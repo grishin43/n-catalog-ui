@@ -12,7 +12,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "np",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -28,6 +28,8 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/libs/bootstrap/bootstrap.min.css",
+              "src/assets/libs/material/material.scss",
               "src/styles.scss"
             ],
             "scripts": []
@@ -91,6 +93,8 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/libs/bootstrap/bootstrap.min.css",
+              "src/assets/libs/material/material.scss",
               "src/styles.scss"
             ],
             "scripts": []

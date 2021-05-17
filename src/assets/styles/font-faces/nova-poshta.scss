@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'NovaPoshta';
+  font-style: italic;
+  src: url('../../../assets/fonts/NovaPoshta/OTF/NovaPoshta-Italic.otf') format('opentype'),
+  url('../../../assets/fonts/NovaPoshta/TTF/NovaPoshta-Italic.ttf') format('truetype'),
+  url('../../../assets/fonts/NovaPoshta/WOFF/NovaPoshta-Italic.woff') format('woff'),
+  url('../../../assets/fonts/NovaPoshta/WOFF2/NovaPoshta-Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'NovaPoshta';
+  font-weight: 400;
+  font-stretch: condensed;
+  src: url('../../../assets/fonts/NovaPoshta/OTF/NovaPoshta-RegularCond.otf') format('opentype'),
+  url('../../../assets/fonts/NovaPoshta/TTF/NovaPoshta-RegularCond.ttf') format('truetype'),
+  url('../../../assets/fonts/NovaPoshta/WOFF/NovaPoshta-RegularCond.woff') format('woff'),
+  url('../../../assets/fonts/NovaPoshta/WOFF2/NovaPoshta-RegularCond.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'NovaPoshta';
+  font-weight: 400;
+  src: url('../../../assets/fonts/NovaPoshta/OTF/NovaPoshta-Regular.otf') format('opentype'),
+  url('../../../assets/fonts/NovaPoshta/TTF/NovaPoshta-Regular.ttf') format('truetype'),
+  url('../../../assets/fonts/NovaPoshta/WOFF/NovaPoshta-Regular.woff') format('woff'),
+  url('../../../assets/fonts/NovaPoshta/WOFF2/NovaPoshta-Regular.woff2') format('woff2');
+}
+
+
+@font-face {
+  font-family: 'NovaPoshta';
+  font-weight: 500;
+  src: url('../../../assets/fonts/NovaPoshta/OTF/NovaPoshta-Medium.otf') format('opentype'),
+  url('../../../assets/fonts/NovaPoshta/TTF/NovaPoshta-Medium.ttf') format('truetype'),
+  url('../../../assets/fonts/NovaPoshta/WOFF/NovaPoshta-Medium.woff') format('woff'),
+  url('../../../assets/fonts/NovaPoshta/WOFF2/NovaPoshta-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'NovaPoshta';
+  font-weight: 700;
+  src: url('../../../assets/fonts/NovaPoshta/OTF/NovaPoshta-Bold.otf') format('opentype'),
+  url('../../../assets/fonts/NovaPoshta/TTF/NovaPoshta-Bold.ttf') format('truetype'),
+  url('../../../assets/fonts/NovaPoshta/WOFF/NovaPoshta-Bold.woff') format('woff'),
+  url('../../../assets/fonts/NovaPoshta/WOFF2/NovaPoshta-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'NovaPoshta';
+  font-weight: 800;
+  src: url('../../../assets/fonts/NovaPoshta/OTF/NovaPoshta-Black.otf') format('opentype'),
+  url('../../../assets/fonts/NovaPoshta/TTF/NovaPoshta-Black.ttf') format('truetype'),
+  url('../../../assets/fonts/NovaPoshta/WOFF/NovaPoshta-Black.woff') format('woff'),
+  url('../../../assets/fonts/NovaPoshta/WOFF2/NovaPoshta-Black.woff2') format('woff2');
+}
