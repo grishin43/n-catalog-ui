@@ -1,0 +1,26 @@
+<ng-container *ngIf="type === 'primary'">
+  <button
+    mat-flat-button
+    color="primary"
+    [ngClass]="{'min-width': enableMinWidth}"
+    [disabled]="disabled">
+    <ng-container
+      [ngTemplateOutlet]="innerContent">
+    </ng-container>
+  </button>
+</ng-container>
+<ng-container *ngIf="type === 'secondary'">
+  <button
+    mat-stroked-button
+    color="primary"
+    [ngClass]="{'min-width': enableMinWidth}"
+    [disabled]="disabled">
+    <ng-container
+      [ngTemplateOutlet]="innerContent">
+    </ng-container>
+  </button>
+</ng-container>
+
+<ng-template #innerContent>
+  <ng-content></ng-content>
+</ng-template>

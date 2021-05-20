@@ -1,0 +1,20 @@
+.container {
+  padding: 50px 0;
+
+  h1 {
+    margin-bottom: 40px;
+  }
+
+  .button-group {
+    .button-label {
+      color: var(--np-roman-silver);
+      font-size: 14px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    & + .button-group {
+      margin-top: 14px;
+    }
+  }
+}

@@ -9,8 +9,16 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: AppRouteEnum.UI_KIT,
+    loadChildren: () => import('./ui-kit/ui-kit.module').then(m => m.UiKitModule)
+  },
+  {
     path: AppRouteEnum.CATALOG,
     loadChildren: () => import('./catalog/catalog.module').then(m => m.CatalogModule)
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 

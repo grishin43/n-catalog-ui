@@ -1,0 +1,24 @@
+.cdk-overlay-container {
+  .mat-menu-panel {
+    background: var(--np-primary-white);
+    min-width: 175px;
+    box-shadow: 0 3px 5px rgb(138 149 163 / 20%);
+
+    .mat-menu-content:not(:empty) {
+      padding: 8px;
+    }
+
+    .mat-menu-item {
+      height: 40px;
+      line-height: 40px;
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      padding-right: 12px;
+
+      mat-icon {
+        margin-right: 10px;
+      }
+    }
+  }
+}

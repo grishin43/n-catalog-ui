@@ -1,4 +1,4 @@
-@import "assets/styles/root-var";
+@import "assets/styles/index";
 
 html, body {
   height: 100%;
@@ -12,4 +12,12 @@ body {
   font-weight: normal;
   color: var(--np-black);
   word-break: break-word;
+
+  button, a {
+    appearance: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
 }
