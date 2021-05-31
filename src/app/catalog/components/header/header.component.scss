@@ -1,0 +1,29 @@
+$main-height: 72px;
+
+header {
+  background: var(--np-primary-white);
+  height: $main-height;
+
+  .container-fluid {
+    max-width: calc(1440px + 15px + 15px);
+
+    .row {
+      .logo-col {
+        flex: 0 0 108px;
+        max-width: 108px;
+        text-align: center;
+      }
+    }
+  }
+
+  .tab {
+    background: var(--np-white-lilac);
+    height: 72px;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+}

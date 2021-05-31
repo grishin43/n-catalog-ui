@@ -7,11 +7,13 @@ import {NgxsModule} from '@ngxs/store';
 import {environment} from '../../environments/environment';
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {CatalogState} from './store/states/catalog.state';
+import {HeaderComponent} from './components/header/header.component';
 
 @NgModule({
   declarations: [
     CatalogComponent,
-    MainComponent
+    MainComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,
