@@ -1,5 +1,12 @@
 {
   "key": "ua",
   "common": {
+    "search": "Пошук"
+  },
+  "statuses": {
+    "undefined": "Невизначений",
+    "draft": "Чернетка",
+    "edited": "Редагується",
+    "launched": "Запущений"
   }
 }

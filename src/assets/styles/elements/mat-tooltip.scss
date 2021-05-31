@@ -1,0 +1,80 @@
+@mixin leftTriangle {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid var(--np-mako);
+  margin: auto 0;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+}
+
+@mixin rightTriangle {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid var(--np-mako);
+  margin: auto 0;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+}
+
+.mat-tooltip {
+  background: var(--np-mako);
+  overflow: visible !important;
+  position: relative;
+
+  &:before {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+  &.left {
+    &:before {
+      @include leftTriangle;
+    }
+  }
+
+  &.right {
+    &:before {
+      @include rightTriangle;
+    }
+  }
+
+  &.above {
+    &:before {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--np-mako);
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
+  }
+
+  &.below {
+    &:before {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid var(--np-mako);
+      bottom: 100%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
+  }
+
+  &.before {
+    &:before {
+      @include leftTriangle;
+    }
+  }
+
+  &.after {
+    &:before {
+      @include rightTriangle;
+    }
+  }
+}

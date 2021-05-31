@@ -1,8 +1,9 @@
 .container {
-  padding: 50px 0;
+  padding-bottom: 40px;
 
   h1 {
     margin-bottom: 40px;
+    margin-top: 40px;
   }
 
   .button-group {
@@ -15,6 +16,18 @@
 
     & + .button-group {
       margin-top: 14px;
+    }
+  }
+
+  np-status-pill {
+    & + np-status-pill {
+      margin-left: 16px;
+    }
+  }
+
+  np-avatar {
+    & + np-avatar {
+      margin-left: 5px;
     }
   }
 }

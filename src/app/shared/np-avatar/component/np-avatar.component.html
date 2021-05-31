@@ -1,0 +1,8 @@
+<span [ngClass]="[theme, size, type]">
+  <ng-container *ngIf="type === 'initials'">
+    {{data || '?'}}
+  </ng-container>
+  <ng-container *ngIf="type === 'avatar'">
+    <img [attr.src]="data" alt="">
+  </ng-container>
+</span>

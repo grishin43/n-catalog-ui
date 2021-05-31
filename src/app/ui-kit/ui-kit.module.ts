@@ -5,6 +5,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {NpButtonModule} from '../shared/np-button/np-button.module';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {NpInputModule} from '../shared/np-input/np-input.module';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {NpStatusPillModule} from '../shared/np-status-pill/np-status-pill.module';
+import {NpAvatarModule} from '../shared/np-avatar/np-avatar.module';
 
 const routes: Routes = [
   {
@@ -26,7 +31,12 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NpButtonModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    NpInputModule,
+    TranslateModule,
+    MatTooltipModule,
+    NpStatusPillModule,
+    NpAvatarModule
   ]
 })
 export class UiKitModule {

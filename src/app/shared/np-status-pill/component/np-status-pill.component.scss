@@ -1,0 +1,42 @@
+@mixin grayPill {
+  background: var(--np-ghost-white);
+  color: var(--np-roman-silver);
+}
+
+@mixin orangePill {
+  background: var(--np-serenade);
+  color: var(--np-pizazz);
+}
+
+@mixin greenPill {
+  background: var(--np-ottoman);
+  color: var(--np-emerald);
+}
+
+span {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+  border-radius: 20px;
+
+  &.np-status-undefined {
+    @include grayPill;
+  }
+
+  &.np-status-draft {
+    @include grayPill;
+  }
+
+  &.np-status-edited {
+    @include orangePill;
+  }
+
+  &.np-status-launched {
+    @include greenPill;
+  }
+}

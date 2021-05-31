@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'np-root',
@@ -7,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'catalog-ui';
+
+  constructor(private translateService: TranslateService) {
+    translateService.setDefaultLang(environment.defaultLanguage);
+    translateService.use(environment.defaultLanguage);
+  }
 }

@@ -1,0 +1,47 @@
+span {
+  border-radius: 50%;
+  justify-content: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 12px;
+
+  &.initials {
+    display: inline-block;
+    text-align: center;
+  }
+
+  &.avatar {
+    display: inline-flex;
+    justify-content: center;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  &.sm {
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+  }
+
+  &.md {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  &.light {
+    background: var(--np-whisper);
+    color: var(--np-roman-silver);
+  }
+
+  &.dark {
+    background: var(--np-outer-space);
+    color: var(--np-primary-white);
+  }
+}

@@ -1,0 +1,114 @@
+mat-form-field {
+  &.mat-form-field-appearance-outline {
+    width: 100%;
+
+    &.input-type-search {
+      &.has-value {
+        .mat-form-field-wrapper {
+          .mat-form-field-flex {
+            .mat-form-field-outline {
+              background: var(--np-catskill-white);
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+
+      .mat-form-field-wrapper {
+        .mat-form-field-flex {
+
+          &:focus-within {
+            .mat-form-field-outline {
+              background: var(--np-catskill-white);
+              border-radius: 5px;
+            }
+          }
+
+          .mat-form-field-outline {
+            .mat-form-field-outline-start, .mat-form-field-outline-end, .mat-form-field-outline-gap {
+              border-width: 0 !important;
+            }
+          }
+        }
+      }
+    }
+
+    &:not(.mat-form-field-disabled) {
+      .mat-form-field-wrapper {
+        .mat-form-field-flex {
+          &:hover {
+            .mat-form-field-outline {
+              color: var(--np-roman-silver);
+            }
+          }
+
+          &:focus-within {
+            .mat-form-field-outline {
+              color: var(--np-roman-silver);
+            }
+          }
+        }
+      }
+    }
+
+    .mat-form-field-wrapper {
+      .mat-form-field-flex {
+        padding: 0 16px;
+        align-items: center;
+
+        .mat-form-field-infix {
+          border-top: 0;
+          padding: 12px 0 12px 0;
+
+          input {
+            &.mat-input-element {
+              font-size: 14px;
+              color: var(--np-mako);
+
+              &:disabled {
+                color: var(--np-roman-silver);
+              }
+            }
+          }
+        }
+
+        .mat-form-field-outline {
+          top: 0;
+          color: var(--np-catskill-white);
+
+          &.mat-form-field-outline-thick {
+            .mat-form-field-outline-start, .mat-form-field-outline-end, .mat-form-field-outline-gap {
+              border-width: 1px;
+            }
+          }
+        }
+
+        .mat-form-field-prefix {
+          top: 0;
+          margin-right: 8px;
+        }
+
+        .mat-form-field-suffix {
+          top: 0;
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}
+
+np-input {
+  display: block;
+
+  mat-label {
+    display: block;
+    font-size: 12px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    color: var(--np-outer-space);
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+}
