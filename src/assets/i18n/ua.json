@@ -1,7 +1,14 @@
 {
   "key": "ua",
   "common": {
-    "search": "Пошук"
+    "search": "Пошук",
+    "catalog": "Каталог",
+    "create": "Створити",
+    "file": "Файл",
+    "folder": "Папка",
+    "mainFolders": "Головні папки",
+    "foldersCount": "{{count}} папки",
+    "filesCount": "{{count}} файлів"
   },
   "statuses": {
     "undefined": "Невизначений",

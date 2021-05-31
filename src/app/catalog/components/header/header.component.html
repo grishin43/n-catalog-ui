@@ -1,21 +1,30 @@
 <header>
   <div class="container-fluid h-100">
     <div class="row h-100 align-items-center">
-      <div class="col-auto logo-col tab">
-        <a [routerLink]="'/'">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M22.6412 28.3367V22.749H17.8908V28.3367H14.2596L18.6701 32.7472C19.5572 33.6343 20.9914 33.6343 21.8785 32.7472L26.289 28.3367H22.6412ZM11.8803 25.9574V13.9363L7.46975 18.3468C6.58267 19.2338 6.58267 20.6681 7.46975 21.5552L11.8803 25.9574ZM17.8908 11.5652V17.1529H22.6412V11.5652H26.2724L21.8619 7.15469C20.9748 6.26761 19.5406 6.26761 18.6535 7.15469L14.243 11.5652H17.8908ZM33.054 18.3468L28.6435 13.9363V25.9574L33.054 21.5552C33.941 20.6681 33.941 19.2338 33.054 18.3468Z"
-              fill="#DA292B"/>
-          </svg>
-        </a>
+      <a class="col-auto logo-col tab"
+         matRipple
+         [routerLink]="'/'">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M22.6412 28.3367V22.749H17.8908V28.3367H14.2596L18.6701 32.7472C19.5572 33.6343 20.9914 33.6343 21.8785 32.7472L26.289 28.3367H22.6412ZM11.8803 25.9574V13.9363L7.46975 18.3468C6.58267 19.2338 6.58267 20.6681 7.46975 21.5552L11.8803 25.9574ZM17.8908 11.5652V17.1529H22.6412V11.5652H26.2724L21.8619 7.15469C20.9748 6.26761 19.5406 6.26761 18.6535 7.15469L14.243 11.5652H17.8908ZM33.054 18.3468L28.6435 13.9363V25.9574L33.054 21.5552C33.941 20.6681 33.941 19.2338 33.054 18.3468Z"
+            fill="#DA292B"/>
+        </svg>
+      </a>
+      <div class="col search-col ml-auto">
+        <np-input
+          [placeholder]="'common.search' | translate"
+          [type]="'search'">
+        </np-input>
       </div>
-      <div class="col-auto">
-
-      </div>
-      <div class="col-auto">
-
-      </div>
+      <a matRipple
+         class="col-auto profile-col">
+        <np-avatar
+          [type]="'initials'"
+          [size]="'md'"
+          [data]="'MO'"
+          [theme]="'dark'">
+        </np-avatar>
+      </a>
     </div>
   </div>
 </header>

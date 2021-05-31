@@ -13,6 +13,31 @@ header {
         max-width: 108px;
         text-align: center;
       }
+
+      .search-col {
+        max-width: 135px;
+        transition: var(--np-base-transition);
+        padding-right: 0;
+
+        &:focus-within {
+          max-width: 30%;
+          padding-right: 15px;
+        }
+      }
+
+      a {
+        &.profile-col {
+          cursor: pointer;
+          height: $main-height;
+          display: inline-flex;
+          align-items: center;
+          transition: var(--np-base-transition);
+
+          &:hover {
+            background: var(--np-white-lilac);
+          }
+        }
+      }
     }
   }
 

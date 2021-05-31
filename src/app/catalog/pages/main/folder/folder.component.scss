@@ -1,0 +1,31 @@
+.folder {
+  border-radius: 10px;
+  background: var(--np-primary-white);
+  padding: 16px;
+
+  .folder-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 22px;
+
+    mat-icon {
+      width: auto;
+      height: auto;
+    }
+  }
+
+  .folder-body {
+    margin-bottom: 6px;
+
+    h6 {
+      margin: 0;
+    }
+  }
+
+  .folder-footer {
+    span {
+      color: var(--np-silver-sand);
+      font-size: 14px;
+    }
+  }
+}

@@ -5,6 +5,7 @@ span {
   text-overflow: ellipsis;
   overflow: hidden;
   font-size: 12px;
+  user-select: none;
 
   &.initials {
     display: inline-block;

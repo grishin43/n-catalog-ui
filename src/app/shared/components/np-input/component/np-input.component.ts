@@ -25,4 +25,10 @@ export class NpInputComponent implements OnInit {
     return `input-type-${this.type}`;
   }
 
+  public onSearchCrossClicked(e: MouseEvent, inputRef: HTMLInputElement ): void {
+    e.preventDefault();
+    e.stopPropagation();
+    inputRef.value = '';
+  }
+
 }

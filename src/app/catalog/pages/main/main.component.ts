@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CatalogFolderModel} from '../../models/folder.model';
+import {ContentHelper} from '../../helpers/content.helper';
 
 @Component({
   selector: 'np-main',
@@ -6,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  public mainFolders: CatalogFolderModel[] = ContentHelper.catalogMainFolders;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
