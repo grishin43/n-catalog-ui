@@ -1,24 +1,52 @@
-<div class="folder">
+<a matRipple
+   matRippleColor="{{rippleLightColor}}"
+   [routerLink]="folderRoute"
+   class="folder">
   <div class="folder-header">
     <mat-icon [innerHTML]="folder.icon | safeHtml"></mat-icon>
     <button mat-icon-button
+            (click)="$event.preventDefault(); $event.stopPropagation();"
             [matMenuTriggerFor]="menu">
       <mat-icon>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="#B8C1CB"/>
+          <path
+            d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+            fill="#B8C1CB"/>
         </svg>
       </mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>Item 1</button>
-      <button mat-menu-item>Item 2</button>
+      <button mat-menu-item
+              (click)="onCreateFolderClicked($event)">
+        <mat-icon>
+          <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.59 1.12688C8.21 0.723125 7.7 0.5 7.17 0.5H2C0.9 0.5 0.00999999 1.45625 0.00999999 2.625L0 15.375C0 16.5438 0.9 17.5 2 17.5H18C19.1 17.5 20 16.5438 20 15.375V4.75C20 3.58125 19.1 2.625 18 2.625H10L8.59 1.12688Z" fill="#B8C1CB"/>
+          </svg>
+        </mat-icon>
+        <span>
+          {{'common.createFolder' | translate}}
+        </span>
+      </button>
+      <button mat-menu-item
+              (click)="onCreateFileClicked($event)">
+        <mat-icon>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M14.59 2.59C14.21 2.21 13.7 2 13.17 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8.83C20 8.3 19.79 7.79 19.41 7.42L14.59 2.59ZM15 18H9C8.45 18 8 17.55 8 17C8 16.45 8.45 16 9 16H15C15.55 16 16 16.45 16 17C16 17.55 15.55 18 15 18ZM15 14H9C8.45 14 8 13.55 8 13C8 12.45 8.45 12 9 12H15C15.55 12 16 12.45 16 13C16 13.55 15.55 14 15 14ZM13 8V3.5L18.5 9H14C13.45 9 13 8.55 13 8Z"
+              fill="#B8C1CB"/>
+          </svg>
+        </mat-icon>
+        <span>
+          {{'common.createFile' | translate}}
+        </span>
+      </button>
     </mat-menu>
   </div>
   <div class="folder-body">
     <h6>{{folder.name}}</h6>
   </div>
   <div class="folder-footer">
-    <span>{{'common.foldersCount' |translate : {count:folder.subFoldersCount} }}</span>
-    <span>{{' • ' + ('common.filesCount' |translate : {count:folder.filesCount} )}}</span>
+    <span>{{'common.foldersCount' |translate : {count: folder.subFoldersCount} }}</span>
+    <span>{{' • ' + ('common.filesCount' |translate : {count: folder.filesCount})}}</span>
   </div>
-</div>
+</a>

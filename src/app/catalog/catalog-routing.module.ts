@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CatalogComponent} from './catalog.component';
 import {CatalogRouteEnum} from './models/catalog-route.enum';
-import {MainComponent} from './pages/main/main.component';
 
 const routes: Routes = [
   {
@@ -16,7 +15,15 @@ const routes: Routes = [
       },
       {
         path: CatalogRouteEnum.MAIN,
-        component: MainComponent
+        loadChildren: () => import('./pages/main/main.module').then(m => m.MainModule)
+      },
+      {
+        path: `${CatalogRouteEnum.FOLDER}/:${CatalogRouteEnum.ID}`,
+        loadChildren: () => import('./pages/folder/folder.module').then(m => m.FolderModule)
+      },
+      {
+        path: '**',
+        redirectTo: ''
       }
     ]
   }

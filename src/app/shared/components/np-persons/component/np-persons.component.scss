@@ -1,0 +1,25 @@
+.persons-row {
+  np-avatar {
+    & + np-avatar {
+      margin-left: -12px;
+    }
+
+    & + span {
+      &:nth-child(2) {
+        margin-left: 8px;
+      }
+
+      &:not(:nth-child(2)) {
+        margin-left: 4px;
+      }
+    }
+  }
+
+  span {
+    color: var(--np-roman-silver);
+
+    &.bold {
+      font-weight: 500;
+    }
+  }
+}

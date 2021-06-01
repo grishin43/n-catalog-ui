@@ -8,7 +8,19 @@
     "folder": "Папка",
     "mainFolders": "Головні папки",
     "foldersCount": "{{count}} папки",
-    "filesCount": "{{count}} файлів"
+    "filesCount": "{{count}} файлів",
+    "createFolder": "Створити папку",
+    "createFile": "Створити файл",
+    "recently": "Недавні",
+    "entityName": "Назва",
+    "participants": "Учасники",
+    "lastUpdated": "Останні змінені",
+    "status": "Статус",
+    "open": "Відкрити",
+    "rename": "Перейменувати",
+    "copy": "Копіювати",
+    "owner": "Власник",
+    "editing": "Редагує"
   },
   "statuses": {
     "undefined": "Невизначений",

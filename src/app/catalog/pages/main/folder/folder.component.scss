@@ -1,7 +1,15 @@
-.folder {
+a.folder {
   border-radius: 10px;
   background: var(--np-primary-white);
   padding: 16px;
+  display: block;
+  text-decoration: none !important;
+  transition: var(--np-base-transition);
+  box-shadow: 1px 1px 3px 0 transparent;
+
+  &:hover {
+    box-shadow: 1px 1px 3px 0 rgb(64 72 82 / 15%);
+  }
 
   .folder-header {
     display: flex;
@@ -19,6 +27,7 @@
 
     h6 {
       margin: 0;
+      color: var(--np-outer-space);
     }
   }
 

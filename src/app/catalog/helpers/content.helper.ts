@@ -1,10 +1,16 @@
 import {CatalogFolderModel} from '../models/folder.model';
+import {CatalogEntityModel} from '../models/catalog-entity.model';
+import {CatalogEntityEnum} from '../models/catalog-entity.enum';
+import {NpStatusPillEnum} from '../../shared/components/np-status-pill/models/np-status-pill.enum';
+import {v4 as uuidv4} from 'uuid';
+import {EmployeeModel} from '../../models/employee.model';
 
 export class ContentHelper {
 
   public static get catalogMainFolders(): CatalogFolderModel[] {
     return [
       {
+        id: 'npu',
         icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M39.0588 14.3437H21.7412L19.7841 11.2425C19.296 10.4691 18.4432 9.96448 17.5316 10.0378H3.85412C1.72094 10.0533 0 11.787 0 13.9201V39.1013C0.00258824 41.2418 1.73718 42.9764 3.87765 42.979H39.0588C41.1993 42.9764 42.9339 41.2418 42.9365 39.1013V18.2213C42.9339 16.0808 41.1993 14.3463 39.0588 14.3437Z" fill="#B5E3D8"/>
         <path d="M44.1459 9.3271H26.8236L23.3789 5.23299C23.263 5.09369 23.0894 5.01557 22.9083 5.02122H8.94125C7.00572 5.0244 5.36902 6.45428 5.10596 8.37181H17.8448C18.5128 8.37016 19.147 8.66499 19.5765 9.17652L22 12.673H39.0589C42.1183 12.6782 44.5972 15.1571 44.6024 18.2165V37.9248C46.5422 37.6828 47.9985 36.0349 48.0001 34.08V13.2C47.995 11.0705 46.2754 9.34263 44.1459 9.3271Z" fill="#B5E3D8"/>
@@ -15,6 +21,7 @@ export class ContentHelper {
         filesCount: 10
       },
       {
+        id: 'npc',
         icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M39.0588 14.3437H21.7412L19.7841 11.2425C19.296 10.4691 18.4432 9.96448 17.5316 10.0378H3.85412C1.72094 10.0533 0 11.787 0 13.9201V39.1013C0.00258824 41.2418 1.73718 42.9764 3.87765 42.979H39.0588C41.1993 42.9764 42.9339 41.2418 42.9365 39.1013V18.2213C42.9339 16.0808 41.1993 14.3463 39.0588 14.3437Z" fill="#DCBFA6"/>
         <path d="M44.1459 9.3271H26.8236L23.3789 5.23299C23.263 5.09369 23.0894 5.01557 22.9083 5.02122H8.94125C7.00572 5.0244 5.36902 6.45428 5.10596 8.37181H17.8448C18.5128 8.37016 19.147 8.66499 19.5765 9.17652L22 12.673H39.0589C42.1183 12.6782 44.5972 15.1571 44.6024 18.2165V37.9248C46.5422 37.6828 47.9985 36.0349 48.0001 34.08V13.2C47.995 11.0705 46.2754 9.34263 44.1459 9.3271Z" fill="#DCBFA6"/>
@@ -25,6 +32,7 @@ export class ContentHelper {
         filesCount: 7
       },
       {
+        id: 'np-global',
         icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M39.0588 14.3437H21.7412L19.7841 11.2425C19.296 10.4691 18.4432 9.96448 17.5316 10.0378H3.85412C1.72094 10.0533 0 11.787 0 13.9201V39.1013C0.00258824 41.2418 1.73718 42.9764 3.87765 42.979H39.0588C41.1993 42.9764 42.9339 41.2418 42.9365 39.1013V18.2213C42.9339 16.0808 41.1993 14.3463 39.0588 14.3437Z" fill="#B6B8DC"/>
         <path d="M44.1459 9.3271H26.8236L23.3789 5.23299C23.263 5.09369 23.0894 5.01557 22.9083 5.02122H8.94125C7.00572 5.0244 5.36902 6.45428 5.10596 8.37181H17.8448C18.5128 8.37016 19.147 8.66499 19.5765 9.17652L22 12.673H39.0589C42.1183 12.6782 44.5972 15.1571 44.6024 18.2165V37.9248C46.5422 37.6828 47.9985 36.0349 48.0001 34.08V13.2C47.995 11.0705 46.2754 9.34263 44.1459 9.3271Z" fill="#B6B8DC"/>
@@ -35,6 +43,7 @@ export class ContentHelper {
         filesCount: 2
       },
       {
+        id: 'post-finance',
         icon: `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M39.0588 14.3437H21.7412L19.7841 11.2425C19.296 10.4691 18.4432 9.96448 17.5316 10.0378H3.85412C1.72094 10.0533 0 11.787 0 13.9201V39.1013C0.00258824 41.2418 1.73718 42.9764 3.87765 42.979H39.0588C41.1993 42.9764 42.9339 41.2418 42.9365 39.1013V18.2213C42.9339 16.0808 41.1993 14.3463 39.0588 14.3437Z" fill="#BDD6E6"/>
         <path d="M44.1459 9.3271H26.8236L23.3789 5.23299C23.263 5.09369 23.0894 5.01557 22.9083 5.02122H8.94125C7.00572 5.0244 5.36902 6.45428 5.10596 8.37181H17.8448C18.5128 8.37016 19.147 8.66499 19.5765 9.17652L22 12.673H39.0589C42.1183 12.6782 44.5972 15.1571 44.6024 18.2165V37.9248C46.5422 37.6828 47.9985 36.0349 48.0001 34.08V13.2C47.995 11.0705 46.2754 9.34263 44.1459 9.3271Z" fill="#BDD6E6"/>
@@ -47,6 +56,55 @@ export class ContentHelper {
         filesCount: 8
       }
     ];
+  }
+
+  public static getCatalogRecentFiles(count: number = 10): CatalogEntityModel[] {
+    const files: CatalogEntityModel[] = [];
+    for (let i = 0; i < count; i++) {
+      const participants = ContentHelper.getEmployees(i || 1);
+      const status = ContentHelper.randomStatus;
+      const entity: CatalogEntityModel = {
+        id: i.toString(),
+        name: 'Business process Nova Contact',
+        type: CatalogEntityEnum.FILE,
+        participants,
+        owner: participants[0],
+        lastUpdated: new Date(),
+        status
+      };
+      if (status === NpStatusPillEnum.EDITED) {
+        entity.editingBy = participants[Math.floor(Math.random() * participants.length)];
+      }
+      files.push(entity);
+    }
+    return files;
+  }
+
+  public static get randomStatus(): NpStatusPillEnum {
+    const statuses = [NpStatusPillEnum.DRAFT, NpStatusPillEnum.EDITED, NpStatusPillEnum.LAUNCHED];
+    return statuses[Math.floor(Math.random() * statuses.length)];
+  }
+
+  public static getEmployees(count: number = 1): EmployeeModel[] {
+    const employees: EmployeeModel[] = [];
+    for (let i = 0; i < count; i++) {
+      employees.push({
+        id: uuidv4(),
+        firstName: ContentHelper.randomFirstName,
+        lastName: ContentHelper.randomLastName
+      });
+    }
+    return employees;
+  }
+
+  public static get randomFirstName(): string {
+    const names = ['Владислав', 'Олег', 'Артем', 'Микола', 'Євген', 'Степан', 'Ілля', 'Денис', 'Віталій'];
+    return names[Math.floor(Math.random() * names.length)];
+  }
+
+  public static get randomLastName(): string {
+    const names = ['Смірнов', 'Філіппов', 'Мазур', 'Даскін', 'Умеренко', 'Калашніков', 'Бондаренко'];
+    return names[Math.floor(Math.random() * names.length)];
   }
 
 }

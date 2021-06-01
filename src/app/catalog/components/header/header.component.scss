@@ -5,8 +5,6 @@ header {
   height: $main-height;
 
   .container-fluid {
-    max-width: calc(1440px + 15px + 15px);
-
     .row {
       .logo-col {
         flex: 0 0 108px;

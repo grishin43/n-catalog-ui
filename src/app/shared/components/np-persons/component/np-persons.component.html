@@ -1,0 +1,32 @@
+<ng-container *ngIf="persons?.length > 1; else singlePerson">
+  <div class="persons-row"
+       matTooltip="{{tooltipMessage}}"
+       matTooltipTouchGestures="auto"
+       #tooltip="matTooltip">
+    <ng-container *ngFor="let person of persons | slice:0: limit">
+      <ng-container *ngTemplateOutlet="avatarTemplate; context: {data : person}"></ng-container>
+    </ng-container>
+    <span *ngIf="persons?.length > limit">
+      + {{persons?.length - limit}}
+    </span>
+  </div>
+</ng-container>
+<ng-template #singlePerson>
+  <div class="persons-row" *ngIf="persons[0] as person">
+    <ng-container *ngTemplateOutlet="avatarTemplate; context: {data : person}"></ng-container>
+    <span [ngClass]="{'bold': active?.id === person.id}">
+      {{person.lastName + ' ' + person.firstName}}
+    </span>
+  </div>
+</ng-template>
+
+<ng-template
+  let-person="data"
+  #avatarTemplate>
+  <np-avatar
+    [type]="'initials'"
+    [size]="'sm'"
+    [data]="person?.lastName + ' ' + person?.firstName | acronym : 2"
+    [selected]="active?.id === person?.id">
+  </np-avatar>
+</ng-template>

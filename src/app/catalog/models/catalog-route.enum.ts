@@ -1,3 +1,5 @@
 export enum CatalogRouteEnum {
-  MAIN = 'main'
+  ID = 'id',
+  MAIN = 'main',
+  FOLDER = 'folder'
 }

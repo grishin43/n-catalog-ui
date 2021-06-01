@@ -1,7 +1,7 @@
 @mixin leftTriangle {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-left: 5px solid var(--np-mako);
+  border-left: 5px solid var(--np-mako-900);
   margin: auto 0;
   top: 0;
   bottom: 0;
@@ -11,70 +11,75 @@
 @mixin rightTriangle {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-right: 5px solid var(--np-mako);
+  border-right: 5px solid var(--np-mako-900);
   margin: auto 0;
   top: 0;
   bottom: 0;
   right: 100%;
 }
 
-.mat-tooltip {
-  background: var(--np-mako);
-  overflow: visible !important;
-  position: relative;
+mat-tooltip-component {
+  .mat-tooltip {
+    background: var(--np-mako-900);
+    overflow: visible !important;
+    position: relative;
+    text-align: center;
+    max-width: 465px;
+    font-size: 12px;
 
-  &:before {
-    content: '';
-    width: 0;
-    height: 0;
-    position: absolute;
-  }
-
-  &.left {
     &:before {
-      @include leftTriangle;
+      content: '';
+      width: 0;
+      height: 0;
+      position: absolute;
     }
-  }
 
-  &.right {
-    &:before {
-      @include rightTriangle;
+    &.left {
+      &:before {
+        @include leftTriangle;
+      }
     }
-  }
 
-  &.above {
-    &:before {
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 5px solid var(--np-mako);
-      top: 100%;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
+    &.right {
+      &:before {
+        @include rightTriangle;
+      }
     }
-  }
 
-  &.below {
-    &:before {
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-bottom: 5px solid var(--np-mako);
-      bottom: 100%;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
+    &.above {
+      &:before {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--np-mako-900);
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+      }
     }
-  }
 
-  &.before {
-    &:before {
-      @include leftTriangle;
+    &.below {
+      &:before {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid var(--np-mako-900);
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+      }
     }
-  }
 
-  &.after {
-    &:before {
-      @include rightTriangle;
+    &.before {
+      &:before {
+        @include leftTriangle;
+      }
+    }
+
+    &.after {
+      &:before {
+        @include rightTriangle;
+      }
     }
   }
 }

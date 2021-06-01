@@ -28,8 +28,25 @@ body {
       outline: none;
     }
   }
+
+  .container-fluid {
+    max-width: calc(1440px + 15px + 15px);
+  }
+
+  main .container-fluid {
+    padding-left: 108px;
+    padding-right: 108px;
+  }
 }
 
-np-status-pill, np-avatar, mat-icon {
+np-status-pill, np-avatar {
   display: inline-flex;
+}
+
+mat-icon {
+  &.mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
