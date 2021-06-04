@@ -58,16 +58,20 @@ export class ContentHelper {
     ];
   }
 
-  public static getCatalogEntities(count: number = 10, onlyFiles?: boolean): CatalogEntityModel[] {
+  public static getCatalogEntities(count: number = 10, onlyFiles: boolean = true): CatalogEntityModel[] {
     const files: CatalogEntityModel[] = [];
     for (let i = 0; i < count; i++) {
       const participants = ContentHelper.getEmployees(i || 1);
       const status = ContentHelper.randomStatus;
       const entity: CatalogEntityModel = {
         id: i.toString(),
-        name: 'Business process Nova Contact',
-        type: CatalogEntityEnum.FILE,
+        name: i % 5 === 0 && !onlyFiles
+          ? 'Папка, яка містить тільки файли'
+          : 'Business process Nova Contact',
         participants,
+        type: i % 5 === 0 && !onlyFiles
+          ? CatalogEntityEnum.FOLDER
+          : CatalogEntityEnum.FILE,
         owner: participants[0],
         lastUpdated: new Date(),
         status

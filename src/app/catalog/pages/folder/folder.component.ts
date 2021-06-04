@@ -11,5 +11,5 @@ import {ContentHelper} from '../../helpers/content.helper';
 })
 export class FolderComponent {
   public tableDisplayedColumns: TableColumnsModel[] = TableHelper.entitiesTableColumns;
-  public folderEntities: CatalogEntityModel[] = ContentHelper.getCatalogEntities(10);
+  public folderEntities: CatalogEntityModel[] = ContentHelper.getCatalogEntities(10, false);
 }

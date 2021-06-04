@@ -5,7 +5,7 @@ import {EmployeeModel} from '../../models/employee.model';
 export interface CatalogEntityModel {
   id: string;
   name: string;
-  type: CatalogEntityEnum;
+  type?: CatalogEntityEnum;
   hasSubFolders?: boolean;
   subFolders?: CatalogEntityModel[];
   participants: EmployeeModel[];

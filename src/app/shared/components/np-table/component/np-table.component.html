@@ -59,13 +59,13 @@
               <ng-container *ngIf="row?.type === catalogEntityType.FOLDER">
                 <mat-icon *ngIf="!row?.hasSubFolders">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0)">
+                    <g clip-path="url(#clip1)">
                       <path
                         d="M10.59 5.12688C10.21 4.72313 9.7 4.5 9.17 4.5H4C2.9 4.5 2.01 5.45625 2.01 6.625L2 19.375C2 20.5438 2.9 21.5 4 21.5H20C21.1 21.5 22 20.5438 22 19.375V8.75C22 7.58125 21.1 6.625 20 6.625H12L10.59 5.12688Z"
                         fill="#B6B8DC"/>
                     </g>
                     <defs>
-                      <clipPath id="clip0">
+                      <clipPath id="clip1">
                         <rect width="24" height="24" fill="white"/>
                       </clipPath>
                     </defs>
@@ -73,7 +73,7 @@
                 </mat-icon>
                 <mat-icon *ngIf="row?.hasSubFolders">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0)">
+                    <g clip-path="url(#clip2)">
                       <path
                         d="M19.5294 7.17183H10.8706L9.89203 5.62126C9.648 5.23457 9.2216 4.98224 8.76581 5.01889H1.92706C0.86047 5.02666 0 5.89348 0 6.96007V19.5507C0.00129412 20.6209 0.868588 21.4882 1.93882 21.4895H19.5294C20.5996 21.4882 21.4669 20.6209 21.4682 19.5507V9.11066C21.4669 8.04042 20.5996 7.17313 19.5294 7.17183Z"
                         fill="#B6B8DC"/>
@@ -82,7 +82,7 @@
                         fill="#B6B8DC"/>
                     </g>
                     <defs>
-                      <clipPath id="clip0">
+                      <clipPath id="clip2">
                         <rect width="24" height="24" fill="white"/>
                       </clipPath>
                     </defs>
@@ -127,11 +127,18 @@
                 </mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item
-                        *ngFor="let action of entityActions"
-                        (click)="action.cb(row?.id)">
-                  {{'common.' + action.name | translate}}
-                </button>
+                <ng-container *ngIf="row.type === catalogEntityType.FILE; else folder">
+                  <ng-container *ngFor="let action of fileActions">
+                    <ng-container
+                      *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+                  </ng-container>
+                </ng-container>
+                <ng-template #folder>
+                  <ng-container *ngFor="let action of folderActions">
+                    <ng-container
+                      *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+                  </ng-container>
+                </ng-template>
               </mat-menu>
             </ng-container>
           </ng-container>
@@ -152,3 +159,14 @@
 
   </mat-table>
 </div>
+
+
+<ng-template
+  #rowActionButton
+  let-action="action"
+  let-id="id">
+  <button mat-menu-item
+          (click)="action.cb(id)">
+    {{'common.' + action.name | translate}}
+  </button>
+</ng-template>

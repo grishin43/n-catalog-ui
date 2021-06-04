@@ -5,8 +5,8 @@ import {TableDataTypeEnum} from '../models/table-data-type.enum';
 import {CatalogEntityModel} from '../../../../catalog/models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../../catalog/models/catalog-entity.enum';
 import {TableActionModel} from '../models/table-action.model';
-import {CatalogEntityActionEnum} from '../models/catalog-entity-action.enum';
 import {NpStatusPillEnum} from '../../np-status-pill/models/np-status-pill.enum';
+import {TableHelper} from '../../../../catalog/helpers/table.helper';
 
 @Component({
   selector: 'np-table',
@@ -25,25 +25,7 @@ export class NpTableComponent {
   public catalogEntityType = CatalogEntityEnum;
   public statuses = NpStatusPillEnum;
 
-  public entityActions: TableActionModel[] = [
-    {
-      name: CatalogEntityActionEnum.OPEN,
-      cb: (entityId: string) => {
-        console.log(entityId);
-      }
-    },
-    {
-      name: CatalogEntityActionEnum.RENAME,
-      cb: (entityId: string) => {
-        console.log(entityId);
-      }
-    },
-    {
-      name: CatalogEntityActionEnum.COPY,
-      cb: (entityId: string) => {
-        console.log(entityId);
-      }
-    }
-  ];
+  public fileActions: TableActionModel[] = TableHelper.fileActions;
+  public folderActions: TableActionModel[] = TableHelper.folderActions;
 
 }
