@@ -58,7 +58,7 @@ export class ContentHelper {
     ];
   }
 
-  public static getCatalogRecentFiles(count: number = 10): CatalogEntityModel[] {
+  public static getCatalogEntities(count: number = 10, onlyFiles?: boolean): CatalogEntityModel[] {
     const files: CatalogEntityModel[] = [];
     for (let i = 0; i < count; i++) {
       const participants = ContentHelper.getEmployees(i || 1);

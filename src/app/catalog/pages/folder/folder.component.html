@@ -1,10 +1,13 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-12">
-      Breadcrumbs
+    <div class="col-12" style="margin-bottom: 32px">
+      <np-folder-breadcrumbs></np-folder-breadcrumbs>
     </div>
     <div class="col-12">
-      Files and folders
+      <np-table
+        [displayedColumns]="tableDisplayedColumns"
+        [data]="folderEntities">
+      </np-table>
     </div>
   </div>
 </div>

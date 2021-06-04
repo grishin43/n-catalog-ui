@@ -20,7 +20,9 @@
     "rename": "Перейменувати",
     "copy": "Копіювати",
     "owner": "Власник",
-    "editing": "Редагує"
+    "editing": "Редагує",
+    "mainFolder": "Головна",
+    "rootFolder": "Рутова папка"
   },
   "statuses": {
     "undefined": "Невизначений",
