@@ -11,11 +11,18 @@ import {NpInputModule} from '../shared/components/np-input/np-input.module';
 import {MatRippleModule} from '@angular/material/core';
 import {NpAvatarModule} from '../shared/components/np-avatar/np-avatar.module';
 import {TranslateModule} from '@ngx-translate/core';
+import { HeaderSearchComponent } from './components/header/header-search/header-search.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
     CatalogComponent,
-    HeaderComponent
+    HeaderComponent,
+    HeaderSearchComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +32,12 @@ import {TranslateModule} from '@ngx-translate/core';
     NpInputModule,
     MatRippleModule,
     NpAvatarModule,
-    TranslateModule
+    TranslateModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class CatalogModule {

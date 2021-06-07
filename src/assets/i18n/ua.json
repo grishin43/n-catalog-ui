@@ -22,7 +22,8 @@
     "owner": "Власник",
     "editing": "Редагує",
     "mainFolder": "Головна",
-    "rootFolder": "Рутова папка"
+    "rootFolder": "Рутова папка",
+    "recentlyResults": "Недавні результати"
   },
   "statuses": {
     "undefined": "Невизначений",

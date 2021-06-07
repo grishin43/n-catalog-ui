@@ -12,17 +12,6 @@ header {
         text-align: center;
       }
 
-      .search-col {
-        max-width: 135px;
-        transition: var(--np-base-transition);
-        padding-right: 0;
-
-        &:focus-within {
-          max-width: 30%;
-          padding-right: 15px;
-        }
-      }
-
       a {
         &.profile-col {
           cursor: pointer;

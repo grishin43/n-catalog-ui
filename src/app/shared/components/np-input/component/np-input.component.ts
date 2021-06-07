@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {v4 as uuidv4} from 'uuid';
+import {MatAutocomplete} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'np-input',
@@ -11,6 +12,7 @@ export class NpInputComponent implements OnInit {
   @Input() disabled: boolean;
   @Input() type = 'text';
   @Input() placeholder: string;
+  @Input() autocomplete: MatAutocomplete;
 
   public inputId: string;
 

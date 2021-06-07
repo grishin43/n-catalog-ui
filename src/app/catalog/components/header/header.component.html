@@ -11,11 +11,8 @@
             fill="#DA292B"/>
         </svg>
       </a>
-      <div class="col search-col ml-auto">
-        <np-input
-          [placeholder]="'common.search' | translate"
-          [type]="'search'">
-        </np-input>
+      <div class="col-auto search-col ml-auto">
+        <np-header-search></np-header-search>
       </div>
       <a matRipple
          matRippleColor="{{rippleLightColor}}"

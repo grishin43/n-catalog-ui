@@ -1,0 +1,121 @@
+<form [ngClass]="{
+      'control-has-value': input.value
+    }">
+  <mat-form-field
+    class="input-type-search"
+    appearance="outline"
+    floatLabel="never"
+    [ngClass]="{
+      'has-value': input.value
+    }">
+    <mat-icon matPrefix>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
+          fill="#2E3742"/>
+      </svg>
+    </mat-icon>
+    <input matInput
+           #input
+           [formControl]="formControl"
+           [matAutocomplete]="auto"
+           [attr.type]="'search'"
+           [placeholder]="'common.search' | translate">
+    <mat-icon style="cursor: pointer"
+              *ngIf="input?.value?.length"
+              (click)="onCrossClicked($event)"
+              matSuffix>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M18.3 5.70973C17.91 5.31973 17.28 5.31973 16.89 5.70973L12 10.5897L7.10997 5.69973C6.71997 5.30973 6.08997 5.30973 5.69997 5.69973C5.30997 6.08973 5.30997 6.71973 5.69997 7.10973L10.59 11.9997L5.69997 16.8897C5.30997 17.2797 5.30997 17.9097 5.69997 18.2997C6.08997 18.6897 6.71997 18.6897 7.10997 18.2997L12 13.4097L16.89 18.2997C17.28 18.6897 17.91 18.6897 18.3 18.2997C18.69 17.9097 18.69 17.2797 18.3 16.8897L13.41 11.9997L18.3 7.10973C18.68 6.72973 18.68 6.08973 18.3 5.70973Z"
+          fill="#8A95A3"/>
+      </svg>
+    </mat-icon>
+  </mat-form-field>
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    autoActiveFirstOption
+    [panelWidth]="500">
+    <mat-optgroup
+      [label]="'common.recentlyResults' | translate">
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option.name">
+        <ng-container *ngIf="option.type === catalogEntityType.FILE">
+          <mat-icon>
+            <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g filter="url(#filter0_d)">
+                <path
+                  d="M5.99998 3.5H21.9287C23.1221 3.5 24.2667 3.97409 25.1106 4.81797L30.1819 9.88908C31.0258 10.733 31.4999 11.8776 31.4999 13.0711V33C31.4999 33.8287 30.828 34.5 30 34.5H5.99998C5.17194 34.5 4.5 33.8287 4.5 33V4.99998C4.5 4.17133 5.17203 3.5 5.99998 3.5Z"
+                  fill="white" stroke="#E7EDF5"/>
+              </g>
+              <g clip-path="url(#clip0)">
+                <path
+                  d="M17.9997 27C22.418 27 25.9997 23.4183 25.9997 19C25.9997 14.5817 22.418 11 17.9997 11C13.5814 11 9.99969 14.5817 9.99969 19C9.99969 23.4183 13.5814 27 17.9997 27Z"
+                  fill="url(#paint0_linear)"/>
+                <path
+                  d="M21.7506 20.0194L22.8734 20.023V17.9967L21.7626 17.9943C21.6777 17.6779 21.553 17.3736 21.3914 17.0887L22.1749 16.3142L20.7423 14.8751L19.9576 15.6496C19.6724 15.4836 19.3666 15.3559 19.0481 15.2698L19.0518 14.1767H17.0045L17.0105 15.2594C16.6928 15.3437 16.387 15.4679 16.1005 15.6291L15.3416 14.8678L13.894 16.2919L14.6534 17.0538C14.5709 17.195 14.4974 17.3413 14.4335 17.4919C14.3698 17.6425 14.316 17.797 14.2726 17.9546L13.1725 17.9487V19.973L14.2605 19.9797C14.3452 20.2968 14.4701 20.6018 14.6324 20.8871L13.8315 21.6756L15.2651 23.1142L16.0653 22.3257C16.3509 22.4914 16.6569 22.6192 16.9754 22.7061V23.8502L19.0106 23.849V22.717C19.3298 22.6328 19.6368 22.508 19.9243 22.3458L20.7245 23.1418L22.1731 21.72L21.3703 20.9202C21.5351 20.6375 21.663 20.3348 21.7506 20.0195V20.0194ZM18.023 21.6945C17.4927 21.6945 16.9743 21.5373 16.5334 21.2427C16.0925 20.9481 15.7489 20.5293 15.546 20.0394C15.3431 19.5495 15.29 19.0105 15.3934 18.4904C15.4969 17.9703 15.7522 17.4926 16.1272 17.1176C16.5021 16.7427 16.9798 16.4873 17.4999 16.3839C18.02 16.2804 18.5591 16.3335 19.049 16.5364C19.5389 16.7394 19.9576 17.083 20.2522 17.5239C20.5468 17.9648 20.7041 18.4832 20.7041 19.0134C20.7041 19.7245 20.4216 20.4064 19.9188 20.9092C19.416 21.412 18.734 21.6945 18.023 21.6945Z"
+                  fill="white"/>
+              </g>
+              <defs>
+                <filter id="filter0_d" x="0" y="0" width="35.9999" height="40" filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+                  <feOffset dy="1"/>
+                  <feGaussianBlur stdDeviation="2"/>
+                  <feColorMatrix type="matrix"
+                                 values="0 0 0 0 0.283038 0 0 0 0 0.412791 0 0 0 0 0.495833 0 0 0 0.13 0"/>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+                </filter>
+                <linearGradient id="paint0_linear" x1="9.99969" y1="27" x2="25.9997" y2="27"
+                                gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FF1E00"/>
+                  <stop offset="1" stop-color="#FF8B00"/>
+                </linearGradient>
+                <clipPath id="clip0">
+                  <rect width="16" height="16" fill="white" transform="translate(9.99969 11)"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </mat-icon>
+        </ng-container>
+        <ng-container *ngIf="option.type === catalogEntityType.FOLDER">
+          <mat-icon *ngIf="!option.hasSubFolders">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip1)">
+                <path
+                  d="M10.59 5.12688C10.21 4.72313 9.7 4.5 9.17 4.5H4C2.9 4.5 2.01 5.45625 2.01 6.625L2 19.375C2 20.5438 2.9 21.5 4 21.5H20C21.1 21.5 22 20.5438 22 19.375V8.75C22 7.58125 21.1 6.625 20 6.625H12L10.59 5.12688Z"
+                  fill="#B6B8DC"/>
+              </g>
+              <defs>
+                <clipPath id="clip1">
+                  <rect width="24" height="24" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </mat-icon>
+          <mat-icon *ngIf="option.hasSubFolders">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip2)">
+                <path
+                  d="M19.5294 7.17183H10.8706L9.89203 5.62126C9.648 5.23457 9.2216 4.98224 8.76581 5.01889H1.92706C0.86047 5.02666 0 5.89348 0 6.96007V19.5507C0.00129412 20.6209 0.868588 21.4882 1.93882 21.4895H19.5294C20.5996 21.4882 21.4669 20.6209 21.4682 19.5507V9.11066C21.4669 8.04042 20.5996 7.17313 19.5294 7.17183Z"
+                  fill="#B6B8DC"/>
+                <path
+                  d="M22.073 4.66358H13.4118L11.6895 2.61652C11.6315 2.54688 11.5447 2.50782 11.4542 2.51064H4.47066C3.50289 2.51223 2.68454 3.22717 2.55301 4.18594H8.92242C9.25642 4.18511 9.57354 4.33252 9.7883 4.58829L11 6.33652H19.5295C21.0592 6.33911 22.2987 7.57858 22.3012 9.10829V18.9624C23.2711 18.8414 23.9993 18.0175 24.0001 17.0401V6.60005C23.9975 5.53529 23.1377 4.67135 22.073 4.66358Z"
+                  fill="#B6B8DC"/>
+              </g>
+              <defs>
+                <clipPath id="clip2">
+                  <rect width="24" height="24" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </mat-icon>
+        </ng-container>
+        {{option.name}}
+      </mat-option>
+    </mat-optgroup>
+  </mat-autocomplete>
+</form>

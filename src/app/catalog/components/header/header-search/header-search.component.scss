@@ -1,0 +1,12 @@
+form {
+  width: 135px;
+  transition: var(--np-base-transition);
+
+  &:focus-within {
+    width: 500px;
+  }
+
+  &.control-has-value {
+    width: 500px;
+  }
+}

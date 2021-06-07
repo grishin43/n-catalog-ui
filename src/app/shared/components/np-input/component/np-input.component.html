@@ -20,11 +20,12 @@
   </mat-icon>
   <input matInput
          #input
+         [matAutocomplete]="autocomplete"
          [attr.id]="inputId"
          [attr.type]="type"
          [placeholder]="placeholder"
          [disabled]="disabled">
-  <mat-icon style="cursor: pointer"
+    <mat-icon style="cursor: pointer"
             *ngIf="type === 'search' && input?.value?.length"
             (click)="onSearchCrossClicked($event, input)"
             matSuffix>
