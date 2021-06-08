@@ -11,7 +11,7 @@ import {NpInputModule} from '../shared/components/np-input/np-input.module';
 import {MatRippleModule} from '@angular/material/core';
 import {NpAvatarModule} from '../shared/components/np-avatar/np-avatar.module';
 import {TranslateModule} from '@ngx-translate/core';
-import { HeaderSearchComponent } from './components/header/header-search/header-search.component';
+import {HeaderSearchComponent} from './components/header/header-search/header-search.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
