@@ -1,5 +1,8 @@
 export enum CatalogRouteEnum {
-  ID = 'id',
+  _ID = 'id',
+  _QUERY = 'query',
   MAIN = 'main',
-  FOLDER = 'folder'
+  FOLDER = 'folder',
+  FILE = 'file',
+  SEARCH_RESULTS = 'search'
 }

@@ -33,9 +33,16 @@ body {
     max-width: calc(1440px + 15px + 15px);
   }
 
-  main .container-fluid {
-    padding-left: 108px;
-    padding-right: 108px;
+  main {
+    .container-fluid {
+      padding-left: 108px;
+      padding-right: 108px;
+    }
+  }
+
+  .wh-auto {
+    width: auto;
+    height: auto;
   }
 }
 

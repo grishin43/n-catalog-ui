@@ -1,0 +1,24 @@
+<ul class="list-unstyled">
+  <li *ngFor="let tool of tools">
+    <button
+      mat-button
+      #menuTrigger="matMenuTrigger"
+      [matMenuTriggerFor]="menu"
+      [ngClass]="{
+        'menu-opened': menuTrigger.menuOpen
+       }">
+      {{'common.' + tool.i18name | translate}}
+    </button>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        *ngFor="let item of tool?.subItems"
+        [ngClass]="{
+          'delimiter-after': item.delimiterAfter,
+          'has-submenu': item.subItems
+        }">
+        {{item.i18name}}
+      </button>
+    </mat-menu>
+  </li>
+</ul>

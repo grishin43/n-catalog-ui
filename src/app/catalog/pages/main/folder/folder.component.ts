@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {CatalogFolderModel} from '../../../models/folder.model';
 import {MatRippleHelper} from '../../../helpers/mat-ripple.helper';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
+import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 
 @Component({
   selector: 'np-folder',
@@ -10,7 +10,7 @@ import {AppRouteEnum} from '../../../../models/app-route.enum';
   styleUrls: ['./folder.component.scss']
 })
 export class FolderComponent {
-  @Input() folder: CatalogFolderModel;
+  @Input() folder: CatalogEntityModel;
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
 

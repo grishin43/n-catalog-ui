@@ -23,7 +23,14 @@
     "editing": "Редагує",
     "mainFolder": "Головна",
     "rootFolder": "Рутова папка",
-    "recentlyResults": "Недавні результати"
+    "recentResults": "Недавні результати",
+    "noRecentResults": "Немає недавніх результатів",
+    "searchResults": "Результати пошуку",
+    "noSearchResults": "Результатів не знайдено",
+    "noResultsByQuery": "За запитом <b>{{query}}</b> нічого не знайдено",
+    "draftSaved": "Чернетку збережено",
+    "edit": "Редагувати",
+    "window": "Вікно"
   },
   "statuses": {
     "undefined": "Невизначений",

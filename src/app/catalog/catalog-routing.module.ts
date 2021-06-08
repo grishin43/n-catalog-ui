@@ -18,8 +18,16 @@ const routes: Routes = [
         loadChildren: () => import('./pages/main/main.module').then(m => m.MainModule)
       },
       {
-        path: `${CatalogRouteEnum.FOLDER}/:${CatalogRouteEnum.ID}`,
+        path: `${CatalogRouteEnum.FOLDER}/:${CatalogRouteEnum._ID}`,
         loadChildren: () => import('./pages/folder/folder.module').then(m => m.FolderModule)
+      },
+      {
+        path: `${CatalogRouteEnum.FILE}/:${CatalogRouteEnum._ID}`,
+        loadChildren: () => import('./pages/file/file.module').then(m => m.FileModule)
+      },
+      {
+        path: `${CatalogRouteEnum.SEARCH_RESULTS}/:${CatalogRouteEnum._QUERY}`,
+        loadChildren: () => import('./pages/search-results/search-results.module').then(m => m.SearchResultsModule)
       },
       {
         path: '**',

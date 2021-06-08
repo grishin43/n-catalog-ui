@@ -1,11 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {ContentHelper} from '../../../helpers/content.helper';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {ActivatedRoute, Params, Router, RoutesRecognized} from '@angular/router';
+import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
+import {AppRouteEnum} from '../../../../models/app-route.enum';
 
 @Component({
   selector: 'np-header-search',
@@ -20,7 +23,18 @@ export class HeaderSearchComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
+  constructor(
+    private router: Router,
+    private activateRoute: ActivatedRoute
+  ) {
+  }
+
   ngOnInit(): void {
+    this.formControlHandler();
+    this.patchControlBySearchQuery();
+  }
+
+  private formControlHandler(): void {
     this.filteredOptions = this.formControl.valueChanges.pipe(
       startWith(''),
       map((value: string) => {
@@ -29,9 +43,13 @@ export class HeaderSearchComponent implements OnInit {
     );
   }
 
+  private patchControlBySearchQuery(): void {
+    this.formControl.patchValue(this.activateRoute.snapshot.params[CatalogRouteEnum._QUERY]);
+  }
+
   private filterEntities(value: string): CatalogEntityModel[] {
     return this.entities.filter((option: CatalogEntityModel) => {
-      return option.name.toLowerCase().indexOf(value.toLowerCase()) === 0;
+      return option.name.toLowerCase().indexOf(value?.toLowerCase()) === 0;
     });
   }
 
@@ -40,6 +58,18 @@ export class HeaderSearchComponent implements OnInit {
     event.stopPropagation();
     this.formControl.patchValue('');
     this.autocomplete.closePanel();
+  }
+
+  public onOptionClicked(entity: CatalogEntityModel): void {
+    if (entity.type === CatalogEntityEnum.FOLDER) {
+      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
+    } else if (entity.type === CatalogEntityEnum.FILE) {
+      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${entity.id}`]);
+    }
+  }
+
+  public onSubmit(): void {
+    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${this.formControl.value}`]);
   }
 
 }

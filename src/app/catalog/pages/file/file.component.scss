@@ -1,0 +1,22 @@
+.container-fluid {
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-top: -38px;
+
+  .file-name {
+    color: var(--np-gunmetal);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .draft-status {
+    font-size: 14px;
+    color: var(--np-roman-silver);
+  }
+
+  np-file-top-toolbar {
+    display: block;
+    margin-top: 10px;
+  }
+
+}

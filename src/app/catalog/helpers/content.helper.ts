@@ -1,4 +1,3 @@
-import {CatalogFolderModel} from '../models/folder.model';
 import {CatalogEntityModel} from '../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../models/catalog-entity.enum';
 import {NpStatusPillEnum} from '../../shared/components/np-status-pill/models/np-status-pill.enum';
@@ -7,7 +6,7 @@ import {EmployeeModel} from '../../models/employee.model';
 
 export class ContentHelper {
 
-  public static get catalogMainFolders(): CatalogFolderModel[] {
+  public static get catalogMainFolders(): CatalogEntityModel[] {
     return [
       {
         id: 'npu',
@@ -18,7 +17,8 @@ export class ContentHelper {
         </svg>`,
         name: 'НПУ',
         subFoldersCount: 2,
-        filesCount: 10
+        filesCount: 10,
+        root: true
       },
       {
         id: 'npc',
@@ -29,7 +29,8 @@ export class ContentHelper {
         </svg>`,
         name: 'НПЦ',
         subFoldersCount: 1,
-        filesCount: 7
+        filesCount: 7,
+        root: true
       },
       {
         id: 'np-global',
@@ -40,7 +41,8 @@ export class ContentHelper {
         </svg>`,
         name: 'NP Global',
         subFoldersCount: 4,
-        filesCount: 2
+        filesCount: 2,
+        root: true
       },
       {
         id: 'post-finance',
@@ -53,7 +55,8 @@ export class ContentHelper {
         </svg>`,
         name: 'Пост-Фінанс',
         subFoldersCount: 2,
-        filesCount: 8
+        filesCount: 8,
+        root: true
       }
     ];
   }
@@ -109,6 +112,22 @@ export class ContentHelper {
   public static get randomLastName(): string {
     const names = ['Смірнов', 'Філіппов', 'Мазур', 'Даскін', 'Умеренко', 'Калашніков', 'Бондаренко'];
     return names[Math.floor(Math.random() * names.length)];
+  }
+
+  public static getFolderById(id: string): CatalogEntityModel {
+    return {
+      id,
+      name: 'Папка, яка містить тільки файли',
+      type: CatalogEntityEnum.FOLDER,
+      root: !!ContentHelper.catalogMainFolders.find((item: CatalogEntityModel) => item.id === id)
+    };
+  }
+
+  public static getFileById(id: string): CatalogEntityModel {
+    return {
+      id,
+      name: 'Business process Nova Contact'
+    };
   }
 
 }

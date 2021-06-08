@@ -5,12 +5,17 @@ import {EmployeeModel} from '../../models/employee.model';
 export interface CatalogEntityModel {
   id: string;
   name: string;
+  icon?: string;
   type?: CatalogEntityEnum;
+  root?: boolean;
   hasSubFolders?: boolean;
   subFolders?: CatalogEntityModel[];
-  participants: EmployeeModel[];
-  owner: EmployeeModel;
-  lastUpdated: Date;
-  status: NpStatusPillEnum;
+  subFoldersCount?: number;
+  filesCount?: number;
+  participants?: EmployeeModel[];
+  owner?: EmployeeModel;
+  lastUpdated?: Date;
+  status?: NpStatusPillEnum;
   editingBy?: EmployeeModel;
+  link?: string;
 }
