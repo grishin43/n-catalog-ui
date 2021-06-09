@@ -4,6 +4,7 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
+import {EntitiesTabService} from '../../services/entities-tab.service';
 
 @Component({
   selector: 'np-file',
@@ -16,7 +17,8 @@ export class FileComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private entitiesTabService: EntitiesTabService
   ) {
   }
 
@@ -24,6 +26,7 @@ export class FileComponent implements OnInit, OnDestroy {
     this.subscription = this.activateRoute.params
       .subscribe((params: Params) => {
         this.file = ContentHelper.getFileById(params[CatalogRouteEnum._ID]);
+        this.entitiesTabService.addEntity(this.file);
       });
   }
 

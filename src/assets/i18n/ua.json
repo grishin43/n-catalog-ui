@@ -30,7 +30,19 @@
     "noResultsByQuery": "За запитом <b>{{query}}</b> нічого не знайдено",
     "draftSaved": "Чернетку збережено",
     "edit": "Редагувати",
-    "window": "Вікно"
+    "window": "Вікно",
+    "downloadFile": "Завантажити файл",
+    "saveVersion": "Зберегти версію",
+    "newFile": "Новий файл",
+    "grantAccess": "Надати доступ",
+    "move": "Перенести",
+    "undo": "Скасувати",
+    "redo": "Переробити",
+    "zoomIn": "Збільшити",
+    "zoomOut": "Зменшити",
+    "fullScreen": "Повноекранний",
+    "versionsHistory": "Історія версій",
+    "launch": "Запустити"
   },
   "statuses": {
     "undefined": "Невизначений",

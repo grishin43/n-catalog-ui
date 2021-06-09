@@ -2,7 +2,7 @@ form {
   width: 135px;
   transition: var(--np-base-transition);
 
-  &:focus-within {
+  &.stretched {
     width: 500px;
   }
 

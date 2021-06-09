@@ -6,6 +6,9 @@ import {FileTopToolbarComponent} from './file-top-toolbar/file-top-toolbar.compo
 import {TranslateModule} from '@ngx-translate/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {NpButtonModule} from '../../../shared/components/np-button/np-button.module';
 
 const routes: Routes = [
   {
@@ -28,7 +31,10 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TranslateModule,
     MatMenuModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    NpButtonModule
   ]
 })
 export class FileModule {

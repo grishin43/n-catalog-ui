@@ -1,6 +1,5 @@
 export interface ToolbarItemModel {
-  id: string;
-  i18name: string;
+  name: string;
   subItems?: ToolbarItemModel[];
   delimiterAfter?: boolean;
   cb?: () => void;

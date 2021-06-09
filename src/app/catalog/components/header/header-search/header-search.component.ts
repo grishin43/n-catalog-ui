@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
@@ -21,7 +21,19 @@ export class HeaderSearchComponent implements OnInit {
   public filteredOptions: Observable<CatalogEntityModel[]>;
   public catalogEntityType = CatalogEntityEnum;
 
+  public formStretched: boolean;
+
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+
+  @ViewChild('formRef') formRef;
+
+  @HostListener('document:click', ['$event.target'])
+  public onOutsideClick(targetElement): void {
+    const clickedInside = this.formRef.nativeElement.contains(targetElement);
+    if (!clickedInside) {
+      this.formStretched = false;
+    }
+  }
 
   constructor(
     private router: Router,
@@ -58,6 +70,7 @@ export class HeaderSearchComponent implements OnInit {
     event.stopPropagation();
     this.formControl.patchValue('');
     this.autocomplete.closePanel();
+    this.formStretched = false;
   }
 
   public onOptionClicked(entity: CatalogEntityModel): void {

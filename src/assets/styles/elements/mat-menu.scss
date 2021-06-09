@@ -4,6 +4,12 @@
     min-width: 175px;
     box-shadow: 0 3px 5px rgb(138 149 163 / 20%);
 
+    &.toolbar-menu {
+      &.file {
+        min-width: 280px;
+      }
+    }
+
     .mat-menu-content:not(:empty) {
       padding: 8px;
     }
@@ -16,8 +22,53 @@
       padding-left: 12px;
       padding-right: 12px;
 
-      mat-icon {
-        margin-right: 10px;
+      &:not(.has-submenu) {
+        mat-icon {
+          margin-right: 10px;
+        }
+      }
+
+      &.mat-menu-item-submenu-trigger {
+        &:after {
+          background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.29006 8.11953L13.1701 11.9995L9.29006 15.8795C8.90006 16.2695 8.90006 16.8995 9.29006 17.2895C9.68006 17.6795 10.3101 17.6795 10.7001 17.2895L15.2901 12.6995C15.6801 12.3095 15.6801 11.6795 15.2901 11.2895L10.7001 6.69953C10.3101 6.30953 9.68006 6.30953 9.29006 6.69953C8.91006 7.08953 8.90006 7.72953 9.29006 8.11953Z' fill='%238A95A3'/%3E%3C/svg%3E");
+          border: none;
+          width: 24px;
+          height: 24px;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          right: 0;
+        }
+      }
+    }
+
+    .mat-divider {
+      border-color: var(--np-catskill-white-2);
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+  }
+}
+
+.cdk-overlay-connected-position-bounding-box {
+  z-index: 1005;
+
+  & + .cdk-overlay-connected-position-bounding-box {
+    z-index: 1004;
+
+    .mat-menu-panel {
+      margin-left: 8px;
+    }
+
+    & + .cdk-overlay-connected-position-bounding-box {
+      z-index: 1003;
+
+      & + .cdk-overlay-connected-position-bounding-box {
+        z-index: 1002;
+
+        & + .cdk-overlay-connected-position-bounding-box {
+          z-index: 1001;
+        }
       }
     }
   }

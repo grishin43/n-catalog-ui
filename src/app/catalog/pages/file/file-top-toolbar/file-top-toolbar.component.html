@@ -7,18 +7,32 @@
       [ngClass]="{
         'menu-opened': menuTrigger.menuOpen
        }">
-      {{'common.' + tool.i18name | translate}}
+      {{'common.' + tool.name | translate}}
     </button>
-    <mat-menu #menu="matMenu">
-      <button
-        mat-menu-item
-        *ngFor="let item of tool?.subItems"
-        [ngClass]="{
-          'delimiter-after': item.delimiterAfter,
-          'has-submenu': item.subItems
-        }">
-        {{item.i18name}}
-      </button>
+    <mat-menu
+      [class]="tool.name"
+      class="toolbar-menu"
+      #menu="matMenu">
+      <ng-container *ngFor="let item of tool?.subItems">
+        <mat-divider *ngIf="item.delimiterAfter"></mat-divider>
+        <ng-container *ngIf="item.subItems?.length; else withoutSubItemsTemplate">
+          <button
+            mat-menu-item
+            [matMenuTriggerFor]="subMenu">
+            {{'common.' + item.name | translate}}
+          </button>
+          <mat-menu #subMenu="matMenu">
+            <button mat-menu-item *ngFor="let subItem of item.subItems">
+              {{subItem.name | uppercase}}
+            </button>
+          </mat-menu>
+        </ng-container>
+        <ng-template #withoutSubItemsTemplate>
+          <button mat-menu-item>
+            {{'common.' + item.name | translate}}
+          </button>
+        </ng-template>
+      </ng-container>
     </mat-menu>
   </li>
 </ul>

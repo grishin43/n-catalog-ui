@@ -29,13 +29,33 @@ header {
   }
 
   .tab {
-    background: var(--np-white-lilac);
     height: 72px;
     display: inline-flex;
     align-items: center;
-    width: 100%;
     justify-content: center;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
+
+    &.active {
+      background: var(--np-white-lilac);
+    }
+
+    .entity-name {
+      font-size: 14px;
+      color: var(--np-gunmetal);
+      font-weight: 500;
+      cursor: pointer;
+
+      & + button {
+        margin-left: 12px;
+      }
+    }
+
+    button {
+      min-width: auto;
+      padding: 0;
+      height: 24px;
+      line-height: 24px;
+    }
   }
 }

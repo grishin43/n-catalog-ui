@@ -1,6 +1,14 @@
 button {
-  font-size: 16px;
-  height: 48px;
+
+  &.md {
+    font-size: 16px;
+    height: 48px;
+  }
+
+  &.sm {
+    height: 40px;
+    font-size: 14px;
+  }
 
   &.min-width {
     min-width: 175px;
@@ -20,7 +28,14 @@ button {
   }
 
   &.mat-stroked-button {
-    border-width: 2px;
+    &.sm {
+      border-width: 1px;
+    }
+
+    &.md {
+      border-width: 2px;
+    }
+
     color: var(--np-gunmetal);
     border-color: var(--np-gunmetal);
 

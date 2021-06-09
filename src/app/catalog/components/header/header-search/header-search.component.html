@@ -1,7 +1,11 @@
-<form [ngClass]="{
-      'control-has-value': input.value
-    }"
-      (keydown.enter)="$event.preventDefault()">
+<form
+  #formRef
+  [ngClass]="{
+    'control-has-value': input.value,
+    'stretched': formStretched
+  }"
+  (click)="formStretched = true"
+  (keydown.enter)="$event.preventDefault()">
   <mat-form-field
     class="input-type-search"
     appearance="outline"
