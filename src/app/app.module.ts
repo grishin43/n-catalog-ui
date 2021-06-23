@@ -48,13 +48,13 @@ registerLocaleData(localeUk, 'uk');
       provide: HTTP_INTERCEPTORS,
       useClass: AuthorizationInterceptor,
       multi: true
-    }
-    /*{
+    },
+    {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
-    }*/
+    }
   ],
   bootstrap: [AppComponent]
 })

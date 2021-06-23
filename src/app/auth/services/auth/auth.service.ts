@@ -6,6 +6,7 @@ import {AuthToken} from '../../models/authToken.model';
 import {environment} from '../../../../environments/environment';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../catalog/models/catalog-route.enum';
+import {KeycloakService} from 'keycloak-angular';
 
 interface TokenRequest {
   grant_type: string;
@@ -23,19 +24,41 @@ export class AuthService {
   private redirectAfterLoginUri = environment.homeUri + '/user';
 
   private authToken: AuthToken;
+  private refreshTokenInterval;
 
   constructor(
     private httpClient: HttpClient,
-    private router: Router
+    private router: Router,
+    private keycloak: KeycloakService
   ) {
     this.getSavedToken();
+    this.startRefreshToken();
   }
-
   private getSavedToken(): void {
     const fetchToken = Cookie.get(this.authTokenKey);
     if (!!fetchToken) {
       this.authToken = JSON.parse(fetchToken) as AuthToken;
     }
+  }
+
+  private startRefreshToken() {
+    if (this.refreshTokenInterval) {
+      clearInterval(this.refreshTokenInterval);
+      this.refreshTokenInterval = 0;
+    }
+
+    this.refreshTokenInterval = setInterval(() => {
+      this.refreshKeyCloakToken();
+    }, environment.refreshTokenInterval || 60000);
+  }
+
+  private refreshKeyCloakToken() {
+    this.keycloak.updateToken(100)
+      .then(() => console.log('token was successfully refreshed'))
+      .catch(() => {
+        console.log('token refresh error, logout user');
+        this.keycloak.logout();
+      })
   }
 
   public login(): void {

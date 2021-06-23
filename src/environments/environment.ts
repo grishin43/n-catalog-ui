@@ -6,5 +6,6 @@ export const environment = {
   homeUri: window['env']['homeUri'] || 'http://localhost:4200',
   auth: window['env']['auth'] || AuthHelper.settings,
   apiV1: window['env']['apiV1'] || 'http://novacontactapi.nc.dev.digital.np.work/api/v1',
-  production:  window['env']['production'] || false
+  production:  window['env']['production'] || false,
+  refreshTokenInterval: 60000
 };
