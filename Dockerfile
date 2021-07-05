@@ -10,7 +10,7 @@ COPY . ./
 RUN ng build --prod
 
 FROM nginx
-COPY --from=compile-image /opt/ng/dist/nova-platform /usr/share/nginx/html 
+COPY --from=compile-image /opt/ng/dist/catalog-ui /usr/share/nginx/html
 COPY nginx/* /etc/nginx/conf.d/
 
 # When the container starts, replace the env.js with values from environment variables
