@@ -3,8 +3,12 @@
     <div class="col-md-5 col-12">
       <div class="row align-items-center">
         <div class="col-auto pr-0">
-          <h5 class="mb-0 file-name">
-            {{file.name}}
+          <h5
+            #fileName
+            class="mb-0 file-name"
+            contenteditable="true"
+            (keydown.enter)="$event.preventDefault(); fileName.blur()">
+            {{file?.name || ('common.newFile' | translate)}}
           </h5>
         </div>
         <div class="col-auto">
@@ -13,7 +17,9 @@
           </span>
         </div>
       </div>
-      <np-file-top-toolbar></np-file-top-toolbar>
+      <np-file-top-toolbar
+        [file]="file">
+      </np-file-top-toolbar>
     </div>
     <div class="col-md-7 col-12">
       <div class="row justify-content-end align-items-center md-gutters">
@@ -72,6 +78,6 @@
   </div>
 </div>
 
-<div class="bpmn-mock">
-  <img src="/assets/images/bpmn-mocked.png" alt="">
-</div>
+<np-bpmn-editor
+  [data]="file">
+</np-bpmn-editor>

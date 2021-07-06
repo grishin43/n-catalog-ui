@@ -1,4 +1,5 @@
 export enum FileTypeEnum {
   BPMN = 'bpmn',
-  JPEG = 'jpeg'
+  JPEG = 'jpeg',
+  SVG = 'svg'
 }

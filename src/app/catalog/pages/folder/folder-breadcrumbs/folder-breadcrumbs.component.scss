@@ -9,12 +9,12 @@ ul {
     display: inline-flex;
     align-items: center;
     line-height: 1.35;
+    font-size: 24px;
+    font-weight: 500;
 
     a {
-      font-size: 24px;
       display: inline-block;
       text-decoration: none !important;
-      font-weight: 500;
       color: var(--np-black);
       transition: var(--np-base-transition);
 
@@ -23,24 +23,31 @@ ul {
       }
     }
 
-    button {
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: 24px;
-      display: inline-flex;
-      align-items: center;
-      font-weight: 500;
+    span {
       color: var(--np-roman-silver);
-      cursor: pointer;
-      transition: var(--np-base-transition);
 
       &:before {
         content: '/';
       }
+    }
+
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      color: var(--np-roman-silver);
+      cursor: pointer;
+      transition: var(--np-base-transition);
 
       &:hover {
         color: var(--np-pale-sky);
+      }
+
+      mat-icon {
+        width: 32px;
+        height: 32px
       }
     }
   }

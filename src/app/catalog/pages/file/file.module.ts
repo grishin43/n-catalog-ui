@@ -8,7 +8,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
-import {NpButtonModule} from '../../../shared/components/np-button/np-button.module';
+import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
+import {BpmnEditorComponent} from './bpmn-editor/bpmn-editor.component';
+import {CreateFileModalModule} from '../../../shared/components/big/create-file-modal/create-file-modal.module';
+import {ToolbarActionBtnComponent} from './file-top-toolbar/toolbar-action-btn/toolbar-action-btn.component';
 
 const routes: Routes = [
   {
@@ -24,7 +27,9 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     FileComponent,
-    FileTopToolbarComponent
+    FileTopToolbarComponent,
+    BpmnEditorComponent,
+    ToolbarActionBtnComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +39,8 @@ const routes: Routes = [
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
-    NpButtonModule
+    NpButtonModule,
+    CreateFileModalModule
   ]
 })
 export class FileModule {

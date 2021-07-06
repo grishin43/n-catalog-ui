@@ -1,6 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ToolbarItemModel} from '../../../models/toolbar/toolbar-item.model';
-import {FileToolbarHelper} from '../../../helpers/file-toolbar.helper';
+import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
+import {CatalogEntityModel} from '../../../models/catalog-entity.model';
+import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enum';
+import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 
 @Component({
   selector: 'np-file-top-toolbar',
@@ -8,13 +11,18 @@ import {FileToolbarHelper} from '../../../helpers/file-toolbar.helper';
   styleUrls: ['./file-top-toolbar.component.scss']
 })
 export class FileTopToolbarComponent implements OnInit {
-  public tools: ToolbarItemModel[];
+  @Input() file: CatalogEntityModel;
 
-  constructor() {
+  public tools: ToolbarItemModel[];
+  public toolbarEditItem = ToolbarEditItemEnum;
+
+  constructor(
+    private bpmnToolbarService: BpmnToolbarService,
+    public bpmnModelerService: BpmnModelerService
+  ) {
   }
 
   ngOnInit(): void {
-    this.tools = FileToolbarHelper.topToolbar;
+    this.tools = this.bpmnToolbarService.toolbar;
   }
-
 }

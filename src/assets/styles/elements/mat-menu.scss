@@ -5,9 +5,8 @@
     box-shadow: 0 3px 5px rgb(138 149 163 / 20%);
 
     &.toolbar-menu {
-      &.file {
-        min-width: 280px;
-      }
+      min-width: 280px;
+      max-width: 100%;
     }
 
     .mat-menu-content:not(:empty) {
@@ -39,6 +38,11 @@
           background-position: center;
           right: 0;
         }
+      }
+
+      .mat-menu-item-postfix {
+        margin-left: auto;
+        padding-left: 15px;
       }
     }
 

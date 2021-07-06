@@ -3,6 +3,7 @@ $main-height: 72px;
 header {
   background: var(--np-primary-white);
   height: $main-height;
+  overflow: hidden;
 
   .container-fluid {
     .row {
@@ -25,6 +26,15 @@ header {
           }
         }
       }
+
+      .file-tabs-col {
+        max-width: calc(100% - 108px - 165px - 70px);
+        transition: var(--np-base-transition);
+
+        &.search-form-stretched {
+          max-width: calc(100% - 108px - 530px - 70px);
+        }
+      }
     }
   }
 
@@ -35,6 +45,7 @@ header {
     justify-content: center;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
+    cursor: pointer;
 
     &.active {
       background: var(--np-white-lilac);
@@ -44,7 +55,10 @@ header {
       font-size: 14px;
       color: var(--np-gunmetal);
       font-weight: 500;
-      cursor: pointer;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: inline-block;
 
       & + button {
         margin-left: 12px;

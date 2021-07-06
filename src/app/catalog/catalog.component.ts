@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {EntitiesTabService} from './services/entities-tab/entities-tab.service';
 
 @Component({
   selector: 'np-catalog',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CatalogComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private entitiesTabService: EntitiesTabService
+  ) {
+  }
 
   ngOnInit(): void {
+    this.entitiesTabService.init();
   }
 
 }

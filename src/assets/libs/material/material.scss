@@ -132,5 +132,5 @@ $nova-contact-app-theme: mat-light-theme((
   )
 ));
 
-// Include libs styles for core and each component used in your app.
+// Include libs styles for core and each bpmn-editor used in your app.
 @include angular-material-theme($nova-contact-app-theme);

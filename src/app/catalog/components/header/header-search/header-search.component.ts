@@ -1,30 +1,34 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, EventEmitter, OnInit, Output, ViewChild, OnDestroy} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
-import {ContentHelper} from '../../../helpers/content.helper';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {ActivatedRoute, Params, Router, RoutesRecognized} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
+import {SearchService} from '../../../services/search/search.service';
+import loader from '@angular-devkit/build-angular/src/webpack/plugins/single-test-transform';
 
 @Component({
   selector: 'np-header-search',
   templateUrl: './header-search.component.html',
   styleUrls: ['./header-search.component.scss']
 })
-export class HeaderSearchComponent implements OnInit {
+export class HeaderSearchComponent implements OnInit, OnDestroy {
   public formControl = new FormControl();
-  public entities: CatalogEntityModel[] = ContentHelper.getCatalogEntities(5, false);
+  public entities: CatalogEntityModel[];
   public filteredOptions: Observable<CatalogEntityModel[]>;
   public catalogEntityType = CatalogEntityEnum;
-
   public formStretched: boolean;
+  public loader: boolean;
+
+  private subscription = new Subscription();
+
+  @Output() formHasStretched = new EventEmitter<boolean>();
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-
   @ViewChild('formRef') formRef;
 
   @HostListener('document:click', ['$event.target'])
@@ -32,18 +36,27 @@ export class HeaderSearchComponent implements OnInit {
     const clickedInside = this.formRef.nativeElement.contains(targetElement);
     if (!clickedInside) {
       this.formStretched = false;
+      if (!this.formControl.value?.length) {
+        this.formHasStretched.emit(false);
+      }
     }
   }
 
   constructor(
     private router: Router,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private searchService: SearchService
   ) {
   }
 
   ngOnInit(): void {
+    this.entities = this.searchService.getSavedEntities();
     this.formControlHandler();
     this.patchControlBySearchQuery();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private formControlHandler(): void {
@@ -56,11 +69,17 @@ export class HeaderSearchComponent implements OnInit {
   }
 
   private patchControlBySearchQuery(): void {
-    this.formControl.patchValue(this.activateRoute.snapshot.params[CatalogRouteEnum._QUERY]);
+    if (location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
+      const query = location.pathname.split('/').pop();
+      if (query?.trim().length) {
+        this.formControl.patchValue(query);
+        this.submit();
+      }
+    }
   }
 
   private filterEntities(value: string): CatalogEntityModel[] {
-    return this.entities.filter((option: CatalogEntityModel) => {
+    return this.entities?.filter((option: CatalogEntityModel) => {
       return option.name.toLowerCase().indexOf(value?.toLowerCase()) === 0;
     });
   }
@@ -71,6 +90,7 @@ export class HeaderSearchComponent implements OnInit {
     this.formControl.patchValue('');
     this.autocomplete.closePanel();
     this.formStretched = false;
+    this.formHasStretched.emit(false);
   }
 
   public onOptionClicked(entity: CatalogEntityModel): void {
@@ -81,8 +101,22 @@ export class HeaderSearchComponent implements OnInit {
     }
   }
 
-  public onSubmit(): void {
-    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${this.formControl.value}`]);
+  public submit(): void {
+    if (this.formControl.value?.trim().length) {
+      this.toggleFormState(true);
+      this.searchService.searchEntities(this.formControl.value)
+        .subscribe(
+          () => {
+            this.toggleFormState(false);
+            this.entities = this.searchService.getSavedEntities();
+          },
+          () => this.toggleFormState(false));
+    }
+  }
+
+  private toggleFormState(flag: boolean): void {
+    this.loader = flag;
+    flag ? this.formControl.disable() : this.formControl.enable();
   }
 
 }

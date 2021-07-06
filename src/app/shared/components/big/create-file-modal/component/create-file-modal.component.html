@@ -1,0 +1,51 @@
+<div mat-dialog-title>
+  <h4>{{'common.newFile' | translate}}</h4>
+  <p>{{'common.chooseFileTypeAndReplacement' | translate}}</p>
+</div>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="form">
+    <div class="form-group">
+      <mat-label>
+        {{'common.fileName' | translate}}
+      </mat-label>
+      <mat-form-field
+        class="input-type-text"
+        appearance="outline"
+        floatLabel="never"
+        [ngClass]="{
+      'has-value': input.value
+    }">
+        <input
+          type="text"
+          matInput
+          #input
+          [formControlName]="formControlName.FILE_NAME"
+          [attr.name]="formControlName.FILE_NAME"
+          [placeholder]="'common.name' | translate">
+        <mat-spinner
+          *ngIf="loader"
+          matSuffix
+          [diameter]="20">
+        </mat-spinner>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [btnType]="'reset'"
+    [type]="'secondary'"
+    [enableMinWidth]="true"
+    (click)="closeModal()">
+    {{'common.cancel' | translate}}
+  </np-button>
+  <np-button
+    [btnType]="'submit'"
+    [type]="'primary'"
+    [enableMinWidth]="true"
+    (click)="closeModal()">
+    <span>
+      {{'common.create' | translate}}
+    </span>
+  </np-button>
+</mat-dialog-actions>

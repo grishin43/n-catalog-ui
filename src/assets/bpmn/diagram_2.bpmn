@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1b1muf7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.8.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="Process_1aajx2m" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1sjton0">
+        <bpmn:targetRef>DataStoreReference_1yripjr</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_180tvpj">
+        <bpmn:targetRef>DataObjectReference_1p3q5mk</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:startEvent>
+    <bpmn:dataStoreReference id="DataStoreReference_1yripjr" />
+    <bpmn:dataObjectReference id="DataObjectReference_1p3q5mk" dataObjectRef="DataObject_05tblrw" />
+    <bpmn:dataObject id="DataObject_05tblrw" />
+    <bpmn:subProcess id="Activity_1eeldm3">
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0oxpz2b">
+        <bpmn:targetRef>DataStoreReference_1yripjr</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:startEvent id="Event_1ionzgf" />
+      <bpmn:textAnnotation id="TextAnnotation_12jho82">
+        <bpmn:text>321</bpmn:text>
+      </bpmn:textAnnotation>
+      <bpmn:association id="Association_0ejkekm" sourceRef="Event_1ionzgf" targetRef="TextAnnotation_12jho82" />
+    </bpmn:subProcess>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1aajx2m">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="279" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_1yripjr_di" bpmnElement="DataStoreReference_1yripjr">
+        <dc:Bounds x="285" y="195" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1p3q5mk_di" bpmnElement="DataObjectReference_1p3q5mk">
+        <dc:Bounds x="832" y="435" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eeldm3_di" bpmnElement="Activity_1eeldm3" isExpanded="true">
+        <dc:Bounds x="470" y="80" width="350" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_12jho82_di" bpmnElement="TextAnnotation_12jho82">
+        <dc:Bounds x="550" y="140" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ionzgf_di" bpmnElement="Event_1ionzgf">
+        <dc:Bounds x="510" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0ejkekm_di" bpmnElement="Association_0ejkekm">
+        <di:waypoint x="540" y="226" />
+        <di:waypoint x="587" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1sjton0_di" bpmnElement="DataOutputAssociation_1sjton0">
+        <di:waypoint x="212" y="287" />
+        <di:waypoint x="285" y="237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_180tvpj_di" bpmnElement="DataOutputAssociation_180tvpj">
+        <di:waypoint x="214" y="301" />
+        <di:waypoint x="832" y="456" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0oxpz2b_di" bpmnElement="DataOutputAssociation_0oxpz2b">
+        <di:waypoint x="470" y="218" />
+        <di:waypoint x="335" y="224" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

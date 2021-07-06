@@ -4,7 +4,7 @@
     'control-has-value': input.value,
     'stretched': formStretched
   }"
-  (click)="formStretched = true"
+  (click)="formStretched = true; formHasStretched.emit(true)"
   (keydown.enter)="$event.preventDefault()">
   <mat-form-field
     class="input-type-search"
@@ -26,9 +26,15 @@
            [matAutocomplete]="auto"
            [attr.type]="'search'"
            [placeholder]="'common.search' | translate"
-           (keyup.enter)="onSubmit()">
+           (keyup.enter)="submit()"
+           (input)="formHasStretched.emit(!!input.value)">
+    <mat-spinner
+      *ngIf="loader"
+      matSuffix
+      [diameter]="20">
+    </mat-spinner>
     <mat-icon style="cursor: pointer"
-              *ngIf="input?.value?.length"
+              *ngIf="input?.value?.length && !loader"
               (click)="onCrossClicked($event)"
               matSuffix>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

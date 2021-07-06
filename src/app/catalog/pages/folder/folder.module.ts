@@ -7,7 +7,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
-import {NpTableModule} from '../../../shared/components/np-table/np-table.module';
+import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
+import {MatRippleModule} from '@angular/material/core';
+import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
 
 const routes: Routes = [
   {
@@ -25,15 +27,17 @@ const routes: Routes = [
     FolderComponent,
     FolderBreadcrumbsComponent
   ],
-  imports: [
-    RouterModule.forChild(routes),
-    CommonModule,
-    TranslateModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatIconModule,
-    NpTableModule
-  ]
+    imports: [
+        RouterModule.forChild(routes),
+        CommonModule,
+        TranslateModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatIconModule,
+        EntityTableModule,
+        MatRippleModule,
+        NpButtonModule
+    ]
 })
 export class FolderModule {
 }

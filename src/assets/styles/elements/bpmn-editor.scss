@@ -1,0 +1,25 @@
+np-bpmn-editor {
+  .transparency-selections .djs-element.djs-shape.selected {
+    opacity: 0.4;
+  }
+}
+
+.bpp-properties-panel {
+  &.closed {
+    display: none !important;
+  }
+}
+
+ul.bpp-properties-tabs-links {
+  > li {
+    &:not(.bpp-active) {
+      > a {
+        cursor: pointer;
+
+        &:hover {
+          background: #ececec;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.cdk-global-overlay-wrapper {
+  mat-dialog-container {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+    color: inherit;
+    border-radius: 10px;
+    padding: 32px;
+
+    .mat-dialog-title {
+      margin: 0 0 20px;
+
+      h4 {
+        font-size: 20px;
+        line-height: 30px;
+        color: var(--np-gunmetal);
+        margin-bottom: 8px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+      }
+    }
+
+    .mat-dialog-content {
+
+    }
+
+    .mat-dialog-actions {
+      padding: 0;
+      min-height: auto;
+      margin: 0;
+      justify-content: flex-end;
+
+      np-button + np-button {
+        margin-left: 16px;
+      }
+    }
+  }
+}

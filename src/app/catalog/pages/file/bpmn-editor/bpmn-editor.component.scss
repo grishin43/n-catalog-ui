@@ -1,0 +1,42 @@
+.bpmn-editor-wrapper {
+  height: calc(100vh - 172px);
+  min-height: 500px;
+  border-top: 1px solid var(--np-silver-sand);
+  display: flex;
+
+  #bpmn-canvas {
+    height: 100%;
+    flex: 1;
+  }
+
+  #bpmn-properties {
+    height: 100%;
+    border-left: 1px solid var(--np-silver-sand);
+    flex: 0 0 auto;
+    position: relative;
+
+    .bpmn-properties-toggle-btn {
+      position: absolute;
+      left: -31px;
+      top: 50%;
+      background: #f8f8f8;
+      padding: 0 10px;
+      transform: rotate(-90deg);
+      white-space: nowrap;
+      font-size: 13px;
+      border: solid 1px #cccccc;
+      border-bottom: none;
+      border-radius: 2px 2px 0 0;
+      transform-origin: top left;
+      z-index: 10;
+      cursor: pointer;
+      user-select: none;
+      line-height: 30px;
+      height: 30px;
+
+      &:hover {
+        background: #ececec;
+      }
+    }
+  }
+}

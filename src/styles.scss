@@ -69,3 +69,31 @@ mat-icon {
     }
   }
 }
+
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+
+  > mat-icon {
+    margin-bottom: 48px;
+  }
+
+  h4 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: var(--np-gunmetal);
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--np-roman-silver);
+
+    b {
+      font-weight: 500;
+    }
+  }
+}

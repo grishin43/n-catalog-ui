@@ -5,6 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
 import {SafeHtmlModule} from '../../../shared/pipes/safe-html/safe-html.module';
+import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
 
 const routes: Routes = [
   {
@@ -21,13 +22,14 @@ const routes: Routes = [
   declarations: [
     SearchResultsComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    TranslateModule,
-    MatIconModule,
-    SafeHtmlModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+        MatIconModule,
+        SafeHtmlModule,
+        EntityTableModule
+    ]
 })
 export class SearchResultsModule {
 }

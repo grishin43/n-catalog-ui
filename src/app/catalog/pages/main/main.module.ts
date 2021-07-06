@@ -5,13 +5,13 @@ import {CreateEntityComponent} from './create-entity/create-entity.component';
 import {FolderComponent} from './folder/folder.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatRippleModule} from '@angular/material/core';
-import {NpButtonModule} from '../../../shared/components/np-button/np-button.module';
+import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {SafeHtmlModule} from '../../../shared/pipes/safe-html/safe-html.module';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule, Routes} from '@angular/router';
-import {NpTableModule} from '../../../shared/components/np-table/np-table.module';
+import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
 
 const routes: Routes = [
   {
@@ -40,7 +40,7 @@ const routes: Routes = [
     MatIconModule,
     SafeHtmlModule,
     MatButtonModule,
-    NpTableModule
+    EntityTableModule
   ]
 })
 export class MainModule {
