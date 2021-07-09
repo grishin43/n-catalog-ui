@@ -75,33 +75,43 @@ export class ContentHelper {
       },
       {
         id: '3640a200-269a-4a08-bbea-0b12f7cf5ffc',
-        name: 'diagram_1',
+        name: 'Основные элементы',
         participants,
         type: CatalogEntityEnum.FILE,
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/diagram_1.bpmn'
+        link: '../../../assets/bpmn/main-elements.bpmn'
       },
       {
         id: 'e2c2c26a-e573-417b-802b-86135afbc5da',
-        name: 'diagram_2',
+        name: 'Переадрессация посылки v17',
         participants,
         type: CatalogEntityEnum.FILE,
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/diagram_2.bpmn'
+        link: '../../../assets/bpmn/forwarding-parcels-v17.bpmn'
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd639',
-        name: 'diagram_3',
+        name: 'Создание ЕН_v11',
         participants,
         type: CatalogEntityEnum.FILE,
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/diagram_3.bpmn'
+        link: '../../../assets/bpmn/creation-of-EN_v11.bpmn'
+      },
+      {
+        id: 'e74e4dd2-cb68-496f-9991-c344d16dd777',
+        name: 'Токены',
+        participants,
+        type: CatalogEntityEnum.FILE,
+        owner: participants[0],
+        lastUpdated: new Date(),
+        status: NpStatusPillEnum.DRAFT,
+        link: '../../../assets/bpmn/tokens.bpmn'
       }
     ];
   }

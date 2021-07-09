@@ -329,10 +329,6 @@ export class BpmnToolbarService {
             cb: () => this.bpmnModeler.resetPropertiesPanel()
           },
           {
-            name: ToolbarWindowItemEnum.TOGGLE_DEVTOOLS,
-            hotkey: 'F12'
-          },
-          {
             name: ToolbarWindowItemEnum.FULLSCREEN,
             hotkey: 'F11',
             cb: () => this.bpmnModeler.toggleFullScreenMode()
