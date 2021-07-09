@@ -353,7 +353,7 @@ export class BpmnModelerService {
       const {svg} = await this.bpmnModeler.saveSVG();
       const imgWidth = +svg.match(/width="(.*?)"/)[1] || 0;
       const imgHeight = +svg.match(/height="(.*?)"/)[1] || 0;
-      const imgSrc = `data:image/svg+xml;base64,${Base64.btoa(svg)}`;
+      const imgSrc = `data:image/svg+xml;base64,${Base64.encode(svg)}`;
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       canvas.setAttribute('width', imgWidth.toString());
