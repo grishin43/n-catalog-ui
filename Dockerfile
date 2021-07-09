@@ -7,7 +7,7 @@ RUN npm install
 ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . ./
-RUN ng build --prod
+RUN ng build --output-hashing=all --prod
 
 FROM nginx
 COPY --from=compile-image /opt/ng/dist/catalog-ui /usr/share/nginx/html
