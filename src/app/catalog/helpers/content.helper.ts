@@ -17,7 +17,7 @@ export class ContentHelper {
         </svg>`,
         name: 'НПУ',
         subFoldersCount: 1,
-        filesCount: 3,
+        filesCount: 4,
         root: true,
         entities: ContentHelper.testEntities
       },
