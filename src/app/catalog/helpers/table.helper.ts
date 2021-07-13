@@ -1,10 +1,5 @@
 import {TableColumnsModel} from '../../shared/components/big/entities-table/models/table.model';
 import {TableDataTypeEnum} from '../../shared/components/big/entities-table/models/table-data-type.enum';
-import {TableActionModel} from '../../shared/components/big/entities-table/models/table-action.model';
-import {CatalogEntityActionEnum} from '../../shared/components/big/entities-table/models/catalog-entity-action.enum';
-import {Router} from '@angular/router';
-import {AppRouteEnum} from '../../models/app-route.enum';
-import {CatalogRouteEnum} from '../models/catalog-route.enum';
 
 enum EntityTableColumnName {
   NAME = 'name',

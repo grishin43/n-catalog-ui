@@ -28,8 +28,13 @@
     "@ngxs/devtools-plugin": "^3.7.2",
     "@ngxs/store": "^3.7.2",
     "bpmn-js": "^8.3.1",
+    "bpmn-js-bpmnlint": "^0.18.0",
+    "bpmnlint-plugin-playground": "file:./plugin",
     "bpmn-js-properties-panel": "^0.43.1",
     "bpmn-js-token-simulation": "^0.21.1",
+    "bpmnlint": "^7.2.1",
+    "bpmnlint-loader": "^0.1.5",
+    "bpmnlint-pack-config": "^0.6.1",
     "camunda-bpmn-moddle": "^5.1.2",
     "js-base64": "^3.6.1",
     "keycloak-angular": "^8.2.0",
@@ -41,6 +46,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^10.0.1",
     "@angular-devkit/build-angular": "~0.1100.2",
     "@angular/cli": "~11.0.2",
     "@angular/compiler-cli": "~11.0.1",

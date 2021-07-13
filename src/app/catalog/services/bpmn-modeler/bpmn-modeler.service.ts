@@ -6,6 +6,9 @@ import propertiesPanelModule from 'bpmn-js-properties-panel';
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
 import {BpmnSpeedEnum} from '../../models/bpmn/bpmn-speed.enum';
 import TokenSimulationModule from 'bpmn-js-token-simulation';
+import lintModule from 'bpmn-js-bpmnlint';
+// @ts-ignore
+import bpmnlintConfig from '.bpmnlintrc';
 
 @Injectable({
   providedIn: 'root'
@@ -61,10 +64,14 @@ export class BpmnModelerService {
         keyboard: {
           bindTo: window
         },
+        linting: {
+          bpmnlint: bpmnlintConfig
+        },
         additionalModules: [
           propertiesPanelModule,
           propertiesProviderModule,
-          TokenSimulationModule
+          TokenSimulationModule,
+          lintModule
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector

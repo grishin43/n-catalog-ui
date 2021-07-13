@@ -15,8 +15,12 @@
       "prefix": "np",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./custom-webpack.config.js",
+              "replaceDuplicatePlugins": true
+            },
             "outputPath": "dist/catalog-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -34,6 +38,7 @@
               "node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
               "node_modules/bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css",
               "node_modules/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css",
+              "node_modules/bpmn-js-bpmnlint/dist/assets/css/bpmn-js-bpmnlint.css",
               "src/styles.scss"
             ],
             "scripts": [
@@ -71,7 +76,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "catalog-ui:build"
           },
@@ -105,6 +110,7 @@
               "node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
               "node_modules/bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css",
               "node_modules/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css",
+              "node_modules/bpmn-js-bpmnlint/dist/assets/css/bpmn-js-bpmnlint.css",
               "src/styles.scss"
             ],
             "scripts": [
