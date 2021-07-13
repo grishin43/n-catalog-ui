@@ -17,7 +17,7 @@ export class ContentHelper {
         </svg>`,
         name: 'НПУ',
         subFoldersCount: 1,
-        filesCount: 4,
+        filesCount: 5,
         root: true,
         entities: ContentHelper.testEntities
       },
@@ -112,6 +112,16 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/tokens.bpmn'
+      },
+      {
+        id: 'e74e4dd2-cb68-496f-9991-c344d16dd228',
+        name: 'token-example',
+        participants,
+        type: CatalogEntityEnum.FILE,
+        owner: participants[0],
+        lastUpdated: new Date(),
+        status: NpStatusPillEnum.DRAFT,
+        link: '../../../assets/bpmn/token-example.bpmn'
       }
     ];
   }

@@ -5,6 +5,7 @@ import {BpmnDirectionEnum} from '../../models/bpmn/bpmn-direction.enum';
 import propertiesPanelModule from 'bpmn-js-properties-panel';
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
 import {BpmnSpeedEnum} from '../../models/bpmn/bpmn-speed.enum';
+import TokenSimulationModule from 'bpmn-js-token-simulation';
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +63,8 @@ export class BpmnModelerService {
         },
         additionalModules: [
           propertiesPanelModule,
-          propertiesProviderModule
+          propertiesProviderModule,
+          TokenSimulationModule
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
@@ -391,8 +393,6 @@ export class BpmnModelerService {
   public async openDiagram(filePath: string): Promise<void> {
     try {
       await this.bpmnModeler.importXML(filePath);
-      const canvas = this.bpmnModeler.get('canvas');
-      canvas.zoom('fit-viewport');
     } catch (err) {
       console.error('Could not import BPMN 2.0 diagram\n', err);
     }

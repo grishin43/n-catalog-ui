@@ -82,7 +82,9 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.apiService.getXML(this.file.link)
         .subscribe((res) => {
-            this.bpmnModelerService.openDiagram(res);
+            this.bpmnModelerService.openDiagram(res).then(() => {
+              this.bpmnModelerService.zoomTo(true);
+            });
           }
         )
     );
