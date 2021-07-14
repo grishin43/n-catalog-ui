@@ -84,6 +84,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
             this.bpmnModelerService.openDiagram(res).then(() => {
               this.bpmnModelerService.zoomTo(true);
+              this.bpmnModelerService.showTransactionBoundaries();
             });
           }
         )

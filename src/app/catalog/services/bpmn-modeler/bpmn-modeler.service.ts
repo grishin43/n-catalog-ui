@@ -9,6 +9,7 @@ import TokenSimulationModule from 'bpmn-js-token-simulation';
 import lintModule from 'bpmn-js-bpmnlint';
 // @ts-ignore
 import bpmnlintConfig from '.bpmnlintrc';
+import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +72,8 @@ export class BpmnModelerService {
           propertiesPanelModule,
           propertiesProviderModule,
           TokenSimulationModule,
-          lintModule
+          lintModule,
+          transactionBoundariesModule
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
@@ -84,7 +86,7 @@ export class BpmnModelerService {
 
   private listenPasteElements(): void {
     try {
-      this.bpmnModeler.get('eventBus').on('copyPaste.pasteElement', 999999, (event) => {
+      this.bpmnModeler.get('eventBus').on('copyPaste.pasteElement', 999999, () => {
         this.cancelCutElements();
       });
     } catch (e) {
@@ -325,6 +327,14 @@ export class BpmnModelerService {
       }
     } catch (e) {
       console.error('Could not zoom to\n', e);
+    }
+  }
+
+  public showTransactionBoundaries(): void {
+    try {
+      this.bpmnModeler.get('transactionBoundaries').show();
+    } catch (e) {
+      console.error('Could not show transaction boundaries\n', e);
     }
   }
 
