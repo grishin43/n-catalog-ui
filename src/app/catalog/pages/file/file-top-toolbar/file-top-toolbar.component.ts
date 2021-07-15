@@ -5,6 +5,8 @@ import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enum';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.model';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {WysiwygEditorComponent} from '../wysiwyg-editor/wysiwyg-editor.component';
 
 @Component({
   selector: 'np-file-top-toolbar',
@@ -19,18 +21,19 @@ export class FileTopToolbarComponent implements OnInit {
   public paletteColors: BpmnPaletteSchemeModel[];
 
   constructor(
-    private bpmnToolbarService: BpmnToolbarService,
-    public bpmnModelerService: BpmnModelerService
+    private bpmnToolbar: BpmnToolbarService,
+    public bpmnModeler: BpmnModelerService,
+    private bottomSheet: MatBottomSheet
   ) {
   }
 
   ngOnInit(): void {
-    this.tools = this.bpmnToolbarService.toolbar;
-    this.paletteColors = this.bpmnToolbarService.paletteColors;
+    this.tools = this.bpmnToolbar.toolbar;
+    this.paletteColors = this.bpmnToolbar.paletteColors;
   }
 
-  public paintElements(paletteScheme: BpmnPaletteSchemeModel): void {
-    this.bpmnModelerService.paintElements(paletteScheme);
+  public openWysiwygEditor(): void {
+    this.bottomSheet.open(WysiwygEditorComponent);
   }
 
 }

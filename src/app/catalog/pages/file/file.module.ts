@@ -13,6 +13,11 @@ import {BpmnEditorComponent} from './bpmn-editor/bpmn-editor.component';
 import {CreateFileModalModule} from '../../../shared/components/big/create-file-modal/create-file-modal.module';
 import {ToolbarActionBtnComponent} from './file-top-toolbar/toolbar-action-btn/toolbar-action-btn.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {WysiwygEditorComponent} from './wysiwyg-editor/wysiwyg-editor.component';
+import {AngularEditorModule} from '@kolkov/angular-editor';
+import {FormsModule} from '@angular/forms';
+import {MatListModule} from '@angular/material/list';
+import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetModule, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
 const routes: Routes = [
   {
@@ -30,20 +35,24 @@ const routes: Routes = [
     FileComponent,
     FileTopToolbarComponent,
     BpmnEditorComponent,
-    ToolbarActionBtnComponent
+    ToolbarActionBtnComponent,
+    WysiwygEditorComponent
   ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        TranslateModule,
-        MatMenuModule,
-        MatButtonModule,
-        MatDividerModule,
-        MatIconModule,
-        NpButtonModule,
-        CreateFileModalModule,
-        MatTooltipModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    TranslateModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    NpButtonModule,
+    CreateFileModalModule,
+    MatTooltipModule,
+    AngularEditorModule,
+    FormsModule,
+    MatBottomSheetModule
+  ]
 })
 export class FileModule {
 }
