@@ -10,6 +10,7 @@ import lintModule from 'bpmn-js-bpmnlint';
 // @ts-ignore
 import bpmnlintConfig from '.bpmnlintrc';
 import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
+import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
 
 @Injectable({
   providedIn: 'root'
@@ -91,6 +92,18 @@ export class BpmnModelerService {
       });
     } catch (e) {
       console.log('Could not set `paste` listener\n', e);
+    }
+  }
+
+  public paintElements(paletteColor: BpmnPaletteSchemeModel): void {
+    try {
+      const modeling = this.bpmnModeler.get('modeling');
+      const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
+      if (selectedElements) {
+        modeling.setColor(selectedElements, paletteColor);
+      }
+    } catch (e) {
+      console.log('Could not set elements color\n', e);
     }
   }
 

@@ -7,6 +7,11 @@
     &.toolbar-menu {
       min-width: 280px;
       max-width: 100%;
+
+      &.colors-palette-menu {
+        min-width: auto;
+        min-height: auto;
+      }
     }
 
     .mat-menu-content:not(:empty) {

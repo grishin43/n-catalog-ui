@@ -4,6 +4,7 @@ import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.se
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enum';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
+import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.model';
 
 @Component({
   selector: 'np-file-top-toolbar',
@@ -15,6 +16,7 @@ export class FileTopToolbarComponent implements OnInit {
 
   public tools: ToolbarItemModel[];
   public toolbarEditItem = ToolbarEditItemEnum;
+  public paletteColors: BpmnPaletteSchemeModel[];
 
   constructor(
     private bpmnToolbarService: BpmnToolbarService,
@@ -24,5 +26,11 @@ export class FileTopToolbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.tools = this.bpmnToolbarService.toolbar;
+    this.paletteColors = this.bpmnToolbarService.paletteColors;
   }
+
+  public paintElements(paletteScheme: BpmnPaletteSchemeModel): void {
+    this.bpmnModelerService.paintElements(paletteScheme);
+  }
+
 }

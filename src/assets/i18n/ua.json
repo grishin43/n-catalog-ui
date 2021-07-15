@@ -86,12 +86,21 @@
     "zoomToFitDiagram": "Масштабувати відповідно до діаграми",
     "togglePropertiesPanel": "Переключити панель властивостей",
     "resetPropertiesPanel": "Скинути панель властивостей",
-    "toggleDevtools": "Переключити панель розробника"
+    "toggleDevtools": "Переключити панель розробника",
+    "color": "Колір"
   },
   "statuses": {
     "undefined": "Невизначений",
     "draft": "Чернетка",
     "edited": "Редагується",
     "launched": "Запущений"
+  },
+  "colors": {
+    "default": "Стандартний",
+    "gray": "Сірий",
+    "blue": "Синій",
+    "pink": "Рожевий",
+    "yellow": "Жовтий",
+    "green": "Зелений"
   }
 }

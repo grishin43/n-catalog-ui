@@ -12,6 +12,7 @@ import {NpButtonModule} from '../../../shared/components/small/np-button/np-butt
 import {BpmnEditorComponent} from './bpmn-editor/bpmn-editor.component';
 import {CreateFileModalModule} from '../../../shared/components/big/create-file-modal/create-file-modal.module';
 import {ToolbarActionBtnComponent} from './file-top-toolbar/toolbar-action-btn/toolbar-action-btn.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 const routes: Routes = [
   {
@@ -31,17 +32,18 @@ const routes: Routes = [
     BpmnEditorComponent,
     ToolbarActionBtnComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    TranslateModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatIconModule,
-    NpButtonModule,
-    CreateFileModalModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatIconModule,
+        NpButtonModule,
+        CreateFileModalModule,
+        MatTooltipModule
+    ]
 })
 export class FileModule {
 }

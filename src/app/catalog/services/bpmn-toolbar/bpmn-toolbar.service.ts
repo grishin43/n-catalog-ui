@@ -18,6 +18,7 @@ import {BpmnDirectionEnum} from '../../models/bpmn/bpmn-direction.enum';
 import {BpmnSpeedEnum} from '../../models/bpmn/bpmn-speed.enum';
 import {BpmnPositionEnum} from '../../models/bpmn/bpmn-position.enum';
 import {ToolbarBlockerModel} from '../../models/toolbar/toolbar-blocker.model';
+import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
 
 @Injectable({
   providedIn: 'root'
@@ -367,6 +368,41 @@ export class BpmnToolbarService {
       {
         name: ToolbarEditItemEnum.EDIT_LABEL,
         allow: this.bpmnModeler.hasSelectedElements
+      }
+    ];
+  }
+
+  public get paletteColors(): BpmnPaletteSchemeModel[] {
+    return [
+      {
+        fill: '#ffffff',
+        stroke: '#000000',
+        title: 'colors.default'
+      },
+      {
+        fill: '#DCDCDE',
+        stroke: '#A8AAAD',
+        title: 'colors.gray'
+      },
+      {
+        fill: '#9DC2E6',
+        stroke: '#5093D4',
+        title: 'colors.blue'
+      },
+      {
+        fill: '#FFABB0',
+        stroke: '#F86467',
+        title: 'colors.pink'
+      },
+      {
+        fill: '#F1D675',
+        stroke: '#DCA618',
+        title: 'colors.yellow'
+      },
+      {
+        fill: '#68DE7C',
+        stroke: '#00BA37',
+        title: 'colors.green'
       }
     ];
   }

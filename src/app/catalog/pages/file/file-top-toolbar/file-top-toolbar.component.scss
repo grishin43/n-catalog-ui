@@ -8,12 +8,52 @@ ul {
 
     button {
       font-weight: normal;
-      color: var(--np-gunmetal);
       font-size: 14px;
       padding: 0 8px;
 
+      &:not(:disabled) {
+        color: var(--np-gunmetal);
+      }
+
       &.menu-opened {
         background: var(--np-catskill-white-2);
+      }
+
+      &.icon-btn {
+        min-width: auto;
+
+        mat-icon {
+          svg {
+            width: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+ol {
+
+  &.colors-palette {
+    margin-bottom: 0;
+    max-width: 100px;
+
+    li {
+      button {
+        &.mat-menu-item {
+          padding: 6px;
+          height: auto;
+          width: auto;
+          margin: 0 auto;
+        }
+
+        .color-scheme-sample {
+          width: 20px;
+          height: 20px;
+          display: block;
+          border: 2px solid;
+          border-radius: 2px;
+        }
       }
     }
   }
