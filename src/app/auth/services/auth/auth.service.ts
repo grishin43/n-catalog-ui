@@ -34,6 +34,7 @@ export class AuthService {
     this.getSavedToken();
     this.startRefreshToken();
   }
+
   private getSavedToken(): void {
     const fetchToken = Cookie.get(this.authTokenKey);
     if (!!fetchToken) {
@@ -41,7 +42,7 @@ export class AuthService {
     }
   }
 
-  private startRefreshToken() {
+  private startRefreshToken(): void {
     if (this.refreshTokenInterval) {
       clearInterval(this.refreshTokenInterval);
       this.refreshTokenInterval = 0;
@@ -52,13 +53,13 @@ export class AuthService {
     }, environment.refreshTokenInterval || 60000);
   }
 
-  private refreshKeyCloakToken() {
+  private refreshKeyCloakToken(): void {
     this.keycloak.updateToken(100)
       .then(() => console.log('token was successfully refreshed'))
       .catch(() => {
         console.log('token refresh error, logout user');
         this.keycloak.logout();
-      })
+      });
   }
 
   public login(): void {
@@ -111,6 +112,8 @@ export class AuthService {
 
     this.authToken = null;
     window.location.href = logoutURL;
+    // TODO
+    this.keycloak.logout();
   }
 
   public openHomePage(): void {

@@ -156,6 +156,7 @@
     <mat-header-row *matHeaderRowDef="displayedColumns | toStringArray : 'name'; sticky: true"></mat-header-row>
 
     <mat-row
+      (click)="openItem(row)"
       *matRowDef="let row; columns: displayedColumns | toStringArray : 'name';">
     </mat-row>
 

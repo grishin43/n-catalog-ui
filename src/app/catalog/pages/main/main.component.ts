@@ -5,6 +5,7 @@ import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {TableHelper} from '../../helpers/table.helper';
 import {ApiService} from '../../services/api/api.service';
 import {Observable} from 'rxjs';
+import {SearchService} from '../../services/search/search.service';
 
 @Component({
   selector: 'np-main',
@@ -17,12 +18,15 @@ export class MainComponent implements OnInit {
   public recentFiles: CatalogEntityModel[];
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private searchService: SearchService
   ) {
   }
 
   ngOnInit(): void {
     this.mainFolders$ = this.apiService.getRootFolders();
+    this.recentFiles = this.searchService.savedEntities;
   }
 
 }
+

@@ -6,8 +6,8 @@ import {tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
-import {CookieHelper} from '../../../helpers/cookie.helper';
-import {CookieEnum} from '../../../models/cookie.enum';
+import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
+import {StorageEnum} from '../../../models/storageEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,11 @@ export class SearchService {
     private apiService: ApiService,
     private router: Router
   ) {
+    this.entities$.next(this.savedEntities);
+  }
+
+  public get savedEntities(): CatalogEntityModel[] {
+    return LocalStorageHelper.getData(StorageEnum.SEARCHED_ENTITIES) || [];
   }
 
   public searchEntities(str: string): Observable<CatalogEntityModel[]> {
@@ -33,12 +38,8 @@ export class SearchService {
       );
   }
 
-  public getSavedEntities(): CatalogEntityModel[] {
-    return CookieHelper.getCookie(CookieEnum.SEARCHED_ENTITIES) || [];
-  }
-
   private saveEntities(entities: CatalogEntityModel[]): void {
-    if (this.getSavedEntities().length + entities?.length > this.limit) {
+    if (this.savedEntities.length + entities?.length > this.limit) {
       this.handleOverflowedEntities(entities);
     } else {
       this.addEntities(entities);
@@ -46,20 +47,20 @@ export class SearchService {
   }
 
   private addEntities(entities: CatalogEntityModel[]): void {
-    CookieHelper.setCookie(CookieEnum.SEARCHED_ENTITIES, this.handleDuplicates(entities));
+    LocalStorageHelper.setData(StorageEnum.SEARCHED_ENTITIES, this.handleDuplicates(entities));
   }
 
   private handleOverflowedEntities(entities: CatalogEntityModel[]): void {
     const newValue = this.handleDuplicates(entities);
-    const diff = newValue.length - this.getSavedEntities().length;
+    const diff = newValue.length - this.savedEntities.length;
     if (diff > 0) {
       newValue.splice(0, diff);
-      CookieHelper.setCookie(CookieEnum.SEARCHED_ENTITIES, newValue);
+      LocalStorageHelper.setData(StorageEnum.SEARCHED_ENTITIES, newValue);
     }
   }
 
   private handleDuplicates(entities: CatalogEntityModel[]): CatalogEntityModel[] {
-    const currentValue = this.getSavedEntities();
+    const currentValue = this.savedEntities;
     if (currentValue.length) {
       currentValue.map((item: CatalogEntityModel) => {
         return {

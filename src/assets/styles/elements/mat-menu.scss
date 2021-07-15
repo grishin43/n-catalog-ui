@@ -4,6 +4,10 @@
     min-width: 175px;
     box-shadow: 0 3px 5px rgb(138 149 163 / 20%);
 
+    &.mh-auto {
+      min-height: auto;
+    }
+
     &.toolbar-menu {
       min-width: 280px;
       max-width: 100%;

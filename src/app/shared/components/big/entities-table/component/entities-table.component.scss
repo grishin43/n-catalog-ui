@@ -18,6 +18,11 @@
     mat-row {
       min-height: 64px;
       border-color: var(--np-white-lilac);
+      cursor: pointer;
+
+      &:hover{
+        background: var(--np-catskill-white);
+      }
 
       mat-cell {
         color: var(--np-pale-sky);

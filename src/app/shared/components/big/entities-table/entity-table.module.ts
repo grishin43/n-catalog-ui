@@ -9,6 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {NpPersonsModule} from '../../small/np-persons/np-persons.module';
+import {TableActionsService} from './services/table-actions/table-actions.service';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,9 @@ import {NpPersonsModule} from '../../small/np-persons/np-persons.module';
     MatButtonModule,
     MatMenuModule,
     NpPersonsModule
+  ],
+  providers: [
+    TableActionsService
   ]
 })
 export class EntityTableModule {

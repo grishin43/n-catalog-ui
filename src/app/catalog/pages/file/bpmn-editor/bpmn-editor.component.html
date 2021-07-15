@@ -6,4 +6,13 @@
       Properties Panel
     </button>
   </div>
+  <div
+    @fadeInOut
+    *ngIf="fileLoader"
+    id="bpmn-loader">
+    <mat-spinner
+      [diameter]="50">
+    </mat-spinner>
+    <p>{{'common.fileLoading' | translate}}</p>
+  </div>
 </div>

@@ -27,6 +27,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {BpmnToolbarService} from './services/bpmn-toolbar/bpmn-toolbar.service';
 import {BpmnModelerService} from './services/bpmn-modeler/bpmn-modeler.service';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -34,26 +35,27 @@ import {MatDialogModule} from '@angular/material/dialog';
     HeaderComponent,
     HeaderSearchComponent
   ],
-  imports: [
-    CommonModule,
-    CatalogRoutingModule,
-    NgxsModule.forRoot([CatalogState], {developmentMode: !environment.production}),
-    NgxsReduxDevtoolsPluginModule.forRoot(),
-    NpInputModule,
-    MatRippleModule,
-    NpAvatarModule,
-    TranslateModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatDialogModule
-  ],
+    imports: [
+        CommonModule,
+        CatalogRoutingModule,
+        NgxsModule.forRoot([CatalogState], {developmentMode: !environment.production}),
+        NgxsReduxDevtoolsPluginModule.forRoot(),
+        NpInputModule,
+        MatRippleModule,
+        NpAvatarModule,
+        TranslateModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatDialogModule,
+        MatMenuModule
+    ],
   providers: [
     EntitiesTabService,
     ApiService,

@@ -12,8 +12,12 @@
             fill="#DA292B"/>
         </svg>
       </a>
-      <div class="col file-tabs-col"
-           [ngClass]="{'search-form-stretched': searchFormStretched}">
+      <div
+        class="col file-tabs-col"
+        [ngClass]="{
+           'search-form-stretched': searchFormStretched,
+           'mw-100': currentId
+        }">
         <div class="row align-items-center flex-nowrap">
           <div class="col-auto tab"
                *ngFor="let entity of catalogEntities | async"
@@ -38,21 +42,36 @@
           </div>
         </div>
       </div>
-      <div class="col-auto ml-auto">
-        <np-header-search
-          (formHasStretched)="searchFormStretched = $event">
-        </np-header-search>
-      </div>
-      <a matRipple
-         matRippleColor="{{rippleLightColor}}"
-         class="col-auto profile-col">
-        <np-avatar
-          [type]="'initials'"
-          [size]="'md'"
-          [data]="'MO'"
-          [theme]="'dark'">
-        </np-avatar>
-      </a>
+      <ng-container *ngIf="!currentId">
+        <div class="col-auto ml-auto">
+          <np-header-search
+            (formHasStretched)="searchFormStretched = $event">
+          </np-header-search>
+        </div>
+        <a matRipple
+           matRippleColor="{{rippleLightColor}}"
+           [matMenuTriggerFor]="menu"
+           class="col-auto profile-col">
+          <np-avatar
+            [type]="'initials'"
+            [size]="'md'"
+            [data]="'MO'"
+            [theme]="'dark'">
+          </np-avatar>
+        </a>
+        <mat-menu
+          class="mh-auto"
+          #menu="matMenu"
+          xPosition="before">
+          <button
+            mat-menu-item
+            (click)="logout()">
+            <span>
+              {{'common.logout' | translate}}
+            </span>
+          </button>
+        </mat-menu>
+      </ng-container>
     </div>
   </div>
 </header>

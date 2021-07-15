@@ -22,14 +22,14 @@ const routes: Routes = [
   declarations: [
     SearchResultsComponent
   ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        TranslateModule,
-        MatIconModule,
-        SafeHtmlModule,
-        EntityTableModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    TranslateModule,
+    MatIconModule,
+    SafeHtmlModule,
+    EntityTableModule
+  ]
 })
 export class SearchResultsModule {
 }

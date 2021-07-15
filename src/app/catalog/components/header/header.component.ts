@@ -6,6 +6,7 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {NavigationEnd, Router, Event} from '@angular/router';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
+import {AuthService} from '../../../auth/services/auth/auth.service';
 
 @Component({
   selector: 'np-header',
@@ -17,12 +18,14 @@ export class HeaderComponent implements OnInit {
   public catalogEntities: BehaviorSubject<CatalogEntityModel[]>;
   public currentId: string;
   public searchFormStretched: boolean;
+  public hideRightBar: boolean;
 
   private subscriptions = new Subscription();
 
   constructor(
     private entitiesTabService: EntitiesTabService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.subscribeRouteChanges();
   }
@@ -61,6 +64,10 @@ export class HeaderComponent implements OnInit {
 
   public openFile(file: CatalogEntityModel): void {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${file.id}`]);
+  }
+
+  public logout(): void {
+    this.authService.logout();
   }
 
 }

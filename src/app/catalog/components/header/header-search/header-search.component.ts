@@ -9,7 +9,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {SearchService} from '../../../services/search/search.service';
-import loader from '@angular-devkit/build-angular/src/webpack/plugins/single-test-transform';
 
 @Component({
   selector: 'np-header-search',
@@ -50,7 +49,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.entities = this.searchService.getSavedEntities();
+    this.entities = this.searchService.savedEntities;
     this.formControlHandler();
     this.patchControlBySearchQuery();
   }
@@ -73,7 +72,6 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
       const query = location.pathname.split('/').pop();
       if (query?.trim().length) {
         this.formControl.patchValue(query);
-        this.submit();
       }
     }
   }
@@ -104,14 +102,31 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   public submit(): void {
     if (this.formControl.value?.trim().length) {
       this.toggleFormState(true);
+      this.searchEntities(
+        () => {
+          this.toggleFormState(false);
+          this.entities = this.searchService.savedEntities;
+        },
+        () => this.toggleFormState(false));
+    }
+  }
+
+  private searchEntities(sucCb?: () => void, errCb?: () => void): void {
+    this.subscription.add(
       this.searchService.searchEntities(this.formControl.value)
         .subscribe(
           () => {
-            this.toggleFormState(false);
-            this.entities = this.searchService.getSavedEntities();
+            if (typeof sucCb === 'function') {
+              sucCb();
+            }
           },
-          () => this.toggleFormState(false));
-    }
+          () => {
+            if (typeof errCb === 'function') {
+              errCb();
+            }
+          }
+        )
+    );
   }
 
   private toggleFormState(flag: boolean): void {

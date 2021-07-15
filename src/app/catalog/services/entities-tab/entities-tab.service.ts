@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {CookieEnum} from '../../../models/cookie.enum';
-import {CookieHelper} from '../../../helpers/cookie.helper';
+import {StorageEnum} from '../../../models/storageEnum';
+import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TranslateService} from '@ngx-translate/core';
 import {AppRouteEnum} from '../../../models/app-route.enum';
@@ -38,7 +38,7 @@ export class EntitiesTabService {
       entitiesValue.splice(removeIndex, 1);
     }
     this.entities.next(entitiesValue);
-    CookieHelper.setCookie(CookieEnum.FILE_TABS, entitiesValue);
+    LocalStorageHelper.setData(StorageEnum.FILE_TABS, entitiesValue);
     if (entitiesValue[removeIndex + 1]) {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${entitiesValue[removeIndex + 1].id}`]);
     } else if (entitiesValue[removeIndex - 1]) {
@@ -54,7 +54,7 @@ export class EntitiesTabService {
     if (removeIndex !== -1) {
       currentValue.splice(removeIndex, 1);
       currentValue.unshift(entity);
-      CookieHelper.setCookie(CookieEnum.FILE_TABS, currentValue);
+      LocalStorageHelper.setData(StorageEnum.FILE_TABS, currentValue);
       // TODO
       this.snackBar.open(this.translateService.instant('common.tabsOverflowed'), 'OK');
     }
@@ -69,13 +69,13 @@ export class EntitiesTabService {
           name: entity.name
         } as CatalogEntityModel, ...this.entities.getValue() || []];
         this.entities.next(newValue);
-        CookieHelper.setCookie(CookieEnum.FILE_TABS, newValue);
+        LocalStorageHelper.setData(StorageEnum.FILE_TABS, newValue);
       }
     }
   }
 
   public init(): void {
-    this.entities = new BehaviorSubject(CookieHelper.getCookie(CookieEnum.FILE_TABS) || []);
+    this.entities = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.FILE_TABS) || []);
   }
 
 }

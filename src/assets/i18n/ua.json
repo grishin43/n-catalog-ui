@@ -87,7 +87,9 @@
     "togglePropertiesPanel": "Переключити панель властивостей",
     "resetPropertiesPanel": "Скинути панель властивостей",
     "toggleDevtools": "Переключити панель розробника",
-    "color": "Колір"
+    "color": "Колір",
+    "logout": "Вийти",
+    "fileLoading": "Завантаження файлу"
   },
   "statuses": {
     "undefined": "Невизначений",

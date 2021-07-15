@@ -6,11 +6,13 @@ import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.se
 import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.service';
 import {Router} from '@angular/router';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
+import {AnimationsHelper} from '../../../helpers/animations.helper';
 
 @Component({
   selector: 'np-bpmn-editor',
   templateUrl: './bpmn-editor.component.html',
-  styleUrls: ['./bpmn-editor.component.scss']
+  styleUrls: ['./bpmn-editor.component.scss'],
+  animations: [AnimationsHelper.fadeInOut]
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
   @Input() set data(value: CatalogEntityModel) {
@@ -21,6 +23,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   public file: CatalogEntityModel;
+  public fileLoader: boolean;
 
   private subscriptions = new Subscription();
 
@@ -79,12 +82,14 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private openFile(): any {
+    this.fileLoader = true;
     this.subscriptions.add(
       this.apiService.getXML(this.file.link)
         .subscribe((res) => {
             this.bpmnModelerService.openDiagram(res).then(() => {
               this.bpmnModelerService.zoomTo(true);
               this.bpmnModelerService.showTransactionBoundaries();
+              this.fileLoader = false;
             });
           }
         )

@@ -18,6 +18,7 @@ import {AngularEditorModule} from '@kolkov/angular-editor';
 import {FormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetModule, MatBottomSheetRef} from '@angular/material/bottom-sheet';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const routes: Routes = [
   {
@@ -38,21 +39,22 @@ const routes: Routes = [
     ToolbarActionBtnComponent,
     WysiwygEditorComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    TranslateModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatIconModule,
-    NpButtonModule,
-    CreateFileModalModule,
-    MatTooltipModule,
-    AngularEditorModule,
-    FormsModule,
-    MatBottomSheetModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatIconModule,
+        NpButtonModule,
+        CreateFileModalModule,
+        MatTooltipModule,
+        AngularEditorModule,
+        FormsModule,
+        MatBottomSheetModule,
+        MatProgressSpinnerModule
+    ]
 })
 export class FileModule {
 }
