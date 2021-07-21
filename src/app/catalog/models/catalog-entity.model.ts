@@ -1,6 +1,7 @@
 import {CatalogEntityEnum} from './catalog-entity.enum';
 import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
 import {EmployeeModel} from '../../models/employee.model';
+import {CatalogEntityPermissionEnum} from './catalog-entity-permission.enum';
 
 export interface CatalogEntityModel {
   id: string;
@@ -18,4 +19,6 @@ export interface CatalogEntityModel {
   status?: NpStatusPillEnum;
   editingBy?: EmployeeModel;
   link?: string;
+  permissions?: CatalogEntityPermissionEnum;
+  path?: string;
 }

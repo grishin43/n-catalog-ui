@@ -14,7 +14,7 @@ import {SearchService} from '../../services/search/search.service';
 })
 export class MainComponent implements OnInit {
   public mainFolders$: Observable<CatalogEntityModel[]>;
-  public tableDisplayedColumns: TableColumnsModel[] = TableHelper.entitiesTableColumns;
+  public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns(true);
   public recentFiles: CatalogEntityModel[];
 
   constructor(

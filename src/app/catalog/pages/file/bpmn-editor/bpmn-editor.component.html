@@ -1,18 +1,24 @@
-<div class="bpmn-editor-wrapper">
-  <div id="bpmn-canvas"></div>
-  <div id="bpmn-properties">
-    <button class="bpmn-properties-toggle-btn"
-            (click)="togglePropertiesPanel()">
-      Properties Panel
-    </button>
-  </div>
-  <div
-    @fadeInOut
-    *ngIf="fileLoader"
-    id="bpmn-loader">
-    <mat-spinner
-      [diameter]="50">
-    </mat-spinner>
-    <p>{{'common.fileLoading' | translate}}</p>
+<div class="container-fluid mw-100 pl-0 pr-0">
+  <div class="row">
+    <div class="col-12">
+      <div class="bpmn-editor-wrapper">
+        <div id="bpmn-canvas"></div>
+        <div id="bpmn-properties">
+          <button class="bpmn-properties-toggle-btn"
+                  (click)="togglePropertiesPanel()">
+            Properties Panel
+          </button>
+        </div>
+        <div
+          @fadeInOut
+          *ngIf="fileLoader"
+          id="bpmn-loader">
+          <mat-spinner
+            [diameter]="50">
+          </mat-spinner>
+          <p>{{'common.fileLoading' | translate}}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -7,6 +7,8 @@ import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.en
 import {TableActionModel} from '../models/table-action.model';
 import {NpStatusPillEnum} from '../../../small/np-status-pill/models/np-status-pill.enum';
 import {TableActionsService} from '../services/table-actions/table-actions.service';
+import {CatalogEntityPermissionEnum} from '../../../../../catalog/models/catalog-entity-permission.enum';
+import {EntityTableColumnName} from '../../../../../catalog/helpers/table.helper';
 
 @Component({
   selector: 'np-entities-table',
@@ -15,6 +17,7 @@ import {TableActionsService} from '../services/table-actions/table-actions.servi
 })
 export class EntitiesTableComponent implements OnInit {
   @Input() displayedColumns: TableColumnsModel[];
+  @Input() tableClass: string;
 
   @Input() set data(value: CatalogEntityModel[] | any) {
     this.dataSource = new MatTableDataSource(value);
@@ -31,6 +34,8 @@ export class EntitiesTableComponent implements OnInit {
   public statuses = NpStatusPillEnum;
   public fileActions: TableActionModel[];
   public folderActions: TableActionModel[];
+  public entityPermission = CatalogEntityPermissionEnum;
+  public entityTableColumnName = EntityTableColumnName;
 
   ngOnInit(): void {
     this.fileActions = this.tableActionsService.fileActions;
@@ -38,10 +43,12 @@ export class EntitiesTableComponent implements OnInit {
   }
 
   public openItem(item: CatalogEntityModel): void {
-    if (item.type === CatalogEntityEnum.FOLDER) {
-      this.tableActionsService.openFolder(item.id);
-    } else if (item.type === CatalogEntityEnum.FILE) {
-      this.tableActionsService.openFile(item.id);
+    if (item.permissions === this.entityPermission.READ || item.permissions === this.entityPermission.EDIT) {
+      if (item.type === CatalogEntityEnum.FOLDER) {
+        this.tableActionsService.openFolder(item.id);
+      } else if (item.type === CatalogEntityEnum.FILE) {
+        this.tableActionsService.openFile(item.id);
+      }
     }
   }
 

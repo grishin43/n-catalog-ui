@@ -1,3 +1,5 @@
+@import "../../../assets/styles/breakpoints";
+
 mat-form-field {
   &.mat-form-field-appearance-outline {
     width: 100%;
@@ -58,6 +60,10 @@ mat-form-field {
         padding: 0 16px;
         align-items: center;
 
+        @media screen and (max-width: $tablet-medium - 1px) {
+          padding: 0 12px;
+        }
+
         .mat-form-field-infix {
           border-top: 0;
           padding: 12px 0 12px 0;
@@ -66,6 +72,10 @@ mat-form-field {
             &.mat-input-element {
               font-size: 14px;
               color: var(--np-mako);
+
+              @media screen and (max-width: $tablet-medium - 1px) {
+                font-size: 13px;
+              }
 
               &:disabled {
                 color: var(--np-roman-silver);

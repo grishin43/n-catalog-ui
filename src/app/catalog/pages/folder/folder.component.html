@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-12" style="margin-bottom: 32px">
+    <div class="col-12">
       <np-folder-breadcrumbs
         [folder]="folder$ | async">
       </np-folder-breadcrumbs>
@@ -10,7 +10,8 @@
         *ngIf="(folder$ | async)?.entities as folderEntities; else noEntities">
         <np-entities-table
           [displayedColumns]="tableDisplayedColumns"
-          [data]="folderEntities">
+          [data]="folderEntities"
+          [tableClass]="'truncate-entity-name-30'">
         </np-entities-table>
       </ng-container>
       <ng-template #noEntities>

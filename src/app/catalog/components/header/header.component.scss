@@ -1,22 +1,50 @@
-$main-height: 72px;
+@import "../../../../assets/styles/breakpoints";
+
+@mixin mainHeight {
+  height: 72px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    height: 56px;
+  }
+}
 
 header {
   background: var(--np-primary-white);
-  height: $main-height;
+  @include mainHeight;
   overflow: hidden;
 
   .container-fluid {
+    @media screen and (max-width: $tablet-medium - 1px) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
     .row {
+      @media screen and (max-width: $tablet-medium - 1px) {
+        margin-left: -10px;
+        margin-right: -10px;
+
+        .col, .col-auto {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+      }
+
       .logo-col {
         flex: 0 0 108px;
         max-width: 108px;
         text-align: center;
+
+        @media screen and (max-width: $tablet-medium - 1px) {
+          flex: 0 0 78px;
+          max-width: 78px;
+        }
       }
 
       a {
         &.profile-col {
           cursor: pointer;
-          height: $main-height;
+          @include mainHeight;
           display: inline-flex;
           align-items: center;
           transition: var(--np-base-transition);
@@ -28,18 +56,35 @@ header {
       }
 
       .file-tabs-col {
-        max-width: calc(100% - 108px - 165px - 70px);
+        max-width: calc(100% - 108px - 165px - 70px - 54px);
         transition: var(--np-base-transition);
+        overflow-x: hidden;
+
+        @media screen and (max-width: $tablet-medium - 1px) {
+          max-width: calc(100% - 78px - 125px - 39px - 50px);
+        }
 
         &.search-form-stretched {
-          max-width: calc(100% - 108px - 530px - 70px);
+          max-width: calc(100% - 108px - 530px - 70px - 54px);
+
+          @media screen and (max-width: $laptop) {
+            max-width: calc(100% - 108px - 380px - 70px - 54px);
+          }
+
+          @media screen and (max-width: $notebook) {
+            max-width: calc(100% - 108px - 280px - 70px - 54px);
+          }
+
+          @media screen and (max-width: $tablet-medium - 1px) {
+            max-width: calc(100% - 78px - 190px - 39px - 50px);
+          }
         }
       }
     }
   }
 
   .tab {
-    height: 72px;
+    @include mainHeight;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -60,8 +105,16 @@ header {
       overflow: hidden;
       display: inline-block;
 
+      @media screen and (max-width: $tablet-medium - 1px) {
+        font-size: 12px;
+      }
+
       & + button {
         margin-left: 12px;
+
+        @media screen and (max-width: $tablet-medium - 1px) {
+          margin-left: 8px;
+        }
       }
     }
 
@@ -70,6 +123,15 @@ header {
       padding: 0;
       height: 24px;
       line-height: 24px;
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        height: 20px;
+        line-height: 20px;
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
     }
   }
 }

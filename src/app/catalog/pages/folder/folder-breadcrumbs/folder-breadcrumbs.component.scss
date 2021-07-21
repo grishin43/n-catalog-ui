@@ -1,16 +1,21 @@
+@import "../../../../../assets/styles/breakpoints";
+
 ul {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   font-size: 24px;
   margin: 0;
+  line-height: 1.35;
+  font-weight: 500;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    font-size: 20px;
+  }
 
   li {
     display: inline-flex;
     align-items: center;
-    line-height: 1.35;
-    font-size: 24px;
-    font-weight: 500;
 
     a {
       display: inline-block;

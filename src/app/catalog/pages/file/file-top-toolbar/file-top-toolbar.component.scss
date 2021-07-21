@@ -1,5 +1,8 @@
+@import "../../../../../assets/styles/breakpoints";
+
 ul {
   display: flex;
+  margin-bottom: 6px;
 
   li {
     & + li {
@@ -10,6 +13,12 @@ ul {
       font-weight: normal;
       font-size: 14px;
       padding: 0 8px;
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        font-size: 12px;
+        min-width: auto;
+        line-height: 30px;
+      }
 
       &:not(:disabled) {
         color: var(--np-gunmetal);
@@ -22,9 +31,17 @@ ul {
       &.icon-btn {
         min-width: auto;
 
+        @media screen and (max-width: $tablet-medium - 1px) {
+          padding: 0 4px;
+        }
+
         mat-icon {
           svg {
             width: 20px;
+
+            @media screen and (max-width: $tablet-medium - 1px) {
+              width: 18px;
+            }
           }
         }
       }
@@ -53,6 +70,12 @@ ol {
           display: block;
           border: 2px solid;
           border-radius: 2px;
+
+          @media screen and (max-width: $tablet-medium - 1px) {
+            width: 16px;
+            height: 16px;
+            border-width: 1px;
+          }
         }
       }
     }

@@ -1,3 +1,5 @@
+@import "../breakpoints";
+
 .mat-autocomplete-panel {
 
   &:not([class*=mat-elevation-z]) {
@@ -10,6 +12,17 @@
       font-size: 16px;
       color: var(--np-roman-silver);
       font-weight: 500;
+
+      @media screen and (max-width: $notebook) {
+        font-size: 15px;
+      }
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        font-size: 12px;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 12px;
+      }
     }
 
     mat-option {
@@ -19,6 +32,17 @@
       line-height: 56px;
       height: 56px;
 
+      @media screen and (max-width: $notebook) {
+        font-size: 15px;
+      }
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        font-size: 12px;
+        line-height: 46px;
+        height: 46px;
+        padding: 0 10px !important;
+      }
+
       .mat-option-text {
         display: inline-flex;
         align-items: center;
@@ -27,8 +51,33 @@
           width: 28px;
           height: auto;
           margin-right: 12px;
+
+          @media screen and (max-width: $tablet-medium - 1px) {
+            width: 22px;
+            margin-right: 8px;
+          }
+
         }
       }
     }
+  }
+}
+
+.search-form-stretched {
+  .cdk-overlay-pane {
+    @media screen and (max-width: $notebook) {
+      left: auto !important;
+      right: 140px !important;
+    }
+    @media screen and (max-width: $tablet-medium - 1px) {
+      right: 110px !important;
+    }
+  }
+}
+
+.cdk-overlay-pane {
+  @media screen and (max-width: $notebook) {
+    transition: var(--np-base-transition);
+    transform: translateX(0);
   }
 }

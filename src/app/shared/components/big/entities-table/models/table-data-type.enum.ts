@@ -4,5 +4,6 @@ export enum TableDataTypeEnum {
   DATE,
   STATUS,
   TEXT,
-  ACTIONS
+  ACTIONS,
+  TRANSLATION
 }

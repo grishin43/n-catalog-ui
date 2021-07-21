@@ -1,7 +1,15 @@
+@import "../../../../assets/styles/breakpoints";
+
 .container-fluid {
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 34px;
+  padding-right: 34px;
   margin-top: -38px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    margin-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 
   .file-name {
     color: var(--np-gunmetal);
@@ -13,6 +21,10 @@
     padding: 4px 8px;
     border-radius: 4px;
     margin-left: -4px;
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      font-size: 14px;
+    }
 
     &:hover {
       background: var(--np-catskill-white);
@@ -32,13 +44,10 @@
 
   np-file-top-toolbar {
     display: block;
-    margin-top: 10px;
-    margin-left: -10px;
   }
 }
 
-.bpmn-mock {
-  img {
-
-  }
+np-bpmn-editor {
+  display: block;
+  overflow-x: hidden;
 }

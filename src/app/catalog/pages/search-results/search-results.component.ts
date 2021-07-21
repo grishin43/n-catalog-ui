@@ -13,7 +13,7 @@ import {TableHelper} from '../../helpers/table.helper';
 })
 export class SearchResultsComponent implements OnInit, OnDestroy {
   public query: string;
-  public tableDisplayedColumns: TableColumnsModel[] = TableHelper.entitiesTableColumns;
+  public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns();
 
   private subscriptions = new Subscription();
 

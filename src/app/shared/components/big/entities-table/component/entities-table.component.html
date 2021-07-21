@@ -1,5 +1,7 @@
 <div class="mat-table-wrapper">
-  <mat-table [dataSource]="dataSource">
+  <mat-table
+    [dataSource]="dataSource"
+    [ngClass]="tableClass">
 
     <ng-container
       *ngFor="let col of displayedColumns"
@@ -89,7 +91,7 @@
                   </svg>
                 </mat-icon>
               </ng-container>
-              <span>
+              <span class="entity-name">
                 {{row?.name || '-'}}
               </span>
             </span>
@@ -108,41 +110,88 @@
           </ng-container>
 
           <ng-container *ngSwitchCase="tableDataType.STATUS">
-            <ng-container *ngIf="row?.type === catalogEntityType.FILE">
-              <np-status-pill
-                [status]="row[col?.name]">
-              </np-status-pill>
+            <ng-container
+              *ngIf="row.permissions === entityPermission.READ || row.permissions === entityPermission.EDIT">
+              <ng-container *ngIf="row?.type === catalogEntityType.FILE">
+                <np-status-pill
+                  [status]="row[col?.name]">
+                </np-status-pill>
+              </ng-container>
             </ng-container>
           </ng-container>
 
           <ng-container *ngSwitchCase="tableDataType.ACTIONS">
-            <ng-container *ngIf="row?.type === catalogEntityType.FILE || row?.type === catalogEntityType.FOLDER">
-              <button mat-icon-button
-                      (click)="$event.preventDefault(); $event.stopPropagation();"
-                      [matMenuTriggerFor]="menu">
-                <mat-icon>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                      fill="#B8C1CB"/>
-                  </svg>
-                </mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <ng-container *ngIf="row.type === catalogEntityType.FILE; else folder">
-                  <ng-container *ngFor="let action of fileActions">
-                    <ng-container
-                      *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+            <ng-container
+              *ngIf="row.permissions === entityPermission.READ || row.permissions === entityPermission.EDIT; else requestPermission">
+              <ng-container *ngIf="row?.type === catalogEntityType.FILE || row?.type === catalogEntityType.FOLDER">
+                <button mat-icon-button
+                        (click)="$event.preventDefault(); $event.stopPropagation();"
+                        [matMenuTriggerFor]="menu">
+                  <mat-icon>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                        fill="#B8C1CB"/>
+                    </svg>
+                  </mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <ng-container *ngIf="row.type === catalogEntityType.FILE; else folder">
+                    <ng-container *ngFor="let action of fileActions">
+                      <ng-container
+                        *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+                    </ng-container>
                   </ng-container>
-                </ng-container>
-                <ng-template #folder>
-                  <ng-container *ngFor="let action of folderActions">
-                    <ng-container
-                      *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
-                  </ng-container>
-                </ng-template>
-              </mat-menu>
+                  <ng-template #folder>
+                    <ng-container *ngFor="let action of folderActions">
+                      <ng-container
+                        *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+                    </ng-container>
+                  </ng-template>
+                </mat-menu>
+              </ng-container>
             </ng-container>
+            <ng-template #requestPermission>
+              <np-button
+                [type]="'secondary'"
+                [size]="'sm'">
+                {{'common.requestPermission' | translate}}
+              </np-button>
+            </ng-template>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="tableDataType.TRANSLATION">
+            <ng-container *ngIf="col?.name === entityTableColumnName.PERMISSIONS; else defaultTranslation">
+              <mat-icon class="d-xl-none">
+                <ng-container *ngIf="row[col?.name] === entityPermission.EDIT">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M2.5 14.5499V17.0832C2.5 17.3166 2.68333 17.4999 2.91667 17.4999H5.45C5.55833 17.4999 5.66667 17.4582 5.74167 17.3749L14.8417 8.28322L11.7167 5.15822L2.625 14.2499C2.54167 14.3332 2.5 14.4332 2.5 14.5499ZM17.2583 5.86655C17.5833 5.54155 17.5833 5.01655 17.2583 4.69155L15.3083 2.74155C14.9833 2.41655 14.4583 2.41655 14.1333 2.74155L12.6083 4.26655L15.7333 7.39155L17.2583 5.86655Z"
+                      fill="#8A95A3"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngIf="row[col?.name] === entityPermission.READ">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M10 4.99992C13.1583 4.99992 15.975 6.77492 17.35 9.58325C15.975 12.3916 13.1583 14.1666 10 14.1666C6.84166 14.1666 4.025 12.3916 2.65 9.58325C4.025 6.77492 6.84166 4.99992 10 4.99992ZM10 3.33325C5.83333 3.33325 2.275 5.92492 0.833332 9.58325C2.275 13.2416 5.83333 15.8333 10 15.8333C14.1667 15.8333 17.725 13.2416 19.1667 9.58325C17.725 5.92492 14.1667 3.33325 10 3.33325ZM10 7.49992C11.15 7.49992 12.0833 8.43325 12.0833 9.58325C12.0833 10.7333 11.15 11.6666 10 11.6666C8.85 11.6666 7.91666 10.7333 7.91666 9.58325C7.91666 8.43325 8.85 7.49992 10 7.49992ZM10 5.83325C7.93333 5.83325 6.25 7.51659 6.25 9.58325C6.25 11.6499 7.93333 13.3333 10 13.3333C12.0667 13.3333 13.75 11.6499 13.75 9.58325C13.75 7.51659 12.0667 5.83325 10 5.83325Z"
+                      fill="#8A95A3"/>
+                  </svg>
+                </ng-container>
+                <ng-container *ngIf="row[col?.name] === entityPermission.NO_PERMISSIONS">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M15 6.66658H14.1667V4.99992C14.1667 2.69992 12.3 0.833252 10 0.833252C7.7 0.833252 5.83333 2.69992 5.83333 4.99992V6.66658H5C4.08333 6.66658 3.33333 7.41658 3.33333 8.33325V16.6666C3.33333 17.5833 4.08333 18.3333 5 18.3333H15C15.9167 18.3333 16.6667 17.5833 16.6667 16.6666V8.33325C16.6667 7.41658 15.9167 6.66658 15 6.66658ZM7.5 4.99992C7.5 3.61659 8.61666 2.49992 10 2.49992C11.3833 2.49992 12.5 3.61659 12.5 4.99992V6.66658H7.5V4.99992ZM15 16.6666H5V8.33325H15V16.6666ZM10 14.1666C10.9167 14.1666 11.6667 13.4166 11.6667 12.4999C11.6667 11.5833 10.9167 10.8333 10 10.8333C9.08333 10.8333 8.33333 11.5833 8.33333 12.4999C8.33333 13.4166 9.08333 14.1666 10 14.1666Z"
+                      fill="#8A95A3"/>
+                  </svg>
+                </ng-container>
+              </mat-icon>
+              <span class="d-xl-block d-none">
+                {{'common.' + row[col?.name] | translate}}
+              </span>
+            </ng-container>
+            <ng-template #defaultTranslation>
+              {{'common.' + row[col?.name] | translate}}
+            </ng-template>
           </ng-container>
 
           <ng-container *ngSwitchDefault>
@@ -157,6 +206,9 @@
 
     <mat-row
       (click)="openItem(row)"
+      [ngClass]="{
+        'disabled': row.permissions !== entityPermission.READ && row.permissions !== entityPermission.EDIT
+      }"
       *matRowDef="let row; columns: displayedColumns | toStringArray : 'name';">
     </mat-row>
 

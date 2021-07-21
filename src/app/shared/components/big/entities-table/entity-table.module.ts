@@ -10,6 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {NpPersonsModule} from '../../small/np-persons/np-persons.module';
 import {TableActionsService} from './services/table-actions/table-actions.service';
+import {NpButtonModule} from '../../small/np-button/np-button.module';
 
 @NgModule({
   declarations: [
@@ -18,17 +19,18 @@ import {TableActionsService} from './services/table-actions/table-actions.servic
   exports: [
     EntitiesTableComponent
   ],
-  imports: [
-    CommonModule,
-    MatTableModule,
-    TranslateModule,
-    ToStringArrayModule,
-    NpStatusPillModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    NpPersonsModule
-  ],
+    imports: [
+        CommonModule,
+        MatTableModule,
+        TranslateModule,
+        ToStringArrayModule,
+        NpStatusPillModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        NpPersonsModule,
+        NpButtonModule
+    ],
   providers: [
     TableActionsService
   ]

@@ -89,7 +89,13 @@
     "toggleDevtools": "Переключити панель розробника",
     "color": "Колір",
     "logout": "Вийти",
-    "fileLoading": "Завантаження файлу"
+    "fileLoading": "Завантаження файлу",
+    "noNotifications": "Немає повідомлень",
+    "location": "Розташування",
+    "permissions": "Права",
+    "read": "Перегляд",
+    "noPermissions": "Немає прав",
+    "requestPermission": "Запросити доступ"
   },
   "statuses": {
     "undefined": "Невизначений",

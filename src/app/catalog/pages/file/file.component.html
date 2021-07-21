@@ -1,17 +1,18 @@
 <div class="container-fluid mw-100">
   <div class="row align-items-center">
-    <div class="col-md-5 col-12">
+    <div class="col-auto">
       <div class="row align-items-center">
         <div class="col-auto pr-0">
           <h5
             #fileName
             class="mb-0 file-name"
             contenteditable="true"
-            (keydown.enter)="$event.preventDefault(); fileName.blur()">
+            (keydown.enter)="$event.preventDefault(); fileName.blur()"
+            (blur)="showSavedLabel = true">
             {{file?.name || ('common.newFile' | translate)}}
           </h5>
         </div>
-        <div class="col-auto">
+        <div class="col-auto" *ngIf="file?.name !== fileName?.innerText && showSavedLabel">
           <span class="draft-status">
             {{'common.draftSaved' | translate}}
           </span>
@@ -21,10 +22,11 @@
         [file]="file">
       </np-file-top-toolbar>
     </div>
-    <div class="col-md-7 col-12">
+    <div class="col">
       <div class="row justify-content-end align-items-center md-gutters">
         <div class="col-auto">
           <np-button
+            [autoMinWidth]="true"
             [type]="'default'"
             [disabled]="true"
             [size]="'sm'">
@@ -35,7 +37,7 @@
                   fill="#8A95A3"/>
               </svg>
             </mat-icon>
-            <span>
+            <span class="d-xl-inline-block d-none">
               {{'common.versionsHistory' | translate}}
             </span>
           </np-button>
@@ -50,6 +52,7 @@
         </div>
         <div class="col-auto">
           <np-button
+            [autoMinWidth]="true"
             [type]="'secondary'"
             [disabled]="true"
             [size]="'sm'">
@@ -60,7 +63,7 @@
                   fill="#8A95A3"/>
               </svg>
             </mat-icon>
-            <span>
+            <span class="d-xl-inline-block d-none">
                {{'common.grantAccess' | translate}}
             </span>
           </np-button>
@@ -81,3 +84,4 @@
 <np-bpmn-editor
   [data]="file">
 </np-bpmn-editor>
+

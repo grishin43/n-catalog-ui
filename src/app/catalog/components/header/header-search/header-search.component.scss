@@ -1,12 +1,34 @@
+@import "../../../../../assets/styles/breakpoints";
+
+@mixin formOpened {
+  width: 500px;
+
+  @media screen and (max-width: $laptop) {
+    width: 350px;
+  }
+
+  @media screen and (max-width: $notebook) {
+    width: 250px;
+  }
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    width: 200px;
+  }
+}
+
 form {
   width: 135px;
   transition: var(--np-base-transition);
 
+  @media screen and (max-width: $tablet-medium - 1px) {
+    width: 110px;
+  }
+
   &.stretched {
-    width: 500px;
+    @include formOpened;
   }
 
   &.control-has-value {
-    width: 500px;
+    @include formOpened;
   }
 }

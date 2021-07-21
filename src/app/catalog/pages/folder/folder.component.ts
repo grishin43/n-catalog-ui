@@ -13,7 +13,7 @@ import {ApiService} from '../../services/api/api.service';
   styleUrls: ['./folder.component.scss']
 })
 export class FolderComponent implements OnInit, OnDestroy {
-  public tableDisplayedColumns: TableColumnsModel[] = TableHelper.entitiesTableColumns;
+  public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns();
   public folder$: Observable<CatalogEntityModel>;
 
   private subscriptions = new Subscription();

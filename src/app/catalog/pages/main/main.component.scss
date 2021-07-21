@@ -1,3 +1,5 @@
+@import "../../../../assets/styles/breakpoints";
+
 .row {
   &.folders-row {
     margin: -12px;
@@ -10,4 +12,12 @@
 
 h6 {
   color: var(--np-gunmetal);
+}
+
+.main-folders {
+  margin-bottom: 48px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    margin-bottom: 30px;
+  }
 }

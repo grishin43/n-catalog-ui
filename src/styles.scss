@@ -14,6 +14,11 @@ body {
   background: var(--np-white-lilac);
   word-break: break-word;
 
+  @media screen and (max-width: $tablet-small - 1px) {
+    overflow-x: auto;
+    min-width: 768px;
+  }
+
   img {
     width: auto;
     height: auto;
@@ -31,12 +36,24 @@ body {
 
   .container-fluid {
     max-width: calc(1440px + 15px + 15px);
+
+    &.mw-100 {
+      max-width: 1920px !important;
+    }
   }
 
   main {
     .container-fluid {
       padding-left: 108px;
       padding-right: 108px;
+      @media screen and (max-width: $notebook - 1px) {
+        padding-left: 64px;
+        padding-right: 64px;
+      }
+      @media screen and (max-width: $tablet-medium - 1px) {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
     }
   }
 
@@ -78,22 +95,43 @@ mat-icon {
   justify-content: center;
   padding: 50px;
 
+  @media screen and (max-width: $tablet-medium - 1px) {
+    padding: 30px;
+  }
+
   > mat-icon {
     margin-bottom: 48px;
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      margin-bottom: 25px;
+    }
   }
 
   h4 {
     font-size: 20px;
     margin-bottom: 8px;
     color: var(--np-gunmetal);
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
   }
 
   p {
     font-size: 16px;
     color: var(--np-roman-silver);
 
+    @media screen and (max-width: $tablet-medium - 1px) {
+      font-size: 14px;
+    }
+
     b {
       font-weight: 500;
     }
   }
+}
+
+.min-width-auto {
+  min-width: auto !important;
 }

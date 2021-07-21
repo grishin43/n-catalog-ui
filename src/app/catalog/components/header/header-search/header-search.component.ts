@@ -34,6 +34,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   public onOutsideClick(targetElement): void {
     const clickedInside = this.formRef.nativeElement.contains(targetElement);
     if (!clickedInside) {
+      document.body.classList.remove('search-form-stretched');
       this.formStretched = false;
       if (!this.formControl.value?.length) {
         this.formHasStretched.emit(false);
@@ -132,6 +133,24 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   private toggleFormState(flag: boolean): void {
     this.loader = flag;
     flag ? this.formControl.disable() : this.formControl.enable();
+  }
+
+  public get panelWidth(): number {
+    if (window.innerWidth > 1440) {
+      return 500;
+    } else if (window.innerWidth <= 1440 && window.innerWidth > 1200) {
+      return 350;
+    } else if (window.innerWidth <= 1200 && window.innerWidth > 960) {
+      return 250;
+    } else if (window.innerWidth <= 960) {
+      return 200;
+    }
+  }
+
+  public onFormClicked(): void {
+    document.body.classList.add('search-form-stretched');
+    this.formStretched = true;
+    this.formHasStretched.emit(true);
   }
 
 }

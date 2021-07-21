@@ -3,6 +3,7 @@ import {CatalogEntityEnum} from '../models/catalog-entity.enum';
 import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
 import {v4 as uuidv4} from 'uuid';
 import {EmployeeModel} from '../../models/employee.model';
+import {CatalogEntityPermissionEnum} from '../models/catalog-entity-permission.enum';
 
 export class ContentHelper {
 
@@ -71,7 +72,9 @@ export class ContentHelper {
         participants,
         type: CatalogEntityEnum.FOLDER,
         owner: participants[0],
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
+        permissions: CatalogEntityPermissionEnum.READ,
+        path: 'НПУ'
       },
       {
         id: '3640a200-269a-4a08-bbea-0b12f7cf5ffc',
@@ -81,7 +84,9 @@ export class ContentHelper {
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/main-elements.bpmn'
+        link: '../../../assets/bpmn/main-elements.bpmn',
+        permissions: CatalogEntityPermissionEnum.EDIT,
+        path: 'НПУ'
       },
       {
         id: 'e2c2c26a-e573-417b-802b-86135afbc5da',
@@ -91,7 +96,9 @@ export class ContentHelper {
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/forwarding-parcels-v17.bpmn'
+        link: '../../../assets/bpmn/forwarding-parcels-v17.bpmn',
+        permissions: CatalogEntityPermissionEnum.EDIT,
+        path: 'НПУ'
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd639',
@@ -101,7 +108,9 @@ export class ContentHelper {
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/creation-of-EN_v11.bpmn'
+        link: '../../../assets/bpmn/creation-of-EN_v11.bpmn',
+        permissions: CatalogEntityPermissionEnum.EDIT,
+        path: 'НПУ'
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd777',
@@ -111,7 +120,9 @@ export class ContentHelper {
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/tokens.bpmn'
+        link: '../../../assets/bpmn/tokens.bpmn',
+        permissions: CatalogEntityPermissionEnum.EDIT,
+        path: 'НПУ'
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd228',
@@ -121,7 +132,9 @@ export class ContentHelper {
         owner: participants[0],
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
-        link: '../../../assets/bpmn/token-example.bpmn'
+        link: '../../../assets/bpmn/token-example.bpmn',
+        permissions: CatalogEntityPermissionEnum.NO_PERMISSIONS,
+        path: 'НПУ'
       }
     ];
   }

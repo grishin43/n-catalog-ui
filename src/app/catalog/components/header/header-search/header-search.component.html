@@ -4,7 +4,7 @@
     'control-has-value': input.value,
     'stretched': formStretched
   }"
-  (click)="formStretched = true; formHasStretched.emit(true)"
+  (click)="onFormClicked()"
   (keydown.enter)="$event.preventDefault()">
   <mat-form-field
     class="input-type-search"
@@ -47,7 +47,8 @@
   <mat-autocomplete
     #auto="matAutocomplete"
     autoActiveFirstOption
-    [panelWidth]="500">
+    [class]="'search-panel'"
+    [panelWidth]="panelWidth">
     <ng-container *ngIf="(filteredOptions | async)?.length; else noResults">
       <mat-optgroup
         [label]="'common.recentResults' | translate">

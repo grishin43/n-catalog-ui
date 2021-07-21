@@ -13,6 +13,7 @@ import {ApiService} from '../../services/api/api.service';
 })
 export class FileComponent implements OnInit, OnDestroy {
   public file: CatalogEntityModel;
+  public showSavedLabel: boolean;
 
   private subscriptions = new Subscription();
 

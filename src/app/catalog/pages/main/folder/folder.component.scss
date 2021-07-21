@@ -1,3 +1,5 @@
+@import "../../../../../assets/styles/breakpoints";
+
 a.folder {
   border-radius: 10px;
   background: var(--np-primary-white);
@@ -15,6 +17,10 @@ a.folder {
     display: flex;
     justify-content: space-between;
     margin-bottom: 22px;
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      margin-bottom: 15px;
+    }
 
     mat-icon {
       width: auto;
@@ -35,6 +41,10 @@ a.folder {
     span {
       color: var(--np-silver-sand);
       font-size: 14px;
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        font-size: 13px;
+      }
     }
   }
 }

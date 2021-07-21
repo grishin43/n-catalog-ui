@@ -1,7 +1,26 @@
+@import "../../../../assets/styles/breakpoints";
+
 .no-results {
   min-height: calc(100vh - 148px  - 36px);
 
+  @media screen and (max-width: $tablet-medium - 1px) {
+    min-height: calc(100vh - 138px);
+  }
+
   > p {
     margin-bottom: 24px;
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+np-folder-breadcrumbs {
+  display: block;
+  margin-bottom: 32px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    margin-bottom: 20px;
   }
 }

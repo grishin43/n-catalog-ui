@@ -1,19 +1,18 @@
 <div class="container-fluid">
   <div class="row justify-content-between align-items-center" style="margin-bottom: 12px">
-    <div class="col-md-auto col-12">
+    <div class="col-auto">
       <h3 class="mb-0">{{'common.catalog' | translate}}</h3>
     </div>
-    <div class="col-md-auto col-12">
+    <div class="col-auto">
       <np-create-entity></np-create-entity>
     </div>
   </div>
-  <div class="row"
-       *ngIf="mainFolders$ | async as mainFolders"
-       style="margin-bottom: 48px">
+  <div class="row main-folders"
+       *ngIf="mainFolders$ | async as mainFolders">
     <div class="col-12">
       <h6>{{'common.mainFolders' | translate}}</h6>
       <div class="row folders-row">
-        <div class="col-lg-3 col-md-6 col-12"
+        <div class="col-lg-3 col-6"
              *ngFor="let folder of mainFolders">
           <np-folder
             [folder]="folder">
@@ -29,7 +28,8 @@
     <div class="col-12">
       <np-entities-table
         [displayedColumns]="tableDisplayedColumns"
-        [data]="recentFiles">
+        [data]="recentFiles"
+        [tableClass]="'hide-details_tablets-and-below truncate-entity-name-45'">
       </np-entities-table>
     </div>
   </div>

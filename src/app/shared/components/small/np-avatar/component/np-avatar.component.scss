@@ -1,3 +1,5 @@
+@import "../../../../../../assets/styles/breakpoints";
+
 span {
   border-radius: 50%;
   justify-content: center;
@@ -6,6 +8,10 @@ span {
   overflow: hidden;
   font-size: 12px;
   user-select: none;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    font-size: 11px;
+  }
 
   &.initials {
     display: inline-block;
@@ -34,6 +40,12 @@ span {
     width: 40px;
     height: 40px;
     line-height: 40px;
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      width: 35px;
+      height: 35px;
+      line-height: 35px;
+    }
   }
 
   &.light {
