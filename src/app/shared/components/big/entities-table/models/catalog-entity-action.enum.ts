@@ -3,5 +3,6 @@ export enum CatalogEntityActionEnum {
   RENAME = 'rename',
   COPY = 'copy',
   CREATE_FOLDER = 'createFolder',
-  CREATE_FILE = 'createFile'
+  CREATE_FILE = 'createFile',
+  PROVIDE_ACCESS = 'provideAccess'
 }

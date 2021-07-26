@@ -22,6 +22,11 @@ export class TableActionsService {
         cb: (entityId: string) => {
           this.openFile(entityId);
         }
+      },{
+        name: CatalogEntityActionEnum.PROVIDE_ACCESS,
+        cb: (entityId: string) => {
+          this.openFile(entityId);
+        }
       },
       {
         name: CatalogEntityActionEnum.RENAME,
@@ -44,6 +49,12 @@ export class TableActionsService {
         name: CatalogEntityActionEnum.OPEN,
         cb: (entityId: string) => {
           this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entityId}`]);
+        }
+      },
+      {
+        name: CatalogEntityActionEnum.PROVIDE_ACCESS,
+        cb: (entityId: string) => {
+          console.log(entityId);
         }
       },
       {

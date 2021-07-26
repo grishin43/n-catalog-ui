@@ -38,7 +38,7 @@ export class SearchService {
       );
   }
 
-  private saveEntities(entities: CatalogEntityModel[]): void {
+  public saveEntities(entities: CatalogEntityModel[]): void {
     if (this.savedEntities.length + entities?.length > this.limit) {
       this.handleOverflowedEntities(entities);
     } else {

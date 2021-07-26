@@ -26,6 +26,7 @@
            [matAutocomplete]="auto"
            [attr.type]="'search'"
            [placeholder]="'common.search' | translate"
+           (ngModelChange)="typeAHeadSearch($event)"
            (keyup.enter)="submit()"
            (input)="formHasStretched.emit(!!input.value)">
     <mat-spinner
@@ -49,11 +50,11 @@
     autoActiveFirstOption
     [class]="'search-panel'"
     [panelWidth]="panelWidth">
-    <ng-container *ngIf="(filteredOptions | async)?.length; else noResults">
+    <ng-container *ngIf="filteredOptions?.length; else noResults">
       <mat-optgroup
-        [label]="'common.recentResults' | translate">
+        [label]="formControl.value ? ('common.searchResults' | translate) : ('common.recentResults' | translate)">
         <mat-option
-          *ngFor="let option of filteredOptions | async"
+          *ngFor="let option of filteredOptions"
           (click)="onOptionClicked(option)"
           [value]="option.name">
           <ng-container *ngIf="option.type === catalogEntityType.FILE">
@@ -134,7 +135,7 @@
       </mat-optgroup>
     </ng-container>
     <ng-template #noResults>
-      <mat-optgroup [label]="'common.noRecentResults' | translate">
+      <mat-optgroup [label]="formControl.value ? ('common.noSearchResults') : ('common.noRecentResults' | translate)">
         <mat-option
           class="d-none"
           value="{{input.value}}">

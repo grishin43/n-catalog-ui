@@ -1,7 +1,6 @@
 import {Component, HostListener, EventEmitter, OnInit, Output, ViewChild, OnDestroy} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
@@ -9,6 +8,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {SearchService} from '../../../services/search/search.service';
+import {ContentHelper} from '../../../helpers/content.helper';
 
 @Component({
   selector: 'np-header-search',
@@ -18,7 +18,7 @@ import {SearchService} from '../../../services/search/search.service';
 export class HeaderSearchComponent implements OnInit, OnDestroy {
   public formControl = new FormControl();
   public entities: CatalogEntityModel[];
-  public filteredOptions: Observable<CatalogEntityModel[]>;
+  public filteredOptions: CatalogEntityModel[];
   public catalogEntityType = CatalogEntityEnum;
   public formStretched: boolean;
   public loader: boolean;
@@ -51,21 +51,12 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.entities = this.searchService.savedEntities;
-    this.formControlHandler();
+    this.showPreviousSearchResults();
     this.patchControlBySearchQuery();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  private formControlHandler(): void {
-    this.filteredOptions = this.formControl.valueChanges.pipe(
-      startWith(''),
-      map((value: string) => {
-        return this.filterEntities(value);
-      })
-    );
   }
 
   private patchControlBySearchQuery(): void {
@@ -93,6 +84,9 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   public onOptionClicked(entity: CatalogEntityModel): void {
+    this.searchService.saveEntities([entity]);
+    this.entities = this.searchService.savedEntities;
+
     if (entity.type === CatalogEntityEnum.FOLDER) {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
     } else if (entity.type === CatalogEntityEnum.FILE) {
@@ -151,6 +145,26 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     document.body.classList.add('search-form-stretched');
     this.formStretched = true;
     this.formHasStretched.emit(true);
+  }
+
+  public typeAHeadSearch(query: string) {
+
+    if (query.trim() === '') {
+      this.showPreviousSearchResults();
+    } else {
+      this.showSearchOptions(query);
+    }
+  }
+
+  private showSearchOptions(query: string): void {
+    this.filteredOptions = ContentHelper.testEntities
+      .filter((option: CatalogEntityModel) => {
+        return option.name.toLowerCase().indexOf(query?.toLowerCase()) === 0;
+      });
+  }
+
+  private showPreviousSearchResults(): void {
+    this.filteredOptions = this.entities || [];
   }
 
 }
