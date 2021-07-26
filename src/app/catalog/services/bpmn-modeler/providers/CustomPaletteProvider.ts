@@ -5,6 +5,9 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class CustomPaletteProvider implements IPaletteProvider {
+
+  static $inject = ['palette', 'originalPaletteProvider', 'elementFactory'];
+
   private readonly elementFactory: any;
 
   constructor(
