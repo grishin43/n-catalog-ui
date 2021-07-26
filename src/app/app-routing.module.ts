@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: AppRouteEnum.CATALOG,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./catalog/catalog.module').then(m => m.CatalogModule)
   },
   {
