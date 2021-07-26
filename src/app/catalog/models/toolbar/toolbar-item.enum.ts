@@ -1,5 +1,6 @@
 export enum ToolbarItemEnum {
   FILE = 'file',
   EDIT = 'edit',
-  WINDOW = 'window'
+  WINDOW = 'window',
+  PLUGINS = 'plugins'
 }

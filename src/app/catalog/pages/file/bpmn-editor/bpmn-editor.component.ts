@@ -2,11 +2,12 @@ import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {ApiService} from '../../../services/api/api.service';
 import {Subscription} from 'rxjs';
-import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
-import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.service';
-import {Router} from '@angular/router';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 import {AnimationsHelper} from '../../../helpers/animations.helper';
+import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.model';
+import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
+import {WysiwygEditorComponent} from '../wysiwyg-editor/wysiwyg-editor.component';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -24,46 +25,47 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   public file: CatalogEntityModel;
   public fileLoader: boolean;
+  public paletteColors: BpmnPaletteSchemeModel[];
 
   private subscriptions = new Subscription();
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e): any {
     if (e.ctrlKey && e.keyCode === 49) {
       // Ctrl + 1
-      this.bpmnModelerService.zoomTo(true);
+      this.bpmnModeler.zoomTo(true);
     } else if (e.ctrlKey && e.keyCode === 88) {
       // Ctrl + X
-      this.bpmnModelerService.cutElements();
+      this.bpmnModeler.cutElements();
     } else if (e.keyCode === 27) {
       // Esc
-      this.bpmnModelerService.cancelCutElements();
+      this.bpmnModeler.cancelCutElements();
     } else if (e.ctrlKey && e.keyCode === 80) {
       // Ctrl + P
       e.preventDefault();
-      this.bpmnModelerService.togglePropertiesPanel();
+      this.bpmnModeler.togglePropertiesPanel();
     } else if (e.ctrlKey && e.shiftKey && e.keyCode === 80) {
       // Ctrl + Shift + P
       e.preventDefault();
-      this.bpmnModelerService.resetPropertiesPanel();
+      this.bpmnModeler.resetPropertiesPanel();
     } else if (e.ctrlKey && e.keyCode === 90) {
       // Ctrl + Z
-      this.bpmnModelerService.increaseUndoCounter();
+      this.bpmnModeler.increaseUndoCounter();
     } else if (e.ctrlKey && e.keyCode === 89) {
       // Ctrl + Y
-      this.bpmnModelerService.decreaseUndoCounter();
+      this.bpmnModeler.decreaseUndoCounter();
     }
   }
 
   constructor(
     private apiService: ApiService,
-    private bpmnToolbarService: BpmnToolbarService,
-    private entitiesTabService: EntitiesTabService,
-    private router: Router,
-    private bpmnModelerService: BpmnModelerService
+    public bpmnModeler: BpmnModelerService,
+    private bpmnToolbar: BpmnToolbarService,
+    private bottomSheet: MatBottomSheet
   ) {
   }
 
   ngOnInit(): void {
+    this.paletteColors = this.bpmnToolbar.paletteColors;
     this.initEditor();
   }
 
@@ -72,7 +74,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private initEditor(): void {
-    this.bpmnModelerService.initModeler(
+    this.bpmnModeler.initModeler(
       '#bpmn-canvas',
       '#bpmn-properties',
       () => {
@@ -86,9 +88,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.apiService.getXML(this.file.link)
         .subscribe((res) => {
-            this.bpmnModelerService.openDiagram(res).then(() => {
-              this.bpmnModelerService.zoomTo(true);
-              this.bpmnModelerService.showTransactionBoundaries();
+            this.bpmnModeler.openDiagram(res).then(() => {
+              this.bpmnModeler.zoomTo(true);
               this.fileLoader = false;
             });
           }
@@ -97,7 +98,12 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   public togglePropertiesPanel(): void {
-    this.bpmnModelerService.togglePropertiesPanel();
+    this.bpmnModeler.togglePropertiesPanel();
   }
+
+  public openWysiwygEditor(): void {
+    this.bottomSheet.open(WysiwygEditorComponent);
+  }
+
 
 }

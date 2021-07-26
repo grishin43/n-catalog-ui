@@ -39,7 +39,7 @@ registerLocaleData(localeUk, 'uk');
   providers: [
     AuthService,
     {provide: LOCALE_ID, useValue: 'uk'},
-    {
+    /*{
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorsInterceptorService,
       multi: true,
@@ -54,7 +54,7 @@ registerLocaleData(localeUk, 'uk');
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
-    }
+    }*/
   ],
   bootstrap: [AppComponent]
 })

@@ -4,6 +4,7 @@ import {BpmnModelerService} from '../../../../services/bpmn-modeler/bpmn-modeler
 import {CatalogEntityModel} from '../../../../models/catalog-entity.model';
 import {BpmnToolbarService} from '../../../../services/bpmn-toolbar/bpmn-toolbar.service';
 import {ToolbarBlockerModel} from '../../../../models/toolbar/toolbar-blocker.model';
+import {ToolbarPluginEnum} from '../../../../models/toolbar/toolbar-plugin.enum';
 
 @Component({
   selector: 'np-toolbar-action-btn',
@@ -14,8 +15,10 @@ export class ToolbarActionBtnComponent {
   @Input() action: ToolbarItemModel;
   @Input() file: CatalogEntityModel;
 
+  public toolbarPlugin = ToolbarPluginEnum;
+
   constructor(
-    private bpmnModeler: BpmnModelerService,
+    public bpmnModeler: BpmnModelerService,
     private bpmnToolbar: BpmnToolbarService
   ) {
   }

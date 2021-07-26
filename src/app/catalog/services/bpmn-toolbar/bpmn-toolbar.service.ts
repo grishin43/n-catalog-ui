@@ -19,6 +19,7 @@ import {BpmnSpeedEnum} from '../../models/bpmn/bpmn-speed.enum';
 import {BpmnPositionEnum} from '../../models/bpmn/bpmn-position.enum';
 import {ToolbarBlockerModel} from '../../models/toolbar/toolbar-blocker.model';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
+import {ToolbarPluginEnum} from '../../models/toolbar/toolbar-plugin.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -291,6 +292,23 @@ export class BpmnToolbarService {
             name: ToolbarEditItemEnum.REMOVE_SELECTED,
             hotkey: 'Del',
             cb: () => this.bpmnModeler.deleteElements()
+          }
+        ]
+      },
+      {
+        name: ToolbarItemEnum.PLUGINS,
+        subItems: [
+          {
+            name: ToolbarPluginEnum.SCHEME_VALIDATOR,
+            cb: () => this.bpmnModeler.toggleSchemeValidatorPlugin()
+          },
+          {
+            name: ToolbarPluginEnum.TOKEN_SIMULATION,
+            cb: () => this.bpmnModeler.toggleTokenSimulationPlugin()
+          },
+          {
+            name: ToolbarPluginEnum.TRANSACTION_BOUNDARIES,
+            cb: () => this.bpmnModeler.toggleTransactionBoundariesPlugin()
           }
         ]
       },

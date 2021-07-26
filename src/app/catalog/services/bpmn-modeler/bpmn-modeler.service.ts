@@ -11,17 +11,28 @@ import lintModule from 'bpmn-js-bpmnlint';
 import bpmnlintConfig from '.bpmnlintrc';
 import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TranslateService} from '@ngx-translate/core';
+import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
+import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BpmnModelerService {
+  public schemeValidatorActive = false;
+  public tokenSimulationActive = false;
+  public transactionBoundariesActive = false;
+
   public bpmnModeler: any;
   public bpmnPanelSelector: string;
 
   private undoCounter = 0;
 
-  constructor() {
+  constructor(
+    private snackBar: MatSnackBar,
+    private translateService: TranslateService
+  ) {
   }
 
   public get canPaste(): boolean {
@@ -72,6 +83,9 @@ export class BpmnModelerService {
         additionalModules: [
           propertiesPanelModule,
           propertiesProviderModule,
+          // Re-use original palette, see CustomPaletteProvider
+          {[InjectionNames.originalPaletteProvider]: ['type', OriginalPaletteProvider]},
+          {[InjectionNames.paletteProvider]: ['type', CustomPaletteProvider]},
           TokenSimulationModule,
           lintModule,
           transactionBoundariesModule
@@ -343,14 +357,6 @@ export class BpmnModelerService {
     }
   }
 
-  public showTransactionBoundaries(): void {
-    try {
-      this.bpmnModeler.get('transactionBoundaries').show();
-    } catch (e) {
-      console.error('Could not show transaction boundaries\n', e);
-    }
-  }
-
   public zoomIn(): void {
     try {
       this.bpmnModeler.get('zoomScroll').stepZoom(1);
@@ -434,6 +440,57 @@ export class BpmnModelerService {
 
   public decreaseUndoCounter(): void {
     this.undoCounter--;
+  }
+
+  public toggleSchemeValidatorPlugin(): void {
+    try {
+      const linting = this.bpmnModeler.get('linting');
+      if (this.schemeValidatorActive === linting.isActive()) {
+        linting.toggle();
+      }
+      this.schemeValidatorActive = !this.schemeValidatorActive;
+      const messageKey = this.schemeValidatorActive
+        ? 'common.schemeValidatorActivated'
+        : 'common.schemeValidatorDeActivated';
+      this.showToast(messageKey);
+    } catch (err) {
+      console.error('Could not toggle scheme validator plugin\n', err);
+    }
+  }
+
+  public toggleTokenSimulationPlugin(): void {
+    try {
+      this.bpmnModeler.get('toggleMode').toggleMode();
+      this.tokenSimulationActive = !this.tokenSimulationActive;
+      const messageKey = this.tokenSimulationActive
+        ? 'common.tokenSimulationActivated'
+        : 'common.tokenSimulationDeActivated';
+      this.showToast(messageKey);
+    } catch (err) {
+      console.error('Could not toggle token simulation plugin\n', err);
+    }
+  }
+
+  public toggleTransactionBoundariesPlugin(): void {
+    try {
+      const transactionBoundaries = this.bpmnModeler.get('transactionBoundaries');
+      this.transactionBoundariesActive ? transactionBoundaries.hide() : transactionBoundaries.show();
+      this.transactionBoundariesActive = !this.transactionBoundariesActive;
+      const messageKey = this.transactionBoundariesActive
+        ? 'common.transactionBoundariesActivated'
+        : 'common.transactionBoundariesDeActivated';
+      this.showToast(messageKey);
+    } catch (err) {
+      console.error('Could not toggle transaction boundaries plugin\n', err);
+    }
+  }
+
+  private showToast(i18nKey: string): void {
+    this.snackBar.open(this.translateService.instant(i18nKey), undefined, {
+      duration: 1000,
+      verticalPosition: 'top',
+      panelClass: 'modeler-toast'
+    });
   }
 
 }

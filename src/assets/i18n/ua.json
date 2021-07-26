@@ -96,7 +96,17 @@
     "permissions": "Права",
     "read": "Перегляд",
     "noPermissions": "Немає прав",
-    "requestPermission": "Запросити доступ"
+    "requestPermission": "Запросити доступ",
+    "plugins": "Плагіни",
+    "schemeValidator": "Валідація схеми",
+    "tokenSimulation": "Симуляція токенів",
+    "transactionBoundaries": "Межі транзакцій",
+    "schemeValidatorActivated": "Валідатор схем активовано",
+    "schemeValidatorDeActivated": "Валідатор схем деактивовано",
+    "tokenSimulationActivated": "Симуляцію токенів активовано",
+    "tokenSimulationDeActivated": "Симуляцію токенів деактивовано",
+    "transactionBoundariesActivated": "Межі транзакій активовано",
+    "transactionBoundariesDeActivated": "Межі транзакій деактивовано"
   },
   "statuses": {
     "undefined": "Невизначений",

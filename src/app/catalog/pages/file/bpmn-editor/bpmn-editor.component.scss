@@ -1,7 +1,7 @@
 @import "../../../../../assets/styles/breakpoints";
 
 .bpmn-editor-wrapper {
-  height: calc(100vh - 172px);
+  height: calc(100vh - 152px);
   min-height: 350px;
   display: flex;
   position: relative;
@@ -13,7 +13,7 @@
   border-color: var(--np-silver-sand);
 
   @media screen and (max-width: $tablet-medium - 1px) {
-    height: calc(100vh - 156px);
+    height: calc(100vh - 125px);
   }
 
   #bpmn-canvas {
@@ -69,5 +69,59 @@
     p {
       margin: 1rem 0 0;
     }
+  }
+}
+
+ol {
+
+  &.colors-palette {
+    margin-bottom: 0;
+    max-width: 100px;
+
+    li {
+      button {
+        &.mat-menu-item {
+          padding: 6px;
+          height: auto;
+          width: auto;
+          margin: 0 auto;
+
+          &:disabled {
+            opacity: 0.2;
+          }
+        }
+
+        .color-scheme-sample {
+          width: 20px;
+          height: 20px;
+          display: block;
+          border: 2px solid;
+          border-radius: 2px;
+
+          @media screen and (max-width: $tablet-medium - 1px) {
+            width: 16px;
+            height: 16px;
+            border-width: 1px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.bpmn-bad-actions {
+  position: absolute;
+  visibility: hidden;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    display: inline-block;
   }
 }

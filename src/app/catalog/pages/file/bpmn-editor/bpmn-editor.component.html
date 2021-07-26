@@ -1,7 +1,21 @@
 <div class="container-fluid mw-100 pl-0 pr-0">
   <div class="row">
     <div class="col-12">
-      <div class="bpmn-editor-wrapper">
+      <div class="bpmn-editor-wrapper"
+        [ngClass]="{
+          'show-scheme-validator': bpmnModeler.schemeValidatorActive,
+          'show-token-simulation': bpmnModeler.tokenSimulationActive
+        }">
+        <div class="bpmn-bad-actions">
+          <button
+            id="wysiwyg-editor-trigger"
+            (click)="openWysiwygEditor()">
+          </button>
+          <button
+            id="color-palette-trigger"
+            [matMenuTriggerFor]="colorMenu">
+          </button>
+        </div>
         <div id="bpmn-canvas"></div>
         <div id="bpmn-properties">
           <button class="bpmn-properties-toggle-btn"
@@ -22,3 +36,23 @@
     </div>
   </div>
 </div>
+
+<mat-menu
+  class="toolbar-menu colors-palette-menu"
+  xPosition="before"
+  #colorMenu="matMenu">
+  <ol class="list-unstyled colors-palette d-flex flex-wrap no-gutters">
+    <li *ngFor="let item of paletteColors"
+        class="col-4">
+      <button
+        mat-menu-item
+        title="{{item.title | translate}}"
+        (click)="bpmnModeler.paintElements(item)">
+        <span
+          [ngStyle]="{'background': item.fill, 'border-color': item.stroke}"
+          class="color-scheme-sample">
+        </span>
+      </button>
+    </li>
+  </ol>
+</mat-menu>

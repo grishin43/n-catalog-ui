@@ -48,36 +48,3 @@ ul {
     }
   }
 }
-
-ol {
-
-  &.colors-palette {
-    margin-bottom: 0;
-    max-width: 100px;
-
-    li {
-      button {
-        &.mat-menu-item {
-          padding: 6px;
-          height: auto;
-          width: auto;
-          margin: 0 auto;
-        }
-
-        .color-scheme-sample {
-          width: 20px;
-          height: 20px;
-          display: block;
-          border: 2px solid;
-          border-radius: 2px;
-
-          @media screen and (max-width: $tablet-medium - 1px) {
-            width: 16px;
-            height: 16px;
-            border-width: 1px;
-          }
-        }
-      }
-    }
-  }
-}
