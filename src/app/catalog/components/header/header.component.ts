@@ -7,6 +7,7 @@ import {NavigationEnd, Router, Event} from '@angular/router';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {AuthService} from '../../../auth/services/auth/auth.service';
+import {UrlHelper} from '../../helpers/url.helper';
 
 @Component({
   selector: 'np-header',
@@ -50,7 +51,7 @@ export class HeaderComponent implements OnInit {
 
   private setupCurrentEntityId(url: string): void {
     if (url.match(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`)) {
-      this.currentId = url.split('/').pop();
+      this.currentId = UrlHelper.getParameterByName(CatalogRouteEnum._ID, url);
     } else {
       this.currentId = undefined;
     }
@@ -63,7 +64,10 @@ export class HeaderComponent implements OnInit {
   }
 
   public openFile(file: CatalogEntityModel): void {
-    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${file.id}`]);
+    this.router.navigate(
+      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+      {queryParams: {[CatalogRouteEnum._ID]: file.id}}
+    );
   }
 
   public logout(): void {

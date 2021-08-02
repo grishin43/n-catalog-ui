@@ -4,12 +4,16 @@ mat-form-field {
   &.mat-form-field-appearance-outline {
     width: 100%;
 
+    .mat-form-field-subscript-wrapper {
+      padding: 0;
+    }
+
     &.input-type-search {
       &.has-value {
         .mat-form-field-wrapper {
           .mat-form-field-flex {
             .mat-form-field-outline {
-              background: var(--np-catskill-white);
+              background: var(--np-ghost-white);
               border-radius: 5px;
             }
           }
@@ -23,7 +27,7 @@ mat-form-field {
 
           &:focus-within {
             .mat-form-field-outline {
-              background: var(--np-catskill-white);
+              background: var(--np-ghost-white);
               border-radius: 5px;
             }
           }
@@ -50,6 +54,18 @@ mat-form-field {
             .mat-form-field-outline {
               color: var(--np-roman-silver);
             }
+          }
+        }
+      }
+    }
+
+    &.smaller-height {
+      .mat-form-field-wrapper {
+        .mat-form-field-flex {
+          margin-top: 0;
+
+          .mat-form-field-infix {
+            padding: 10px 0 10px 0;
           }
         }
       }
@@ -82,11 +98,30 @@ mat-form-field {
               }
             }
           }
+
+          &.np-mat-errors {
+            np-mat-errors {
+              position: absolute;
+              left: -15px;
+              top: 100%;
+              font-size: 12px;
+              line-height: 18px;
+              padding-top: 2px;
+              width: calc(100% + 30px);
+
+              mat-error {
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
         }
 
         .mat-form-field-outline {
           top: 0;
-          color: var(--np-catskill-white);
+          color: var(--np-geyser);
           transition: var(--np-base-transition);
 
           &.mat-form-field-outline-thick {
@@ -106,6 +141,26 @@ mat-form-field {
           margin-left: 8px;
         }
       }
+    }
+
+    &.mat-form-field-invalid {
+      .mat-form-field-flex {
+        .mat-form-field-outline {
+          color: var(--np-crimson) !important;
+        }
+
+        .mat-form-field-infix {
+          input.mat-input-element {
+            color: var(--np-crimson);
+          }
+        }
+      }
+    }
+  }
+
+  &.pb-0 {
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
     }
   }
 }
@@ -133,4 +188,12 @@ mat-label {
   font-weight: normal;
   margin-bottom: 6px;
   display: block;
+}
+
+.form-group {
+  &.has-errors {
+    mat-label {
+      color: var(--np-crimson);
+    }
+  }
 }

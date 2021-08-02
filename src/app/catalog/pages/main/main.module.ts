@@ -12,6 +12,7 @@ import {SafeHtmlModule} from '../../../shared/pipes/safe-html/safe-html.module';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule, Routes} from '@angular/router';
 import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
+import {CreateEntityModalModule} from '../../../shared/components/big/create-entity-modal/create-entity-modal.module';
 
 const routes: Routes = [
   {
@@ -40,7 +41,8 @@ const routes: Routes = [
     MatIconModule,
     SafeHtmlModule,
     MatButtonModule,
-    EntityTableModule
+    EntityTableModule,
+    CreateEntityModalModule
   ]
 })
 export class MainModule {

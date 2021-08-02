@@ -1,34 +1,106 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, pipe} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {delay, map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
+import {SearchModel} from '../../../models/domain/search.model';
+import {FolderModel} from '../../../models/domain/folder.model';
+import {ProcessModel} from '../../../models/domain/process.model';
+import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 
 enum ApiRoute {
+  FOLDERS = 'folders',
+  RENAME = 'rename',
+  MOVE = 'move',
+  DEFINITIONS = 'definitions',
+  ORIGINS = 'origins'
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly ApiUrl = '';
+  private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
 
   constructor(
     private http: HttpClient
   ) {
   }
 
-  public getRootFolders(): Observable<CatalogEntityModel[]> {
+  public createRootFolder(name: string): Observable<{ name: string }> {
+    return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}`, {name});
+  }
+
+  public getRootFolders(): Observable<SearchModel<FolderModel>> {
+    return this.http.get<SearchModel<FolderModel>>(`${this.ApiUrl}/${ApiRoute.FOLDERS}`);
+  }
+
+  public createFolder(parentFolderId: string, name: string): Observable<{ name: string }> {
+    return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`, {
+      id: parentFolderId,
+      name
+    });
+  }
+
+  public getFolderById(id: string): Observable<FolderModel> {
+    return this.http.get<FolderModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`);
+  }
+
+  public renameFolder(id: string, name: string): Observable<{ name: string }> {
+    return this.http.put<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}/${ApiRoute.RENAME}`, {name});
+  }
+
+  public moveFolder(id: string, targetFolderId: string): Observable<{ folder: string }> {
+    return this.http.post<{ folder: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}/${ApiRoute.MOVE}`, {folder: targetFolderId});
+  }
+
+  /**
+   * Only an empty folder is allowed to be deleted.
+   * When you try to delete a folder that contains other folders or processes, the response status will be 403.
+   */
+  public deleteFolder(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`);
+  }
+
+  public createProcess(parentFolderId: string, processType: string, name: string): Observable<ProcessModel> {
+    return this.http.post<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.DEFINITIONS}`, {
+      id: parentFolderId,
+      origin: processType,
+      name
+    });
+  }
+
+  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<{ name: string }> {
+    return this.http.put<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.DEFINITIONS}/${processId}/${ApiRoute.RENAME}`, {
+      folderId: parentFolderId,
+      definitionId: processId,
+      name
+    });
+  }
+
+  public moveProcess(parentFolderId: string, processId: string, targetFolderId: string): Observable<{ folder: string }> {
+    return this.http.post<{ folder: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.DEFINITIONS}/${processId}/${ApiRoute.MOVE}`, {
+      folderId: parentFolderId,
+      definitionId: processId,
+      folder: targetFolderId
+    });
+  }
+
+  public getProcessTypes(): Observable<SearchModel<ProcessTypeModel>> {
+    return this.http.get<SearchModel<ProcessTypeModel>>(`${this.ApiUrl}/${ApiRoute.ORIGINS}`);
+  }
+
+  public getMockedRootFolders(): Observable<CatalogEntityModel[]> {
     // TODO
     // return this.http.get<CatalogEntityModel[]>(`${this.ApiUrl}`);
     return of(ContentHelper.catalogMainFolders);
   }
 
-  public getFolderById(id: string): Observable<CatalogEntityModel> {
+  public getMockedFolderById(id: string): Observable<CatalogEntityModel> {
     // TODO
     // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
-    return this.getRootFolders().pipe(
+    return this.getMockedRootFolders().pipe(
       map((folders: CatalogEntityModel[]) => {
         return folders.find((folder: CatalogEntityModel) => folder.id === id);
       })
@@ -38,7 +110,7 @@ export class ApiService {
   public getFileById(id: string): Observable<CatalogEntityModel> {
     // TODO
     // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
-    return this.getRootFolders().pipe(
+    return this.getMockedRootFolders().pipe(
       map((folders: CatalogEntityModel[]) => {
         return folders.find((folder: CatalogEntityModel) => {
           return !!folder.entities?.length;
@@ -52,7 +124,7 @@ export class ApiService {
   public searchEntities(str: string): Observable<CatalogEntityModel[]> {
     // TODO
     // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
-    return this.getRootFolders().pipe(
+    return this.getMockedRootFolders().pipe(
       map((folders: CatalogEntityModel[]) => {
         return folders.find((folder: CatalogEntityModel) => {
           return !!folder.entities?.length;

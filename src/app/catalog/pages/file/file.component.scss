@@ -27,11 +27,11 @@
     }
 
     &:hover {
-      background: var(--np-catskill-white);
+      background: var(--np-ghost-white);
     }
 
     &:focus {
-      background: var(--np-catskill-white-2);
+      background: var(--np-catskill-white);
       outline: none !important;
       cursor: auto;
     }

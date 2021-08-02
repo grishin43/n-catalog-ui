@@ -5,6 +5,9 @@ import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
 import {ApiService} from '../../services/api/api.service';
+import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
+import {NpStatusPillEnum} from '../../../shared/components/small/np-status-pill/models/np-status-pill.enum';
+import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permission.enum';
 
 @Component({
   selector: 'np-file',
@@ -25,18 +28,20 @@ export class FileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    document.body.classList.add('cdk-overflow');
     this.subscribeRoute();
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('cdk-overflow');
     this.subscriptions.unsubscribe();
   }
 
   private subscribeRoute(): void {
     this.subscriptions.add(
-      this.activateRoute.params
-        .subscribe((params: Params) => {
-          this.subscribeFile(params[CatalogRouteEnum._ID]);
+      this.activateRoute.queryParams
+        .subscribe((queryParams: Params) => {
+          this.subscribeFile(queryParams[CatalogRouteEnum._ID]);
         })
     );
   }
@@ -45,8 +50,21 @@ export class FileComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.apiService.getFileById(fileId)
         .subscribe((res: CatalogEntityModel) => {
-          this.file = res;
-          this.entitiesTabService.addEntity(this.file);
+          if (res) {
+            this.file = res;
+            this.entitiesTabService.addEntity(this.file);
+          } else {
+            // TODO
+            this.file = {
+              id: fileId,
+              name: 'Новий файл',
+              type: CatalogEntityEnum.FILE,
+              status: NpStatusPillEnum.DRAFT,
+              link: '../../../assets/bpmn/newDiagram.bpmn',
+              permissions: CatalogEntityPermissionEnum.READ
+            };
+            this.entitiesTabService.addEntity(this.file);
+          }
         })
     );
   }

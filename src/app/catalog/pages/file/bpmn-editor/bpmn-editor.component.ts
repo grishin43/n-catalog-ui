@@ -8,6 +8,7 @@ import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.m
 import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
 import {WysiwygEditorComponent} from '../wysiwyg-editor/wysiwyg-editor.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -25,6 +26,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   public file: CatalogEntityModel;
   public fileLoader: boolean;
+  public fileLoadingError: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
   private subscriptions = new Subscription();
@@ -84,14 +86,21 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private openFile(): any {
+    this.fileLoadingError = undefined;
     this.fileLoader = true;
     this.subscriptions.add(
-      this.apiService.getXML(this.file.link)
-        .subscribe((res) => {
+      this.apiService.getXML(this.file?.link)
+        .subscribe(
+          (res) => {
             this.bpmnModeler.openDiagram(res).then(() => {
               this.bpmnModeler.zoomTo(true);
               this.fileLoader = false;
             });
+          },
+          (err: HttpErrorResponse) => {
+            this.fileLoader = false;
+            this.fileLoadingError = err;
+            console.error(err);
           }
         )
     );
@@ -105,5 +114,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     this.bottomSheet.open(WysiwygEditorComponent);
   }
 
+  public reloadPage(): void {
+    window.location.reload();
+  }
 
 }

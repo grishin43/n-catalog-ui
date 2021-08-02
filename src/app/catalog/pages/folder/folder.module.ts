@@ -10,6 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
 import {MatRippleModule} from '@angular/material/core';
 import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const routes: Routes = [
   {
@@ -36,7 +37,8 @@ const routes: Routes = [
         MatIconModule,
         EntityTableModule,
         MatRippleModule,
-        NpButtonModule
+        NpButtonModule,
+        MatProgressSpinnerModule
     ]
 })
 export class FolderModule {

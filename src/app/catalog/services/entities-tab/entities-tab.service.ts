@@ -40,9 +40,15 @@ export class EntitiesTabService {
     this.entities.next(entitiesValue);
     LocalStorageHelper.setData(StorageEnum.FILE_TABS, entitiesValue);
     if (entitiesValue[removeIndex + 1]) {
-      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${entitiesValue[removeIndex + 1].id}`]);
+      this.router.navigate(
+        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+        {queryParams: {[CatalogRouteEnum._ID]: entitiesValue[removeIndex + 1].id}}
+      );
     } else if (entitiesValue[removeIndex - 1]) {
-      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${entitiesValue[removeIndex - 1].id}`]);
+      this.router.navigate(
+        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+        {queryParams: {[CatalogRouteEnum._ID]: entitiesValue[removeIndex - 1].id}}
+      );
     } else {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
     }

@@ -3,7 +3,10 @@
     mat-button
     [type]="btnType"
     [class]="size"
-    [ngClass]="{'min-width-auto': autoMinWidth}"
+    [ngClass]="{
+      'min-width-auto': autoMinWidth,
+      'min-width': minWidth
+    }"
     [disabled]="disabled">
     <ng-container
       [ngTemplateOutlet]="innerContent">
@@ -16,7 +19,10 @@
     color="primary"
     [type]="btnType"
     [class]="size"
-    [ngClass]="{'min-width-auto': autoMinWidth}"
+    [ngClass]="{
+      'min-width-auto': autoMinWidth,
+      'min-width': minWidth
+    }"
     [disabled]="disabled">
     <ng-container
       [ngTemplateOutlet]="innerContent">
@@ -29,7 +35,10 @@
     color="primary"
     [type]="btnType"
     [class]="size"
-    [ngClass]="{'min-width-auto': autoMinWidth}"
+    [ngClass]="{
+      'min-width-auto': autoMinWidth,
+      'min-width': minWidth
+    }"
     [disabled]="disabled">
     <ng-container
       [ngTemplateOutlet]="innerContent">

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12">
       <div class="bpmn-editor-wrapper"
-        [ngClass]="{
+           [ngClass]="{
           'show-scheme-validator': bpmnModeler.schemeValidatorActive,
           'show-token-simulation': bpmnModeler.tokenSimulationActive
         }">
@@ -26,11 +26,20 @@
         <div
           @fadeInOut
           *ngIf="fileLoader"
-          id="bpmn-loader">
+          class="bpmn-overlay">
           <mat-spinner
             [diameter]="50">
           </mat-spinner>
           <p>{{'common.fileLoading' | translate}}</p>
+        </div>
+        <div
+          @fadeInOut
+          *ngIf="fileLoadingError"
+          class="bpmn-overlay">
+          <p>{{'errors.failedToLoadFile' | translate}}</p>
+          <np-button (click)="reloadPage()">
+            <span>{{'common.tryAgain' | translate}}</span>
+          </np-button>
         </div>
       </div>
     </div>

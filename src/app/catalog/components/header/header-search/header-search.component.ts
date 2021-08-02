@@ -90,7 +90,10 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     if (entity.type === CatalogEntityEnum.FOLDER) {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
     } else if (entity.type === CatalogEntityEnum.FILE) {
-      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}/${entity.id}`]);
+      this.router.navigate(
+        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+        {queryParams: {[CatalogRouteEnum._ID]: entity.id}}
+      );
     }
   }
 

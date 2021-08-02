@@ -25,7 +25,9 @@ button {
   }
 
   &.min-width {
-    min-width: 175px;
+    @media screen and (min-width: $notebook) {
+      min-width: 175px;
+    }
   }
 
   &.mat-flat-button {

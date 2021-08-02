@@ -48,3 +48,11 @@ a.folder {
     }
   }
 }
+
+.general-folder-icon {
+  svg {
+    path {
+      fill: var(--np-hit-gray);
+    }
+  }
+}

@@ -1,20 +1,28 @@
 button {
   .mat-button-wrapper {
-    span + mat-icon {
-      &:first-child {
-        margin-left: -8px;
-        margin-right: 8px;
-      }
-
-      &:last-child {
-        margin-right: -8px;
-        margin-left: 8px;
-      }
-    }
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
 
     mat-icon {
       & + span {
         margin-left: 5px;
+      }
+    }
+
+    > span + mat-spinner {
+      margin-left: 8px;
+    }
+  }
+
+  &.mat-primary {
+    .mat-button-wrapper {
+      mat-spinner {
+        svg {
+          circle {
+            stroke: var(--np-primary-white);
+          }
+        }
       }
     }
   }
@@ -25,5 +33,5 @@ np-button {
 }
 
 .mat-menu-item:hover:not([disabled]), .mat-menu-item.cdk-program-focused:not([disabled]), .mat-menu-item.cdk-keyboard-focused:not([disabled]), .mat-menu-item-highlighted:not([disabled]) {
-  background: var(--np-catskill-white);
+  background: var(--np-ghost-white);
 }

@@ -1,9 +1,20 @@
-<a matRipple
+<a *ngIf="folder"
+   matRipple
    matRippleColor="{{rippleLightColor}}"
    [routerLink]="folderRoute"
    class="folder">
   <div class="folder-header">
-    <mat-icon [innerHTML]="folder.icon | safeHtml"></mat-icon>
+    <ng-container *ngIf="folder.icon; else generalIconTemplate">
+      <mat-icon [innerHTML]="folder.icon | safeHtml"></mat-icon>
+    </ng-container>
+    <ng-template #generalIconTemplate>
+      <mat-icon class="general-folder-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M39.0588 14.3435H21.7412L19.7841 11.2424C19.296 10.469 18.4432 9.96436 17.5316 10.0377H3.85412C1.72094 10.0532 0 11.7868 0 13.92V39.1012C0.00258824 41.2417 1.73718 42.9762 3.87765 42.9788H39.0588C41.1993 42.9762 42.9339 41.2417 42.9365 39.1012V18.2212C42.9339 16.0807 41.1993 14.3461 39.0588 14.3435Z" fill="#B5E3D8"/>
+          <path d="M44.1459 9.32765H26.8236L23.3789 5.23354C23.263 5.09424 23.0894 5.01612 22.9083 5.02177H8.94125C7.00572 5.02495 5.36902 6.45483 5.10596 8.37236H17.8448C18.5128 8.37071 19.147 8.66554 19.5765 9.17707L22 12.6735H39.0589C42.1183 12.6787 44.5972 15.1577 44.6024 18.2171V37.9253C46.5422 37.6833 47.9985 36.0354 48.0001 34.0806V13.2006C47.995 11.0711 46.2754 9.34318 44.1459 9.32765Z" fill="#B5E3D8"/>
+        </svg>
+      </mat-icon>
+    </ng-template>
     <button mat-icon-button
             (click)="$event.preventDefault(); $event.stopPropagation();"
             [matMenuTriggerFor]="menu">
@@ -17,10 +28,12 @@
     </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item
-              (click)="onCreateFolderClicked($event)">
+              (click)="createEntity($event, eCatalogEntity.FOLDER)">
         <mat-icon>
           <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.59 1.12688C8.21 0.723125 7.7 0.5 7.17 0.5H2C0.9 0.5 0.00999999 1.45625 0.00999999 2.625L0 15.375C0 16.5438 0.9 17.5 2 17.5H18C19.1 17.5 20 16.5438 20 15.375V4.75C20 3.58125 19.1 2.625 18 2.625H10L8.59 1.12688Z" fill="#B8C1CB"/>
+            <path
+              d="M8.59 1.12688C8.21 0.723125 7.7 0.5 7.17 0.5H2C0.9 0.5 0.00999999 1.45625 0.00999999 2.625L0 15.375C0 16.5438 0.9 17.5 2 17.5H18C19.1 17.5 20 16.5438 20 15.375V4.75C20 3.58125 19.1 2.625 18 2.625H10L8.59 1.12688Z"
+              fill="#B8C1CB"/>
           </svg>
         </mat-icon>
         <span>
@@ -28,7 +41,7 @@
         </span>
       </button>
       <button mat-menu-item
-              (click)="onCreateFileClicked($event)">
+              (click)="createEntity($event, eCatalogEntity.FILE)">
         <mat-icon>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -46,7 +59,7 @@
     <h6>{{folder.name}}</h6>
   </div>
   <div class="folder-footer">
-    <span>{{'common.foldersCount' |translate : {count: folder.subFoldersCount} }}</span>
-    <span>{{' • ' + ('common.filesCount' |translate : {count: folder.filesCount})}}</span>
+    <span>{{'common.foldersCount' | translate : {count: folder.folders?.count || 0} }}</span>
+    <span>{{' • ' + ('common.filesCount' | translate : {count: folder.definitions?.count || 0})}}</span>
   </div>
 </a>

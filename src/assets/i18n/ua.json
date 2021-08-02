@@ -106,7 +106,21 @@
     "tokenSimulationActivated": "Симуляцію токенів активовано",
     "tokenSimulationDeActivated": "Симуляцію токенів деактивовано",
     "transactionBoundariesActivated": "Межі транзакій активовано",
-    "transactionBoundariesDeActivated": "Межі транзакій деактивовано"
+    "transactionBoundariesDeActivated": "Межі транзакій деактивовано",
+    "folderName": "Назва папки",
+    "choosePlaceForSaving": "Оберіть місце для збереження",
+    "choosePlaceForSavingAndFileType": "Оберіть місце для збереження та тип файлу",
+    "chooseReplacement": "Оберіть розташування...",
+    "rootFolders": "Рутові папки",
+    "select": "Вибрати",
+    "fileType": "Тип файлу",
+    "chooseType": "Оберіть тип",
+    "youCanChooseOnlyFolder": "Обрати можно тільки папку",
+    "createNewFolderInFolder": "Створити нову папку в папці “{{folderPath}}”",
+    "folderCreated": "Папка створена",
+    "processCreated": "Процес створено",
+    "tryAgain": "Спробувати знову",
+    "folderLoading": "Завантаження папки"
   },
   "statuses": {
     "undefined": "Невизначений",
@@ -121,5 +135,11 @@
     "pink": "Рожевий",
     "yellow": "Жовтий",
     "green": "Зелений"
+  },
+  "errors": {
+    "required": "Це поле необхідно заповнити.",
+    "thisFolderNameAlreadyExistAt": "Така назва папки вже існує в {{folderPath}}",
+    "thisFileNameAlreadyExistAt": "Така назва файлу вже існує в {{folderPath}}",
+    "failedToLoadFile": "Не вдалося завантажити файл"
   }
 }

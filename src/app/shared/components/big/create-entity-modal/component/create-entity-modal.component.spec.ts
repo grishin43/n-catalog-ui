@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateFileModalComponent } from './create-file-modal.component';
+import { CreateEntityModalComponent } from './create-entity-modal.component';
 
-describe('CreateFileModalComponent', () => {
-  let component: CreateFileModalComponent;
-  let fixture: ComponentFixture<CreateFileModalComponent>;
+describe('NewFolderModalComponent', () => {
+  let component: CreateEntityModalComponent;
+  let fixture: ComponentFixture<CreateEntityModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateFileModalComponent ]
+      declarations: [ CreateEntityModalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateFileModalComponent);
+    fixture = TestBed.createComponent(CreateEntityModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,7 +9,6 @@ import {ToolbarAlignmentEnum} from '../../models/toolbar/toolbar-alignment.enum'
 import {ToolbarDistributionEnum} from '../../models/toolbar/toolbar-distribution.enum';
 import {ToolbarMovementEnum} from '../../models/toolbar/toolbar-movement.enum';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
-import {CreateFileModalComponent} from '../../../shared/components/big/create-file-modal/component/create-file-modal.component';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TranslateService} from '@ngx-translate/core';
@@ -20,6 +19,9 @@ import {BpmnPositionEnum} from '../../models/bpmn/bpmn-position.enum';
 import {ToolbarBlockerModel} from '../../models/toolbar/toolbar-blocker.model';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
 import {ToolbarPluginEnum} from '../../models/toolbar/toolbar-plugin.enum';
+import {CreateEntityModalComponent} from '../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
+import {InjectableDataModel} from '../../../shared/components/big/create-entity-modal/models/injectable-data.model';
+import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -42,9 +44,12 @@ export class BpmnToolbarService {
           {
             name: ToolbarFileItemEnum.NEW_FILE,
             cb: () => {
-              this.dialog.open(CreateFileModalComponent, {
+              this.dialog.open(CreateEntityModalComponent, {
                 width: '700px',
-                autoFocus: false
+                autoFocus: false,
+                data: {
+                  type: CatalogEntityEnum.FILE
+                } as InjectableDataModel
               });
             }
           },

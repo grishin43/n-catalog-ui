@@ -66,31 +66,33 @@
     }
 
     .mat-divider {
-      border-color: var(--np-catskill-white-2);
+      border-color: var(--np-catskill-white);
       margin-left: -8px;
       margin-right: -8px;
     }
   }
 }
 
-.cdk-overlay-connected-position-bounding-box {
-  z-index: 1005;
-
-  & + .cdk-overlay-connected-position-bounding-box {
-    z-index: 1004;
-
-    .mat-menu-panel {
-      margin-left: 8px;
-    }
+.cdk-overflow {
+  .cdk-overlay-connected-position-bounding-box {
+    z-index: 1005;
 
     & + .cdk-overlay-connected-position-bounding-box {
-      z-index: 1003;
+      z-index: 1004;
+
+      .mat-menu-panel {
+        margin-left: 8px;
+      }
 
       & + .cdk-overlay-connected-position-bounding-box {
-        z-index: 1002;
+        z-index: 1003;
 
         & + .cdk-overlay-connected-position-bounding-box {
-          z-index: 1001;
+          z-index: 1002;
+
+          & + .cdk-overlay-connected-position-bounding-box {
+            z-index: 1001;
+          }
         }
       }
     }

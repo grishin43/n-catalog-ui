@@ -1,0 +1,348 @@
+<div mat-dialog-title>
+  <ng-container *ngIf="data.type === eCatalogEntity.FOLDER">
+    <h4>{{'common.newFolder' | translate}}</h4>
+    <p>{{'common.choosePlaceForSaving' | translate}}</p>
+  </ng-container>
+  <ng-container *ngIf="data.type === eCatalogEntity.FILE">
+    <h4>{{'common.newFile' | translate}}</h4>
+    <p>{{'common.choosePlaceForSavingAndFileType' | translate}}</p>
+  </ng-container>
+</div>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="form">
+    <div
+      class="form-group mb-0"
+      [ngClass]="{
+         'has-errors': form.get(formControlName.ENTITY_NAME).touched && form.get(formControlName.ENTITY_NAME).invalid
+      }">
+      <mat-label>
+        <ng-container *ngIf="data.type === eCatalogEntity.FOLDER">
+          {{'common.folderName' | translate}}
+        </ng-container>
+        <ng-container *ngIf="data.type === eCatalogEntity.FILE">
+          {{'common.fileName' | translate}}
+        </ng-container>
+      </mat-label>
+      <mat-form-field
+        class="input-type-text"
+        appearance="outline"
+        floatLabel="never">
+        <input
+          type="text"
+          matInput
+          (blur)="handleEntityNameDuplicator(formControlName.ENTITY_NAME, eCatalogEntity.FILE)"
+          [formControlName]="formControlName.ENTITY_NAME"
+          [attr.name]="formControlName.ENTITY_NAME"
+          [placeholder]="'common.entityName' | translate">
+        <mat-error *ngIf="form.get(formControlName.ENTITY_NAME).invalid">
+          <ng-container *ngIf="form.get(formControlName.ENTITY_NAME).hasError('required')">
+            {{'errors.required' | translate}}
+          </ng-container>
+          <ng-container *ngIf="!form.get(formControlName.ENTITY_NAME).hasError('required') &&
+            form.get(formControlName.ENTITY_NAME).hasError('duplicatedName')">
+            <ng-container *ngIf="data.type === eCatalogEntity.FOLDER">
+              {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+            </ng-container>
+            <ng-container *ngIf="data.type === eCatalogEntity.FILE">
+              {{'errors.thisFileNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+            </ng-container>
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-group mb-0">
+      <mat-label>
+        {{'common.folder' | translate}}
+      </mat-label>
+      <mat-form-field
+        class="input-type-text"
+        appearance="outline"
+        floatLabel="never"
+        (click)="!rootFoldersLoader ? matAutocompleteTrigger.openPanel() : undefined">
+        <input
+          type="text"
+          matInput
+          #matAutocompleteTrigger="matAutocompleteTrigger"
+          [formControlName]="formControlName.FOLDER_PATH"
+          [attr.name]="formControlName.FOLDER_PATH"
+          [placeholder]="'common.chooseReplacement' | translate"
+          [matAutocomplete]="auto"
+          [readonly]="true">
+        <mat-spinner
+          *ngIf="rootFoldersLoader"
+          matSuffix
+          [diameter]="20">
+        </mat-spinner>
+        <mat-icon
+          *ngIf="!rootFoldersLoader"
+          matSuffix>
+          <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.0336 9.60742L12.0803 14.6074L7.12695 9.60742" stroke="#B8C1CB" stroke-width="1.5"
+                  stroke-linecap="round"/>
+          </svg>
+        </mat-icon>
+      </mat-form-field>
+    </div>
+    <div
+      class="form-group mb-0"
+      *ngIf="form.get(formControlName.FILE_TYPE)"
+      [ngClass]="{
+         'has-errors': form.get(formControlName.FILE_TYPE).touched && form.get(formControlName.FILE_TYPE).invalid
+      }">
+      <mat-label>
+        {{'common.fileType' | translate}}
+      </mat-label>
+      <mat-form-field
+        class="input-type-text"
+        appearance="outline"
+        floatLabel="never"
+        (click)="!fileTypesLoader ? matAutocompleteTrigger2.openPanel() : undefined">
+        <input
+          type="text"
+          matInput
+          #matAutocompleteTrigger2="matAutocompleteTrigger"
+          [formControlName]="formControlName.FILE_TYPE"
+          [attr.name]="formControlName.FILE_TYPE"
+          [placeholder]="'common.chooseType' | translate"
+          [matAutocomplete]="fileTypesAuto"
+          [readonly]="true">
+        <mat-spinner
+          *ngIf="fileTypesLoader"
+          matSuffix
+          [diameter]="20">
+        </mat-spinner>
+        <mat-error *ngIf="form.get(formControlName.FILE_TYPE).invalid">
+          {{'errors.required' | translate}}
+        </mat-error>
+        <mat-icon
+          *ngIf="!fileTypesLoader"
+          matSuffix>
+          <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.0336 9.60742L12.0803 14.6074L7.12695 9.60742" stroke="#B8C1CB" stroke-width="1.5"
+                  stroke-linecap="round"/>
+          </svg>
+        </mat-icon>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'reset'"
+    [type]="'secondary'"
+    (click)="closeModal()">
+    {{'common.cancel' | translate}}
+  </np-button>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'submit'"
+    [type]="'primary'"
+    [disabled]="form.invalid || loader"
+    (click)="formSubmit()">
+    <span>
+      {{'common.create' | translate}}
+    </span>
+    <mat-spinner
+      *ngIf="loader"
+      [diameter]="20">
+    </mat-spinner>
+  </np-button>
+</mat-dialog-actions>
+
+<mat-autocomplete
+  class="pseudo-file-manager"
+  #fileTypesAuto="matAutocomplete">
+  <mat-option
+    *ngFor="let option of fileTypes"
+    [value]="option.name"
+    (click)="fileTypeSelected($event, option)">
+    {{option.name}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete
+  class="pseudo-file-manager sticky-pseudo-header sticky-pseudo-footer"
+  #auto="matAutocomplete"
+  [formGroup]="form">
+  <ng-container *ngIf="newFolderMode; else fileManagerTemplate">
+    <mat-option
+      class="pseudo-disabled pseudo-header"
+      [disabled]="true">
+      <button
+        mat-button
+        (click)="onNewFolderBack($event)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.3334 7.33268H5.22008L8.94675 3.60602L8.00008 2.66602L2.66675 7.99935L8.00008 13.3327L8.94008 12.3927L5.22008 8.66602H13.3334V7.33268Z"
+            fill="#8A95A3"/>
+        </svg>
+      </button>
+      <mat-form-field
+        *ngIf="form.get(formControlName.NEW_ENTITY_NAME)"
+        class="input-type-text pb-0 smaller-height"
+        appearance="outline"
+        floatLabel="never">
+        <input
+          type="text"
+          matInput
+          (blur)="handleEntityNameDuplicator(formControlName.NEW_ENTITY_NAME, eCatalogEntity.FOLDER)"
+          [formControlName]="formControlName.NEW_ENTITY_NAME"
+          [attr.name]="formControlName.NEW_ENTITY_NAME"
+          [placeholder]="'common.entityName' | translate">
+      </mat-form-field>
+    </mat-option>
+    <mat-option
+      class="pseudo-disabled pseudo-body"
+      [disabled]="true">
+      <ng-container *ngIf="!form.get(formControlName.NEW_ENTITY_NAME).hasError('required') &&
+            form.get(formControlName.NEW_ENTITY_NAME).hasError('duplicatedName');
+            else createFolderLabelTemplate">
+        <span class="error-label">
+          {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+        </span>
+      </ng-container>
+      <ng-template #createFolderLabelTemplate>
+        <span>
+          {{'common.createNewFolderInFolder' | translate: {folderPath: fullFolderPath} }}
+        </span>
+      </ng-template>
+    </mat-option>
+    <mat-option
+      class="pseudo-disabled pseudo-footer"
+      [disabled]="true">
+      <np-button
+        [size]="'md'"
+        [btnType]="'submit'"
+        [type]="'primary'"
+        [disabled]="form.get(formControlName.NEW_ENTITY_NAME).invalid"
+        (click)="onCreateNewFolder($event)">
+        <span>
+          {{'common.create' | translate}}
+        </span>
+      </np-button>
+    </mat-option>
+  </ng-container>
+  <ng-template #fileManagerTemplate>
+    <mat-option
+      class="pseudo-disabled pseudo-header"
+      [disabled]="true">
+      <button
+        *ngIf="openedFolder"
+        mat-button
+        (click)="onFolderBack($event)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.3334 7.33268H5.22008L8.94675 3.60602L8.00008 2.66602L2.66675 7.99935L8.00008 13.3327L8.94008 12.3927L5.22008 8.66602H13.3334V7.33268Z"
+            fill="#8A95A3"/>
+        </svg>
+      </button>
+      <span class="mat-optgroup-label pl-0 pr-0">
+        <ng-container *ngIf="selectedFolderPaths?.length; else rootFoldersTextTemplate">
+          <span class="entity-path">
+            <span *ngFor="let item of selectedFolderPaths">
+              {{item}}
+            </span>
+          </span>
+        </ng-container>
+        <ng-template #rootFoldersTextTemplate>
+          {{'common.rootFolders' | translate}}
+        </ng-template>
+      </span>
+    </mat-option>
+    <mat-optgroup class="hide-label">
+      <ng-container *ngIf="openedFolder; else rootFoldersTemplate">
+        <ng-container
+          *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolder?.entities}"></ng-container>
+      </ng-container>
+      <ng-template #rootFoldersTemplate>
+        <ng-container *ngTemplateOutlet="folderOptionsTemplate; context: {data : rootFolders}"></ng-container>
+      </ng-template>
+    </mat-optgroup>
+    <mat-option
+      class="pseudo-disabled pseudo-footer"
+      [disabled]="true">
+      <np-button
+        class="mr-auto"
+        *ngIf="data.type === eCatalogEntity.FILE && !newFolderMode && openedFolder"
+        [size]="'md'"
+        [btnType]="'submit'"
+        [type]="'default'"
+        (click)="onAddNewFolder($event)">
+        <mat-icon style="margin-right: 4px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#2E3742"/>
+          </svg>
+        </mat-icon>
+        <span class="ml-0">
+          {{'common.newFolder' | translate}}
+        </span>
+      </np-button>
+      <np-button
+        [size]="'md'"
+        [btnType]="'submit'"
+        [type]="'primary'"
+        [disabled]="!selectedFolder"
+        (click)="onFolderSelected($event, matAutocompleteTrigger)">
+      <span>
+        {{'common.select' | translate}}
+      </span>
+      </np-button>
+    </mat-option>
+  </ng-template>
+</mat-autocomplete>
+
+<ng-template
+  let-entities="data"
+  #folderOptionsTemplate>
+  <ng-container *ngFor="let entity of entities">
+    <mat-option
+      *ngIf="entity.type !== eCatalogEntity.FILE ||
+        (entity.type === eCatalogEntity.FILE && data?.type === eCatalogEntity.FILE)"
+      class="pseudo-disabled"
+      [ngClass]="{
+        'selected': selectedFolder?.id === entity.id,
+        'entity-type--file': entity.type === eCatalogEntity.FILE
+      }"
+      (click)="optionSingleClick($event, entity)"
+      (dblclick)="optionDoubleClick($event, entity)"
+      [value]="entity.name"
+      [disabled]="true"
+      [matTooltip]="entity.type === eCatalogEntity.FILE
+        ? ('common.youCanChooseOnlyFolder' | translate)
+        : undefined">
+      <mat-icon *ngIf="!entity.root && entity.type === eCatalogEntity.FOLDER">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip1)">
+            <path
+              d="M10.59 5.12688C10.21 4.72313 9.7 4.5 9.17 4.5H4C2.9 4.5 2.01 5.45625 2.01 6.625L2 19.375C2 20.5438 2.9 21.5 4 21.5H20C21.1 21.5 22 20.5438 22 19.375V8.75C22 7.58125 21.1 6.625 20 6.625H12L10.59 5.12688Z"
+              fill="#B8C1CB"/>
+          </g>
+          <defs>
+            <clipPath id="clip1">
+              <rect width="24" height="24" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </mat-icon>
+      <mat-icon *ngIf="entity.type === eCatalogEntity.FILE && data?.type === eCatalogEntity.FILE">
+        <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M15.4952 2.59C15.0916 2.21 14.55 2 13.9871 2H6.37226C5.20401 2 4.24817 2.9 4.24817 4V20C4.24817 21.1 5.19339 22 6.36164 22H19.1168C20.285 22 21.2409 21.1 21.2409 20V8.83C21.2409 8.3 21.0178 7.79 20.6143 7.42L15.4952 2.59ZM15.9306 18H9.55839C8.97426 18 8.49634 17.55 8.49634 17C8.49634 16.45 8.97426 16 9.55839 16H15.9306C16.5148 16 16.9927 16.45 16.9927 17C16.9927 17.55 16.5148 18 15.9306 18ZM15.9306 14H9.55839C8.97426 14 8.49634 13.55 8.49634 13C8.49634 12.45 8.97426 12 9.55839 12H15.9306C16.5148 12 16.9927 12.45 16.9927 13C16.9927 13.55 16.5148 14 15.9306 14ZM13.8066 8V3.5L19.6478 9H14.8686C14.2845 9 13.8066 8.55 13.8066 8Z"
+            fill="#E7EDF5"/>
+        </svg>
+      </mat-icon>
+      <span>
+        {{entity.name}}
+      </span>
+      <mat-icon
+        class="ml-auto"
+        *ngIf="entity?.entities?.length">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.60742 7.14453L14.6074 12.1445L9.60742 17.1445" stroke="#B8C1CB" stroke-width="1.5"
+                stroke-linecap="round"/>
+        </svg>
+      </mat-icon>
+    </mat-option>
+  </ng-container>
+</ng-template>

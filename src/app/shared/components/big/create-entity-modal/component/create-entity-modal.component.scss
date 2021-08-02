@@ -1,0 +1,21 @@
+.entity-path {
+  & > span {
+    &:not(:last-child) {
+      &:after {
+        content: '/';
+      }
+    }
+
+    &:not(:first-child) {
+      &:last-child {
+        color: var(--np-hit-gray);
+      }
+    }
+  }
+}
+
+mat-option {
+  &.entity-type--file {
+    color: var(--np-roman-silver) !important;
+  }
+}

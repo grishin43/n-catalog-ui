@@ -20,7 +20,8 @@ export class ContentHelper {
         subFoldersCount: 1,
         filesCount: 5,
         root: true,
-        entities: ContentHelper.testEntities
+        entities: ContentHelper.testEntities,
+        type: CatalogEntityEnum.FOLDER
       },
       {
         id: 'npc',
@@ -32,7 +33,8 @@ export class ContentHelper {
         name: 'НПЦ',
         subFoldersCount: 0,
         filesCount: 0,
-        root: true
+        root: true,
+        type: CatalogEntityEnum.FOLDER
       },
       {
         id: 'np-global',
@@ -44,7 +46,8 @@ export class ContentHelper {
         name: 'NP Global',
         subFoldersCount: 0,
         filesCount: 0,
-        root: true
+        root: true,
+        type: CatalogEntityEnum.FOLDER
       },
       {
         id: 'post-finance',
@@ -58,7 +61,8 @@ export class ContentHelper {
         name: 'Пост-Фінанс',
         subFoldersCount: 0,
         filesCount: 0,
-        root: true
+        root: true,
+        type: CatalogEntityEnum.FOLDER
       }
     ];
   }
@@ -74,7 +78,46 @@ export class ContentHelper {
         owner: participants[0],
         lastUpdated: new Date(),
         permissions: CatalogEntityPermissionEnum.READ,
-        path: 'НПУ'
+        entities: [
+          {
+            id: '701431a7-21da-468d-9fc3-cc290a13a141',
+            name: 'folder_1_1',
+            participants,
+            type: CatalogEntityEnum.FOLDER,
+            owner: participants[0],
+            lastUpdated: new Date(),
+            permissions: CatalogEntityPermissionEnum.READ,
+            entities: [
+              {
+                id: '701431a7-21da-468d-9fc3-cc290a13a241',
+                name: 'folder_1_1_1',
+                participants,
+                type: CatalogEntityEnum.FOLDER,
+                owner: participants[0],
+                lastUpdated: new Date(),
+                permissions: CatalogEntityPermissionEnum.READ
+              }
+            ]
+          },
+          {
+            id: '701431a7-21da-468d-9fc3-cc290a13a142',
+            name: 'folder_1_2',
+            participants,
+            type: CatalogEntityEnum.FOLDER,
+            owner: participants[0],
+            lastUpdated: new Date(),
+            permissions: CatalogEntityPermissionEnum.READ
+          },
+          {
+            id: '701431a7-21da-468d-9fc3-cc290a13a143',
+            name: 'folder_1_3',
+            participants,
+            type: CatalogEntityEnum.FOLDER,
+            owner: participants[0],
+            lastUpdated: new Date(),
+            permissions: CatalogEntityPermissionEnum.READ
+          }
+        ]
       },
       {
         id: '3640a200-269a-4a08-bbea-0b12f7cf5ffc',
@@ -85,8 +128,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/main-elements.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT,
-        path: 'НПУ'
+        permissions: CatalogEntityPermissionEnum.EDIT
       },
       {
         id: 'e2c2c26a-e573-417b-802b-86135afbc5da',
@@ -97,8 +139,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/forwarding-parcels-v17.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT,
-        path: 'НПУ'
+        permissions: CatalogEntityPermissionEnum.EDIT
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd639',
@@ -109,8 +150,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/creation-of-EN_v11.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT,
-        path: 'НПУ'
+        permissions: CatalogEntityPermissionEnum.EDIT
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd777',
@@ -121,8 +161,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/tokens.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT,
-        path: 'НПУ'
+        permissions: CatalogEntityPermissionEnum.EDIT
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd228',
@@ -133,8 +172,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/token-example.bpmn',
-        permissions: CatalogEntityPermissionEnum.NO_PERMISSIONS,
-        path: 'НПУ'
+        permissions: CatalogEntityPermissionEnum.NO_PERMISSIONS
       }
     ];
   }

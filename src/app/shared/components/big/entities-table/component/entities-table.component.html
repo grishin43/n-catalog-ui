@@ -139,13 +139,13 @@
                   <ng-container *ngIf="row.type === catalogEntityType.FILE; else folder">
                     <ng-container *ngFor="let action of fileActions">
                       <ng-container
-                        *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+                        *ngTemplateOutlet="rowActionButton; context: {action: action, entity: row}"></ng-container>
                     </ng-container>
                   </ng-container>
                   <ng-template #folder>
                     <ng-container *ngFor="let action of folderActions">
                       <ng-container
-                        *ngTemplateOutlet="rowActionButton; context: {action: action, id: row?.id}"></ng-container>
+                        *ngTemplateOutlet="rowActionButton; context: {action: action, entity: row}"></ng-container>
                     </ng-container>
                   </ng-template>
                 </mat-menu>
@@ -219,9 +219,9 @@
 <ng-template
   #rowActionButton
   let-action="action"
-  let-id="id">
+  let-entity="entity">
   <button mat-menu-item
-          (click)="action.cb(id)">
+          (click)="action.cb(entity)">
     {{'common.' + action.name | translate}}
   </button>
 </ng-template>

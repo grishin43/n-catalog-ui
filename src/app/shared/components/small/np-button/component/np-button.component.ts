@@ -10,5 +10,6 @@ export class NpButtonComponent {
   @Input() btnType: 'button' | 'submit' | 'reset' = 'button';
   @Input() disabled: boolean;
   @Input() autoMinWidth: boolean;
+  @Input() minWidth: boolean;
   @Input() size: 'sm' | 'md' = 'md';
 }
