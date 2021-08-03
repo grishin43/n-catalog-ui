@@ -58,7 +58,7 @@ export class FileComponent implements OnInit, OnDestroy {
             this.file = {
               id: fileId,
               name: 'Новий файл',
-              type: CatalogEntityEnum.FILE,
+              type: CatalogEntityEnum.PROCESS,
               status: NpStatusPillEnum.DRAFT,
               link: '../../../assets/bpmn/newDiagram.bpmn',
               permissions: CatalogEntityPermissionEnum.READ

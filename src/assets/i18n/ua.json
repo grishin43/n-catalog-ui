@@ -7,8 +7,6 @@
     "file": "Файл",
     "folder": "Папка",
     "mainFolders": "Головні папки",
-    "foldersCount": "{{count}} папки",
-    "filesCount": "{{count}} файлів",
     "createFolder": "Створити папку",
     "createFile": "Створити файл",
     "provideAccess": "Надати Доступ",
@@ -141,5 +139,13 @@
     "thisFolderNameAlreadyExistAt": "Така назва папки вже існує в {{folderPath}}",
     "thisFileNameAlreadyExistAt": "Така назва файлу вже існує в {{folderPath}}",
     "failedToLoadFile": "Не вдалося завантажити файл"
+  },
+  "counters": {
+    "foldersCount1": "{{count}} папка",
+    "foldersCount2": "{{count}} папки",
+    "foldersCount3": "{{count}} папок",
+    "filesCount1": "{{count}} файл",
+    "filesCount2": "{{count}} файли",
+    "filesCount3": "{{count}} файлів"
   }
 }

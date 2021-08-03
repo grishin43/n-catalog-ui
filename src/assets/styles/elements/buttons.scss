@@ -1,4 +1,10 @@
 button {
+  &.mat-button-base{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .mat-button-wrapper {
     display: inline-flex;
     align-items: center;

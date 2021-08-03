@@ -1,4 +1,4 @@
 export enum CatalogEntityEnum {
   FOLDER,
-  FILE
+  PROCESS
 }

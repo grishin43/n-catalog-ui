@@ -43,12 +43,10 @@ export class EntitiesTableComponent implements OnInit {
   }
 
   public openItem(item: CatalogEntityModel): void {
-    if (item.permissions === this.entityPermission.READ || item.permissions === this.entityPermission.EDIT) {
-      if (item.type === CatalogEntityEnum.FOLDER) {
-        this.tableActionsService.openFolder(item);
-      } else if (item.type === CatalogEntityEnum.FILE) {
-        this.tableActionsService.openFile(item);
-      }
+    if (item.type === CatalogEntityEnum.FOLDER) {
+      this.tableActionsService.openFolder(item);
+    } else if (item.type === CatalogEntityEnum.PROCESS) {
+      this.tableActionsService.openFile(item);
     }
   }
 

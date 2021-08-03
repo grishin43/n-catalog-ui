@@ -48,7 +48,7 @@ export class BpmnToolbarService {
                 width: '700px',
                 autoFocus: false,
                 data: {
-                  type: CatalogEntityEnum.FILE
+                  type: CatalogEntityEnum.PROCESS
                 } as InjectableDataModel
               });
             }

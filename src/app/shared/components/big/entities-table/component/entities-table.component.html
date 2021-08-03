@@ -2,7 +2,6 @@
   <mat-table
     [dataSource]="dataSource"
     [ngClass]="tableClass">
-
     <ng-container
       *ngFor="let col of displayedColumns"
       [matColumnDef]="col?.name">
@@ -18,7 +17,7 @@
 
           <ng-container *ngSwitchCase="tableDataType.FILE">
             <span class="entity-row">
-              <ng-container *ngIf="row?.type === catalogEntityType.FILE">
+              <ng-container *ngIf="row?.type === catalogEntityType.PROCESS">
               <mat-icon>
                 <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g filter="url(#filter0_d)">
@@ -112,7 +111,7 @@
           <ng-container *ngSwitchCase="tableDataType.STATUS">
             <ng-container
               *ngIf="row.permissions === entityPermission.READ || row.permissions === entityPermission.EDIT">
-              <ng-container *ngIf="row?.type === catalogEntityType.FILE">
+              <ng-container *ngIf="row?.type === catalogEntityType.PROCESS">
                 <np-status-pill
                   [status]="row[col?.name]">
                 </np-status-pill>
@@ -123,7 +122,7 @@
           <ng-container *ngSwitchCase="tableDataType.ACTIONS">
             <ng-container
               *ngIf="row.permissions === entityPermission.READ || row.permissions === entityPermission.EDIT; else requestPermission">
-              <ng-container *ngIf="row?.type === catalogEntityType.FILE || row?.type === catalogEntityType.FOLDER">
+              <ng-container *ngIf="row?.type === catalogEntityType.PROCESS || row?.type === catalogEntityType.FOLDER">
                 <button mat-icon-button
                         (click)="$event.preventDefault(); $event.stopPropagation();"
                         [matMenuTriggerFor]="menu">
@@ -136,7 +135,7 @@
                   </mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <ng-container *ngIf="row.type === catalogEntityType.FILE; else folder">
+                  <ng-container *ngIf="row.type === catalogEntityType.PROCESS; else folder">
                     <ng-container *ngFor="let action of fileActions">
                       <ng-container
                         *ngTemplateOutlet="rowActionButton; context: {action: action, entity: row}"></ng-container>

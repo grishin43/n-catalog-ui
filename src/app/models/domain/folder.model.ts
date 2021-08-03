@@ -5,7 +5,8 @@ export interface FolderModel {
   id?: string;
   name?: string;
   icon?: string;
-  parent?: any;
+  parent?: FolderModel;
   folders?: SearchModel<FolderModel>;
   definitions?: SearchModel<ProcessModel>;
+  root?: boolean;
 }

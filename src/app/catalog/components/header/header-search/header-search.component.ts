@@ -1,5 +1,5 @@
 import {Component, HostListener, EventEmitter, OnInit, Output, ViewChild, OnDestroy} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
@@ -89,7 +89,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
 
     if (entity.type === CatalogEntityEnum.FOLDER) {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
-    } else if (entity.type === CatalogEntityEnum.FILE) {
+    } else if (entity.type === CatalogEntityEnum.PROCESS) {
       this.router.navigate(
         [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
         {queryParams: {[CatalogRouteEnum._ID]: entity.id}}
@@ -150,8 +150,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.formHasStretched.emit(true);
   }
 
-  public typeAHeadSearch(query: string) {
-
+  public typeAHeadSearch(query: string): void {
     if (query.trim() === '') {
       this.showPreviousSearchResults();
     } else {

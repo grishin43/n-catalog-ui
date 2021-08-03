@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateEntityModalComponent} from '../../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
@@ -10,6 +10,8 @@ import {InjectableDataModel} from '../../../../shared/components/big/create-enti
   styleUrls: ['./create-entity.component.scss']
 })
 export class CreateEntityComponent {
+  @Output() entityCreated = new EventEmitter<void>();
+
   public eCatalogEntity = CatalogEntityEnum;
 
   constructor(
@@ -24,7 +26,10 @@ export class CreateEntityComponent {
       width: '700px',
       autoFocus: false,
       data: {
-        type
+        type,
+        ssCb: () => {
+          this.entityCreated.emit();
+        }
       } as InjectableDataModel
     });
   }

@@ -20,20 +20,20 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   exports: [
     CreateEntityModalComponent
   ],
-    imports: [
-        CommonModule,
-        TranslateModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        NpButtonModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        MatButtonModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule
-    ]
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NpButtonModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule
+  ]
 })
 export class CreateEntityModalModule {
 }

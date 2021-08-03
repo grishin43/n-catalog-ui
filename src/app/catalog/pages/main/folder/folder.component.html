@@ -41,7 +41,7 @@
         </span>
       </button>
       <button mat-menu-item
-              (click)="createEntity($event, eCatalogEntity.FILE)">
+              (click)="createEntity($event, eCatalogEntity.PROCESS)">
         <mat-icon>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -59,7 +59,7 @@
     <h6>{{folder.name}}</h6>
   </div>
   <div class="folder-footer">
-    <span>{{'common.foldersCount' | translate : {count: folder.folders?.count || 0} }}</span>
-    <span>{{' • ' + ('common.filesCount' | translate : {count: folder.definitions?.count || 0})}}</span>
+    <span>{{'counters.' + folderI18nKey | translate : {count: folder.folders?.count || 0} }}</span>
+    <span>{{' • ' + ('counters.' + fileI18nKey | translate : {count: folder.definitions?.count || 0})}}</span>
   </div>
 </a>

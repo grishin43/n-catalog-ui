@@ -57,7 +57,7 @@
           *ngFor="let option of filteredOptions"
           (click)="onOptionClicked(option)"
           [value]="option.name">
-          <ng-container *ngIf="option.type === catalogEntityType.FILE">
+          <ng-container *ngIf="option.type === catalogEntityType.PROCESS">
             <mat-icon>
               <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g filter="url(#filter0_d)">

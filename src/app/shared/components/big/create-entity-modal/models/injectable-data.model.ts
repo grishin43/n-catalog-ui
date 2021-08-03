@@ -4,4 +4,5 @@ import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.en
 export interface InjectableDataModel {
   parent?: CatalogEntityModel;
   type?: CatalogEntityEnum;
+  ssCb?: () => void;
 }

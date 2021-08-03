@@ -14,7 +14,7 @@ export class MapHelper {
           name: folder.name,
           type: CatalogEntityEnum.FOLDER,
           // TODO
-          permissions: CatalogEntityPermissionEnum.READ
+          permissions: CatalogEntityPermissionEnum.EDIT
         };
       });
     }
@@ -27,9 +27,9 @@ export class MapHelper {
         return {
           id: process.id,
           name: process.name,
-          type: CatalogEntityEnum.FILE,
+          type: CatalogEntityEnum.PROCESS,
           // TODO
-          permissions: CatalogEntityPermissionEnum.READ
+          permissions: CatalogEntityPermissionEnum.EDIT
         };
       });
     }

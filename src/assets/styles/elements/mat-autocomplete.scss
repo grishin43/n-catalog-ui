@@ -93,6 +93,7 @@
         padding: 0;
         min-width: 30px;
         line-height: 30px;
+        height: 30px;
 
         & + .mat-optgroup-label {
           margin-left: 5px;
@@ -114,6 +115,16 @@
         .error-label {
           color: var(--np-crimson);
         }
+
+        .pseudo-body-label {
+          display: block;
+          text-align: center;
+          line-height: 1.5;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
       }
     }
 
@@ -131,6 +142,7 @@
     .mat-option-text {
       display: inline-flex;
       align-items: center;
+      width: 100%;
 
       > mat-icon {
         width: 28px;

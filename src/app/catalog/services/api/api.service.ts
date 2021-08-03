@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {map} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -36,6 +36,24 @@ export class ApiService {
     return this.http.get<SearchModel<FolderModel>>(`${this.ApiUrl}/${ApiRoute.FOLDERS}`);
   }
 
+  public getRootFoldersWithSubs(): Observable<SearchModel<FolderModel>> {
+    return this.getRootFolders()
+      .pipe(
+        exhaustMap((res: SearchModel<FolderModel>) => {
+          return forkJoin(res.items.map((folder: FolderModel) => this.getFolderById(folder.id)))
+            .pipe(
+              defaultIfEmpty(null)
+            );
+        }),
+        map((res: FolderModel[]): SearchModel<FolderModel> => {
+          return {
+            items: res,
+            count: res?.length
+          };
+        })
+      );
+  }
+
   public createFolder(parentFolderId: string, name: string): Observable<{ name: string }> {
     return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`, {
       id: parentFolderId,
@@ -43,8 +61,44 @@ export class ApiService {
     });
   }
 
+  public getFolderByIdWithSubs(id: string): Observable<FolderModel> {
+    let folder: FolderModel;
+    return this.getFolderById(id)
+      .pipe(
+        exhaustMap((res: FolderModel) => {
+          folder = res;
+          return forkJoin(res.folders.items.map((item: FolderModel) => this.getFolderById(item.id)))
+            .pipe(
+              defaultIfEmpty(folder as any)
+            );
+        }),
+        map((res: FolderModel[] | FolderModel): FolderModel => {
+          if ((res as FolderModel[]).length) {
+            const folders = res as FolderModel[];
+            return {
+              ...folder,
+              folders: {
+                count: folders.length,
+                items: folders
+              }
+            };
+          } else {
+            return res as FolderModel;
+          }
+        })
+      );
+  }
+
   public getFolderById(id: string): Observable<FolderModel> {
-    return this.http.get<FolderModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`);
+    return this.http.get<FolderModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`)
+      .pipe(
+        map((folder: FolderModel) => {
+          return {
+            ...folder,
+            root: !folder.parent
+          };
+        })
+      );
   }
 
   public renameFolder(id: string, name: string): Observable<{ name: string }> {
