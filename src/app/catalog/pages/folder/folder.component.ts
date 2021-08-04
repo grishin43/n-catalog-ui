@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {ApiService} from '../../services/api/api.service';
-import {FolderModel} from '../../../models/domain/folder.model';
+import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {MapHelper} from '../../helpers/map.helper';
 
@@ -20,6 +20,7 @@ export class FolderComponent implements OnInit, OnDestroy {
   public folderEntities: CatalogEntityModel[] = [];
   public loader: boolean;
 
+  private folderId: string;
   private subscriptions = new Subscription();
 
   constructor(
@@ -36,10 +37,10 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private getFolderById(id: string): void {
+  public getFolderById(): void {
     this.loader = true;
     this.subscriptions.add(
-      this.apiService.getFolderById(id).subscribe(
+      this.apiService.getFolderById(this.folderId).subscribe(
         (res: FolderModel) => {
           this.loader = false;
           this.handleResponse(res);
@@ -52,11 +53,10 @@ export class FolderComponent implements OnInit, OnDestroy {
 
   private handleResponse(res: FolderModel): void {
     this.folder = res;
-    if (res?.folders?.count || res?.definitions?.count) {
-      this.folderEntities.push(...MapHelper.mapFoldersToEntities(res.folders?.items));
-      this.folderEntities.push(...MapHelper.mapProcessesToEntities(res.definitions?.items));
-    } else {
-      this.folderEntities = [];
+    this.folderEntities = [];
+    if (res?.[FolderFieldKey.FOLDERS]?.count || res?.[FolderFieldKey.PROCESSES]?.count) {
+      this.folderEntities.push(...MapHelper.mapFoldersToEntities(res[FolderFieldKey.FOLDERS]?.items));
+      this.folderEntities.push(...MapHelper.mapProcessesToEntities(res[FolderFieldKey.PROCESSES]?.items));
     }
   }
 
@@ -64,9 +64,16 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activatedRoute.params
         .subscribe((params: Params) => {
-          this.getFolderById(params[CatalogRouteEnum._ID]);
+          this.folderId = params[CatalogRouteEnum._ID];
+          this.getFolderById();
         })
     );
+  }
+
+  public onEntityCreated(): void {
+    setTimeout(() => {
+      this.getFolderById();
+    }, 200);
   }
 
 }

@@ -86,13 +86,17 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   public onOptionClicked(entity: CatalogEntityModel): void {
     this.searchService.saveEntities([entity]);
     this.entities = this.searchService.savedEntities;
-
     if (entity.type === CatalogEntityEnum.FOLDER) {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
     } else if (entity.type === CatalogEntityEnum.PROCESS) {
       this.router.navigate(
         [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
-        {queryParams: {[CatalogRouteEnum._ID]: entity.id}}
+        {
+          queryParams: {
+            [CatalogRouteEnum._ID]: entity.id,
+            [CatalogRouteEnum._NAME]: entity.name
+          }
+        }
       );
     }
   }

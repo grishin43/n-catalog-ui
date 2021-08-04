@@ -17,6 +17,14 @@ ul {
     display: inline-flex;
     align-items: center;
 
+    &:not(:first-child){
+      a {
+        &:before {
+          content: '/';
+        }
+      }
+    }
+
     a {
       display: inline-block;
       text-decoration: none !important;

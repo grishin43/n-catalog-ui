@@ -41,12 +41,12 @@ export class FileComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activateRoute.queryParams
         .subscribe((queryParams: Params) => {
-          this.subscribeFile(queryParams[CatalogRouteEnum._ID]);
+          this.subscribeFile(queryParams[CatalogRouteEnum._ID], queryParams[CatalogRouteEnum._NAME]);
         })
     );
   }
 
-  private subscribeFile(fileId: string): void {
+  private subscribeFile(fileId: string, fileName: string): void {
     this.subscriptions.add(
       this.apiService.getFileById(fileId)
         .subscribe((res: CatalogEntityModel) => {
@@ -57,7 +57,7 @@ export class FileComponent implements OnInit, OnDestroy {
             // TODO
             this.file = {
               id: fileId,
-              name: 'Новий файл',
+              name: fileName || 'Новий файл',
               type: CatalogEntityEnum.PROCESS,
               status: NpStatusPillEnum.DRAFT,
               link: '../../../assets/bpmn/newDiagram.bpmn',

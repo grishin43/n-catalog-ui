@@ -219,8 +219,10 @@
   #rowActionButton
   let-action="action"
   let-entity="entity">
-  <button mat-menu-item
-          (click)="action.cb(entity)">
+  <button
+    mat-menu-item
+    [disabled]="action.disabled"
+    (click)="action.cb(entity)">
     {{'common.' + action.name | translate}}
   </button>
 </ng-template>

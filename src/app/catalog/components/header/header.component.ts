@@ -63,10 +63,15 @@ export class HeaderComponent implements OnInit {
     this.entitiesTabService.deleteEntity(file);
   }
 
-  public openFile(file: CatalogEntityModel): void {
+  public openProcess(process: CatalogEntityModel): void {
     this.router.navigate(
       [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
-      {queryParams: {[CatalogRouteEnum._ID]: file.id}}
+      {
+        queryParams: {
+          [CatalogRouteEnum._ID]: process.id,
+          [CatalogRouteEnum._NAME]: process.name
+        }
+      }
     );
   }
 

@@ -9,6 +9,7 @@ import {InjectableDataModel} from '../../../create-entity-modal/models/injectabl
 import {MatDialog} from '@angular/material/dialog';
 import {CatalogEntityModel} from '../../../../../../catalog/models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../../../../catalog/models/catalog-entity.enum';
+import {FolderModel} from '../../../../../../models/domain/folder.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,13 +39,15 @@ export class TableActionsService {
         name: CatalogEntityActionEnum.RENAME,
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
-        }
+        },
+        disabled: true
       },
       {
         name: CatalogEntityActionEnum.COPY,
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
-        }
+        },
+        disabled: true
       }
     ];
   }
@@ -61,17 +64,19 @@ export class TableActionsService {
         name: CatalogEntityActionEnum.PROVIDE_ACCESS,
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
-        }
+        },
+        disabled: true
       },
       {
         name: CatalogEntityActionEnum.RENAME,
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
-        }
+        },
+        disabled: true
       },
       {
         name: CatalogEntityActionEnum.CREATE_FOLDER,
-        cb: (entity: CatalogEntityModel) => {
+        cb: (entity: FolderModel) => {
           this.dialog.open(CreateEntityModalComponent, {
             width: '700px',
             autoFocus: false,
@@ -80,13 +85,15 @@ export class TableActionsService {
               type: CatalogEntityEnum.FOLDER
             } as InjectableDataModel
           });
-        }
+        },
+        disabled: true
       },
       {
         name: CatalogEntityActionEnum.CREATE_FILE,
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
-        }
+        },
+        disabled: true
       }
     ];
   }
@@ -94,7 +101,12 @@ export class TableActionsService {
   public openFile(entity: CatalogEntityModel): void {
     this.router.navigate(
       [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
-      {queryParams: {[CatalogRouteEnum._ID]: entity.id}}
+      {
+        queryParams: {
+          [CatalogRouteEnum._ID]: entity.id,
+          [CatalogRouteEnum._NAME]: entity.name
+        }
+      }
     );
   }
 

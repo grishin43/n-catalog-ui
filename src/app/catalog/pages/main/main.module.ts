@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MainComponent} from './main.component';
-import {CreateEntityComponent} from './create-entity/create-entity.component';
 import {FolderComponent} from './folder/folder.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatRippleModule} from '@angular/material/core';
@@ -12,7 +11,7 @@ import {SafeHtmlModule} from '../../../shared/pipes/safe-html/safe-html.module';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule, Routes} from '@angular/router';
 import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
-import {CreateEntityModalModule} from '../../../shared/components/big/create-entity-modal/create-entity-modal.module';
+import {CreateEntityButtonModule} from '../../../shared/components/big/create-entity-button/create-entity-button.module';
 
 const routes: Routes = [
   {
@@ -25,10 +24,11 @@ const routes: Routes = [
   }
 ];
 
+// @ts-ignore
+// @ts-ignore
 @NgModule({
   declarations: [
     MainComponent,
-    CreateEntityComponent,
     FolderComponent
   ],
   imports: [
@@ -42,7 +42,7 @@ const routes: Routes = [
     SafeHtmlModule,
     MatButtonModule,
     EntityTableModule,
-    CreateEntityModalModule
+    CreateEntityButtonModule
   ]
 })
 export class MainModule {

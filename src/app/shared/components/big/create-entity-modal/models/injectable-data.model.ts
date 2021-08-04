@@ -1,8 +1,8 @@
-import {CatalogEntityModel} from '../../../../../catalog/models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.enum';
+import {FolderModel} from '../../../../../models/domain/folder.model';
 
 export interface InjectableDataModel {
-  parent?: CatalogEntityModel;
+  parent?: FolderModel;
   type?: CatalogEntityEnum;
   ssCb?: () => void;
 }

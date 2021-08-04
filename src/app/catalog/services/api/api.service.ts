@@ -5,7 +5,7 @@ import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
 import {defaultIfEmpty, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
-import {FolderModel} from '../../../models/domain/folder.model';
+import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 
@@ -67,7 +67,7 @@ export class ApiService {
       .pipe(
         exhaustMap((res: FolderModel) => {
           folder = res;
-          return forkJoin(res.folders.items.map((item: FolderModel) => this.getFolderById(item.id)))
+          return forkJoin(res[FolderFieldKey.FOLDERS].items.map((item: FolderModel) => this.getFolderById(item.id)))
             .pipe(
               defaultIfEmpty(folder as any)
             );
@@ -77,7 +77,7 @@ export class ApiService {
             const folders = res as FolderModel[];
             return {
               ...folder,
-              folders: {
+              [FolderFieldKey.FOLDERS]: {
                 count: folders.length,
                 items: folders
               }

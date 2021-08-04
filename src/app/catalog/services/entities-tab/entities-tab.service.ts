@@ -42,12 +42,22 @@ export class EntitiesTabService {
     if (entitiesValue[removeIndex + 1]) {
       this.router.navigate(
         [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
-        {queryParams: {[CatalogRouteEnum._ID]: entitiesValue[removeIndex + 1].id}}
+        {
+          queryParams: {
+            [CatalogRouteEnum._ID]: entitiesValue[removeIndex + 1].id,
+            [CatalogRouteEnum._NAME]: entity.name
+          }
+        }
       );
     } else if (entitiesValue[removeIndex - 1]) {
       this.router.navigate(
         [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
-        {queryParams: {[CatalogRouteEnum._ID]: entitiesValue[removeIndex - 1].id}}
+        {
+          queryParams: {
+            [CatalogRouteEnum._ID]: entitiesValue[removeIndex - 1].id,
+            [CatalogRouteEnum._NAME]: entity.name
+          }
+        }
       );
     } else {
       this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);

@@ -1,10 +1,9 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatRippleHelper} from '../../../helpers/mat-ripple.helper';
-import {MatDialog} from '@angular/material/dialog';
-import {CreateEntityModalComponent} from '../../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
-import {InjectableDataModel} from '../../../../shared/components/big/create-entity-modal/models/injectable-data.model';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
 import {FolderModel} from '../../../../models/domain/folder.model';
+import {AppRouteEnum} from '../../../../models/app-route.enum';
+import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 
 @Component({
   selector: 'np-folder-breadcrumbs',
@@ -14,25 +13,9 @@ import {FolderModel} from '../../../../models/domain/folder.model';
 export class FolderBreadcrumbsComponent {
   @Input() folder: FolderModel;
 
+  @Output() entityCreated = new EventEmitter<void>();
+
   public rippleLightColor = MatRippleHelper.lightRippleColor;
   public eCatalogEntity = CatalogEntityEnum;
-
-  constructor(
-    private dialog: MatDialog
-  ) {
-  }
-
-  public onCreateEntity(event: MouseEvent, type: CatalogEntityEnum): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.dialog.open(CreateEntityModalComponent, {
-      width: '700px',
-      autoFocus: false,
-      data: {
-        parent: this.folder,
-        type
-      } as InjectableDataModel
-    });
-  }
-
+  public folderRoute = `/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/`;
 }

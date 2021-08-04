@@ -10,13 +10,12 @@ import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../../catalog/models/catalog-route.enum';
 import {InjectableDataModel} from '../models/injectable-data.model';
 import {v4 as uuidv4} from 'uuid';
-import {forkJoin, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TranslateService} from '@ngx-translate/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {SearchModel} from '../../../../../models/domain/search.model';
-import {FolderModel} from '../../../../../models/domain/folder.model';
-import {MapHelper} from '../../../../../catalog/helpers/map.helper';
+import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
 import {ProcessModel} from '../../../../../models/domain/process.model';
 
@@ -41,6 +40,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public eCatalogEntity = CatalogEntityEnum;
   public processTypes: ProcessTypeModel[];
   public newFolderMode: boolean;
+  public eFolderFieldKey = FolderFieldKey;
 
   private subscription = new Subscription();
 
@@ -57,6 +57,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getRootFolders();
     if (this.data && this.data.parent) {
+      this.openedFolder = this.data.parent;
       this.initForm(this.data.parent.name);
     } else {
       this.initForm();
@@ -101,11 +102,14 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private initForm(parentFolderName?: string): void {
+    const folderPathRequired = this.isProcess
+      ? [Validators.required]
+      : undefined;
     this.form = new FormGroup({
       [FormFieldEnum.ENTITY_NAME]: new FormControl(undefined, [Validators.required]),
-      [FormFieldEnum.FOLDER_PATH]: new FormControl(parentFolderName)
+      [FormFieldEnum.FOLDER_PATH]: new FormControl(parentFolderName, folderPathRequired)
     });
-    if (this.data.type === CatalogEntityEnum.PROCESS) {
+    if (this.isProcess) {
       this.form.addControl(FormFieldEnum.PROCESS_TYPE, new FormControl(undefined, [Validators.required]));
       this.getProcessTypes();
     }
@@ -137,7 +141,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public folderDoubleClick(event: MouseEvent, folder: FolderModel): void {
     event.preventDefault();
     event.stopPropagation();
-    if (folder.folders?.count || folder.definitions?.count) {
+    if (folder[FolderFieldKey.FOLDERS]?.count || folder[FolderFieldKey.PROCESSES]?.count) {
       this.isSingleClick = false;
       this.selectedFolderPaths.push(folder.name);
       this.clearSelectedFolder();
@@ -172,7 +176,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
         .subscribe((res: FolderModel) => {
           this.explorerLoader = false;
           this.openedFolder = res;
-          this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
         }, (err: HttpErrorResponse) => {
           this.explorerLoader = false;
           this.showToast(err.message);
@@ -192,7 +195,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       }
       this.form.get(FormFieldEnum.FOLDER_PATH).patchValue(value);
       matAutocompleteTrigger.closePanel();
-      this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
     }
   }
 
@@ -207,6 +209,10 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       }
     } else if (this.selectedFolder) {
       return this.selectedFolder.name;
+    } else if (this.openedFolder) {
+      return this.openedFolder.name;
+    } else if (this.rootFolders) {
+      return this.translateService.instant('common.rootFolders');
     }
     return undefined;
   }
@@ -219,13 +225,13 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private handleFormSubmit(): void {
-    if (this.data.type === CatalogEntityEnum.FOLDER) {
+    if (this.isFolder) {
       if (this.form.value[FormFieldEnum.FOLDER_PATH]?.length) {
         this.createGeneralFolder();
       } else {
         this.createRootFolder();
       }
-    } else if (this.data.type === CatalogEntityEnum.PROCESS) {
+    } else if (this.isProcess) {
       this.createProcess();
     }
   }
@@ -237,8 +243,9 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   private createProcess(): void {
     this.formLoader = true;
     const processType = this.processTypes.find(ft => this.form.value[FormFieldEnum.PROCESS_TYPE] === ft.name);
+    const processName = this.form.value[FormFieldEnum.ENTITY_NAME];
     this.subscription.add(
-      this.api.createProcess(this.currentFolderId, processType.code, this.form.value[FormFieldEnum.ENTITY_NAME])
+      this.api.createProcess(this.currentFolderId, processType.code, processName)
         .subscribe(
           () => {
             this.formLoader = false;
@@ -249,7 +256,12 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
             randomId = randomId.substring(randomId.length - 7, randomId.length);
             this.router.navigate(
               [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
-              {queryParams: {[CatalogRouteEnum._ID]: `${processType.code}/${randomId}`}}
+              {
+                queryParams: {
+                  [CatalogRouteEnum._ID]: `${processType.code}/${randomId}`,
+                  [CatalogRouteEnum._NAME]: processName
+                }
+              }
             );
             if (typeof this.data.ssCb === 'function') {
               this.data.ssCb();
@@ -339,7 +351,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
     const control = this.form.get(FormFieldEnum.NEW_ENTITY_NAME);
-    this.handleEntityNameDuplicator(FormFieldEnum.NEW_ENTITY_NAME);
     if (control.valid) {
       this.createFolder(this.currentFolderId, control.value);
     }
@@ -365,15 +376,21 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   public handleEntityNameDuplicator(controlName: string): void {
     const control = this.form.get(controlName);
+    const entityKey = this.isFolder || this.newFolderMode
+      ? FolderFieldKey.FOLDERS
+      : FolderFieldKey.PROCESSES;
     if (control.value?.length) {
       let duplicatorMatched;
       if (this.selectedFolder) {
-        duplicatorMatched = this.matchNameDuplicates(this.selectedFolder.folders?.items, control.value);
+        duplicatorMatched = this.matchNameDuplicates(this.selectedFolder[entityKey]?.items, control.value);
       } else if (this.openedFolder) {
-        duplicatorMatched = this.matchNameDuplicates(this.openedFolder.definitions?.items, control.value);
+        duplicatorMatched = this.matchNameDuplicates(this.openedFolder[entityKey]?.items, control.value);
+      } else if (this.rootFolders && this.isFolder) {
+        duplicatorMatched = this.matchNameDuplicates(this.rootFolders, control.value);
       }
       if (duplicatorMatched) {
         control.setErrors({[this.duplicatorErrorKey]: {value: control.value}});
+        control.markAsTouched();
       } else {
         this.removeControlError(controlName, this.duplicatorErrorKey);
       }
@@ -389,6 +406,14 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       });
     }
     return undefined;
+  }
+
+  public get isProcess(): boolean {
+    return this.data.type === CatalogEntityEnum.PROCESS;
+  }
+
+  public get isFolder(): boolean {
+    return this.data.type === CatalogEntityEnum.FOLDER;
   }
 
 }

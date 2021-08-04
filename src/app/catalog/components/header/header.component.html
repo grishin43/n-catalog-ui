@@ -26,7 +26,7 @@
                matTooltip="{{entity.name}}"
                [ngClass]="{'active': entity.id === currentId}"
                [ngStyle]="{'max-width': 'calc(100% / ' + (catalogEntities | async).length + ')'}"
-               (click)="openFile(entity)">
+               (click)="openProcess(entity)">
             <span class="entity-name">
                {{entity.name}}
             </span>

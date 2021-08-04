@@ -1,9 +1,9 @@
 <div mat-dialog-title>
-  <ng-container *ngIf="data.type === eCatalogEntity.FOLDER">
+  <ng-container *ngIf="isFolder">
     <h4>{{'common.newFolder' | translate}}</h4>
     <p>{{'common.choosePlaceForSaving' | translate}}</p>
   </ng-container>
-  <ng-container *ngIf="data.type === eCatalogEntity.PROCESS">
+  <ng-container *ngIf="isProcess">
     <h4>{{'common.newFile' | translate}}</h4>
     <p>{{'common.choosePlaceForSavingAndFileType' | translate}}</p>
   </ng-container>
@@ -16,10 +16,10 @@
          'has-errors': form.get(formControlName.ENTITY_NAME).touched && form.get(formControlName.ENTITY_NAME).invalid
       }">
       <mat-label>
-        <ng-container *ngIf="data.type === eCatalogEntity.FOLDER">
+        <ng-container *ngIf="isFolder">
           {{'common.folderName' | translate}}
         </ng-container>
-        <ng-container *ngIf="data.type === eCatalogEntity.PROCESS">
+        <ng-container *ngIf="isProcess">
           {{'common.fileName' | translate}}
         </ng-container>
       </mat-label>
@@ -30,7 +30,7 @@
         <input
           type="text"
           matInput
-          (blur)="handleEntityNameDuplicator(formControlName.ENTITY_NAME)"
+          (input)="handleEntityNameDuplicator(formControlName.ENTITY_NAME)"
           [formControlName]="formControlName.ENTITY_NAME"
           [attr.name]="formControlName.ENTITY_NAME"
           [placeholder]="'common.entityName' | translate">
@@ -40,17 +40,21 @@
           </ng-container>
           <ng-container *ngIf="!form.get(formControlName.ENTITY_NAME).hasError('required') &&
             form.get(formControlName.ENTITY_NAME).hasError('duplicatedName')">
-            <ng-container *ngIf="data.type === eCatalogEntity.FOLDER">
+            <ng-container *ngIf="isFolder">
               {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
             </ng-container>
-            <ng-container *ngIf="data.type === eCatalogEntity.PROCESS">
+            <ng-container *ngIf="isProcess">
               {{'errors.thisFileNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
             </ng-container>
           </ng-container>
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="form-group mb-0">
+    <div
+      class="form-group mb-0"
+      [ngClass]="{
+         'has-errors': form.get(formControlName.FOLDER_PATH).touched && form.get(formControlName.FOLDER_PATH).invalid
+      }">
       <mat-label>
         {{'common.folder' | translate}}
       </mat-label>
@@ -68,6 +72,11 @@
           [placeholder]="'common.chooseReplacement' | translate"
           [matAutocomplete]="auto"
           [readonly]="true">
+        <mat-error *ngIf="form.get(formControlName.FOLDER_PATH).invalid">
+          <ng-container *ngIf="form.get(formControlName.FOLDER_PATH).hasError('required')">
+            {{'errors.required' | translate}}
+          </ng-container>
+        </mat-error>
         <mat-spinner
           *ngIf="explorerLoader"
           matSuffix
@@ -186,7 +195,7 @@
         <input
           type="text"
           matInput
-          (blur)="handleEntityNameDuplicator(formControlName.NEW_ENTITY_NAME)"
+          (input)="handleEntityNameDuplicator(formControlName.NEW_ENTITY_NAME)"
           [formControlName]="formControlName.NEW_ENTITY_NAME"
           [attr.name]="formControlName.NEW_ENTITY_NAME"
           [placeholder]="'common.entityName' | translate">
@@ -258,10 +267,10 @@
     <mat-optgroup class="hide-label">
       <ng-container *ngIf="openedFolder; else rootFoldersTemplate">
         <ng-container
-          *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolder?.folders?.items}"></ng-container>
+          *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolder[eFolderFieldKey.FOLDERS]?.items}"></ng-container>
         <ng-container *ngIf="data?.type === eCatalogEntity.PROCESS">
           <ng-container
-            *ngTemplateOutlet="processOptionsTemplate; context: {data : openedFolder?.definitions?.items}"></ng-container>
+            *ngTemplateOutlet="processOptionsTemplate; context: {data : openedFolder[eFolderFieldKey.PROCESSES]?.items}"></ng-container>
         </ng-container>
       </ng-container>
       <ng-template #rootFoldersTemplate>
@@ -273,12 +282,12 @@
       [disabled]="true">
       <np-button
         class="mr-auto"
-        *ngIf="data.type === eCatalogEntity.PROCESS && !newFolderMode && openedFolder"
+        *ngIf="isProcess && !newFolderMode && openedFolder"
         [size]="'md'"
         [btnType]="'submit'"
         [type]="'default'"
         (click)="onAddNewFolder($event)">
-        <mat-icon style="margin-right: 4px">
+        <mat-icon style="margin-right: 8px; margin-left: -4px;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#2E3742"/>
           </svg>
@@ -333,7 +342,7 @@
       </span>
       <mat-icon
         class="ml-auto"
-        *ngIf="folder?.folders?.count || (folder?.definitions?.count && data.type === eCatalogEntity.PROCESS)">
+        *ngIf="folder?.folders?.count || (folder?.definitions?.count && isProcess)">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.60742 7.14453L14.6074 12.1445L9.60742 17.1445" stroke="#B8C1CB" stroke-width="1.5"
                 stroke-linecap="round"/>

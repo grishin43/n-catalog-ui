@@ -1,5 +1,4 @@
 export enum FormFieldEnum {
-  PROCESS_NAME = 'processName',
   PROCESS_TYPE = 'processType',
   FOLDER = 'folder',
   FOLDER_PATH = 'folderPath',

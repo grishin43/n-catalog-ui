@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateEntityComponent } from './create-entity.component';
+import { CreateEntityButtonComponent } from './create-entity-button.component';
 
-describe('CreateEntityComponent', () => {
-  let component: CreateEntityComponent;
-  let fixture: ComponentFixture<CreateEntityComponent>;
+describe('CreateEntityButtonComponent', () => {
+  let component: CreateEntityButtonComponent;
+  let fixture: ComponentFixture<CreateEntityButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateEntityComponent ]
+      declarations: [ CreateEntityButtonComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateEntityComponent);
+    fixture = TestBed.createComponent(CreateEntityButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
