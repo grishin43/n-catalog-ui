@@ -9,6 +9,7 @@ import {NpStatusPillEnum} from '../../../small/np-status-pill/models/np-status-p
 import {TableActionsService} from '../services/table-actions/table-actions.service';
 import {CatalogEntityPermissionEnum} from '../../../../../catalog/models/catalog-entity-permission.enum';
 import {EntityTableColumnName} from '../../../../../catalog/helpers/table.helper';
+import {MatRippleHelper} from '../../../../../catalog/helpers/mat-ripple.helper';
 
 @Component({
   selector: 'np-entities-table',
@@ -18,6 +19,8 @@ import {EntityTableColumnName} from '../../../../../catalog/helpers/table.helper
 export class EntitiesTableComponent implements OnInit {
   @Input() displayedColumns: TableColumnsModel[];
   @Input() tableClass: string;
+
+  public rippleLightColor = MatRippleHelper.lightRippleColor;
 
   @Input() set data(value: CatalogEntityModel[] | any) {
     this.dataSource = new MatTableDataSource(value);
@@ -32,13 +35,13 @@ export class EntitiesTableComponent implements OnInit {
   public tableDataType = TableDataTypeEnum;
   public catalogEntityType = CatalogEntityEnum;
   public statuses = NpStatusPillEnum;
-  public fileActions: TableActionModel[];
+  public processActions: TableActionModel[];
   public folderActions: TableActionModel[];
   public entityPermission = CatalogEntityPermissionEnum;
   public entityTableColumnName = EntityTableColumnName;
 
   ngOnInit(): void {
-    this.fileActions = this.tableActionsService.fileActions;
+    this.processActions = this.tableActionsService.processActions;
     this.folderActions = this.tableActionsService.folderActions;
   }
 
@@ -46,7 +49,7 @@ export class EntitiesTableComponent implements OnInit {
     if (item.type === CatalogEntityEnum.FOLDER) {
       this.tableActionsService.openFolder(item);
     } else if (item.type === CatalogEntityEnum.PROCESS) {
-      this.tableActionsService.openFile(item);
+      this.tableActionsService.openProcess(item);
     }
   }
 

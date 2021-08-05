@@ -1,4 +1,4 @@
 export enum StorageEnum {
-  FILE_TABS = 'fileTabs',
+  PROCESSES_TABS = 'processesTabs',
   SEARCHED_ENTITIES = 'searchedEntities'
 }

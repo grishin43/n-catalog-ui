@@ -25,11 +25,17 @@ export class FolderComponent {
   }
 
   public get folderI18nKey(): string {
-    return TextHelper.declOfNum(this.folder[FolderFieldKey.FOLDERS]?.count || 0, ['foldersCount1', 'foldersCount2', 'foldersCount3']);
+    return TextHelper.declOfNum(
+      this.folder[FolderFieldKey.FOLDERS]?.count || 0,
+      ['foldersCount1', 'foldersCount2', 'foldersCount3']
+    );
   }
 
-  public get fileI18nKey(): string {
-    return TextHelper.declOfNum(this.folder[FolderFieldKey.PROCESSES]?.count || 0, ['filesCount1', 'filesCount2', 'filesCount3']);
+  public get processI18nKey(): string {
+    return TextHelper.declOfNum(
+      this.folder[FolderFieldKey.PROCESSES]?.count || 0,
+      ['processesCount1', 'processesCount2', 'processesCount3']
+    );
   }
 
 }

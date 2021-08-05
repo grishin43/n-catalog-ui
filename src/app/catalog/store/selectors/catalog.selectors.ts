@@ -4,8 +4,8 @@ import {CatalogStateModel} from '../models/catalog-state.model';
 
 export class CatalogSelectors {
   @Selector([CatalogState])
-  static recentFiles(state: CatalogStateModel): any {
-    return state.recentFiles;
+  static recentProcesses(state: CatalogStateModel): any {
+    return state.recentProcesses;
   }
 
   @Selector([CatalogState])

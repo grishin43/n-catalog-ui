@@ -15,7 +15,7 @@
         [ngStyle]="{'flex-basis':col?.width, 'max-width':col?.width}">
         <ng-container [ngSwitch]="col?.type">
 
-          <ng-container *ngSwitchCase="tableDataType.FILE">
+          <ng-container *ngSwitchCase="tableDataType.PROCESS">
             <span class="entity-row">
               <ng-container *ngIf="row?.type === catalogEntityType.PROCESS">
               <mat-icon>
@@ -136,7 +136,7 @@
                 </button>
                 <mat-menu #menu="matMenu">
                   <ng-container *ngIf="row.type === catalogEntityType.PROCESS; else folder">
-                    <ng-container *ngFor="let action of fileActions">
+                    <ng-container *ngFor="let action of processActions">
                       <ng-container
                         *ngTemplateOutlet="rowActionButton; context: {action: action, entity: row}"></ng-container>
                     </ng-container>
@@ -204,6 +204,8 @@
     <mat-header-row *matHeaderRowDef="displayedColumns | toStringArray : 'name'; sticky: true"></mat-header-row>
 
     <mat-row
+      matRipple
+      matRippleColor="{{rippleLightColor}}"
       (click)="openItem(row)"
       [ngClass]="{
         'disabled': row.permissions !== entityPermission.READ && row.permissions !== entityPermission.EDIT
@@ -221,6 +223,7 @@
   let-entity="entity">
   <button
     mat-menu-item
+    [ngClass]="action.class"
     [disabled]="action.disabled"
     (click)="action.cb(entity)">
     {{'common.' + action.name | translate}}

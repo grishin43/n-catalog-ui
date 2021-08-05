@@ -15,7 +15,7 @@ import {FolderModel} from '../../../models/domain/folder.model';
 })
 export class MainComponent implements OnInit, OnDestroy {
   public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns(true);
-  public recentFiles: CatalogEntityModel[];
+  public recentProcesses: CatalogEntityModel[];
   public rootFolders: FolderModel[];
   public loader: boolean;
   public loaderHelper = new Array(4);
@@ -29,7 +29,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.recentFiles = this.searchService.savedEntities;
+    this.recentProcesses = this.searchService.savedEntities;
     this.getChapters();
   }
 

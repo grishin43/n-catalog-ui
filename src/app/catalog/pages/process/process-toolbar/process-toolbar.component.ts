@@ -6,12 +6,12 @@ import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enu
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 
 @Component({
-  selector: 'np-file-top-toolbar',
-  templateUrl: './file-top-toolbar.component.html',
-  styleUrls: ['./file-top-toolbar.component.scss']
+  selector: 'np-process-toolbar',
+  templateUrl: './process-toolbar.component.html',
+  styleUrls: ['./process-toolbar.component.scss']
 })
-export class FileTopToolbarComponent implements OnInit {
-  @Input() file: CatalogEntityModel;
+export class ProcessToolbarComponent implements OnInit {
+  @Input() process: CatalogEntityModel;
 
   public tools: ToolbarItemModel[];
   public toolbarEditItem = ToolbarEditItemEnum;

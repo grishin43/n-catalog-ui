@@ -87,7 +87,6 @@ mat-icon {
   }
 }
 
-
 .no-results {
   display: flex;
   flex-direction: column;
@@ -138,4 +137,12 @@ mat-icon {
 
 .min-width-auto {
   min-width: auto !important;
+}
+
+.container-top-gap {
+  margin-top: 48px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    margin-top: 20px;
+  }
 }

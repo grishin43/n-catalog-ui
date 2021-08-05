@@ -1,7 +1,7 @@
 @import "../../../../assets/styles/breakpoints";
 
 @mixin mainHeight {
-  height: 72px;
+  height: 64px;
 
   @media screen and (max-width: $tablet-medium - 1px) {
     height: 56px;
@@ -55,7 +55,7 @@ header {
         }
       }
 
-      .file-tabs-col {
+      .process-tab-col {
         max-width: calc(100% - 108px - 165px - 70px - 54px);
         transition: var(--np-base-transition);
         overflow-x: hidden;

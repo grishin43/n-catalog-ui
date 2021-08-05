@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FileTopToolbarComponent } from './file-top-toolbar.component';
+import { ProcessToolbarComponent } from './process-toolbar.component';
 
-describe('FileTopToolbarComponent', () => {
-  let component: FileTopToolbarComponent;
-  let fixture: ComponentFixture<FileTopToolbarComponent>;
+describe('ProcessToolbarComponent', () => {
+  let component: ProcessToolbarComponent;
+  let fixture: ComponentFixture<ProcessToolbarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FileTopToolbarComponent ]
+      declarations: [ ProcessToolbarComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FileTopToolbarComponent);
+    fixture = TestBed.createComponent(ProcessToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

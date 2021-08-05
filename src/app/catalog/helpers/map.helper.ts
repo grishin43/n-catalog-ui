@@ -13,7 +13,6 @@ export class MapHelper {
           id: folder.id,
           name: folder.name,
           type: CatalogEntityEnum.FOLDER,
-          // TODO
           permissions: CatalogEntityPermissionEnum.EDIT
         };
       });
@@ -28,12 +27,31 @@ export class MapHelper {
           id: process.id,
           name: process.name,
           type: CatalogEntityEnum.PROCESS,
-          // TODO
           permissions: CatalogEntityPermissionEnum.EDIT
         };
       });
     }
     return [];
+  }
+
+  public static mapEntityToFolder(entity: CatalogEntityModel): FolderModel {
+    if (entity) {
+      return {
+        id: entity.id,
+        name: entity.name
+      };
+    }
+    return undefined;
+  }
+
+  public static mapEntityToProcess(entity: CatalogEntityModel): ProcessModel {
+    if (entity) {
+      return {
+        id: entity.id,
+        name: entity.name
+      };
+    }
+    return undefined;
   }
 
 }

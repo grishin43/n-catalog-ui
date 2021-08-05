@@ -4,6 +4,6 @@ export enum CatalogRouteEnum {
   _NAME = 'name',
   MAIN = 'main',
   FOLDER = 'folder',
-  FILE = 'file',
+  PROCESS = 'process',
   SEARCH_RESULTS = 'search'
 }

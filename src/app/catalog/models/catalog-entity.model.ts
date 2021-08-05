@@ -11,7 +11,7 @@ export interface CatalogEntityModel {
   root?: boolean;
   hasSubFolders?: boolean;
   subFoldersCount?: number;
-  filesCount?: number;
+  processesCount?: number;
   entities?: CatalogEntityModel[];
   participants?: EmployeeModel[];
   owner?: EmployeeModel;

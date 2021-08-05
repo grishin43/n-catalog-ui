@@ -58,6 +58,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     this.getRootFolders();
     if (this.data && this.data.parent) {
       this.openedFolder = this.data.parent;
+      this.patchOpenedFolder(this.openedFolder.id);
       this.initForm(this.data.parent.name);
     } else {
       this.initForm();
@@ -102,12 +103,9 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private initForm(parentFolderName?: string): void {
-    const folderPathRequired = this.isProcess
-      ? [Validators.required]
-      : undefined;
     this.form = new FormGroup({
       [FormFieldEnum.ENTITY_NAME]: new FormControl(undefined, [Validators.required]),
-      [FormFieldEnum.FOLDER_PATH]: new FormControl(parentFolderName, folderPathRequired)
+      [FormFieldEnum.FOLDER_PATH]: new FormControl(parentFolderName, [Validators.required])
     });
     if (this.isProcess) {
       this.form.addControl(FormFieldEnum.PROCESS_TYPE, new FormControl(undefined, [Validators.required]));
@@ -226,11 +224,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   private handleFormSubmit(): void {
     if (this.isFolder) {
-      if (this.form.value[FormFieldEnum.FOLDER_PATH]?.length) {
-        this.createGeneralFolder();
-      } else {
-        this.createRootFolder();
-      }
+      this.createGeneralFolder();
     } else if (this.isProcess) {
       this.createProcess();
     }
@@ -255,7 +249,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
             let randomId = uuidv4().replace('-', '');
             randomId = randomId.substring(randomId.length - 7, randomId.length);
             this.router.navigate(
-              [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+              [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
               {
                 queryParams: {
                   [CatalogRouteEnum._ID]: `${processType.code}/${randomId}`,
@@ -284,31 +278,15 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
             this.formLoader = false;
             this.showToast('common.folderCreated');
             this.closeModal();
-            this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
+            // TODO
+            setTimeout(() => {
+              this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
+            }, 200);
             if (typeof this.data.ssCb === 'function') {
               this.data.ssCb();
             }
           },
           (err: HttpErrorResponse) => {
-            this.formLoader = false;
-            this.showToast(err.message);
-          })
-    );
-  }
-
-  private createRootFolder(): void {
-    this.formLoader = true;
-    this.subscription.add(
-      this.api.createRootFolder(this.form.value[FormFieldEnum.ENTITY_NAME])
-        .subscribe(
-          () => {
-            this.formLoader = false;
-            this.showToast('common.folderCreated');
-            this.closeModal();
-            if (typeof this.data.ssCb === 'function') {
-              this.data.ssCb();
-            }
-          }, (err: HttpErrorResponse) => {
             this.formLoader = false;
             this.showToast(err.message);
           })
@@ -323,7 +301,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  public fileTypeSelected(event: MouseEvent, option: ProcessTypeModel): void {
+  public processTypeSelected(event: MouseEvent, option: ProcessTypeModel): void {
     event.preventDefault();
     event.stopPropagation();
     this.form.get(FormFieldEnum.PROCESS_TYPE).patchValue(option.name);

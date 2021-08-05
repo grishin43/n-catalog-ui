@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ToolbarItemModel} from '../../models/toolbar/toolbar-item.model';
 import {ToolbarItemEnum} from '../../models/toolbar/toolbar-item.enum';
-import {ToolbarFileItemEnum} from '../../models/toolbar/toolbar-file-item.enum';
-import {FileTypeEnum} from '../../models/file-type.enum';
+import {ToolbarProcessItemEnum} from '../../models/toolbar/toolbar-process-item.enum';
+import {ProcessSaveTypeEnum} from '../../models/process-save-type.enum';
 import {ToolbarEditItemEnum} from '../../models/toolbar/toolbar-edit-item.enum';
 import {ToolbarWindowItemEnum} from '../../models/toolbar/toolbar-window-item.enum';
 import {ToolbarAlignmentEnum} from '../../models/toolbar/toolbar-alignment.enum';
@@ -39,10 +39,10 @@ export class BpmnToolbarService {
   public get toolbar(): ToolbarItemModel[] {
     return [
       {
-        name: ToolbarItemEnum.FILE,
+        name: ToolbarItemEnum.PROCESS,
         subItems: [
           {
-            name: ToolbarFileItemEnum.NEW_FILE,
+            name: ToolbarProcessItemEnum.NEW_PROCESS,
             cb: () => {
               this.dialog.open(CreateEntityModalComponent, {
                 width: '700px',
@@ -54,24 +54,24 @@ export class BpmnToolbarService {
             }
           },
           {
-            name: ToolbarFileItemEnum.DOWNLOAD_FILE,
+            name: ToolbarProcessItemEnum.DOWNLOAD_PROCESS,
             subItems: [
               {
-                name: FileTypeEnum.BPMN,
-                cb: (fileRef: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsXML(fileRef?.name)
+                name: ProcessSaveTypeEnum.BPMN,
+                cb: (process: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsXML(process?.name)
               },
               {
-                name: FileTypeEnum.JPEG,
-                cb: (fileRef: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsJpeg(fileRef?.name)
+                name: ProcessSaveTypeEnum.JPEG,
+                cb: (process: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsJpeg(process?.name)
               },
               {
-                name: FileTypeEnum.SVG,
-                cb: (fileRef: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsSVG(fileRef?.name)
+                name: ProcessSaveTypeEnum.SVG,
+                cb: (process: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsSVG(process?.name)
               }
             ]
           },
           {
-            name: ToolbarFileItemEnum.SAVE_VERSION,
+            name: ToolbarProcessItemEnum.SAVE_VERSION,
             cb: () => {
               this.snackBar.open(this.translateService.instant('common.diagramVersionSaved'), 'OK', {
                 duration: 3000
@@ -80,17 +80,17 @@ export class BpmnToolbarService {
             delimiterAfter: true
           },
           {
-            name: ToolbarFileItemEnum.GRANT_ACCESS,
+            name: ToolbarProcessItemEnum.GRANT_ACCESS,
             delimiterAfter: true
           },
           {
-            name: ToolbarFileItemEnum.COPY
+            name: ToolbarProcessItemEnum.COPY
           },
           {
-            name: ToolbarFileItemEnum.RENAME
+            name: ToolbarProcessItemEnum.RENAME
           },
           {
-            name: ToolbarFileItemEnum.MOVE
+            name: ToolbarProcessItemEnum.MOVE
           }
         ]
       },

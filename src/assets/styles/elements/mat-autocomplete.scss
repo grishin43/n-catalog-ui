@@ -64,7 +64,7 @@
       &.pseudo-disabled {
         color: inherit;
 
-        &:not(.pseudo-footer):not(.pseudo-header):not(.entity-type--file):not(.pseudo-body) {
+        &:not(.pseudo-footer):not(.pseudo-header):not(.entity-type--process):not(.pseudo-body) {
           cursor: pointer;
 
           &:hover {
@@ -161,7 +161,7 @@
     }
   }
 
-  &.pseudo-file-manager {
+  &.pseudo-explorer {
     mat-option {
       &:not(.pseudo-header):not(.pseudo-body):not(.pseudo-footer) {
         height: 38px;

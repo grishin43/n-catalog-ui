@@ -5,5 +5,5 @@ export interface ToolbarItemModel {
   hotkey?: string;
   subItems?: ToolbarItemModel[];
   delimiterAfter?: boolean;
-  cb?: (fileRef?: CatalogEntityModel) => void;
+  cb?: (entity?: CatalogEntityModel) => void;
 }

@@ -38,10 +38,10 @@ export class EntitiesTabService {
       entitiesValue.splice(removeIndex, 1);
     }
     this.entities.next(entitiesValue);
-    LocalStorageHelper.setData(StorageEnum.FILE_TABS, entitiesValue);
+    LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, entitiesValue);
     if (entitiesValue[removeIndex + 1]) {
       this.router.navigate(
-        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
         {
           queryParams: {
             [CatalogRouteEnum._ID]: entitiesValue[removeIndex + 1].id,
@@ -51,7 +51,7 @@ export class EntitiesTabService {
       );
     } else if (entitiesValue[removeIndex - 1]) {
       this.router.navigate(
-        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
         {
           queryParams: {
             [CatalogRouteEnum._ID]: entitiesValue[removeIndex - 1].id,
@@ -70,7 +70,7 @@ export class EntitiesTabService {
     if (removeIndex !== -1) {
       currentValue.splice(removeIndex, 1);
       currentValue.unshift(entity);
-      LocalStorageHelper.setData(StorageEnum.FILE_TABS, currentValue);
+      LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, currentValue);
       // TODO
       this.snackBar.open(this.translateService.instant('common.tabsOverflowed'), 'OK');
     }
@@ -85,13 +85,13 @@ export class EntitiesTabService {
           name: entity.name
         } as CatalogEntityModel, ...this.entities.getValue() || []];
         this.entities.next(newValue);
-        LocalStorageHelper.setData(StorageEnum.FILE_TABS, newValue);
+        LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, newValue);
       }
     }
   }
 
   public init(): void {
-    this.entities = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.FILE_TABS) || []);
+    this.entities = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.PROCESSES_TABS) || []);
   }
 
 }

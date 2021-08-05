@@ -22,8 +22,8 @@ const routes: Routes = [
         loadChildren: () => import('./pages/folder/folder.module').then(m => m.FolderModule)
       },
       {
-        path: `${CatalogRouteEnum.FILE}`,
-        loadChildren: () => import('./pages/file/file.module').then(m => m.FileModule)
+        path: `${CatalogRouteEnum.PROCESS}`,
+        loadChildren: () => import('./pages/process/process.module').then(m => m.ProcessModule)
       },
       {
         path: `${CatalogRouteEnum.SEARCH_RESULTS}/:${CatalogRouteEnum._QUERY}`,

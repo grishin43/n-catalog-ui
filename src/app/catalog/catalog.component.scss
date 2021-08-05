@@ -1,9 +1,3 @@
-@import "../../assets/styles/breakpoints";
 
-main {
-  margin-top: 48px;
 
-  @media screen and (max-width: $tablet-medium - 1px) {
-    margin-top: 20px;
-  }
-}
+

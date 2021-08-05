@@ -11,6 +11,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {NpPersonsModule} from '../../small/np-persons/np-persons.module';
 import {TableActionsService} from './services/table-actions/table-actions.service';
 import {NpButtonModule} from '../../small/np-button/np-button.module';
+import {MatRippleModule} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {NpButtonModule} from '../../small/np-button/np-button.module';
         MatButtonModule,
         MatMenuModule,
         NpPersonsModule,
-        NpButtonModule
+        NpButtonModule,
+        MatRippleModule
     ],
   providers: [
     TableActionsService

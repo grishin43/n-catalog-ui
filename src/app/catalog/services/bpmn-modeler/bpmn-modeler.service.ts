@@ -373,20 +373,20 @@ export class BpmnModelerService {
     }
   }
 
-  public async exportDiagramAsSVG(fileName: string): Promise<void> {
+  public async exportDiagramAsSVG(processName: string): Promise<void> {
     try {
       const {svg} = await this.bpmnModeler.saveSVG();
       const encodedData = encodeURIComponent(svg);
       const a = document.createElement('a');
       a.href = `data:application/bpmn20-xml;charset=UTF-8,${encodedData}`;
-      a.download = `${fileName}.svg`;
+      a.download = `${processName}.svg`;
       a.click();
     } catch (err) {
       console.error('Could not save BPMN 2.0 diagram\n', err);
     }
   }
 
-  public async exportDiagramAsJpeg(fileName: string): Promise<void> {
+  public async exportDiagramAsJpeg(processName: string): Promise<void> {
     try {
       const {svg} = await this.bpmnModeler.saveSVG();
       const imgWidth = +svg.match(/width="(.*?)"/)[1] || 0;
@@ -404,7 +404,7 @@ export class BpmnModelerService {
         context.drawImage(image, 0, 0);
         const canvasData = canvas.toDataURL('image/jpeg');
         const a = document.createElement('a');
-        a.download = `${fileName}.jpeg`;
+        a.download = `${processName}.jpeg`;
         a.href = canvasData;
         a.click();
       };
@@ -413,22 +413,22 @@ export class BpmnModelerService {
     }
   }
 
-  public async exportDiagramAsXML(fileName: string): Promise<void> {
+  public async exportDiagramAsXML(processName: string): Promise<void> {
     try {
       const {xml} = await this.bpmnModeler.saveXML({format: true});
       const encodedData = encodeURIComponent(xml);
       const a = document.createElement('a');
       a.href = `data:application/bpmn20-xml;charset=UTF-8,${encodedData}`;
-      a.download = `${fileName}.bpmn`;
+      a.download = `${processName}.bpmn`;
       a.click();
     } catch (err) {
       console.error('Could not save BPMN 2.0 diagram\n', err);
     }
   }
 
-  public async openDiagram(filePath: string): Promise<void> {
+  public async openDiagram(processUrl: string): Promise<void> {
     try {
-      await this.bpmnModeler.importXML(filePath);
+      await this.bpmnModeler.importXML(processUrl);
     } catch (err) {
       console.error('Could not import BPMN 2.0 diagram\n', err);
     }

@@ -13,7 +13,7 @@ import {ToolbarPluginEnum} from '../../../../models/toolbar/toolbar-plugin.enum'
 })
 export class ToolbarActionBtnComponent {
   @Input() action: ToolbarItemModel;
-  @Input() file: CatalogEntityModel;
+  @Input() process: CatalogEntityModel;
 
   public toolbarPlugin = ToolbarPluginEnum;
 

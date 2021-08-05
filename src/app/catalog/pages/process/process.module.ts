@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FileComponent} from './file.component';
+import {ProcessComponent} from './process.component';
 import {RouterModule, Routes} from '@angular/router';
-import {FileTopToolbarComponent} from './file-top-toolbar/file-top-toolbar.component';
+import {ProcessToolbarComponent} from './process-toolbar/process-toolbar.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
@@ -10,7 +10,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
 import {BpmnEditorComponent} from './bpmn-editor/bpmn-editor.component';
-import {ToolbarActionBtnComponent} from './file-top-toolbar/toolbar-action-btn/toolbar-action-btn.component';
+import {ToolbarActionBtnComponent} from './process-toolbar/toolbar-action-btn/toolbar-action-btn.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {WysiwygEditorComponent} from './wysiwyg-editor/wysiwyg-editor.component';
 import {AngularEditorModule} from '@kolkov/angular-editor';
@@ -21,7 +21,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 const routes: Routes = [
   {
     path: '',
-    component: FileComponent
+    component: ProcessComponent
   },
   {
     path: '**',
@@ -31,8 +31,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    FileComponent,
-    FileTopToolbarComponent,
+    ProcessComponent,
+    ProcessToolbarComponent,
     BpmnEditorComponent,
     ToolbarActionBtnComponent,
     WysiwygEditorComponent
@@ -53,5 +53,5 @@ const routes: Routes = [
     MatProgressSpinnerModule
   ]
 })
-export class FileModule {
+export class ProcessModule {
 }

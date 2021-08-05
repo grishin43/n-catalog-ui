@@ -18,7 +18,7 @@ export class ContentHelper {
         </svg>`,
         name: 'НПУ',
         subFoldersCount: 1,
-        filesCount: 5,
+        processesCount: 5,
         root: true,
         entities: ContentHelper.testEntities,
         type: CatalogEntityEnum.FOLDER
@@ -32,7 +32,7 @@ export class ContentHelper {
         </svg>`,
         name: 'НПЦ',
         subFoldersCount: 0,
-        filesCount: 0,
+        processesCount: 0,
         root: true,
         type: CatalogEntityEnum.FOLDER
       },
@@ -45,7 +45,7 @@ export class ContentHelper {
         </svg>`,
         name: 'NP Global',
         subFoldersCount: 0,
-        filesCount: 0,
+        processesCount: 0,
         root: true,
         type: CatalogEntityEnum.FOLDER
       },
@@ -60,7 +60,7 @@ export class ContentHelper {
         </svg>`,
         name: 'Пост-Фінанс',
         subFoldersCount: 0,
-        filesCount: 0,
+        processesCount: 0,
         root: true,
         type: CatalogEntityEnum.FOLDER
       }

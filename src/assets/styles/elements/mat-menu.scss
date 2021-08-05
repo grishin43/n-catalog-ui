@@ -32,6 +32,12 @@
       padding-left: 12px;
       padding-right: 12px;
 
+      &:not([disabled]) {
+        &.danger {
+          color: var(--np-alizarin-crimson);
+        }
+      }
+
       @media screen and (max-width: $tablet-medium - 1px) {
         height: 35px;
         line-height: 35px;

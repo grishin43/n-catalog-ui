@@ -24,7 +24,14 @@
 
     mat-row {
       min-height: 64px;
-      border-color: var(--np-white-lilac);
+
+      &:not(:last-child) {
+        border-color: var(--np-catskill-white);
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
 
       @media screen and (max-width: $tablet-medium - 1px) {
         min-height: 54px;

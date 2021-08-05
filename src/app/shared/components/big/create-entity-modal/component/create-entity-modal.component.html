@@ -4,8 +4,8 @@
     <p>{{'common.choosePlaceForSaving' | translate}}</p>
   </ng-container>
   <ng-container *ngIf="isProcess">
-    <h4>{{'common.newFile' | translate}}</h4>
-    <p>{{'common.choosePlaceForSavingAndFileType' | translate}}</p>
+    <h4>{{'common.newProcess' | translate}}</h4>
+    <p>{{'common.choosePlaceForSavingAndProcessType' | translate}}</p>
   </ng-container>
 </div>
 <mat-dialog-content class="mat-typography">
@@ -20,7 +20,7 @@
           {{'common.folderName' | translate}}
         </ng-container>
         <ng-container *ngIf="isProcess">
-          {{'common.fileName' | translate}}
+          {{'common.processName' | translate}}
         </ng-container>
       </mat-label>
       <mat-form-field
@@ -44,7 +44,7 @@
               {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
             </ng-container>
             <ng-container *ngIf="isProcess">
-              {{'errors.thisFileNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+              {{'errors.thisProcessNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
             </ng-container>
           </ng-container>
         </mat-error>
@@ -99,7 +99,7 @@
          'has-errors': form.get(formControlName.PROCESS_TYPE).touched && form.get(formControlName.PROCESS_TYPE).invalid
       }">
       <mat-label>
-        {{'common.fileType' | translate}}
+        {{'common.processType' | translate}}
       </mat-label>
       <mat-form-field
         class="input-type-text"
@@ -113,7 +113,7 @@
           [formControlName]="formControlName.PROCESS_TYPE"
           [attr.name]="formControlName.PROCESS_TYPE"
           [placeholder]="'common.chooseType' | translate"
-          [matAutocomplete]="fileTypesAuto"
+          [matAutocomplete]="processTypesAuto"
           [readonly]="true">
         <mat-spinner
           *ngIf="processTypesLoader"
@@ -160,21 +160,21 @@
 </mat-dialog-actions>
 
 <mat-autocomplete
-  class="pseudo-file-manager"
-  #fileTypesAuto="matAutocomplete">
+  class="pseudo-explorer"
+  #processTypesAuto="matAutocomplete">
   <mat-option
     *ngFor="let option of processTypes"
     [value]="option.name"
-    (click)="fileTypeSelected($event, option)">
+    (click)="processTypeSelected($event, option)">
     {{option.name}}
   </mat-option>
 </mat-autocomplete>
 
 <mat-autocomplete
-  class="pseudo-file-manager sticky-pseudo-header sticky-pseudo-footer"
+  class="pseudo-explorer sticky-pseudo-header sticky-pseudo-footer"
   #auto="matAutocomplete"
   [formGroup]="form">
-  <ng-container *ngIf="newFolderMode; else fileManagerTemplate">
+  <ng-container *ngIf="newFolderMode; else explorerTemplate">
     <mat-option
       class="pseudo-disabled pseudo-header"
       [disabled]="true">
@@ -237,7 +237,7 @@
       </np-button>
     </mat-option>
   </ng-container>
-  <ng-template #fileManagerTemplate>
+  <ng-template #explorerTemplate>
     <mat-option
       class="pseudo-disabled pseudo-header"
       [disabled]="true">
@@ -357,7 +357,7 @@
   #processOptionsTemplate>
   <ng-container *ngFor="let process of processes">
     <mat-option
-      class="pseudo-disabled entity-type--file"
+      class="pseudo-disabled entity-type--process"
       [value]="process.name"
       [disabled]="true"
       [matTooltip]="'common.youCanChooseOnlyFolder' | translate">

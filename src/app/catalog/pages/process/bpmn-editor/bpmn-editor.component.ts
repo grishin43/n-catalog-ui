@@ -18,15 +18,15 @@ import {HttpErrorResponse} from '@angular/common/http';
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
   @Input() set data(value: CatalogEntityModel) {
-    this.file = value;
-    if (this.file) {
-      this.openFile();
+    this.process = value;
+    if (this.process) {
+      this.openProcess();
     }
   }
 
-  public file: CatalogEntityModel;
-  public fileLoader: boolean;
-  public fileLoadingError: HttpErrorResponse;
+  public process: CatalogEntityModel;
+  public processLoader: boolean;
+  public processLoadingError: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
   private subscriptions = new Subscription();
@@ -80,26 +80,26 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       '#bpmn-canvas',
       '#bpmn-properties',
       () => {
-        this.openFile();
+        this.openProcess();
       }
     );
   }
 
-  private openFile(): any {
-    this.fileLoadingError = undefined;
-    this.fileLoader = true;
+  private openProcess(): any {
+    this.processLoadingError = undefined;
+    this.processLoader = true;
     this.subscriptions.add(
-      this.apiService.getXML(this.file?.link)
+      this.apiService.getXML(this.process?.link)
         .subscribe(
           (res) => {
             this.bpmnModeler.openDiagram(res).then(() => {
               this.bpmnModeler.zoomTo(true);
-              this.fileLoader = false;
+              this.processLoader = false;
             });
           },
           (err: HttpErrorResponse) => {
-            this.fileLoader = false;
-            this.fileLoadingError = err;
+            this.processLoader = false;
+            this.processLoadingError = err;
             console.error(err);
           }
         )

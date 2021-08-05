@@ -25,18 +25,18 @@
         </div>
         <div
           @fadeInOut
-          *ngIf="fileLoader"
+          *ngIf="processLoader"
           class="bpmn-overlay">
           <mat-spinner
             [diameter]="50">
           </mat-spinner>
-          <p>{{'common.fileLoading' | translate}}</p>
+          <p>{{'common.processLoading' | translate}}</p>
         </div>
         <div
           @fadeInOut
-          *ngIf="fileLoadingError"
+          *ngIf="processLoadingError"
           class="bpmn-overlay">
-          <p>{{'errors.failedToLoadFile' | translate}}</p>
+          <p>{{'errors.failedToLoadProcess' | translate}}</p>
           <np-button (click)="reloadPage()">
             <span>{{'common.tryAgain' | translate}}</span>
           </np-button>

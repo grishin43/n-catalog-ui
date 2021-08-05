@@ -1,0 +1,19 @@
+@import "../../../../assets/styles/breakpoints";
+
+.container-fluid {
+  padding: 8px 34px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  np-process-toolbar {
+    display: block;
+  }
+}
+
+np-bpmn-editor {
+  display: block;
+  overflow-x: hidden;
+}

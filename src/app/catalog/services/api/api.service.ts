@@ -161,15 +161,15 @@ export class ApiService {
     );
   }
 
-  public getFileById(id: string): Observable<CatalogEntityModel> {
+  public getProcessById(id: string): Observable<CatalogEntityModel> {
     // TODO
     // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
     return this.getMockedRootFolders().pipe(
       map((folders: CatalogEntityModel[]) => {
         return folders.find((folder: CatalogEntityModel) => {
           return !!folder.entities?.length;
-        })?.entities.find((file: CatalogEntityModel) => {
-          return file.id === id;
+        })?.entities.find((process: CatalogEntityModel) => {
+          return process.id === id;
         });
       })
     );
@@ -182,15 +182,15 @@ export class ApiService {
       map((folders: CatalogEntityModel[]) => {
         return folders.find((folder: CatalogEntityModel) => {
           return !!folder.entities?.length;
-        })?.entities.filter((file: CatalogEntityModel) => {
-          return file.name.indexOf(str) !== -1;
+        })?.entities.filter((process: CatalogEntityModel) => {
+          return process.name.indexOf(str) !== -1;
         });
       })
     );
   }
 
-  public getXML(fileLink: string): Observable<any> {
-    return this.http.get(fileLink, {
+  public getXML(url: string): Observable<any> {
+    return this.http.get(url, {
       headers: new HttpHeaders()
         .set('Content-Type', 'text/xml')
         .append('Access-Control-Allow-Methods', 'GET')

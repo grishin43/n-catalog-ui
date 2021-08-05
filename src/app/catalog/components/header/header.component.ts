@@ -50,22 +50,22 @@ export class HeaderComponent implements OnInit {
   }
 
   private setupCurrentEntityId(url: string): void {
-    if (url.match(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`)) {
+    if (url.match(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`)) {
       this.currentId = UrlHelper.getParameterByName(CatalogRouteEnum._ID, url);
     } else {
       this.currentId = undefined;
     }
   }
 
-  public onDeleteClicked(event: MouseEvent, file: CatalogEntityModel): void {
+  public onDeleteClicked(event: MouseEvent, entity: CatalogEntityModel): void {
     event.stopPropagation();
     event.preventDefault();
-    this.entitiesTabService.deleteEntity(file);
+    this.entitiesTabService.deleteEntity(entity);
   }
 
   public openProcess(process: CatalogEntityModel): void {
     this.router.navigate(
-      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
       {
         queryParams: {
           [CatalogRouteEnum._ID]: process.id,

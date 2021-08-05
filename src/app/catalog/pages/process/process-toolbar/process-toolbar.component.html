@@ -30,7 +30,7 @@
             <ng-container *ngFor="let subItem of item.subItems">
               <np-toolbar-action-btn
                 [action]="subItem"
-                [file]="file">
+                [process]="process">
               </np-toolbar-action-btn>
             </ng-container>
           </mat-menu>
@@ -38,7 +38,7 @@
         <ng-template #withoutSubItemsTemplate>
           <np-toolbar-action-btn
             [action]="item"
-            [file]="file">
+            [process]="process">
           </np-toolbar-action-btn>
         </ng-template>
         <mat-divider *ngIf="item.delimiterAfter"></mat-divider>

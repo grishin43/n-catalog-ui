@@ -9,7 +9,8 @@ import {InjectableDataModel} from '../../../create-entity-modal/models/injectabl
 import {MatDialog} from '@angular/material/dialog';
 import {CatalogEntityModel} from '../../../../../../catalog/models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../../../../catalog/models/catalog-entity.enum';
-import {FolderModel} from '../../../../../../models/domain/folder.model';
+import {MapHelper} from '../../../../../../catalog/helpers/map.helper';
+import {ApiService} from '../../../../../../catalog/services/api/api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,22 +19,24 @@ export class TableActionsService {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private api: ApiService
   ) {
   }
 
-  public get fileActions(): TableActionModel[] {
+  public get processActions(): TableActionModel[] {
     return [
       {
         name: CatalogEntityActionEnum.OPEN,
         cb: (entity: CatalogEntityModel) => {
-          this.openFile(entity);
+          this.openProcess(entity);
         }
       }, {
         name: CatalogEntityActionEnum.PROVIDE_ACCESS,
         cb: (entity: CatalogEntityModel) => {
-          this.openFile(entity);
-        }
+          console.log(entity);
+        },
+        disabled: true
       },
       {
         name: CatalogEntityActionEnum.RENAME,
@@ -76,31 +79,36 @@ export class TableActionsService {
       },
       {
         name: CatalogEntityActionEnum.CREATE_FOLDER,
-        cb: (entity: FolderModel) => {
-          this.dialog.open(CreateEntityModalComponent, {
-            width: '700px',
-            autoFocus: false,
-            data: {
-              parent: entity,
-              type: CatalogEntityEnum.FOLDER
-            } as InjectableDataModel
-          });
-        },
-        disabled: true
+        cb: (entity: CatalogEntityModel) => {
+          this.openCreateEntityModal({
+            parent: MapHelper.mapEntityToFolder(entity),
+            type: CatalogEntityEnum.FOLDER
+          } as InjectableDataModel);
+        }
       },
       {
-        name: CatalogEntityActionEnum.CREATE_FILE,
+        name: CatalogEntityActionEnum.CREATE_PROCESS,
+        cb: (entity: CatalogEntityModel) => {
+          this.openCreateEntityModal({
+            parent: MapHelper.mapEntityToProcess(entity),
+            type: CatalogEntityEnum.PROCESS
+          } as InjectableDataModel);
+        }
+      },
+      {
+        name: CatalogEntityActionEnum.DELETE,
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
         },
+        class: 'danger',
         disabled: true
       }
     ];
   }
 
-  public openFile(entity: CatalogEntityModel): void {
+  public openProcess(entity: CatalogEntityModel): void {
     this.router.navigate(
-      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FILE}`],
+      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
       {
         queryParams: {
           [CatalogRouteEnum._ID]: entity.id,
@@ -112,6 +120,14 @@ export class TableActionsService {
 
   public openFolder(entity: CatalogEntityModel): void {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
+  }
+
+  public openCreateEntityModal(data: InjectableDataModel): void {
+    this.dialog.open(CreateEntityModalComponent, {
+      width: '700px',
+      autoFocus: false,
+      data
+    });
   }
 
 }

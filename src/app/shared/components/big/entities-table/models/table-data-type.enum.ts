@@ -1,5 +1,5 @@
 export enum TableDataTypeEnum {
-  FILE,
+  PROCESS,
   PARTICIPANTS,
   DATE,
   STATUS,

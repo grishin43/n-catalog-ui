@@ -1,4 +1,4 @@
 export interface CatalogStateModel {
-  recentFiles?: any;
+  recentProcesses?: any;
   mainFolders?: any;
 }

@@ -1,7 +1,7 @@
 <button
   mat-menu-item
   [disabled]="!action.cb || disabled"
-  (click)="action?.cb(file)">
+  (click)="action?.cb(process)">
   {{('common.' + action.name | translate) === 'common.' + action.name
   ? (action.name | uppercase)
   : ('common.' + action.name | translate)}}
