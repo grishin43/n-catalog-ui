@@ -18,6 +18,7 @@ import {SearchModel} from '../../../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
 import {ProcessModel} from '../../../../../models/domain/process.model';
+import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
 
 @Component({
   selector: 'np-create-entity-modal',
@@ -35,8 +36,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public rootFolders: FolderModel[] = [];
   public openedFolder: FolderModel;
   public selectedFolder: FolderModel;
-  public selectedFolderPaths: string[] = [];
-  public isSingleClick = true;
   public eCatalogEntity = CatalogEntityEnum;
   public processTypes: ProcessTypeModel[];
   public newFolderMode: boolean;
@@ -59,7 +58,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     if (this.data && this.data.parent) {
       this.openedFolder = this.data.parent;
       this.patchOpenedFolder(this.openedFolder.id);
-      this.initForm(this.data.parent.name);
+      this.initForm(this.folderPath);
     } else {
       this.initForm();
     }
@@ -128,20 +127,13 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public folderSingleClick(event: MouseEvent, folder: FolderModel): void {
     event.preventDefault();
     event.stopPropagation();
-    this.isSingleClick = true;
-    setTimeout(() => {
-      if (this.isSingleClick) {
-        this.selectedFolder = folder;
-      }
-    }, 200);
+    this.selectedFolder = folder;
   }
 
   public folderDoubleClick(event: MouseEvent, folder: FolderModel): void {
     event.preventDefault();
     event.stopPropagation();
     if (folder[FolderFieldKey.FOLDERS]?.count || folder[FolderFieldKey.PROCESSES]?.count) {
-      this.isSingleClick = false;
-      this.selectedFolderPaths.push(folder.name);
       this.clearSelectedFolder();
       this.patchOpenedFolder(folder.id);
     }
@@ -156,7 +148,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
     this.clearSelectedFolder();
-    this.selectedFolderPaths.splice(this.selectedFolderPaths.length - 1, 1);
     if (this.openedFolder) {
       if (this.openedFolder.parent) {
         this.patchOpenedFolder(this.openedFolder.parent.id);
@@ -185,34 +176,26 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
     if (this.selectedFolder) {
-      let value;
-      if (this.selectedFolderPaths?.length) {
-        value = this.fullFolderPath;
-      } else {
-        value = this.selectedFolder.name;
-      }
-      this.form.get(FormFieldEnum.FOLDER_PATH).patchValue(value);
+      this.form.get(FormFieldEnum.FOLDER_PATH).patchValue(this.folderPath);
       matAutocompleteTrigger.closePanel();
     }
   }
 
-  public get fullFolderPath(): string {
-    if (this.selectedFolderPaths.length) {
-      if (this.selectedFolder) {
-        const value = [].concat(this.selectedFolderPaths);
-        value.push(this.selectedFolder.name);
-        return value.join('/');
-      } else if (this.openedFolder) {
-        return this.selectedFolderPaths.join('/');
-      }
-    } else if (this.selectedFolder) {
-      return this.selectedFolder.name;
+  public get folderPath(): string {
+    if (this.selectedFolder) {
+      return this.extractFolderPathname(this.selectedFolder);
     } else if (this.openedFolder) {
-      return this.openedFolder.name;
-    } else if (this.rootFolders) {
-      return this.translateService.instant('common.rootFolders');
+      return this.extractFolderPathname(this.openedFolder);
     }
-    return undefined;
+    return this.translateService.instant('common.rootFolders');
+  }
+
+  public extractFolderPathname(folder: FolderModel): string {
+    if (folder.path) {
+      const path = folder.path.map((item: EntityPathModel) => item.name).join('/');
+      return path?.length ? `${path}/${folder.name}` : folder.name;
+    }
+    return folder.name;
   }
 
   public formSubmit(): void {
@@ -392,6 +375,18 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   public get isFolder(): boolean {
     return this.data.type === CatalogEntityEnum.FOLDER;
+  }
+
+  public get openedFolderHasChildren(): boolean {
+    return !!this.openedFolderSubFolders?.length || !!this.openedFolderProcesses?.length;
+  }
+
+  public get openedFolderSubFolders(): FolderModel[] {
+    return this.openedFolder?.[FolderFieldKey.FOLDERS]?.items;
+  }
+
+  public get openedFolderProcesses(): ProcessModel[] {
+    return this.openedFolder?.[FolderFieldKey.PROCESSES]?.items;
   }
 
 }

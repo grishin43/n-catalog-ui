@@ -41,10 +41,10 @@
           <ng-container *ngIf="!form.get(formControlName.ENTITY_NAME).hasError('required') &&
             form.get(formControlName.ENTITY_NAME).hasError('duplicatedName')">
             <ng-container *ngIf="isFolder">
-              {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+              {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: folderPath} }}
             </ng-container>
             <ng-container *ngIf="isProcess">
-              {{'errors.thisProcessNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+              {{'errors.thisProcessNameAlreadyExistAt' | translate : {folderPath: folderPath} }}
             </ng-container>
           </ng-container>
         </mat-error>
@@ -208,12 +208,12 @@
             form.get(formControlName.NEW_ENTITY_NAME).hasError('duplicatedName');
             else createFolderLabelTemplate">
         <span class="error-label pseudo-body-label">
-          {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: fullFolderPath} }}
+          {{'errors.thisFolderNameAlreadyExistAt' | translate : {folderPath: folderPath} }}
         </span>
       </ng-container>
       <ng-template #createFolderLabelTemplate>
         <span class="pseudo-body-label">
-          {{'common.createNewFolderInFolder' | translate: {folderPath: fullFolderPath} }}
+          {{'common.createNewFolderInFolder' | translate: {folderPath: folderPath} }}
         </span>
       </ng-template>
     </mat-option>
@@ -252,11 +252,9 @@
         </svg>
       </button>
       <span class="mat-optgroup-label pl-0 pr-0">
-        <ng-container *ngIf="selectedFolderPaths?.length; else rootFoldersTextTemplate">
+        <ng-container *ngIf="folderPath; else rootFoldersTextTemplate">
           <span class="entity-path">
-            <span *ngFor="let item of selectedFolderPaths">
-              {{item}}
-            </span>
+            <span>{{folderPath}}</span>
           </span>
         </ng-container>
         <ng-template #rootFoldersTextTemplate>
@@ -264,19 +262,30 @@
         </ng-template>
       </span>
     </mat-option>
-    <mat-optgroup class="hide-label">
-      <ng-container *ngIf="openedFolder; else rootFoldersTemplate">
-        <ng-container
-          *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolder[eFolderFieldKey.FOLDERS]?.items}"></ng-container>
-        <ng-container *ngIf="data?.type === eCatalogEntity.PROCESS">
+    <ng-container *ngIf="openedFolder; else rootFoldersTemplate">
+      <mat-optgroup class="hide-label">
+        <ng-container *ngIf="openedFolderHasChildren; else noSubsTemplate">
           <ng-container
-            *ngTemplateOutlet="processOptionsTemplate; context: {data : openedFolder[eFolderFieldKey.PROCESSES]?.items}"></ng-container>
+            *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolderSubFolders}"></ng-container>
+          <ng-container *ngIf="isProcess">
+            <ng-container
+              *ngTemplateOutlet="processOptionsTemplate; context: {data : openedFolderProcesses}"></ng-container>
+          </ng-container>
         </ng-container>
-      </ng-container>
-      <ng-template #rootFoldersTemplate>
+        <ng-template #noSubsTemplate>
+          <mat-option
+            class="pseudo-disabled pseudo-body"
+            [disabled]="true">
+            {{'common.folderIsEmpty' | translate}}
+          </mat-option>
+        </ng-template>
+      </mat-optgroup>
+    </ng-container>
+    <ng-template #rootFoldersTemplate>
+      <mat-optgroup class="hide-label">
         <ng-container *ngTemplateOutlet="folderOptionsTemplate; context: {data : rootFolders}"></ng-container>
-      </ng-template>
-    </mat-optgroup>
+      </mat-optgroup>
+    </ng-template>
     <mat-option
       class="pseudo-disabled pseudo-footer"
       [disabled]="true">

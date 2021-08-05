@@ -48,7 +48,9 @@
 
       &:not(.has-submenu) {
         mat-icon {
-          margin-right: 10px;
+          &:not(.mat-menu-item-prefix):not(.mat-menu-item-postfix) {
+            margin-right: 10px;
+          }
         }
       }
 
@@ -68,6 +70,11 @@
       .mat-menu-item-postfix {
         margin-left: auto;
         padding-left: 15px;
+      }
+
+      .mat-menu-item-prefix {
+        margin-left: -6px;
+        margin-right: 6px;
       }
     }
 

@@ -1,7 +1,7 @@
 @import "../../../../../assets/styles/breakpoints";
 
 .bpmn-editor-wrapper {
-  height: calc(100vh - 128px);
+  height: calc(100vh - 120px);
   min-height: 350px;
   display: flex;
   position: relative;
@@ -13,7 +13,7 @@
   border-color: var(--np-silver-sand);
 
   @media screen and (max-width: $tablet-medium - 1px) {
-    height: calc(100vh - 125px);
+    height: calc(100vh - 106px);
   }
 
   #bpmn-canvas {
