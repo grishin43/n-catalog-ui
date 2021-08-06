@@ -119,7 +119,8 @@
     "processCreated": "Процес створено",
     "tryAgain": "Спробувати знову",
     "folderLoading": "Завантаження папки",
-    "delete": "Видалити"
+    "delete": "Видалити",
+    "rootFoldersNotFound": "Рутові папки не знайдені"
   },
   "statuses": {
     "undefined": "Невизначений",

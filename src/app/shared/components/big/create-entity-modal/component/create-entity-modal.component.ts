@@ -39,7 +39,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public eCatalogEntity = CatalogEntityEnum;
   public processTypes: ProcessTypeModel[];
   public newFolderMode: boolean;
-  public eFolderFieldKey = FolderFieldKey;
 
   private subscription = new Subscription();
 

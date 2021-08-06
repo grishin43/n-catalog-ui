@@ -8,6 +8,7 @@ import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
+import {Base64} from 'js-base64';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -95,7 +96,8 @@ export class ApiService {
         map((folder: FolderModel) => {
           return {
             ...folder,
-            root: !folder.parent
+            root: !folder.parent,
+            icon: folder.icon ? Base64.decode(folder.icon) : folder.icon
           };
         })
       );

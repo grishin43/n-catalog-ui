@@ -273,17 +273,20 @@
           </ng-container>
         </ng-container>
         <ng-template #noSubsTemplate>
-          <mat-option
-            class="pseudo-disabled pseudo-body"
-            [disabled]="true">
-            {{'common.folderIsEmpty' | translate}}
-          </mat-option>
+          <ng-container
+            *ngTemplateOutlet="noOptionsTemplate; context: {data : 'common.folderIsEmpty'}"></ng-container>
         </ng-template>
       </mat-optgroup>
     </ng-container>
     <ng-template #rootFoldersTemplate>
       <mat-optgroup class="hide-label">
-        <ng-container *ngTemplateOutlet="folderOptionsTemplate; context: {data : rootFolders}"></ng-container>
+        <ng-container *ngIf="rootFolders?.length; else noRootFoldersTemplate">
+          <ng-container *ngTemplateOutlet="folderOptionsTemplate; context: {data : rootFolders}"></ng-container>
+        </ng-container>
+        <ng-template #noRootFoldersTemplate>
+          <ng-container
+            *ngTemplateOutlet="noOptionsTemplate; context: {data : 'common.rootFoldersNotFound'}"></ng-container>
+        </ng-template>
       </mat-optgroup>
     </ng-template>
     <mat-option
@@ -318,6 +321,16 @@
     </mat-option>
   </ng-template>
 </mat-autocomplete>
+
+<ng-template
+  let-i18Key="data"
+  #noOptionsTemplate>
+  <mat-option
+    class="pseudo-disabled pseudo-body"
+    [disabled]="true">
+    {{i18Key | translate}}
+  </mat-option>
+</ng-template>
 
 <ng-template
   let-folders="data"
