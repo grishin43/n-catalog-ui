@@ -137,7 +137,7 @@
       </mat-optgroup>
     </ng-container>
     <ng-template #noResults>
-      <mat-optgroup [label]="formControl.value ? ('common.noSearchResults') : ('common.noRecentResults' | translate)">
+      <mat-optgroup [label]="formControl.value ? ('common.noSearchResults' | translate) : ('common.noRecentResults' | translate)">
         <mat-option
           class="d-none"
           value="{{input.value}}">

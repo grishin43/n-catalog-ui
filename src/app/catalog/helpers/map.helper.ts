@@ -27,7 +27,8 @@ export class MapHelper {
           id: process.id,
           name: process.name,
           type: CatalogEntityEnum.PROCESS,
-          permissions: CatalogEntityPermissionEnum.EDIT
+          permissions: CatalogEntityPermissionEnum.EDIT,
+          link: process.url
         };
       });
     }

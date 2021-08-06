@@ -4,6 +4,7 @@ import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/mod
 import {v4 as uuidv4} from 'uuid';
 import {EmployeeModel} from '../../models/employee.model';
 import {CatalogEntityPermissionEnum} from '../models/catalog-entity-permission.enum';
+import {ProcessModel} from '../../models/domain/process.model';
 
 export class ContentHelper {
 
@@ -197,6 +198,41 @@ export class ContentHelper {
   public static get randomLastName(): string {
     const names = ['Смірнов', 'Філіппов', 'Мазур', 'Даскін', 'Умеренко', 'Калашніков', 'Бондаренко'];
     return names[Math.floor(Math.random() * names.length)];
+  }
+
+  public static get demoProcesses(): ProcessModel[] {
+    return [
+      {
+        id: '701431a1',
+        name: 'Автентифікація клієнта v1',
+        url: '../../../assets/bpmn/demo-files/Client_authentication_v1.bpmn'
+      },
+      {
+        id: '701431a2',
+        name: 'Оплата услуг V1.6',
+        url: '../../../assets/bpmn/demo-files/Payment_for_services_V1-6.bpmn'
+      },
+      {
+        id: '701431a3',
+        name: 'Основные элементы',
+        url: '../../../assets/bpmn/demo-files/Essential_elements.bpmn'
+      },
+      {
+        id: '701431a4',
+        name: 'Переадрессация посылки v17.1',
+        url: '../../../assets/bpmn/demo-files/Forwarding_parcels_v17-1.bpmn'
+      },
+      {
+        id: '701431a5',
+        name: 'Создание ЕН_v11',
+        url: '../../../assets/bpmn/demo-files/Creation_of_EN_v11.bpmn'
+      },
+      {
+        id: '701431a6',
+        name: 'Токены',
+        url: '../../../assets/bpmn/demo-files/Tokens.bpmn'
+      }
+    ];
   }
 
 }

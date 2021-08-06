@@ -3,12 +3,13 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, map} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 import {Base64} from 'js-base64';
+import {MapHelper} from '../../helpers/map.helper';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -97,10 +98,25 @@ export class ApiService {
           return {
             ...folder,
             root: !folder.parent,
-            icon: folder.icon ? Base64.decode(folder.icon) : folder.icon
+            icon: folder.icon ? Base64.decode(folder.icon) : folder.icon,
+            definitions: folder.id === 'dad96848-7809-4cde-988e-2f110b581bac'
+              ? this.getMockedDefinitions(folder[FolderFieldKey.PROCESSES])
+              : folder[FolderFieldKey.PROCESSES]
           };
         })
       );
+  }
+
+  public getMockedDefinitions(definitions: SearchModel<ProcessModel>): SearchModel<ProcessModel> {
+    if (definitions) {
+      const currentItems = definitions.items || [];
+      currentItems.push(...ContentHelper.demoProcesses);
+      return {
+        count: currentItems.length,
+        items: currentItems
+      };
+    }
+    return definitions;
   }
 
   public renameFolder(id: string, name: string): Observable<{ name: string }> {
@@ -165,16 +181,19 @@ export class ApiService {
 
   public getProcessById(id: string): Observable<CatalogEntityModel> {
     // TODO
-    // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
-    return this.getMockedRootFolders().pipe(
-      map((folders: CatalogEntityModel[]) => {
-        return folders.find((folder: CatalogEntityModel) => {
-          return !!folder.entities?.length;
-        })?.entities.find((process: CatalogEntityModel) => {
-          return process.id === id;
+    let gotcha: CatalogEntityModel;
+    gotcha = ContentHelper.catalogMainFolders.find((folder: CatalogEntityModel) => {
+      return !!folder.entities?.length;
+    })?.entities.find((process: CatalogEntityModel) => {
+      return process.id === id;
+    });
+    if (!gotcha) {
+      gotcha = MapHelper.mapProcessesToEntities(ContentHelper.demoProcesses)
+        .find((folder: CatalogEntityModel) => {
+            return folder.id === id;
         });
-      })
-    );
+    }
+    return of(gotcha);
   }
 
   public searchEntities(str: string): Observable<CatalogEntityModel[]> {

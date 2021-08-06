@@ -3,5 +3,6 @@ export interface ProcessModel {
   name?: string;
   origin?: string;
   parent?: string;
+  url?: string;
 }
 
