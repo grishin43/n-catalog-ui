@@ -4,7 +4,7 @@ import {EntityPathModel} from './entity-path.model';
 
 export enum FolderFieldKey {
   FOLDERS = 'folders',
-  PROCESSES = 'definitions'
+  PROCESSES = 'processes'
 }
 
 export interface FolderModel {
