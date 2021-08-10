@@ -17,21 +17,22 @@
 
       &.colors-palette-menu {
         min-width: auto;
-        min-height: auto;
       }
 
-      .mat-menu-content:not(:empty) {
-        padding: 8px 0;
-        overflow-x: hidden;
-      }
+      &:not(.colors-palette-menu) {
+        .mat-menu-content:not(:empty) {
+          padding: 8px 0;
+          overflow-x: hidden;
+        }
 
-      .mat-menu-item {
-        padding-left: 24px;
-        padding-right: 24px;
+        .mat-menu-item {
+          padding-left: 24px;
+          padding-right: 24px;
 
-        @media screen and (max-width: $tablet-medium - 1px) {
-          padding-left: 15px;
-          padding-right: 15px;
+          @media screen and (max-width: $tablet-medium - 1px) {
+            padding-left: 15px;
+            padding-right: 15px;
+          }
         }
       }
     }

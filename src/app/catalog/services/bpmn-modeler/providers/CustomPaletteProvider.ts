@@ -24,9 +24,18 @@ export class CustomPaletteProvider implements IPaletteProvider {
         className: ['color-palette', 'svg-icon'],
         title: 'Open color palette',
         action: {
-          click: () => {
-            const paletteTrigger = document.getElementById('color-palette-trigger');
-            paletteTrigger.click();
+          click: (e) => {
+            try {
+              const paletteTrigger = document.getElementById('color-palette-trigger');
+              const domRect = e.target.getBoundingClientRect();
+              const offsetX = domRect.x + e.target.offsetWidth - 10;
+              const offsetY = domRect.y + e.target.offsetHeight - 10;
+              paletteTrigger.style.left = `${offsetX}px`;
+              paletteTrigger.style.top = `${offsetY}px`;
+              paletteTrigger.click();
+            } catch (error) {
+              console.log('Could not open color palette\n', error);
+            }
           }
         }
       },
@@ -36,8 +45,12 @@ export class CustomPaletteProvider implements IPaletteProvider {
         title: 'Open WYSIWYG editor',
         action: {
           click: () => {
-            const paletteTrigger = document.getElementById('wysiwyg-editor-trigger');
-            paletteTrigger.click();
+            try {
+              const paletteTrigger = document.getElementById('wysiwyg-editor-trigger');
+              paletteTrigger.click();
+            } catch (error) {
+              console.log('Could not open WYSIWYG editor\n', error);
+            }
           }
         }
       }
