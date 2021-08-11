@@ -70,10 +70,11 @@ export class FolderComponent implements OnInit, OnDestroy {
     );
   }
 
-  public onEntityCreated(): void {
+  public onEntityChanged(): void {
+    // TODO
     setTimeout(() => {
       this.getFolderById();
-    }, 200);
+    }, 2000);
   }
 
 }

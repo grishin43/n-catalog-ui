@@ -225,7 +225,7 @@
     mat-menu-item
     [ngClass]="action.class"
     [disabled]="action.disabled"
-    (click)="action.cb(entity)">
+    (click)="action.cb(entity, parentFolder, entityRenamedSsCb)">
     {{'common.' + action.name | translate}}
   </button>
 </ng-template>

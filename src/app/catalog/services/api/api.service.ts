@@ -58,7 +58,6 @@ export class ApiService {
 
   public createFolder(parentFolderId: string, name: string): Observable<{ name: string }> {
     return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`, {
-      id: parentFolderId,
       name
     });
   }
@@ -99,7 +98,7 @@ export class ApiService {
             ...folder,
             root: !folder.parent,
             icon: folder.icon ? Base64.decode(folder.icon) : folder.icon,
-            [FolderFieldKey.PROCESSES]: folder.id === 'dad96848-7809-4cde-988e-2f110b581bac'
+            [FolderFieldKey.PROCESSES]: folder.name === 'НПУ'
               ? this.getMockedProcesses(folder[FolderFieldKey.PROCESSES])
               : folder[FolderFieldKey.PROCESSES]
           };
@@ -137,7 +136,6 @@ export class ApiService {
 
   public createProcess(parentFolderId: string, processType: string, name: string): Observable<ProcessModel> {
     return this.http.post<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}`, {
-      id: parentFolderId,
       origin: processType,
       name
     });
@@ -145,16 +143,12 @@ export class ApiService {
 
   public renameProcess(parentFolderId: string, processId: string, name: string): Observable<{ name: string }> {
     return this.http.put<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RENAME}`, {
-      folderId: parentFolderId,
-      definitionId: processId,
       name
     });
   }
 
   public moveProcess(parentFolderId: string, processId: string, targetFolderId: string): Observable<{ folder: string }> {
     return this.http.post<{ folder: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.MOVE}`, {
-      folderId: parentFolderId,
-      definitionId: processId,
       folder: targetFolderId
     });
   }

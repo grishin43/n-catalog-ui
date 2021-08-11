@@ -12,6 +12,7 @@ import {NpPersonsModule} from '../../small/np-persons/np-persons.module';
 import {TableActionsService} from './services/table-actions/table-actions.service';
 import {NpButtonModule} from '../../small/np-button/np-button.module';
 import {MatRippleModule} from '@angular/material/core';
+import {RenameEntityModalModule} from '../rename-entity-modal/rename-entity-modal.module';
 
 @NgModule({
   declarations: [
@@ -20,19 +21,20 @@ import {MatRippleModule} from '@angular/material/core';
   exports: [
     EntitiesTableComponent
   ],
-    imports: [
-        CommonModule,
-        MatTableModule,
-        TranslateModule,
-        ToStringArrayModule,
-        NpStatusPillModule,
-        MatIconModule,
-        MatButtonModule,
-        MatMenuModule,
-        NpPersonsModule,
-        NpButtonModule,
-        MatRippleModule
-    ],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    TranslateModule,
+    ToStringArrayModule,
+    NpStatusPillModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    NpPersonsModule,
+    NpButtonModule,
+    MatRippleModule,
+    RenameEntityModalModule
+  ],
   providers: [
     TableActionsService
   ]

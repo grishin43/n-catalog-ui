@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TableColumnsModel} from '../models/table.model';
 import {MatTableDataSource} from '@angular/material/table';
 import {TableDataTypeEnum} from '../models/table-data-type.enum';
@@ -10,6 +10,7 @@ import {TableActionsService} from '../services/table-actions/table-actions.servi
 import {CatalogEntityPermissionEnum} from '../../../../../catalog/models/catalog-entity-permission.enum';
 import {EntityTableColumnName} from '../../../../../catalog/helpers/table.helper';
 import {MatRippleHelper} from '../../../../../catalog/helpers/mat-ripple.helper';
+import {FolderModel} from '../../../../../models/domain/folder.model';
 
 @Component({
   selector: 'np-entities-table',
@@ -19,6 +20,8 @@ import {MatRippleHelper} from '../../../../../catalog/helpers/mat-ripple.helper'
 export class EntitiesTableComponent implements OnInit {
   @Input() displayedColumns: TableColumnsModel[];
   @Input() tableClass: string;
+  @Input() parentFolder: FolderModel;
+  @Output() entityRenamed = new EventEmitter<void>();
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
 
@@ -51,6 +54,10 @@ export class EntitiesTableComponent implements OnInit {
     } else if (item.type === CatalogEntityEnum.PROCESS) {
       this.tableActionsService.openProcess(item);
     }
+  }
+
+  public entityRenamedSsCb = () => {
+    this.entityRenamed.emit();
   }
 
 }

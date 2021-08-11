@@ -1,0 +1,60 @@
+<div mat-dialog-title>
+  <h4>{{'common.rename' | translate}}</h4>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div
+      class="form-group mb-0"
+      [ngClass]="{
+         'has-errors': form.get(formControlName.ENTITY_NAME).touched && form.get(formControlName.ENTITY_NAME).invalid
+      }">
+      <mat-label>
+        <ng-container *ngIf="isFolder">
+          {{'common.folderName' | translate}}
+        </ng-container>
+        <ng-container *ngIf="isProcess">
+          {{'common.processName' | translate}}
+        </ng-container>
+      </mat-label>
+      <mat-form-field
+        class="input-type-text"
+        appearance="outline"
+        floatLabel="never">
+        <input
+          type="text"
+          matInput
+          [formControlName]="formControlName.ENTITY_NAME"
+          [attr.name]="formControlName.ENTITY_NAME"
+          [placeholder]="'common.entityName' | translate">
+        <mat-error *ngIf="form.get(formControlName.ENTITY_NAME).invalid">
+          <ng-container *ngIf="form.get(formControlName.ENTITY_NAME).hasError('required')">
+            {{'errors.required' | translate}}
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'reset'"
+    [type]="'secondary'"
+    (click)="closeModal()">
+    {{'common.cancel' | translate}}
+  </np-button>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'submit'"
+    [type]="'primary'"
+    [disabled]="form.invalid || formLoader"
+    (click)="formSubmit()">
+    <span>
+      {{'common.save' | translate}}
+    </span>
+    <mat-spinner
+      *ngIf="formLoader"
+      [diameter]="20">
+    </mat-spinner>
+  </np-button>
+</mat-dialog-actions>

@@ -20,7 +20,7 @@ import {ToolbarBlockerModel} from '../../models/toolbar/toolbar-blocker.model';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
 import {ToolbarPluginEnum} from '../../models/toolbar/toolbar-plugin.enum';
 import {CreateEntityModalComponent} from '../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
-import {InjectableDataModel} from '../../../shared/components/big/create-entity-modal/models/injectable-data.model';
+import {ModalInjectableDataModel} from '../../../models/modal-injectable-data.model';
 import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
 
 @Injectable({
@@ -49,7 +49,7 @@ export class BpmnToolbarService {
                 autoFocus: false,
                 data: {
                   type: CatalogEntityEnum.PROCESS
-                } as InjectableDataModel
+                } as ModalInjectableDataModel
               });
             }
           },
