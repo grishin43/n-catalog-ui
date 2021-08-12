@@ -10,13 +10,15 @@ import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 import {Base64} from 'js-base64';
 import {MapHelper} from '../../helpers/map.helper';
+import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permission.enum';
 
 enum ApiRoute {
   FOLDERS = 'folders',
   RENAME = 'rename',
   MOVE = 'move',
   PROCESSES = 'processes',
-  ORIGINS = 'origins'
+  ORIGINS = 'origins',
+  RECENT_PROCESSES = 'processes/recent'
 }
 
 @Injectable({
@@ -213,6 +215,22 @@ export class ApiService {
         .append('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method'),
       responseType: 'text'
     });
+  }
+
+  public getRecentProcesses(): Observable<CatalogEntityModel[]> {
+    const getRecentUrl =`${this.ApiUrl}/${ApiRoute.RECENT_PROCESSES}`;
+    return this.http.get<CatalogEntityModel[]>(getRecentUrl)
+      .pipe(
+        map(
+          (recentProcesses: CatalogEntityModel[]) => {
+            return recentProcesses.map((process: CatalogEntityModel) => {
+              if (!process.permissions)
+                process.permissions = CatalogEntityPermissionEnum.NO_PERMISSIONS;
+                return process;
+              });
+          }
+        )
+      );
   }
 
 }

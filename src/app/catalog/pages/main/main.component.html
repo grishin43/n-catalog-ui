@@ -54,7 +54,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="recentProcesses?.length">
+  <div class="row" *ngIf="(recentProcesses$ | async) as recentProcesses">
     <div class="col-12">
       <h6>{{'common.recently' | translate}}</h6>
     </div>
