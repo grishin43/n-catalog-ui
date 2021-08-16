@@ -5,7 +5,7 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<boo
     keycloak.init({
       config: {
         url: 'https://uaa.nplf.dev.digital.np.work/auth',
-        realm: 'NovaContact',
+        realm: 'BusinessCatalog',
         clientId: 'web-app',
       },
       loadUserProfileAtStartUp: true
