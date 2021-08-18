@@ -21,4 +21,5 @@ export interface CatalogEntityModel {
   link?: string;
   permissions?: CatalogEntityPermissionEnum;
   path?: string;
+  original?: any;
 }

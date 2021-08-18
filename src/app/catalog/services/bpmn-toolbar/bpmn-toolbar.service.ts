@@ -10,9 +10,6 @@ import {ToolbarDistributionEnum} from '../../models/toolbar/toolbar-distribution
 import {ToolbarMovementEnum} from '../../models/toolbar/toolbar-movement.enum';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
 import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {TranslateService} from '@ngx-translate/core';
-import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {BpmnDirectionEnum} from '../../models/bpmn/bpmn-direction.enum';
 import {BpmnSpeedEnum} from '../../models/bpmn/bpmn-speed.enum';
 import {BpmnPositionEnum} from '../../models/bpmn/bpmn-position.enum';
@@ -22,6 +19,8 @@ import {ToolbarPluginEnum} from '../../models/toolbar/toolbar-plugin.enum';
 import {CreateEntityModalComponent} from '../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
 import {ModalInjectableDataModel} from '../../../models/modal-injectable-data.model';
 import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
+import {ProcessModel} from '../../../models/domain/process.model';
+import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +30,7 @@ export class BpmnToolbarService {
   constructor(
     private bpmnModeler: BpmnModelerService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private translateService: TranslateService
+    private processAutosave: ProcessAutosaveService
   ) {
   }
 
@@ -58,24 +56,22 @@ export class BpmnToolbarService {
             subItems: [
               {
                 name: ProcessSaveTypeEnum.BPMN,
-                cb: (process: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsXML(process?.name)
+                cb: (process: ProcessModel) => this.bpmnModeler.exportDiagramAsXML(process?.name)
               },
               {
                 name: ProcessSaveTypeEnum.JPEG,
-                cb: (process: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsJpeg(process?.name)
+                cb: (process: ProcessModel) => this.bpmnModeler.exportDiagramAsJpeg(process?.name)
               },
               {
                 name: ProcessSaveTypeEnum.SVG,
-                cb: (process: CatalogEntityModel) => this.bpmnModeler.exportDiagramAsSVG(process?.name)
+                cb: (process: ProcessModel) => this.bpmnModeler.exportDiagramAsSVG(process?.name)
               }
             ]
           },
           {
             name: ToolbarProcessItemEnum.SAVE_VERSION,
-            cb: () => {
-              this.snackBar.open(this.translateService.instant('common.diagramVersionSaved'), 'OK', {
-                duration: 3000
-              });
+            cb: (process: ProcessModel) => {
+              this.processAutosave.saveProcess(process);
             },
             delimiterAfter: true
           },

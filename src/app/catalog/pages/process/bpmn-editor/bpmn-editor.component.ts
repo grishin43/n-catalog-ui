@@ -1,5 +1,4 @@
 import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {ApiService} from '../../../services/api/api.service';
 import {Subscription} from 'rxjs';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
@@ -9,6 +8,7 @@ import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.se
 import {WysiwygEditorComponent} from '../wysiwyg-editor/wysiwyg-editor.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {HttpErrorResponse} from '@angular/common/http';
+import {ProcessModel} from '../../../../models/domain/process.model';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -17,19 +17,18 @@ import {HttpErrorResponse} from '@angular/common/http';
   animations: [AnimationsHelper.fadeInOut]
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
-  @Input() set data(value: CatalogEntityModel) {
+  @Input() set data(value: ProcessModel) {
     this.process = value;
-    if (this.process) {
-      this.openProcess();
-    }
+    this.openProcess();
   }
 
-  public process: CatalogEntityModel;
+  public process: ProcessModel;
   public processLoader: boolean;
   public processLoadingError: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
   private subscriptions = new Subscription();
+  private readonly newDiagramLink = '../../../assets/bpmn/newDiagram.bpmn';
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e): any {
     if (e.ctrlKey && e.keyCode === 49) {
@@ -86,17 +85,29 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private openProcess(): any {
+    if (this.process) {
+      if (this.process.activeResource) {
+        this.openDiagram(this.process.activeResource.content);
+      } else {
+        this.openNewDiagram();
+      }
+    }
+  }
+
+  private openDiagram(xml: string): void {
+    this.bpmnModeler.openDiagram(xml).then(() => {
+      this.bpmnModeler.zoomTo(true);
+      this.processLoader = false;
+    });
+  }
+
+  private openNewDiagram(): void {
     this.processLoadingError = undefined;
     this.processLoader = true;
     this.subscriptions.add(
-      this.apiService.getXML(this.process?.link)
+      this.apiService.getXML(this.newDiagramLink)
         .subscribe(
-          (res) => {
-            this.bpmnModeler.openDiagram(res).then(() => {
-              this.bpmnModeler.zoomTo(true);
-              this.processLoader = false;
-            });
-          },
+          (res: string) => this.openDiagram(res),
           (err: HttpErrorResponse) => {
             this.processLoader = false;
             this.processLoadingError = err;

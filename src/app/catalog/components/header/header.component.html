@@ -20,12 +20,12 @@
         }">
         <div class="row align-items-center flex-nowrap">
           <div class="col-auto tab"
-               *ngFor="let entity of catalogEntities | async"
+               *ngFor="let entity of catalogProcesses | async"
                matRipple
                matRippleColor="{{rippleLightColor}}"
                matTooltip="{{entity.name}}"
                [ngClass]="{'active': entity.id === currentId}"
-               [ngStyle]="{'max-width': 'calc(100% / ' + (catalogEntities | async).length + ')'}"
+               [ngStyle]="{'max-width': 'calc(100% / ' + (catalogProcesses | async).length + ')'}"
                (click)="openProcess(entity)">
             <span class="entity-name">
                {{entity.name}}

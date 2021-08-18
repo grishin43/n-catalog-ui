@@ -5,6 +5,16 @@
         [process]="process">
       </np-process-toolbar>
     </div>
+    <div class="col-auto">
+      <span class="saving-state autosaving"
+            *ngIf="processAutosave.requestLoader$ | async">
+        {{'common.saving' | translate}}
+      </span>
+      <span class="saving-state"
+            *ngIf="processAutosave.resourceSaved$ | async">
+        {{'common.saved' | translate}}
+      </span>
+    </div>
     <div class="col">
       <div class="row justify-content-end align-items-center md-gutters">
         <div class="col-auto">

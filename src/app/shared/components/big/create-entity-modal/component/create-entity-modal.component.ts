@@ -9,16 +9,15 @@ import {Router} from '@angular/router';
 import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../../catalog/models/catalog-route.enum';
 import {ModalInjectableDataModel} from '../../../../../models/modal-injectable-data.model';
-import {v4 as uuidv4} from 'uuid';
 import {Subscription} from 'rxjs';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {TranslateService} from '@ngx-translate/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {SearchModel} from '../../../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
 import {ProcessModel} from '../../../../../models/domain/process.model';
 import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
+import {ToastService} from '../../../../../catalog/services/toast/toast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'np-create-entity-modal',
@@ -47,8 +46,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableDataModel,
-    private snackBar: MatSnackBar,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private toast: ToastService
   ) {
   }
 
@@ -227,18 +226,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
             this.formLoader = false;
             this.showToast('common.processCreated');
             this.closeModal();
-            // TODO
-            let randomId = uuidv4().replace('-', '');
-            randomId = randomId.substring(randomId.length - 7, randomId.length);
-            this.router.navigate(
-              [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
-              {
-                queryParams: {
-                  [CatalogRouteEnum._ID]: `${processType.code}/${randomId}`,
-                  [CatalogRouteEnum._NAME]: processName
-                }
-              }
-            );
             if (typeof this.data.ssCb === 'function') {
               this.data.ssCb();
             }
@@ -276,11 +263,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private showToast(i18nKey: string): void {
-    this.snackBar.open(this.translateService.instant(i18nKey), undefined, {
-      duration: 1500,
-      verticalPosition: 'bottom',
-      horizontalPosition: 'right'
-    });
+    this.toast.show(i18nKey, 1500, undefined, 'bottom', 'right');
   }
 
   public processTypeSelected(event: MouseEvent, option: ProcessTypeModel): void {

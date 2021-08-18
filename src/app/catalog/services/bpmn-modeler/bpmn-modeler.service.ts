@@ -11,10 +11,11 @@ import lintModule from 'bpmn-js-bpmnlint';
 import bpmnlintConfig from '.bpmnlintrc';
 import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {TranslateService} from '@ngx-translate/core';
 import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
 import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
+import {ToastService} from '../toast/toast.service';
+import {WindowHelper} from '../../../helpers/window.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class BpmnModelerService {
   private undoCounter = 0;
 
   constructor(
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
     private translateService: TranslateService
   ) {
   }
@@ -96,6 +97,21 @@ export class BpmnModelerService {
       });
       cb();
       this.listenPasteElements();
+      this.listenChanged();
+    }
+  }
+
+  private listenChanged(): void {
+    try {
+      this.bpmnModeler.get('eventBus').on('commandStack.changed', 999999, (e) => {
+        if (this.canUndo) {
+          WindowHelper.enableBeforeUnload();
+        } else {
+          WindowHelper.disableBeforeUnload();
+        }
+      });
+    } catch (e) {
+      console.log('Could not set `changes` listener\n', e);
     }
   }
 
@@ -413,6 +429,11 @@ export class BpmnModelerService {
     }
   }
 
+  public async getDiagramXml(): Promise<string> {
+    const {xml} = await this.bpmnModeler.saveXML({format: true});
+    return xml;
+  }
+
   public async exportDiagramAsXML(processName: string): Promise<void> {
     try {
       const {xml} = await this.bpmnModeler.saveXML({format: true});
@@ -485,12 +506,8 @@ export class BpmnModelerService {
     }
   }
 
-  private showToast(i18nKey: string): void {
-    this.snackBar.open(this.translateService.instant(i18nKey), undefined, {
-      duration: 1000,
-      verticalPosition: 'top',
-      panelClass: 'modeler-toast'
-    });
+  public showToast(i18nKey: string, duration: number = 1000, action?: string): void {
+    this.toast.show(i18nKey, duration, action, 'top', 'center', 'modeler-toast');
   }
 
 }

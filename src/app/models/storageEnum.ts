@@ -1,4 +1,5 @@
 export enum StorageEnum {
   PROCESSES_TABS = 'processesTabs',
-  SEARCHED_ENTITIES = 'searchedEntities'
+  SEARCHED_ENTITIES = 'searchedEntities',
+  SAVED_PROCESSES = 'savedProcesses'
 }

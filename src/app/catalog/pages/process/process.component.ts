@@ -2,12 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
-import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
 import {ApiService} from '../../services/api/api.service';
-import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
-import {NpStatusPillEnum} from '../../../shared/components/small/np-status-pill/models/np-status-pill.enum';
-import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permission.enum';
+import {ProcessAutosaveService} from '../../services/process-autosave/process-autosave.service';
+import {ProcessModel} from '../../../models/domain/process.model';
+import {HttpErrorResponse} from '@angular/common/http';
+import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 
 @Component({
   selector: 'np-process',
@@ -15,14 +15,15 @@ import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permissio
   styleUrls: ['./process.component.scss']
 })
 export class ProcessComponent implements OnInit, OnDestroy {
-  public process: CatalogEntityModel;
+  public process: ProcessModel;
 
   private subscriptions = new Subscription();
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private entitiesTabService: EntitiesTabService,
-    private apiService: ApiService
+    private entitiesTab: EntitiesTabService,
+    private api: ApiService,
+    public processAutosave: ProcessAutosaveService
   ) {
   }
 
@@ -33,6 +34,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     document.body.classList.remove('cdk-overflow');
+    this.processAutosave.destroy();
     this.subscriptions.unsubscribe();
   }
 
@@ -40,29 +42,24 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activateRoute.queryParams
         .subscribe((queryParams: Params) => {
-          this.subscribeProcess(queryParams[CatalogRouteEnum._ID], queryParams[CatalogRouteEnum._NAME]);
+          this.subscribeProcess(
+            queryParams[CatalogRouteEnum._ID],
+            queryParams[CatalogRouteEnum._PARENT_ID]
+          );
         })
     );
   }
 
-  private subscribeProcess(processId: string, processName: string): void {
+  private subscribeProcess(processId: string, folderId: string): void {
     this.subscriptions.add(
-      this.apiService.getProcessById(processId)
-        .subscribe((res: CatalogEntityModel) => {
-          if (res) {
-            this.process = res;
-            this.entitiesTabService.addEntity(this.process);
-          } else {
-            // TODO
-            this.process = {
-              id: processId,
-              name: processName || 'Новий процес',
-              type: CatalogEntityEnum.PROCESS,
-              status: NpStatusPillEnum.DRAFT,
-              link: '../../../assets/bpmn/newDiagram.bpmn',
-              permissions: CatalogEntityPermissionEnum.READ
-            };
-            this.entitiesTabService.addEntity(this.process);
+      this.api.getProcessById(folderId, processId)
+        .subscribe((res: ProcessModel) => {
+          this.process = res;
+          this.processAutosave.init(res);
+          this.entitiesTab.addEntity(res);
+        }, (err: HttpErrorResponse) => {
+          if (err.status === HttpStatusCodeEnum.NOT_FOUND) {
+            this.entitiesTab.deleteEntity({id: processId});
           }
         })
     );

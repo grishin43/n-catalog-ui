@@ -6,9 +6,8 @@ import {ModalInjectableDataModel} from '../../../../../models/modal-injectable-d
 import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.enum';
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {Observable, Subscription} from 'rxjs';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {TranslateService} from '@ngx-translate/core';
 import {HttpErrorResponse} from '@angular/common/http';
+import {ToastService} from '../../../../../catalog/services/toast/toast.service';
 
 @Component({
   selector: 'np-rename-entity-modal',
@@ -26,8 +25,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<RenameEntityModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableDataModel,
     private api: ApiService,
-    private snackBar: MatSnackBar,
-    private translateService: TranslateService
+    private toast: ToastService
   ) {
   }
 
@@ -36,6 +34,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private initForm(): void {
@@ -84,11 +83,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private showToast(i18nKey: string): void {
-    this.snackBar.open(this.translateService.instant(i18nKey), undefined, {
-      duration: 1500,
-      verticalPosition: 'bottom',
-      horizontalPosition: 'right'
-    });
+    this.toast.show(i18nKey, 1500, undefined, 'bottom', 'right');
   }
 
   public get isProcess(): boolean {

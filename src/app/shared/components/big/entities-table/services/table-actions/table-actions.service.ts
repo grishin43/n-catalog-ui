@@ -12,6 +12,9 @@ import {CatalogEntityEnum} from '../../../../../../catalog/models/catalog-entity
 import {MapHelper} from '../../../../../../catalog/helpers/map.helper';
 import {RenameEntityModalComponent} from '../../../rename-entity-modal/component/rename-entity-modal.component';
 import {FolderModel} from '../../../../../../models/domain/folder.model';
+import {ApiService} from '../../../../../../catalog/services/api/api.service';
+import {ToastService} from '../../../../../../catalog/services/toast/toast.service';
+import {EntitiesTabService} from '../../../../../../catalog/services/entities-tab/entities-tab.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +23,10 @@ export class TableActionsService {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private api: ApiService,
+    private toast: ToastService,
+    private entitiesTab: EntitiesTabService
   ) {
   }
 
@@ -55,6 +61,20 @@ export class TableActionsService {
           console.log(entity);
         },
         disabled: true
+      },
+      {
+        name: CatalogEntityActionEnum.DELETE,
+        cb: (entity: CatalogEntityModel, parentFolder?: FolderModel, ssCb?: () => void) => {
+          this.api.deleteProcess(parentFolder.id, entity.id)
+            .subscribe(() => {
+              this.entitiesTab.deleteEntity({id: entity.id});
+              this.toast.show('common.processDeletedSuccessfully', 1500, undefined, 'bottom', 'right');
+              if (typeof ssCb === 'function') {
+                ssCb();
+              }
+            });
+        },
+        class: 'danger'
       }
     ];
   }
@@ -119,7 +139,8 @@ export class TableActionsService {
       {
         queryParams: {
           [CatalogRouteEnum._ID]: entity.id,
-          [CatalogRouteEnum._NAME]: entity.name
+          [CatalogRouteEnum._NAME]: entity.name,
+          [CatalogRouteEnum._PARENT_ID]: entity.original.parent.id
         }
       }
     );

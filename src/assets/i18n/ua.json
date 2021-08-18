@@ -123,7 +123,13 @@
     "rootFoldersNotFound": "Рутові папки не знайдені",
     "save": "Зберегти",
     "folderRenamesSuccessfully": "Папка успішно перейменована",
-    "processRenamesSuccessfully": "Процес успішно перейменовано"
+    "processRenamesSuccessfully": "Процес успішно перейменовано",
+    "saving": "Збереження",
+    "saved": "Збережено",
+    "noInternetConnectionTheChangesHaveBeenSaved": "Відсутній зв'язок з інтернетом. Внесені зміни збережені",
+    "internetConnectionRestored": "Інтернет-з'єднання відновлено",
+    "directoryServerErrorTheChangesHaveBeenSaved": "Помилка серверу каталогу. Внесені зміни збережені",
+    "processDeletedSuccessfully": "Процес успішно видалений"
   },
   "statuses": {
     "undefined": "Невизначений",

@@ -3,7 +3,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, exhaustMap, map} from 'rxjs/operators';
+import {defaultIfEmpty, delay, exhaustMap, map} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -11,6 +11,8 @@ import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 import {Base64} from 'js-base64';
 import {MapHelper} from '../../helpers/map.helper';
 import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permission.enum';
+import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
+import {ResourceModel} from '../../../models/domain/resource.model';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -18,7 +20,8 @@ enum ApiRoute {
   MOVE = 'move',
   PROCESSES = 'processes',
   ORIGINS = 'origins',
-  RECENT_PROCESSES = 'processes/recent'
+  RECENT_PROCESSES = 'processes/recent',
+  RESOURCES = 'resources'
 }
 
 @Injectable({
@@ -30,10 +33,6 @@ export class ApiService {
   constructor(
     private http: HttpClient
   ) {
-  }
-
-  public createRootFolder(name: string): Observable<{ name: string }> {
-    return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}`, {name});
   }
 
   public getRootFolders(): Observable<SearchModel<FolderModel>> {
@@ -100,24 +99,19 @@ export class ApiService {
             ...folder,
             root: !folder.parent,
             icon: folder.icon ? Base64.decode(folder.icon) : folder.icon,
-            [FolderFieldKey.PROCESSES]: folder.name === 'НПУ'
-              ? this.getMockedProcesses(folder[FolderFieldKey.PROCESSES])
-              : folder[FolderFieldKey.PROCESSES]
+            [FolderFieldKey.PROCESSES]: {
+              count: folder[FolderFieldKey.PROCESSES].count,
+              items: folder[FolderFieldKey.PROCESSES]
+                .items.map((process: ProcessModel) => {
+                  return {
+                    ...process,
+                    parent: {id}
+                  };
+                })
+            }
           };
         })
       );
-  }
-
-  public getMockedProcesses(processes: SearchModel<ProcessModel>): SearchModel<ProcessModel> {
-    if (processes) {
-      const currentItems = processes.items || [];
-      currentItems.push(...ContentHelper.demoProcesses);
-      return {
-        count: currentItems.length,
-        items: currentItems
-      };
-    }
-    return processes;
   }
 
   public renameFolder(id: string, name: string): Observable<{ name: string }> {
@@ -141,6 +135,10 @@ export class ApiService {
       origin: processType,
       name
     });
+  }
+
+  public deleteProcess(folderId: string, processId: string): Observable<any> {
+    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`);
   }
 
   public renameProcess(parentFolderId: string, processId: string, name: string): Observable<{ name: string }> {
@@ -175,21 +173,19 @@ export class ApiService {
     );
   }
 
-  public getProcessById(id: string): Observable<CatalogEntityModel> {
-    // TODO
-    let gotcha: CatalogEntityModel;
-    gotcha = ContentHelper.catalogMainFolders.find((folder: CatalogEntityModel) => {
-      return !!folder.entities?.length;
-    })?.entities.find((process: CatalogEntityModel) => {
-      return process.id === id;
-    });
-    if (!gotcha) {
-      gotcha = MapHelper.mapProcessesToEntities(ContentHelper.demoProcesses)
-        .find((folder: CatalogEntityModel) => {
-            return folder.id === id;
-        });
-    }
-    return of(gotcha);
+  public getProcessById(folderId: string, processId: string): Observable<ProcessModel> {
+    return this.http.get<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`)
+      .pipe(
+        map((res: ProcessModel) => {
+          return {
+            ...res,
+            subRoot: res.path.length > 1
+              ? res.path[res.path.length - 1].id
+              : res.path[0].id,
+            activeResource: res.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML)
+          };
+        })
+      );
   }
 
   public searchEntities(str: string): Observable<CatalogEntityModel[]> {
@@ -218,19 +214,44 @@ export class ApiService {
   }
 
   public getRecentProcesses(): Observable<CatalogEntityModel[]> {
-    const getRecentUrl =`${this.ApiUrl}/${ApiRoute.RECENT_PROCESSES}`;
+    const getRecentUrl = `${this.ApiUrl}/${ApiRoute.RECENT_PROCESSES}`;
     return this.http.get<CatalogEntityModel[]>(getRecentUrl)
       .pipe(
         map(
           (recentProcesses: CatalogEntityModel[]) => {
             return recentProcesses.map((process: CatalogEntityModel) => {
-              if (!process.permissions)
+              if (!process.permissions) {
                 process.permissions = CatalogEntityPermissionEnum.NO_PERMISSIONS;
-                return process;
-              });
+              }
+              return process;
+            });
           }
         )
       );
+  }
+
+  public saveResource(
+    process: ProcessModel,
+    content: string): Observable<void> {
+    if (process.activeResource?.id) {
+      return this.updateResource(process.parent.id, process.id, process.activeResource.id, content);
+    } else {
+      return this.createResource(process.parent.id, process.id, content, process.subRoot);
+    }
+  }
+
+  public createResource(folderId: string, processId: string, content: string, subRoot: string): Observable<void> {
+    return this.http.post<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RESOURCES}`, {
+      type: ResourceTypeEnum.XML,
+      content,
+      subRoot
+    });
+  }
+
+  public updateResource(folderId: string, processId: string, resourceId: string, content: string): Observable<void> {
+    return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RESOURCES}/${resourceId}`, {
+      content
+    });
   }
 
 }

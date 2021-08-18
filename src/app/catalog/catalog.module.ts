@@ -28,6 +28,8 @@ import {BpmnToolbarService} from './services/bpmn-toolbar/bpmn-toolbar.service';
 import {BpmnModelerService} from './services/bpmn-modeler/bpmn-modeler.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
+import {ProcessAutosaveService} from './services/process-autosave/process-autosave.service';
+import {ToastService} from './services/toast/toast.service';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import {MatMenuModule} from '@angular/material/menu';
     ApiService,
     SearchService,
     BpmnToolbarService,
-    BpmnModelerService
+    BpmnModelerService,
+    ProcessAutosaveService,
+    ToastService
   ]
 })
 export class CatalogModule {

@@ -13,7 +13,8 @@ export class MapHelper {
           id: folder.id,
           name: folder.name,
           type: CatalogEntityEnum.FOLDER,
-          permissions: CatalogEntityPermissionEnum.EDIT
+          permissions: CatalogEntityPermissionEnum.EDIT,
+          original: folder
         };
       });
     }
@@ -28,7 +29,8 @@ export class MapHelper {
           name: process.name,
           type: CatalogEntityEnum.PROCESS,
           permissions: CatalogEntityPermissionEnum.EDIT,
-          link: process.url
+          link: process.url,
+          original: process
         };
       });
     }

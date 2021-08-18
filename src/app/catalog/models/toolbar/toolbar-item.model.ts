@@ -1,9 +1,9 @@
-import {CatalogEntityModel} from '../catalog-entity.model';
+import {ProcessModel} from '../../../models/domain/process.model';
 
 export interface ToolbarItemModel {
   name: string;
   hotkey?: string;
   subItems?: ToolbarItemModel[];
   delimiterAfter?: boolean;
-  cb?: (entity?: CatalogEntityModel) => void;
+  cb?: (process?: ProcessModel) => void;
 }

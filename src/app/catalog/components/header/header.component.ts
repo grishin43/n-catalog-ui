@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {MatRippleHelper} from '../../helpers/mat-ripple.helper';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
-import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {NavigationEnd, Router, Event} from '@angular/router';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {AuthService} from '../../../auth/services/auth/auth.service';
 import {UrlHelper} from '../../helpers/url.helper';
+import {ProcessModel} from '../../../models/domain/process.model';
 
 @Component({
   selector: 'np-header',
@@ -16,7 +16,7 @@ import {UrlHelper} from '../../helpers/url.helper';
 })
 export class HeaderComponent implements OnInit {
   public rippleLightColor = MatRippleHelper.lightRippleColor;
-  public catalogEntities: BehaviorSubject<CatalogEntityModel[]>;
+  public catalogProcesses: BehaviorSubject<ProcessModel[]>;
   public currentId: string;
   public searchFormStretched: boolean;
   public hideRightBar: boolean;
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   }
 
   private setupCatalogEntities(): void {
-    this.catalogEntities = this.entitiesTabService.entities;
+    this.catalogProcesses = this.entitiesTabService.processes;
   }
 
   private subscribeRouteChanges(): void {
@@ -57,19 +57,20 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  public onDeleteClicked(event: MouseEvent, entity: CatalogEntityModel): void {
+  public onDeleteClicked(event: MouseEvent, entity: ProcessModel): void {
     event.stopPropagation();
     event.preventDefault();
     this.entitiesTabService.deleteEntity(entity);
   }
 
-  public openProcess(process: CatalogEntityModel): void {
+  public openProcess(process: ProcessModel): void {
     this.router.navigate(
       [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
       {
         queryParams: {
           [CatalogRouteEnum._ID]: process.id,
-          [CatalogRouteEnum._NAME]: process.name
+          [CatalogRouteEnum._NAME]: process.name,
+          [CatalogRouteEnum._PARENT_ID]: process.parent.id
         }
       }
     );
