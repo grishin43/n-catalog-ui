@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, forkJoin, interval, Subscription} from 'rxjs';
-import {concatMap, tap, timeInterval} from 'rxjs/operators';
+import {concatMap, timeInterval} from 'rxjs/operators';
 import {ApiService} from '../api/api.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
@@ -17,7 +17,7 @@ import {WindowHelper} from '../../../helpers/window.helper';
   providedIn: 'root'
 })
 export class ProcessAutosaveService {
-  readonly delay = 60 * 10000;
+  readonly delay = 60 * 1000;
 
   private timer$: Subscription;
   private networkState$: Subscription;
@@ -52,15 +52,17 @@ export class ProcessAutosaveService {
   }
 
   public saveProcess(process: ProcessModel): Promise<void> {
+    this.resourceSaved$.next(false);
+    this.requestLoader$.next(true);
     return this.bpmnModeler.getDiagramXml().then((content: string) => {
       this.api.saveResource(process, content)
         .subscribe(
           () => {
-            WindowHelper.disableBeforeUnload();
+            this.savingSuccessCb();
             this.toast.show('common.diagramVersionSaved', 3000, 'OK');
           },
           () => {
-            WindowHelper.disableBeforeUnload();
+            this.requestLoader$.next(false);
             this.handleServerErrors();
           }
         );
@@ -87,16 +89,11 @@ export class ProcessAutosaveService {
     this.timer$ = interval(this.delay)
       .pipe(
         timeInterval(),
-        tap(() => this.resourceSaved$.next(false)),
-        tap(() => this.requestLoader$.next(true)),
         concatMap(() => this.saveProcess(this.process))
       )
       .subscribe(() => {
-        this.requestLoader$.next(false);
-        this.resourceSaved$.next(true);
         this.restartTimer();
       }, (err: HttpErrorResponse) => {
-        this.requestLoader$.next(false);
         if (Object.values(HttpStatusCodeEnum).includes(err.status)) {
           this.handleServerErrors();
         }
@@ -128,17 +125,24 @@ export class ProcessAutosaveService {
   private checkLocalResources(): void {
     const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
     if (currentSavedProcesses?.length) {
+      this.resourceSaved$.next(false);
+      this.requestLoader$.next(true);
       forkJoin(
         currentSavedProcesses.map((p: ProcessModel) => this.api.saveResource(p, p.activeResource.content))
       ).subscribe(() => {
         LocalStorageHelper.deleteData(StorageEnum.SAVED_PROCESSES);
+        this.savingSuccessCb();
+        this.toast.show('common.diagramVersionSaved', 3000, 'OK');
       }, () => {
+        this.requestLoader$.next(false);
         this.showServerErrorToast();
       });
     }
   }
 
   private saveResourceLocal(): void {
+    this.resourceSaved$.next(false);
+    this.requestLoader$.next(true);
     this.bpmnModeler.getDiagramXml().then((resource: string) => {
       const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
       const findIndex: number = currentSavedProcesses?.findIndex((p: ProcessModel) => {
@@ -158,7 +162,17 @@ export class ProcessAutosaveService {
         }
       } as ProcessModel, ...currentSavedProcesses || []];
       LocalStorageHelper.setData(StorageEnum.SAVED_PROCESSES, newValue);
+      this.savingSuccessCb();
+    }).catch((e) => {
+      this.requestLoader$.next(false);
+      console.error('Could save resource locally`\n', e);
     });
+  }
+
+  private savingSuccessCb(): void {
+    this.requestLoader$.next(false);
+    this.resourceSaved$.next(true);
+    WindowHelper.disableBeforeUnload();
   }
 
   private showNetworkConnectionToast(online: boolean): void {
