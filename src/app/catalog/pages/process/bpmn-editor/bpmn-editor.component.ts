@@ -9,6 +9,7 @@ import {WysiwygEditorComponent} from '../wysiwyg-editor/wysiwyg-editor.component
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
+import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -30,30 +31,28 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private readonly newDiagramLink = '../../../assets/bpmn/newDiagram.bpmn';
 
-  @HostListener('window:keydown', ['$event']) onKeyDown(e): any {
-    if (e.ctrlKey && e.keyCode === 49) {
-      // Ctrl + 1
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.ctrlKey && e.code === 'Digit1') {
       this.bpmnModeler.zoomTo(true);
-    } else if (e.ctrlKey && e.keyCode === 88) {
-      // Ctrl + X
+    } else if (e.ctrlKey && e.code === 'KeyX') {
       this.bpmnModeler.cutElements();
-    } else if (e.keyCode === 27) {
-      // Esc
+    } else if (e.code === 'Escape') {
       this.bpmnModeler.cancelCutElements();
-    } else if (e.ctrlKey && e.keyCode === 80) {
-      // Ctrl + P
+    } else if (e.ctrlKey && e.code === 'KeyP') {
       e.preventDefault();
       this.bpmnModeler.togglePropertiesPanel();
-    } else if (e.ctrlKey && e.shiftKey && e.keyCode === 80) {
-      // Ctrl + Shift + P
+    } else if (e.ctrlKey && e.shiftKey && e.code === 'KeyP') {
       e.preventDefault();
       this.bpmnModeler.resetPropertiesPanel();
-    } else if (e.ctrlKey && e.keyCode === 90) {
-      // Ctrl + Z
+    } else if (e.ctrlKey && e.code === 'KeyZ') {
       this.bpmnModeler.increaseUndoCounter();
-    } else if (e.ctrlKey && e.keyCode === 89) {
-      // Ctrl + Y
+    } else if (e.ctrlKey && e.code === 'KeyY') {
       this.bpmnModeler.decreaseUndoCounter();
+    } else if (e.ctrlKey && e.code === 'KeyS') {
+      e.preventDefault();
+      if (this.process) {
+        this.processAutosave.saveProcess(this.process);
+      }
     }
   }
 
@@ -61,7 +60,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     public bpmnModeler: BpmnModelerService,
     private bpmnToolbar: BpmnToolbarService,
-    private bottomSheet: MatBottomSheet
+    private bottomSheet: MatBottomSheet,
+    private processAutosave: ProcessAutosaveService
   ) {
   }
 

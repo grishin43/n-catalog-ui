@@ -11,6 +11,7 @@ import {ToastService} from '../toast/toast.service';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
+import {WindowHelper} from '../../../helpers/window.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -54,8 +55,14 @@ export class ProcessAutosaveService {
     return this.bpmnModeler.getDiagramXml().then((content: string) => {
       this.api.saveResource(process, content)
         .subscribe(
-          () => this.toast.show('common.diagramVersionSaved', 3000, 'OK'),
-          () => this.handleServerErrors()
+          () => {
+            WindowHelper.disableBeforeUnload();
+            this.toast.show('common.diagramVersionSaved', 3000, 'OK');
+          },
+          () => {
+            WindowHelper.disableBeforeUnload();
+            this.handleServerErrors();
+          }
         );
     });
   }
