@@ -6,5 +6,5 @@ export interface ModalInjectableDataModel {
   entity?: FolderModel | ProcessModel;
   parent?: FolderModel;
   type?: CatalogEntityEnum;
-  ssCb?: () => void;
+  ssCb?: (str?: string) => void;
 }

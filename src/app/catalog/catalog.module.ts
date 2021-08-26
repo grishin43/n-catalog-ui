@@ -29,7 +29,7 @@ import {BpmnModelerService} from './services/bpmn-modeler/bpmn-modeler.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {ProcessAutosaveService} from './services/process-autosave/process-autosave.service';
-import {ToastService} from './services/toast/toast.service';
+import {ToastModule} from '../shared/components/small/toast/toast.module';
 
 @NgModule({
   declarations: [
@@ -56,7 +56,8 @@ import {ToastService} from './services/toast/toast.service';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatMenuModule
+    MatMenuModule,
+    ToastModule
   ],
   providers: [
     EntitiesTabService,
@@ -64,8 +65,7 @@ import {ToastService} from './services/toast/toast.service';
     SearchService,
     BpmnToolbarService,
     BpmnModelerService,
-    ProcessAutosaveService,
-    ToastService
+    ProcessAutosaveService
   ]
 })
 export class CatalogModule {

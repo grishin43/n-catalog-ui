@@ -20,6 +20,7 @@ import {ProcessAutosaveService} from '../../../services/process-autosave/process
 export class BpmnEditorComponent implements OnInit, OnDestroy {
   @Input() set data(value: ProcessModel) {
     this.process = value;
+    this.processLoader = true;
     this.openProcess();
   }
 
@@ -54,6 +55,25 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
         this.processAutosave.saveProcess(this.process);
       }
     }
+  }
+
+  @HostListener('window:dragover', ['$event']) onDrag(e: DragEvent): void {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  }
+
+  @HostListener('window:drop', ['$event']) onDrop(e: DragEvent): void {
+    e.stopPropagation();
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onload = (pe: ProgressEvent<FileReader>): void => {
+      const xml = pe.target.result;
+      this.openDiagram(xml as string);
+    };
+    reader.readAsText(file);
   }
 
   constructor(

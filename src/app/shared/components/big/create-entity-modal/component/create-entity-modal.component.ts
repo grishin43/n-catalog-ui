@@ -16,7 +16,7 @@ import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.m
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
 import {ProcessModel} from '../../../../../models/domain/process.model';
 import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
-import {ToastService} from '../../../../../catalog/services/toast/toast.service';
+import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({

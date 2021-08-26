@@ -7,7 +7,8 @@ import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.en
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {Observable, Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ToastService} from '../../../../../catalog/services/toast/toast.service';
+import {ToastService} from '../../../small/toast/service/toast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'np-rename-entity-modal',
@@ -16,7 +17,6 @@ import {ToastService} from '../../../../../catalog/services/toast/toast.service'
 })
 export class RenameEntityModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
-  public formLoader: boolean;
   public formControlName = FormFieldEnum;
 
   private subscription = new Subscription();
@@ -25,7 +25,8 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<RenameEntityModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableDataModel,
     private api: ApiService,
-    private toast: ToastService
+    private toast: ToastService,
+    private translateService: TranslateService
   ) {
   }
 
@@ -50,40 +51,58 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
   public formSubmit(): void {
     if (this.form.valid) {
       const entityId = this.data.entity.id;
+      const entityName = this.data.entity.name;
       const controlValue = this.form.value[FormFieldEnum.ENTITY_NAME];
+      const loaderTitle = this.translateService.instant('loaders.rename', {name: entityName});
       if (this.isFolder) {
         this.renameEntity(
           this.api.renameFolder(entityId, controlValue),
-          'common.folderRenamesSuccessfully'
+          loaderTitle,
+          this.translateService.instant(
+            'common.folderSuccessfullyRenamed',
+            {processOldName: entityName, processNewName: controlValue}
+          ),
+          this.translateService.instant('errors.failedToRenameFolder', {folderName: entityName}),
+          controlValue
         );
       } else if (this.isProcess) {
         this.renameEntity(
           this.api.renameProcess(this.data.parent.id, entityId, controlValue),
-          'common.processRenamesSuccessfully'
+          loaderTitle,
+          this.translateService.instant(
+            'common.processSuccessfullyRenamed',
+            {processOldName: entityName, processNewName: controlValue}
+          ),
+          this.translateService.instant('errors.failedToRenameProcess', {processName: entityName}),
+          controlValue
         );
       }
     }
   }
 
-  private renameEntity(request: Observable<any>, toastSuccessKey: string): void {
-    this.formLoader = true;
+  private renameEntity(
+    request: Observable<any>,
+    loaderTitle: string,
+    successTitle: string,
+    errorTitle: string,
+    newName: string
+  ): void {
+    this.closeModal();
+    this.toast.showLoader(loaderTitle);
     this.subscription.add(
       request.subscribe(() => {
-        this.formLoader = false;
-        this.showToast(toastSuccessKey);
-        this.closeModal();
+        this.toast.close();
+        this.toast.showMessage(successTitle);
         if (typeof this.data.ssCb === 'function') {
-          this.data.ssCb();
+          this.data.ssCb(newName);
         }
       }, (err: HttpErrorResponse) => {
-        this.formLoader = false;
-        this.showToast(err.message);
+        this.toast.showError(
+          errorTitle,
+          err?.message
+        );
       })
     );
-  }
-
-  private showToast(i18nKey: string): void {
-    this.toast.show(i18nKey, 1500, undefined, 'bottom', 'right');
   }
 
   public get isProcess(): boolean {

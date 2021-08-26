@@ -7,7 +7,7 @@ import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
 import {ConnectionService} from 'ng-connection-service';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 import {ProcessModel} from '../../../models/domain/process.model';
-import {ToastService} from '../toast/toast.service';
+import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';

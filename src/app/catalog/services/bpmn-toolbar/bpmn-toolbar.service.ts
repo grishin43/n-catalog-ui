@@ -21,6 +21,8 @@ import {ModalInjectableDataModel} from '../../../models/modal-injectable-data.mo
 import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
+import {RenameEntityModalComponent} from '../../../shared/components/big/rename-entity-modal/component/rename-entity-modal.component';
+import {MapHelper} from '../../helpers/map.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -83,7 +85,21 @@ export class BpmnToolbarService {
             name: ToolbarProcessItemEnum.COPY
           },
           {
-            name: ToolbarProcessItemEnum.RENAME
+            name: ToolbarProcessItemEnum.RENAME,
+            cb: (process: ProcessModel) => {
+              this.dialog.open(RenameEntityModalComponent, {
+                width: '700px',
+                autoFocus: false,
+                data: {
+                  entity: process,
+                  type: CatalogEntityEnum.PROCESS,
+                  parent: process.parent,
+                  ssCb: (newName: string) => {
+                    process.name = newName;
+                  }
+                } as ModalInjectableDataModel
+              });
+            }
           },
           {
             name: ToolbarProcessItemEnum.MOVE

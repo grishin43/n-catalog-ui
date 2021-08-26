@@ -47,14 +47,10 @@
     [minWidth]="true"
     [btnType]="'submit'"
     [type]="'primary'"
-    [disabled]="form.invalid || formLoader"
+    [disabled]="form.invalid"
     (click)="formSubmit()">
     <span>
       {{'common.save' | translate}}
     </span>
-    <mat-spinner
-      *ngIf="formLoader"
-      [diameter]="20">
-    </mat-spinner>
   </np-button>
 </mat-dialog-actions>

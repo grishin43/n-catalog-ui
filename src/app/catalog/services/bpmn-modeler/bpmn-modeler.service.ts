@@ -14,7 +14,7 @@ import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.mode
 import {TranslateService} from '@ngx-translate/core';
 import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
 import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
-import {ToastService} from '../toast/toast.service';
+import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {WindowHelper} from '../../../helpers/window.helper';
 
 @Injectable({

@@ -1,0 +1,33 @@
+<div class="d-flex">
+  <div class="col-left">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="6" fill="white"/>
+      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 13C11.45 13 11 12.55 11 12V8C11 7.45 11.45 7 12 7C12.55 7 13 7.45 13 8V12C13 12.55 12.55 13 12 13ZM13 17H11V15H13V17Z" fill="#ED1C24"/>
+    </svg>
+  </div>
+  <div class="col-center">
+    <p>{{data?.title || ('errors.errorOccurred' | translate)}}</p>
+    <p *ngIf="data?.error">
+      {{data?.error}}
+    </p>
+    <np-button
+      [size]="'sm'"
+      [minWidth]="true"
+      [type]="'default'"
+      (click)="snackBarRef.dismiss()">
+      <span>
+        {{'common.gotIt' | translate}}
+      </span>
+    </np-button>
+  </div>
+  <div class="col-right">
+    <button
+      class="p-0 min-width-auto"
+      mat-button
+      (click)="snackBarRef.dismiss()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.3002 5.71022C17.9102 5.32022 17.2802 5.32022 16.8902 5.71022L12.0002 10.5902L7.11022 5.70021C6.72022 5.31021 6.09021 5.31021 5.70021 5.70021C5.31021 6.09021 5.31021 6.72022 5.70021 7.11022L10.5902 12.0002L5.70021 16.8902C5.31021 17.2802 5.31021 17.9102 5.70021 18.3002C6.09021 18.6902 6.72022 18.6902 7.11022 18.3002L12.0002 13.4102L16.8902 18.3002C17.2802 18.6902 17.9102 18.6902 18.3002 18.3002C18.6902 17.9102 18.6902 17.2802 18.3002 16.8902L13.4102 12.0002L18.3002 7.11022C18.6802 6.73022 18.6802 6.09022 18.3002 5.71022Z" fill="#B8C1CB"/>
+      </svg>
+    </button>
+  </div>
+</div>

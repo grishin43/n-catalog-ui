@@ -1,0 +1,9 @@
+<div class="d-flex align-items-center">
+  <mat-spinner
+    style="margin-right: 8px"
+    [diameter]="24">
+  </mat-spinner>
+  <span>
+    {{data || ('common.loading' | translate)}}
+  </span>
+</div>

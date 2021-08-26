@@ -10,6 +10,12 @@ button {
       font-size: 14px;
       height: 40px;
     }
+
+    &.min-width {
+      @media screen and (min-width: $notebook) {
+        min-width: 175px;
+      }
+    }
   }
 
   &.sm {
@@ -22,11 +28,11 @@ button {
       line-height: 30px;
       padding: 0 10px;
     }
-  }
 
-  &.min-width {
-    @media screen and (min-width: $notebook) {
-      min-width: 175px;
+    &.min-width {
+      @media screen and (min-width: $notebook) {
+        min-width: 140px;
+      }
     }
   }
 

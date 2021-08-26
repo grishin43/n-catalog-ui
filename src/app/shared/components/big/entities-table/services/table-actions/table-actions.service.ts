@@ -13,7 +13,7 @@ import {MapHelper} from '../../../../../../catalog/helpers/map.helper';
 import {RenameEntityModalComponent} from '../../../rename-entity-modal/component/rename-entity-modal.component';
 import {FolderModel} from '../../../../../../models/domain/folder.model';
 import {ApiService} from '../../../../../../catalog/services/api/api.service';
-import {ToastService} from '../../../../../../catalog/services/toast/toast.service';
+import {ToastService} from '../../../../small/toast/service/toast.service';
 import {EntitiesTabService} from '../../../../../../catalog/services/entities-tab/entities-tab.service';
 
 @Injectable({

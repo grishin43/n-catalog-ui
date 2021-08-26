@@ -3,7 +3,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, delay, exhaustMap, map} from 'rxjs/operators';
+import {defaultIfEmpty, delay, exhaustMap, map, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -13,6 +13,7 @@ import {MapHelper} from '../../helpers/map.helper';
 import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permission.enum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {ResourceModel} from '../../../models/domain/resource.model';
+import {EntitiesTabService} from '../entities-tab/entities-tab.service';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -31,7 +32,8 @@ export class ApiService {
   private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private entitiesTab: EntitiesTabService
   ) {
   }
 
@@ -141,10 +143,12 @@ export class ApiService {
     return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`);
   }
 
-  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<{ name: string }> {
-    return this.http.put<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RENAME}`, {
-      name
-    });
+  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<null> {
+    return this.http.put<null>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RENAME}`,
+      {name})
+      .pipe(
+        tap(() => this.entitiesTab.patchEntityName(parentFolderId, processId, name))
+      );
   }
 
   public moveProcess(parentFolderId: string, processId: string, targetFolderId: string): Observable<{ folder: string }> {

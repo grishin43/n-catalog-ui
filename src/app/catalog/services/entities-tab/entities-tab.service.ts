@@ -6,7 +6,7 @@ import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {ProcessModel} from '../../../models/domain/process.model';
-import {ToastService} from '../toast/toast.service';
+import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +69,22 @@ export class EntitiesTabService {
 
   public init(): void {
     this.processes = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.PROCESSES_TABS) || []);
+  }
+
+  public patchEntityName(parentFolderId: string, processId: string, name: string): void {
+    const currentValue: ProcessModel[] = this.processes.getValue();
+    if (currentValue?.length) {
+      currentValue.forEach((item: ProcessModel, index: number) => {
+        if (item.id === processId && item.parent.id === parentFolderId) {
+          currentValue[index] = {
+            ...item,
+            name
+          };
+        }
+      });
+      this.processes.next(currentValue);
+      LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, currentValue);
+    }
   }
 
 }
