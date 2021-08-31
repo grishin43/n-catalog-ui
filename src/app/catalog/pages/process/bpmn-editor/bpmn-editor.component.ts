@@ -10,6 +10,9 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
+import {validate, parse} from 'fast-xml-parser';
+import {ToastService} from '../../../../shared/components/small/toast/service/toast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -26,7 +29,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   public process: ProcessModel;
   public processLoader: boolean;
-  public processLoadingError: HttpErrorResponse;
+  public errorResponse: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
   private subscriptions = new Subscription();
@@ -82,11 +85,13 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private apiService: ApiService,
+    private api: ApiService,
     public bpmnModeler: BpmnModelerService,
     private bpmnToolbar: BpmnToolbarService,
     private bottomSheet: MatBottomSheet,
-    private processAutosave: ProcessAutosaveService
+    private processAutosave: ProcessAutosaveService,
+    private toast: ToastService,
+    private translate: TranslateService
   ) {
   }
 
@@ -120,23 +125,30 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private openDiagram(xml: string): void {
-    this.bpmnModeler.openDiagram(xml).then(() => {
-      this.bpmnModeler.zoomTo(true);
+    if (validate(xml) === true) {
+      this.bpmnModeler.openDiagram(xml).then(() => {
+        this.bpmnModeler.zoomTo(true);
+        this.processLoader = false;
+      });
+    } else {
       this.processLoader = false;
-    });
+      this.toast.showError(
+        'errors.errorOccurred',
+        this.translate.instant('errors.processCannotBeOpened')
+      );
+    }
   }
 
   private openNewDiagram(): void {
-    this.processLoadingError = undefined;
+    this.errorResponse = undefined;
     this.processLoader = true;
     this.subscriptions.add(
-      this.apiService.getXML(this.newDiagramLink)
+      this.api.getXML(this.newDiagramLink)
         .subscribe(
           (res: string) => this.openDiagram(res),
           (err: HttpErrorResponse) => {
             this.processLoader = false;
-            this.processLoadingError = err;
-            console.error(err);
+            this.errorResponse = err;
           }
         )
     );

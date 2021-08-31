@@ -35,7 +35,7 @@
         </div>
         <div
           @fadeInOut
-          *ngIf="processLoadingError"
+          *ngIf="errorResponse"
           class="bpmn-overlay">
           <p>{{'errors.failedToLoadProcess' | translate}}</p>
           <np-button (click)="reloadPage()">

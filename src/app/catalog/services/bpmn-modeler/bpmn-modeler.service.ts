@@ -111,7 +111,7 @@ export class BpmnModelerService {
         }
       });
     } catch (e) {
-      console.log('Could not set `changes` listener\n', e);
+      console.error('Could not set `changes` listener\n', e);
     }
   }
 
@@ -121,7 +121,7 @@ export class BpmnModelerService {
         this.cancelCutElements();
       });
     } catch (e) {
-      console.log('Could not set `paste` listener\n', e);
+      console.error('Could not set `paste` listener\n', e);
     }
   }
 
@@ -129,11 +129,11 @@ export class BpmnModelerService {
     try {
       const modeling = this.bpmnModeler.get('modeling');
       const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
-      if (selectedElements) {
+      if (selectedElements.length) {
         modeling.setColor(selectedElements, paletteColor);
       }
     } catch (e) {
-      console.log('Could not set elements color\n', e);
+      console.error('Could not set elements color\n', e);
     }
   }
 
@@ -144,7 +144,7 @@ export class BpmnModelerService {
         keyboardMoveSelection.moveSelection(direction, speed);
       }
     } catch (e) {
-      console.log('Could not move selection\n', e);
+      console.error('Could not move selection\n', e);
     }
   }
 
@@ -173,7 +173,7 @@ export class BpmnModelerService {
       }
       canvasRef.scroll({dx, dy});
     } catch (e) {
-      console.log('Could not move canvas\n', e);
+      console.error('Could not move canvas\n', e);
     }
   }
 
@@ -184,7 +184,7 @@ export class BpmnModelerService {
         this.bpmnModeler.get('distributeElements').trigger(selectedElements, type);
       }
     } catch (e) {
-      console.log('Could not distribute elements\n', e);
+      console.error('Could not distribute elements\n', e);
     }
   }
 
@@ -195,7 +195,7 @@ export class BpmnModelerService {
         this.bpmnModeler.get('alignElements').trigger(selectedElements, type);
       }
     } catch (e) {
-      console.log('Could not align elements\n', e);
+      console.error('Could not align elements\n', e);
     }
   }
 
@@ -207,7 +207,7 @@ export class BpmnModelerService {
       });
       this.bpmnModeler.get('selection').select(elements);
     } catch (e) {
-      console.log('Could not select all elements\n', e);
+      console.error('Could not select all elements\n', e);
     }
   }
 
@@ -217,7 +217,7 @@ export class BpmnModelerService {
         this.bpmnModeler.get('searchPad').open();
       }, 0);
     } catch (e) {
-      console.log('Could not open search pad\n', e);
+      console.error('Could not open search pad\n', e);
     }
   }
 
@@ -227,7 +227,7 @@ export class BpmnModelerService {
         key: 'e'
       }));
     } catch (e) {
-      console.log('Could not enable element label editing\n', e);
+      console.error('Could not enable element label editing\n', e);
     }
   }
 
@@ -235,7 +235,7 @@ export class BpmnModelerService {
     try {
       this.bpmnModeler.get('globalConnect').toggle();
     } catch (e) {
-      console.log('Could not select global connect tool\n', e);
+      console.error('Could not select global connect tool\n', e);
     }
   }
 
@@ -243,7 +243,7 @@ export class BpmnModelerService {
     try {
       this.bpmnModeler.get('spaceTool').toggle();
     } catch (e) {
-      console.log('Could not select space tool\n', e);
+      console.error('Could not select space tool\n', e);
     }
   }
 
@@ -251,7 +251,7 @@ export class BpmnModelerService {
     try {
       this.bpmnModeler.get('lassoTool').toggle();
     } catch (e) {
-      console.log('Could not select lasso tool\n', e);
+      console.error('Could not select lasso tool\n', e);
     }
   }
 
@@ -259,7 +259,7 @@ export class BpmnModelerService {
     try {
       this.bpmnModeler.get('handTool').toggle();
     } catch (e) {
-      console.log('Could not select hand tool\n', e);
+      console.error('Could not select hand tool\n', e);
     }
   }
 
@@ -268,7 +268,7 @@ export class BpmnModelerService {
       this.bpmnModeler.get('commandStack').redo();
       this.decreaseUndoCounter();
     } catch (e) {
-      console.log('Could not redo action\n', e);
+      console.error('Could not redo action\n', e);
     }
   }
 
@@ -447,9 +447,9 @@ export class BpmnModelerService {
     }
   }
 
-  public async openDiagram(processUrl: string): Promise<void> {
+  public async openDiagram(xml: string): Promise<void> {
     try {
-      await this.bpmnModeler.importXML(processUrl);
+      await this.bpmnModeler.importXML(xml);
     } catch (err) {
       console.error('Could not import BPMN 2.0 diagram\n', err);
     }

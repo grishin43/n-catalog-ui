@@ -27,9 +27,9 @@ export class CustomPaletteProvider implements IPaletteProvider {
           click: (e) => {
             try {
               const paletteTrigger = document.getElementById('color-palette-trigger');
-              const domRect = e.target.getBoundingClientRect();
-              const offsetX = domRect.x + e.target.offsetWidth - 10;
-              const offsetY = domRect.y + e.target.offsetHeight - 10;
+              const domRect: DOMRect = e.target.getBoundingClientRect();
+              const offsetX = domRect.x + domRect.width + 5;
+              const offsetY = domRect.y;
               paletteTrigger.style.left = `${offsetX}px`;
               paletteTrigger.style.top = `${offsetY}px`;
               paletteTrigger.click();

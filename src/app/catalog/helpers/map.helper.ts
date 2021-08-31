@@ -1,4 +1,4 @@
-import {FolderModel} from '../../models/domain/folder.model';
+import {FolderFieldKey, FolderModel} from '../../models/domain/folder.model';
 import {CatalogEntityModel} from '../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../models/catalog-entity.enum';
 import {ProcessModel} from '../../models/domain/process.model';
@@ -14,7 +14,9 @@ export class MapHelper {
           name: folder.name,
           type: CatalogEntityEnum.FOLDER,
           permissions: CatalogEntityPermissionEnum.EDIT,
-          original: folder
+          original: folder,
+          icon: folder.icon,
+          hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count
         };
       });
     }

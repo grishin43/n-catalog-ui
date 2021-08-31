@@ -2,12 +2,14 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TableColumnsModel} from '../../../shared/components/big/entities-table/models/table.model';
 import {TableHelper} from '../../helpers/table.helper';
 import {Subscription} from 'rxjs';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {ApiService} from '../../services/api/api.service';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {MapHelper} from '../../helpers/map.helper';
+import {HttpErrorResponse} from '@angular/common/http';
+import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 
 @Component({
   selector: 'np-folder',
@@ -19,13 +21,16 @@ export class FolderComponent implements OnInit, OnDestroy {
   public folder: FolderModel;
   public folderEntities: CatalogEntityModel[] = [];
   public loader: boolean;
+  public errorResponse: HttpErrorResponse;
+  public httpStatusCode = HttpStatusCodeEnum;
 
   private folderId: string;
   private subscriptions = new Subscription();
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router
   ) {
   }
 
@@ -38,14 +43,16 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   public getFolderById(): void {
+    this.errorResponse = undefined;
     this.loader = true;
     this.subscriptions.add(
-      this.apiService.getFolderById(this.folderId).subscribe(
+      this.apiService.getFolderByIdWithSubs(this.folderId).subscribe(
         (res: FolderModel) => {
           this.loader = false;
           this.handleResponse(res);
-        }, () => {
-          this.loader = true;
+        }, (err: HttpErrorResponse) => {
+          this.loader = false;
+          this.errorResponse = err;
         }
       )
     );
@@ -75,6 +82,10 @@ export class FolderComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.getFolderById();
     }, 2000);
+  }
+
+  public goHome(): void {
+    this.router.navigate(['/']);
   }
 
 }

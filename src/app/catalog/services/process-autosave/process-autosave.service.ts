@@ -5,13 +5,13 @@ import {ApiService} from '../api/api.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
 import {ConnectionService} from 'ng-connection-service';
-import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {WindowHelper} from '../../../helpers/window.helper';
+import {HttpHelper} from '../../../helpers/http.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -94,7 +94,7 @@ export class ProcessAutosaveService {
       .subscribe(() => {
         this.restartTimer();
       }, (err: HttpErrorResponse) => {
-        if (Object.values(HttpStatusCodeEnum).includes(err.status)) {
+        if (HttpHelper.http5xxStatuses.includes(err.status)) {
           this.handleServerErrors();
         }
         this.destroyTimer();

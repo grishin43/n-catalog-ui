@@ -186,7 +186,7 @@
       </button>
       <mat-form-field
         *ngIf="form.get(formControlName.NEW_ENTITY_NAME)"
-        class="pb-0 smaller-height"
+        class="pb-0 mb-0 smaller-height"
         appearance="outline"
         floatLabel="never">
         <input
@@ -291,7 +291,7 @@
       [disabled]="true">
       <np-button
         class="mr-auto"
-        *ngIf="isProcess && !newFolderMode && openedFolder"
+        *ngIf="!newFolderMode && (openedFolder || selectedFolder)"
         [size]="'md'"
         [btnType]="'submit'"
         [type]="'default'"

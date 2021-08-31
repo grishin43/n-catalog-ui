@@ -138,7 +138,8 @@
     "enterEmailOrName": "Введіть email або ім’я користувача",
     "email": "Email",
     "canRead": "Може переглядати",
-    "canEdit": "Може редагувати"
+    "canEdit": "Може редагувати",
+    "goHome": "На головну"
   },
   "statuses": {
     "undefined": "Невизначений",
@@ -161,7 +162,10 @@
     "thisProcessNameAlreadyExistAt": "Така назва процесу вже існує в {{folderPath}}",
     "failedToLoadProcess": "Не вдалося завантажити процес",
     "failedToRenameProcess": "Не вдалося перейменувати процес “{{processName}}”",
-    "failedToRenameFolder": "Не вдалося перейменувати папку “{{folderName}}”"
+    "failedToRenameFolder": "Не вдалося перейменувати папку “{{folderName}}”",
+    "folderNotFoundOrHasBeenDeleted": "Папку не знайдено або вона була видалена",
+    "processNotFoundOrHasBeenDeleted": "Процес не знайдений або він був видалений",
+    "processCannotBeOpened": "Неможливо відкрити процес, діаграма пошкоджена, читання неможливо"
   },
   "counters": {
     "foldersCount1": "{{count}} папка",

@@ -176,6 +176,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     if (this.selectedFolder) {
       this.form.get(FormFieldEnum.FOLDER_PATH).patchValue(this.folderPath);
       matAutocompleteTrigger.closePanel();
+      this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
     }
   }
 

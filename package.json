@@ -38,6 +38,7 @@
     "bpmnlint-pack-config": "^0.6.1",
     "bpmnlint-plugin-playground": "file:./plugin",
     "camunda-bpmn-moddle": "^5.1.2",
+    "fast-xml-parser": "^3.19.0",
     "js-base64": "^3.6.1",
     "keycloak-angular": "^8.2.0",
     "keycloak-js": "^10.0.2",

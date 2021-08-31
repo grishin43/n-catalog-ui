@@ -8,6 +8,8 @@ import {ProcessAutosaveService} from '../../services/process-autosave/process-au
 import {ProcessModel} from '../../../models/domain/process.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
+import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'np-process',
@@ -23,7 +25,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
     private activateRoute: ActivatedRoute,
     private entitiesTab: EntitiesTabService,
     private api: ApiService,
-    public processAutosave: ProcessAutosaveService
+    public processAutosave: ProcessAutosaveService,
+    private toast: ToastService,
+    private translate: TranslateService
   ) {
   }
 
@@ -58,9 +62,14 @@ export class ProcessComponent implements OnInit, OnDestroy {
           this.entitiesTab.addEntity(res);
           this.runAutoSave(res);
         }, (err: HttpErrorResponse) => {
+          let errorMessage: string;
           if (err.status === HttpStatusCodeEnum.NOT_FOUND) {
             this.entitiesTab.deleteEntity({id: processId});
+            errorMessage = this.translate.instant('errors.processNotFoundOrHasBeenDeleted');
+          } else {
+            errorMessage = err.message;
           }
+          this.toast.showError('errors.errorOccurred', errorMessage);
         })
     );
   }
