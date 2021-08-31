@@ -34,10 +34,13 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.ctrlKey && e.code === 'Digit1') {
+      e.preventDefault();
       this.bpmnModeler.zoomTo(true);
     } else if (e.ctrlKey && e.code === 'KeyX') {
+      e.preventDefault();
       this.bpmnModeler.cutElements();
     } else if (e.code === 'Escape') {
+      e.preventDefault();
       this.bpmnModeler.cancelCutElements();
     } else if (e.ctrlKey && e.code === 'KeyP') {
       e.preventDefault();
@@ -46,8 +49,10 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       e.preventDefault();
       this.bpmnModeler.resetPropertiesPanel();
     } else if (e.ctrlKey && e.code === 'KeyZ') {
+      e.preventDefault();
       this.bpmnModeler.increaseUndoCounter();
     } else if (e.ctrlKey && e.code === 'KeyY') {
+      e.preventDefault();
       this.bpmnModeler.decreaseUndoCounter();
     } else if (e.ctrlKey && e.code === 'KeyS') {
       e.preventDefault();

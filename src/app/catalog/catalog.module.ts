@@ -30,6 +30,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {ProcessAutosaveService} from './services/process-autosave/process-autosave.service';
 import {ToastModule} from '../shared/components/small/toast/toast.module';
+import {GrantAccessModalModule} from '../shared/components/big/grant-access-modal/grant-access-modal.module';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {ToastModule} from '../shared/components/small/toast/toast.module';
     MatSnackBarModule,
     MatDialogModule,
     MatMenuModule,
-    ToastModule
+    ToastModule,
+    GrantAccessModalModule
   ],
   providers: [
     EntitiesTabService,

@@ -1,0 +1,49 @@
+.mat-dialog-content {
+  margin-bottom: -1.34375em;
+}
+
+.mat-dialog-title {
+  margin: 0;
+  padding-bottom: 16px;
+  position: relative;
+
+  &:after {
+    content: '';
+    width: calc(100% + 64px);
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: -32px;
+    right: -32px;
+    background: var(--np-catskill-white);
+  }
+}
+
+form {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 1.34375em;
+
+  .form-group {
+    flex: 1;
+
+    .merged-fields {
+      mat-form-field {
+        &:nth-child(1) {
+          flex: 0 0 60%;
+          max-width: 60%;
+        }
+
+        &:nth-child(2) {
+          flex: 0 0 40%;
+          max-width: 40%;
+        }
+      }
+    }
+  }
+
+  .form-action {
+    padding-left: 16px;
+    margin-bottom: .25em;
+  }
+}

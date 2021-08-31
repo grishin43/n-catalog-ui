@@ -1,0 +1,97 @@
+<div
+  mat-dialog-title
+  class="d-flex justify-content-between align-items-center">
+  <h4 class="mb-0">{{'common.grantAccess' | translate}}</h4>
+  <button
+    class="min-width-auto p-0"
+    mat-button
+    (click)="closeModal()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M18.3 5.7107C17.91 5.3207 17.28 5.3207 16.89 5.7107L12 10.5907L7.10997 5.7007C6.71997 5.3107 6.08997 5.3107 5.69997 5.7007C5.30997 6.0907 5.30997 6.7207 5.69997 7.1107L10.59 12.0007L5.69997 16.8907C5.30997 17.2807 5.30997 17.9107 5.69997 18.3007C6.08997 18.6907 6.71997 18.6907 7.10997 18.3007L12 13.4107L16.89 18.3007C17.28 18.6907 17.91 18.6907 18.3 18.3007C18.69 17.9107 18.69 17.2807 18.3 16.8907L13.41 12.0007L18.3 7.1107C18.68 6.7307 18.68 6.0907 18.3 5.7107Z"
+        fill="#B8C1CB"/>
+    </svg>
+  </button>
+</div>
+<mat-dialog-content>
+  <form
+    [formGroup]="form"
+    (submit)="formSubmit()">
+    <div class="form-group mb-0">
+      <mat-label>
+        {{'common.email' | translate}}
+      </mat-label>
+      <div class="merged-fields">
+        <mat-form-field
+          class="mb-0"
+          appearance="outline"
+          floatLabel="never">
+          <input
+            type="text"
+            matInput
+            [formControlName]="formControlName.EMAIL"
+            [attr.name]="formControlName.EMAIL"
+            [placeholder]="'common.enterEmailOrName' | translate">
+          <mat-error *ngIf="form.get(formControlName.EMAIL).invalid">
+            <ng-container *ngIf="form.get(formControlName.EMAIL).hasError('required')">
+              {{'errors.required' | translate}}
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          class="mb-0"
+          appearance="outline"
+          floatLabel="never"
+          (click)="!formLoader ? matAutocompleteTrigger.openPanel() : undefined">
+          <input
+            type="text"
+            matInput
+            #matAutocompleteTrigger="matAutocompleteTrigger"
+            [formControlName]="formControlName.PERMISSIONS"
+            [attr.name]="formControlName.PERMISSIONS"
+            [placeholder]="'common.permissions' | translate"
+            [matAutocomplete]="auto"
+            [readonly]="true">
+          <mat-error *ngIf="form.get(formControlName.PERMISSIONS).invalid">
+            <ng-container *ngIf="form.get(formControlName.PERMISSIONS).hasError('required')">
+              {{'errors.required' | translate}}
+            </ng-container>
+          </mat-error>
+          <mat-icon matSuffix>
+            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.0336 9.60742L12.0803 14.6074L7.12695 9.60742" stroke="#B8C1CB" stroke-width="1.5"
+                    stroke-linecap="round"/>
+            </svg>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="form-action">
+      <np-button
+        [size]="'sm'"
+        [btnType]="'submit'"
+        [type]="'primary'"
+        [disabled]="form.invalid || formLoader">
+        <span>
+          {{'common.create' | translate}}
+        </span>
+        <mat-spinner
+          *ngIf="formLoader"
+          [diameter]="20">
+        </mat-spinner>
+      </np-button>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-autocomplete
+  #auto="matAutocomplete"
+  autoActiveFirstOption>
+  <mat-option
+    class="sm"
+    (click)="patchPermission(permission)"
+    *ngFor="let permission of permissions"
+    [value]="'common.can' + (permission | titlecase) | translate">
+    {{'common.can' + (permission | titlecase) | translate}}
+  </mat-option>
+</mat-autocomplete>

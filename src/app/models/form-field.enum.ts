@@ -3,5 +3,7 @@ export enum FormFieldEnum {
   FOLDER = 'folder',
   FOLDER_PATH = 'folderPath',
   ENTITY_NAME = 'entityName',
-  NEW_ENTITY_NAME = 'newEntityName'
+  NEW_ENTITY_NAME = 'newEntityName',
+  EMAIL = 'email',
+  PERMISSIONS = 'permissions'
 }

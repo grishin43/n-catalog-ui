@@ -23,6 +23,7 @@ import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
 import {RenameEntityModalComponent} from '../../../shared/components/big/rename-entity-modal/component/rename-entity-modal.component';
 import {MapHelper} from '../../helpers/map.helper';
+import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +80,13 @@ export class BpmnToolbarService {
           },
           {
             name: ToolbarProcessItemEnum.GRANT_ACCESS,
+            cb: (process: ProcessModel) => {
+              this.dialog.open(GrantAccessModalComponent, {
+                width: '700px',
+                autoFocus: false,
+                data: process
+              });
+            },
             delimiterAfter: true
           },
           {

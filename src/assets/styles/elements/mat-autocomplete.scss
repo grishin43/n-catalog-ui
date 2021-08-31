@@ -50,11 +50,20 @@
   }
 
   mat-option {
-    font-size: 16px;
     color: var(--np-black);
     padding: 0 16px !important;
-    line-height: 56px;
-    height: 56px;
+
+    &:not(.sm) {
+      font-size: 16px;
+      line-height: 56px;
+      height: 56px;
+    }
+
+    &.sm {
+      height: 38px;
+      line-height: 38px;
+      font-size: 14px;
+    }
 
     &.selected {
       background: var(--np-ghost-white);

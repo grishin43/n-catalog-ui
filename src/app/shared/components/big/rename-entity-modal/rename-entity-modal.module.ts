@@ -16,9 +16,6 @@ import {MatInputModule} from '@angular/material/input';
   exports: [
     RenameEntityModalComponent
   ],
-  entryComponents: [
-    RenameEntityModalComponent
-  ],
   imports: [
     CommonModule,
     MatDialogModule,

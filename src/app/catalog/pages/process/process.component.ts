@@ -55,14 +55,19 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this.api.getProcessById(folderId, processId)
         .subscribe((res: ProcessModel) => {
           this.process = res;
-          this.processAutosave.init(res);
           this.entitiesTab.addEntity(res);
+          this.runAutoSave(res);
         }, (err: HttpErrorResponse) => {
           if (err.status === HttpStatusCodeEnum.NOT_FOUND) {
             this.entitiesTab.deleteEntity({id: processId});
           }
         })
     );
+  }
+
+  private runAutoSave(process: ProcessModel): void {
+    this.processAutosave.destroy();
+    this.processAutosave.init(process);
   }
 
 }

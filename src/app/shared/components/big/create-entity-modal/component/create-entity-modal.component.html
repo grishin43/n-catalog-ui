@@ -8,7 +8,7 @@
     <p>{{'common.choosePlaceForSavingAndProcessType' | translate}}</p>
   </ng-container>
 </div>
-<mat-dialog-content class="mat-typography">
+<mat-dialog-content>
   <form [formGroup]="form">
     <div
       class="form-group mb-0"
@@ -24,7 +24,6 @@
         </ng-container>
       </mat-label>
       <mat-form-field
-        class="input-type-text"
         appearance="outline"
         floatLabel="never">
         <input
@@ -59,7 +58,6 @@
         {{'common.folder' | translate}}
       </mat-label>
       <mat-form-field
-        class="input-type-text"
         appearance="outline"
         floatLabel="never"
         (click)="!explorerLoader ? matAutocompleteTrigger.openPanel() : undefined">
@@ -102,7 +100,6 @@
         {{'common.processType' | translate}}
       </mat-label>
       <mat-form-field
-        class="input-type-text"
         appearance="outline"
         floatLabel="never"
         (click)="!processTypesLoader ? matAutocompleteTrigger2.openPanel() : undefined">
@@ -160,9 +157,9 @@
 </mat-dialog-actions>
 
 <mat-autocomplete
-  class="pseudo-explorer"
   #processTypesAuto="matAutocomplete">
   <mat-option
+    class="sm"
     *ngFor="let option of processTypes"
     [value]="option.name"
     (click)="processTypeSelected($event, option)">
@@ -189,7 +186,7 @@
       </button>
       <mat-form-field
         *ngIf="form.get(formControlName.NEW_ENTITY_NAME)"
-        class="input-type-text pb-0 smaller-height"
+        class="pb-0 smaller-height"
         appearance="outline"
         floatLabel="never">
         <input

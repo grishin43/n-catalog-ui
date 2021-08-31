@@ -134,7 +134,11 @@
     "gotIt": "Зрозуміло",
     "processSuccessfullyRenamed": "Процес “{{processOldName}}” перейменовано на “{{processNewName}}”",
     "folderSuccessfullyRenamed": "Процес “{{folderOldName}}” перейменовано на “{{folderNewName}}”",
-    "success": "Успішно!"
+    "success": "Успішно!",
+    "enterEmailOrName": "Введіть email або ім’я користувача",
+    "email": "Email",
+    "canRead": "Може переглядати",
+    "canEdit": "Може редагувати"
   },
   "statuses": {
     "undefined": "Невизначений",
