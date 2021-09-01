@@ -37,7 +37,20 @@ export class EntitiesTabService {
     }
     this.processes.next(entitiesValue);
     LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, entitiesValue);
-    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
+    if (entitiesValue.length >= 1) {
+      this.router.navigate(
+        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
+        {
+          queryParams: {
+            [CatalogRouteEnum._ID]: entitiesValue[removeIndex - 1].id,
+            [CatalogRouteEnum._NAME]: entity.name,
+            [CatalogRouteEnum._PARENT_ID]: entity.parent.id
+          }
+        }
+      );
+    } else {
+      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
+    }
   }
 
   private deleteEarliestEntity(entity: ProcessModel): void {

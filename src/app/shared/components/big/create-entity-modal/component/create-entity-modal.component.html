@@ -192,6 +192,7 @@
         <input
           type="text"
           matInput
+          (keydown)="$event.stopPropagation()"
           (input)="handleEntityNameDuplicator(formControlName.NEW_ENTITY_NAME)"
           [formControlName]="formControlName.NEW_ENTITY_NAME"
           [attr.name]="formControlName.NEW_ENTITY_NAME"
