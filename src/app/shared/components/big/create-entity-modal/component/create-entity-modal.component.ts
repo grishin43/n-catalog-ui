@@ -34,7 +34,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public newFolderLoader: boolean;
   public rootFolders: FolderModel[] = [];
   public openedFolder: FolderModel;
-  public selectedFolder: FolderModel;
   public eCatalogEntity = CatalogEntityEnum;
   public processTypes: ProcessTypeModel[];
   public newFolderMode: boolean;
@@ -122,30 +121,15 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  public folderSingleClick(event: MouseEvent, folder: FolderModel): void {
+  public onFolderClick(event: MouseEvent, folder: FolderModel): void {
     event.preventDefault();
     event.stopPropagation();
-    this.selectedFolder = folder;
-  }
-
-  public folderDoubleClick(event: MouseEvent, folder: FolderModel): void {
-    event.preventDefault();
-    event.stopPropagation();
-    if (folder[FolderFieldKey.FOLDERS]?.count || folder[FolderFieldKey.PROCESSES]?.count) {
-      this.clearSelectedFolder();
-      this.patchOpenedFolder(folder.id);
-    }
-  }
-
-  private clearSelectedFolder(): void {
-    this.selectedFolder = undefined;
-    this.form.get(FormFieldEnum.FOLDER_PATH).patchValue(undefined);
+    this.patchOpenedFolder(folder.id);
   }
 
   public onFolderBack(event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.clearSelectedFolder();
     if (this.openedFolder) {
       if (this.openedFolder.parent) {
         this.patchOpenedFolder(this.openedFolder.parent.id);
@@ -170,10 +154,10 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  public onFolderSelected(event: MouseEvent, matAutocompleteTrigger: MatAutocompleteTrigger): void {
+  public selectFolder(event: MouseEvent, matAutocompleteTrigger: MatAutocompleteTrigger): void {
     event.preventDefault();
     event.stopPropagation();
-    if (this.selectedFolder) {
+    if (this.openedFolder) {
       this.form.get(FormFieldEnum.FOLDER_PATH).patchValue(this.folderPath);
       matAutocompleteTrigger.closePanel();
       this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
@@ -181,9 +165,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   public get folderPath(): string {
-    if (this.selectedFolder) {
-      return this.extractFolderPathname(this.selectedFolder);
-    } else if (this.openedFolder) {
+    if (this.openedFolder) {
       return this.extractFolderPathname(this.openedFolder);
     }
     return this.translateService.instant('common.rootFolders');
@@ -213,7 +195,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private get currentFolderId(): string {
-    return this.selectedFolder?.id || this.openedFolder?.id || this.data.parent?.id;
+    return this.openedFolder?.id || this.data.parent?.id;
   }
 
   private createProcess(): void {
@@ -240,7 +222,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   private createGeneralFolder(): void {
     this.formLoader = true;
-    const parentFolderId = this.selectedFolder?.id || this.data?.parent?.id;
+    const parentFolderId = this.openedFolder?.id || this.data?.parent?.id;
     this.subscription.add(
       this.api.createFolder(parentFolderId, this.form.value[FormFieldEnum.ENTITY_NAME])
         .subscribe(
@@ -251,7 +233,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
             // TODO
             setTimeout(() => {
               this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
-            }, 200);
+            }, 2000);
             if (typeof this.data.ssCb === 'function') {
               this.data.ssCb();
             }
@@ -311,7 +293,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           // TODO
           setTimeout(() => {
             this.patchOpenedFolder(this.openedFolder.id);
-          }, 200);
+          }, 2000);
         }, () => {
           this.newFolderLoader = false;
         })
@@ -325,9 +307,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       : FolderFieldKey.PROCESSES;
     if (control.value?.length) {
       let duplicatorMatched;
-      if (this.selectedFolder) {
-        duplicatorMatched = this.matchNameDuplicates(this.selectedFolder[entityKey]?.items, control.value);
-      } else if (this.openedFolder) {
+      if (this.openedFolder) {
         duplicatorMatched = this.matchNameDuplicates(this.openedFolder[entityKey]?.items, control.value);
       } else if (this.rootFolders && this.isFolder) {
         duplicatorMatched = this.matchNameDuplicates(this.rootFolders, control.value);
@@ -362,6 +342,10 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   public get openedFolderHasChildren(): boolean {
     return !!this.openedFolderSubFolders?.length || !!this.openedFolderProcesses?.length;
+  }
+
+  public get openedFolderHasSubFolders(): boolean {
+    return !!this.openedFolderSubFolders?.length;
   }
 
   public get openedFolderSubFolders(): FolderModel[] {

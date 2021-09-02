@@ -170,7 +170,8 @@
 <mat-autocomplete
   class="pseudo-explorer sticky-pseudo-header sticky-pseudo-footer"
   #auto="matAutocomplete"
-  [formGroup]="form">
+  [formGroup]="form"
+  (click)="$event.stopPropagation()">
   <ng-container *ngIf="newFolderMode; else explorerTemplate">
     <mat-option
       class="pseudo-disabled pseudo-header"
@@ -262,7 +263,7 @@
     </mat-option>
     <ng-container *ngIf="openedFolder; else rootFoldersTemplate">
       <mat-optgroup class="hide-label">
-        <ng-container *ngIf="openedFolderHasChildren; else noSubsTemplate">
+        <ng-container *ngIf="(isProcess && openedFolderHasChildren) || (isFolder && openedFolderHasSubFolders); else noSubsTemplate">
           <ng-container
             *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolderSubFolders}"></ng-container>
           <ng-container *ngIf="isProcess">
@@ -288,11 +289,12 @@
       </mat-optgroup>
     </ng-template>
     <mat-option
+      *ngIf="openedFolder"
       class="pseudo-disabled pseudo-footer"
       [disabled]="true">
       <np-button
         class="mr-auto"
-        *ngIf="!newFolderMode && (openedFolder || selectedFolder)"
+        *ngIf="isProcess && !newFolderMode"
         [size]="'md'"
         [btnType]="'submit'"
         [type]="'default'"
@@ -310,11 +312,11 @@
         [size]="'md'"
         [btnType]="'submit'"
         [type]="'primary'"
-        [disabled]="!selectedFolder"
-        (click)="onFolderSelected($event, matAutocompleteTrigger)">
-      <span>
-        {{'common.select' | translate}}
-      </span>
+        [disabled]="!openedFolder"
+        (click)="selectFolder($event, matAutocompleteTrigger)">
+        <span>
+          {{'common.select' | translate}}
+        </span>
       </np-button>
     </mat-option>
   </ng-template>
@@ -336,11 +338,7 @@
   <ng-container *ngFor="let folder of folders">
     <mat-option
       class="pseudo-disabled"
-      [ngClass]="{
-        'selected': selectedFolder?.id === folder.id
-      }"
-      (click)="folderSingleClick($event, folder)"
-      (dblclick)="folderDoubleClick($event, folder)"
+      (click)="onFolderClick($event, folder)"
       [value]="folder.name"
       [disabled]="true">
       <mat-icon *ngIf="!folder.root">
