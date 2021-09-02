@@ -378,9 +378,10 @@
   <ng-container *ngFor="let process of processes">
     <mat-option
       class="pseudo-disabled entity-type--process"
+      (mouseenter)="processNameTooltip.show()"
+      (mouseleave)="processNameTooltip.hide()"
       [value]="process.name"
-      [disabled]="true"
-      [matTooltip]="'common.youCanChooseOnlyFolder' | translate">
+      [disabled]="true">
       <mat-icon>
         <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -388,8 +389,10 @@
             fill="#E7EDF5"/>
         </svg>
       </mat-icon>
-      <span>
-        {{process.name}}
+      <span
+        #processNameTooltip="matTooltip"
+        [matTooltip]="'common.youCanChooseOnlyFolder' | translate">
+          {{process.name}}
       </span>
     </mat-option>
   </ng-container>

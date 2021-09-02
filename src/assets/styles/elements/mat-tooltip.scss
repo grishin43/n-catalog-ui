@@ -1,4 +1,4 @@
-@mixin leftTriangle {
+@mixin rightTriangle {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-left: 5px solid var(--np-mako-900);
@@ -8,7 +8,7 @@
   left: 100%;
 }
 
-@mixin rightTriangle {
+@mixin leftTriangle {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-right: 5px solid var(--np-mako-900);
@@ -16,6 +16,26 @@
   top: 0;
   bottom: 0;
   right: 100%;
+}
+
+@mixin triangleTop {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid var(--np-mako-900);
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+@mixin triangleBottom {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--np-mako-900);
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 
 mat-tooltip-component {
@@ -34,51 +54,31 @@ mat-tooltip-component {
       position: absolute;
     }
 
-    &.left {
+    &[style*="transform-origin: center top"] {
+      margin-top: 0;
+
       &:before {
-        @include leftTriangle;
+        @include triangleTop;
       }
     }
 
-    &.right {
+    &[style*="transform-origin: center bottom"] {
+      margin-bottom: 0;
+
+      &:before {
+        @include triangleBottom;
+      }
+    }
+
+    &[style*="transform-origin: right center"] {
       &:before {
         @include rightTriangle;
       }
     }
 
-    &.above {
-      &:before {
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid var(--np-mako-900);
-        top: 100%;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-      }
-    }
-
-    &.below {
-      &:before {
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-bottom: 5px solid var(--np-mako-900);
-        bottom: 100%;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-      }
-    }
-
-    &.before {
+    &[style*="transform-origin: left center"] {
       &:before {
         @include leftTriangle;
-      }
-    }
-
-    &.after {
-      &:before {
-        @include rightTriangle;
       }
     }
   }
