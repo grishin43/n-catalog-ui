@@ -5,15 +5,15 @@ import {Pipe, PipeTransform} from '@angular/core';
   pure: false
 })
 export class AcronymPipe implements PipeTransform {
-  transform(str: string, wordsCount: number): string {
+  transform(str: string, lettersCount: number): string {
     if (str) {
-      const words = str.split(' ');
+      const letters = str.split(' ');
       str = '';
-      if (wordsCount > words.length) {
-        wordsCount = words.length;
+      if (lettersCount > letters.length) {
+        lettersCount = letters.length;
       }
-      for (let i = 0; i < wordsCount; i++) {
-        str += words[i][0];
+      for (let i = 0; i < lettersCount; i++) {
+        str += letters[i][0];
       }
     }
     return str?.toUpperCase();

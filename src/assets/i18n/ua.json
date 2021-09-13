@@ -137,9 +137,19 @@
     "success": "Успішно!",
     "enterEmailOrName": "Введіть email або ім’я користувача",
     "email": "Email",
-    "canRead": "Може переглядати",
-    "canEdit": "Може редагувати",
-    "goHome": "На головну"
+    "viewer": "Може переглядати",
+    "editor": "Може редагувати",
+    "goHome": "На головну",
+    "copyLink": "Копіювати посилання",
+    "onlyUsersWithAccessHaveEditingPermission": "Дозвіл на редагування є лише у користувачів які мають доступ",
+    "copied": "Скопійовано",
+    "company": "Компанія",
+    "subDivision": "Підрозділ",
+    "position": "Посада",
+    "email2": "Ел. пошта",
+    "userNotFound": "Працівника не знайдено",
+    "noAccess": "Немає доступу",
+    "contactTheOwnerToProvideAccessToTheProcess": "Зверніться до власника для надання доступу до процесу."
   },
   "statuses": {
     "undefined": "Невизначений",
@@ -157,6 +167,7 @@
   },
   "errors": {
     "errorOccurred": "Виникла помилка",
+    "errorOccurredTryAgainLater": "Виникла помилка, спробуйте пізніше",
     "required": "Це поле необхідно заповнити.",
     "thisFolderNameAlreadyExistAt": "Така назва папки вже існує в {{folderPath}}",
     "thisProcessNameAlreadyExistAt": "Така назва процесу вже існує в {{folderPath}}",
@@ -165,7 +176,9 @@
     "failedToRenameFolder": "Не вдалося перейменувати папку “{{folderName}}”",
     "folderNotFoundOrHasBeenDeleted": "Папку не знайдено або вона була видалена",
     "processNotFoundOrHasBeenDeleted": "Процес не знайдений або він був видалений",
-    "processCannotBeOpened": "Неможливо відкрити процес, діаграма пошкоджена, читання неможливо"
+    "processCannotBeOpened": "Неможливо відкрити процес, діаграма пошкоджена, читання неможливо",
+    "searchUsersFailed": "Неможливо знайти співробітників. Спробуйте пізніше",
+    "processAccessDenied": "Доступ до процесу заборонено"
   },
   "counters": {
     "foldersCount1": "{{count}} папка",
@@ -177,5 +190,10 @@
   },
   "loaders": {
     "rename": "Йде перейменування “{{name}}”"
+  },
+  "permissions": {
+    "owner": "Власник",
+    "editor": "Може редагувати",
+    "viewer": "Може переглядати"
   }
 }

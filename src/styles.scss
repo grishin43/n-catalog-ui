@@ -67,6 +67,10 @@ np-status-pill, np-avatar {
   display: inline-flex;
 }
 
+np-avatar {
+  padding: 1px;
+}
+
 mat-icon {
   &.mat-icon {
     display: inline-flex;

@@ -1,0 +1,26 @@
+@import "../breakpoints";
+
+.search-form-stretched {
+  .cdk-overlay-pane {
+    @media screen and (max-width: $notebook) {
+      left: auto !important;
+      right: 140px !important;
+    }
+    @media screen and (max-width: $tablet-medium - 1px) {
+      right: 110px !important;
+    }
+  }
+}
+
+.cdk-overlay-pane {
+  @media screen and (max-width: $notebook) {
+    transition: var(--np-base-transition);
+    transform: translateX(0);
+  }
+}
+
+.cdk-overlay-pane {
+  &.padding-10 {
+    padding: 10px;
+  }
+}

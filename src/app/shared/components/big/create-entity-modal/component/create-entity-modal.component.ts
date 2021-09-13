@@ -79,7 +79,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           }
         }, (err: HttpErrorResponse) => {
           this.processTypesLoader = false;
-          this.showToast(err.message);
+          this.showToast(err.error?.message || err.message);
         })
     );
   }
@@ -93,7 +93,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           this.rootFolders = res?.items;
         }, (err: HttpErrorResponse) => {
           this.explorerLoader = false;
-          this.showToast(err.message);
+          this.showToast(err.error?.message || err.message);
         })
     );
   }
@@ -149,7 +149,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           this.openedFolder = res;
         }, (err: HttpErrorResponse) => {
           this.explorerLoader = false;
-          this.showToast(err.message);
+          this.showToast(err.error?.message || err.message);
         })
     );
   }
@@ -215,7 +215,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
-            this.showToast(err.message);
+            this.showToast(err.error?.message || err.message);
           })
     );
   }
@@ -240,7 +240,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
-            this.showToast(err.message);
+            this.showToast(err.error?.message || err.message);
           })
     );
   }

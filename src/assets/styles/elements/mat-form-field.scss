@@ -66,6 +66,22 @@ mat-form-field {
       }
     }
 
+    &.copy-clipboard {
+      .mat-form-field-wrapper {
+        .mat-form-field-flex {
+          .mat-form-field-outline {
+            background: var(--np-ghost-white);
+          }
+
+          .mat-form-field-infix {
+            input {
+              color: var(--np-gunmetal) !important;
+            }
+          }
+        }
+      }
+    }
+
     .mat-form-field-wrapper {
       padding-bottom: 0;
 
@@ -134,6 +150,7 @@ mat-form-field {
         }
 
         .mat-form-field-suffix {
+          display: inline-flex;
           top: 0;
           margin-left: 8px;
         }
@@ -201,32 +218,39 @@ mat-label {
 
 .merged-fields {
   display: flex;
+  border: 1px solid var(--np-geyser);
+  border-radius: 4px;
+  transition: var(--np-base-transition);
+
+  &:hover, &:focus-within {
+    border-color: var(--np-roman-silver);
+  }
 
   mat-form-field {
-    &:nth-child(1) {
-      &.mat-form-field-appearance-outline {
-        .mat-form-field-wrapper {
-          .mat-form-field-flex {
-            .mat-form-field-outline {
-              .mat-form-field-outline-end {
-                border-right: 0;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-              }
-            }
-          }
-        }
-      }
-    }
 
-    &:nth-child(2) {
-      &.mat-form-field-appearance-outline {
-        .mat-form-field-wrapper {
-          .mat-form-field-flex {
-            .mat-form-field-outline {
-              .mat-form-field-outline-start {
-                display: none !important;
-              }
+    &.mat-form-field-appearance-outline {
+      .mat-form-field-wrapper {
+        flex: 0 0 100%;
+        max-width: 100%;
+        display: inline-flex;
+        height: 100%;
+        margin: 0;
+        width: 100%;
+
+        .mat-form-field-flex {
+          height: 100%;
+          margin: 0;
+
+          .mat-form-field-outline {
+            display: none !important;
+          }
+
+          .mat-form-field-infix {
+            flex: 1;
+            max-width: 100%;
+
+            mat-spinner {
+              margin-right: -20px;
             }
           }
         }

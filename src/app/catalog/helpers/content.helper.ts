@@ -78,7 +78,7 @@ export class ContentHelper {
         type: CatalogEntityEnum.FOLDER,
         owner: participants[0],
         lastUpdated: new Date(),
-        permissions: CatalogEntityPermissionEnum.READ,
+        permissions: CatalogEntityPermissionEnum.VIEWER,
         entities: [
           {
             id: '701431a7-21da-468d-9fc3-cc290a13a141',
@@ -87,7 +87,7 @@ export class ContentHelper {
             type: CatalogEntityEnum.FOLDER,
             owner: participants[0],
             lastUpdated: new Date(),
-            permissions: CatalogEntityPermissionEnum.READ,
+            permissions: CatalogEntityPermissionEnum.VIEWER,
             entities: [
               {
                 id: '701431a7-21da-468d-9fc3-cc290a13a241',
@@ -96,7 +96,7 @@ export class ContentHelper {
                 type: CatalogEntityEnum.FOLDER,
                 owner: participants[0],
                 lastUpdated: new Date(),
-                permissions: CatalogEntityPermissionEnum.READ
+                permissions: CatalogEntityPermissionEnum.VIEWER
               }
             ]
           },
@@ -107,7 +107,7 @@ export class ContentHelper {
             type: CatalogEntityEnum.FOLDER,
             owner: participants[0],
             lastUpdated: new Date(),
-            permissions: CatalogEntityPermissionEnum.READ
+            permissions: CatalogEntityPermissionEnum.VIEWER
           },
           {
             id: '701431a7-21da-468d-9fc3-cc290a13a143',
@@ -116,7 +116,7 @@ export class ContentHelper {
             type: CatalogEntityEnum.FOLDER,
             owner: participants[0],
             lastUpdated: new Date(),
-            permissions: CatalogEntityPermissionEnum.READ
+            permissions: CatalogEntityPermissionEnum.VIEWER
           }
         ]
       },
@@ -129,7 +129,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/main-elements.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT
+        permissions: CatalogEntityPermissionEnum.EDITOR
       },
       {
         id: 'e2c2c26a-e573-417b-802b-86135afbc5da',
@@ -140,7 +140,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/forwarding-parcels-v17.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT
+        permissions: CatalogEntityPermissionEnum.EDITOR
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd639',
@@ -151,7 +151,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/creation-of-EN_v11.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT
+        permissions: CatalogEntityPermissionEnum.EDITOR
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd777',
@@ -162,7 +162,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/tokens.bpmn',
-        permissions: CatalogEntityPermissionEnum.EDIT
+        permissions: CatalogEntityPermissionEnum.EDITOR
       },
       {
         id: 'e74e4dd2-cb68-496f-9991-c344d16dd228',

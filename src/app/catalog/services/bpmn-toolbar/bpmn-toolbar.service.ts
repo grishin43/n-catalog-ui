@@ -22,7 +22,6 @@ import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
 import {RenameEntityModalComponent} from '../../../shared/components/big/rename-entity-modal/component/rename-entity-modal.component';
-import {MapHelper} from '../../helpers/map.helper';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 
 @Injectable({

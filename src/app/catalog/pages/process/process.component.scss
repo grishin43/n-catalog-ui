@@ -1,4 +1,5 @@
 @import "../../../../assets/styles/breakpoints";
+@import "../../../../assets/styles/keyframes";
 
 .container-fluid {
   padding: 8px 34px;
@@ -31,20 +32,4 @@ np-bpmn-editor {
   }
 }
 
-@keyframes dotty {
-  0% {
-    content: '';
-  }
-  25% {
-    content: '.';
-  }
-  50% {
-    content: '..';
-  }
-  75% {
-    content: '...';
-  }
-  100% {
-    content: '';
-  }
-}
+

@@ -10,9 +10,11 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
-import {validate, parse} from 'fast-xml-parser';
+import {validate} from 'fast-xml-parser';
 import {ToastService} from '../../../../shared/components/small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Router} from '@angular/router';
+import {HttpStatusCodeEnum} from '../../../../models/http-status-code.enum';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -22,10 +24,14 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
   @Input() set data(value: ProcessModel) {
-    this.process = value;
-    this.processLoader = true;
-    this.openProcess();
+    if (value) {
+      this.process = value;
+      this.processLoader = true;
+      this.openProcess();
+    }
   }
+
+  @Input() processLoadError: HttpErrorResponse;
 
   public process: ProcessModel;
   public processLoader: boolean;
@@ -34,6 +40,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
   private readonly newDiagramLink = '../../../assets/bpmn/newDiagram.bpmn';
+  public httpStatusCode = HttpStatusCodeEnum;
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.ctrlKey && e.code === 'Digit1') {
@@ -91,7 +98,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private processAutosave: ProcessAutosaveService,
     private toast: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router
   ) {
   }
 
@@ -164,6 +172,10 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   public reloadPage(): void {
     window.location.reload();
+  }
+
+  public goHome(): void {
+    this.router.navigate(['/']);
   }
 
 }

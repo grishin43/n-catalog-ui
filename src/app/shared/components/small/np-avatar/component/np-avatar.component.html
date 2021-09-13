@@ -1,5 +1,6 @@
-<span [ngClass]="[theme, size, type]"
-      [class.selected]="selected">
+<span
+  [ngClass]="[theme, size, type]"
+  [class.selected]="selected">
   <ng-container *ngIf="type === 'initials'">
     {{data || '?'}}
   </ng-container>

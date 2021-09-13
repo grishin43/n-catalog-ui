@@ -19,7 +19,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "bpmn-js-transaction-boundaries",
-              "bpmn-js-properties-panel"
+              "bpmn-js-properties-panel",
+              "fast-xml-parser"
             ],
             "customWebpackConfig": {
               "path": "./custom-webpack.config.js",

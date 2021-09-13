@@ -5,5 +5,6 @@ export enum FormFieldEnum {
   ENTITY_NAME = 'entityName',
   NEW_ENTITY_NAME = 'newEntityName',
   EMAIL = 'email',
-  PERMISSIONS = 'permissions'
+  PERMISSIONS = 'permissions',
+  SEARCH = 'search'
 }

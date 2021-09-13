@@ -11,27 +11,45 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import {NpButtonModule} from '../../small/np-button/np-button.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatChipsModule} from '@angular/material/chips';
+import {NpAvatarModule} from '../../small/np-avatar/np-avatar.module';
+import {AcronymModule} from '../../../pipes/acronym/acronym.module';
+import { WorkgroupUserComponent } from './component/workgroup-user/workgroup-user.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import {UserInfoTooltipModule} from '../../../directives/user-info-tooltip/user-info-tooltip.module';
 
 @NgModule({
   declarations: [
-    GrantAccessModalComponent
+    GrantAccessModalComponent,
+    WorkgroupUserComponent
   ],
   exports: [
     GrantAccessModalComponent
   ],
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    TranslateModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatIconModule,
-    NpButtonModule,
-    MatProgressSpinnerModule
-  ]
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        TranslateModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        MatIconModule,
+        NpButtonModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        NpAvatarModule,
+        AcronymModule,
+        MatMenuModule,
+        MatDividerModule,
+        MatTooltipModule,
+        ClipboardModule,
+        UserInfoTooltipModule
+    ]
 })
 export class GrantAccessModalModule {
 }

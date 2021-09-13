@@ -12,4 +12,5 @@ export class NpButtonComponent {
   @Input() autoMinWidth: boolean;
   @Input() minWidth: boolean;
   @Input() size: 'sm' | 'md' = 'md';
+  @Input() light: boolean;
 }

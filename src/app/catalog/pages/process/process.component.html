@@ -21,8 +21,9 @@
           <np-button
             [autoMinWidth]="true"
             [type]="'secondary'"
-            [disabled]="true"
-            [size]="'sm'">
+            [size]="'sm'"
+            [light]="true"
+            (click)="openGrantAccessModal()">
             <mat-icon>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -41,6 +42,7 @@
 </div>
 
 <np-bpmn-editor
-  [data]="process">
+  [data]="process"
+  [processLoadError]="errorResponse">
 </np-bpmn-editor>
 

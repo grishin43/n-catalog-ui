@@ -3,17 +3,19 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, delay, exhaustMap, map, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, map, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 import {Base64} from 'js-base64';
-import {MapHelper} from '../../helpers/map.helper';
 import {CatalogEntityPermissionEnum} from '../../models/catalog-entity-permission.enum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {ResourceModel} from '../../../models/domain/resource.model';
 import {EntitiesTabService} from '../entities-tab/entities-tab.service';
+import {UserModel} from '../../../models/domain/user.model';
+import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
+import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -22,7 +24,11 @@ enum ApiRoute {
   PROCESSES = 'processes',
   ORIGINS = 'origins',
   RECENT_PROCESSES = 'processes/recent',
-  RESOURCES = 'resources'
+  RESOURCES = 'resources',
+  SEARCH_USERS = 'search/user',
+  PERMISSIONS = 'permissions',
+  OWNER = 'owner',
+  USERS = 'users'
 }
 
 @Injectable({
@@ -256,6 +262,47 @@ export class ApiService {
     return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RESOURCES}/${resourceId}`, {
       content
     });
+  }
+
+  public searchUsers(searchTerm: string): Observable<SearchModel<UserModel>> {
+    return this.http.post<SearchModel<UserModel>>(`${this.ApiUrl}/${ApiRoute.SEARCH_USERS}`, {searchTerm});
+  }
+
+  public getProcessWorkGroup(folderId: string, processId: string): Observable<SearchModel<ProcessWorkgroupModel>> {
+    return this.http.get<SearchModel<ProcessWorkgroupModel>>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}`);
+  }
+
+  public deleteUserFromWorkgroup(folderId: string, processId: string, permissionId: string): Observable<void> {
+    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`);
+  }
+
+  public patchUserPermission(folderId: string, processId: string, permissionId: string, level: PermissionLevel): Observable<void> {
+    return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`, {level});
+  }
+
+  public changeProcessOwner(folderId: string, processId: string, currentOwnerId: string, newOwnerId: string): Observable<void> {
+    return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.OWNER}`, {
+      currentOwnerPermissionId: currentOwnerId,
+      newOwnerPermissionId: newOwnerId
+    });
+  }
+
+  public getUserInfo(username: string): Observable<UserModel> {
+    return this.http.get<UserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${username}`);
+  }
+
+  public grantAccessToProcess(folderId: string, processId: string, level: string, username: string): Observable<void> {
+    return this.http.post<void>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}`, {
+      level,
+      subRoot: folderId,
+      username
+    });
+  }
+
+  public getProcessOwner(folderId: string, processId: string): Observable<UserModel> {
+    return this.http.get<UserModel>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.OWNER}`);
   }
 
 }

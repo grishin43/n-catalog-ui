@@ -1,5 +1,5 @@
 export enum CatalogEntityPermissionEnum {
-  READ = 'read',
-  EDIT = 'edit',
+  VIEWER = 'viewer',
+  EDITOR = 'editor',
   NO_PERMISSIONS = 'noPermissions'
 }

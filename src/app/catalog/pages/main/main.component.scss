@@ -1,4 +1,5 @@
 @import "../../../../assets/styles/breakpoints";
+@import "../../../../assets/styles/mixins";
 
 .row {
   &.folders-row {
@@ -28,16 +29,12 @@ h6 {
   display: block;
   padding: 16px;
   border-radius: 10px;
-  background: var(--np-primary-white);
-  position: relative;
-  overflow: hidden;
+  @include skeleton;
 
   span {
-    opacity: 0.5;
-
     svg {
       path {
-        fill: var(--np-hit-gray);
+        fill: var(--np-desert-storm);
       }
     }
 
@@ -49,7 +46,7 @@ h6 {
     }
 
     &:nth-child(2) {
-      background: var(--np-hit-gray);
+      background: var(--np-desert-storm);
       height: 16px;
       display: block;
       margin-bottom: 14px;
@@ -58,32 +55,11 @@ h6 {
     }
 
     &:nth-child(3) {
-      background: var(--np-hit-gray);
+      background: var(--np-desert-storm);
       height: 16px;
       display: block;
       border-radius: 30px;
       width: 75%;
     }
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -45%;
-    height: 100%;
-    width: 45%;
-    background-image: linear-gradient(to left, rgba(251, 251, 251, .05), rgba(251, 251, 251, .3), rgba(251, 251, 251, .6), rgba(251, 251, 251, .3), rgba(251, 251, 251, .05));
-    animation: loading 2s infinite;
-    z-index: 1;
-  }
-}
-
-@keyframes loading {
-  0% {
-    left: -45%;
-  }
-  100% {
-    left: 100%;
   }
 }

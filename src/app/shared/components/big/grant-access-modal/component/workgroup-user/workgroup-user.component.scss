@@ -1,0 +1,35 @@
+div {
+  np-avatar {
+    & + p {
+      margin-right: auto;
+      margin-left: 12px;
+    }
+  }
+
+  &:not(.active) {
+    p {
+      color: var(--np-roman-silver);
+    }
+  }
+
+  span {
+    color: var(--np-roman-silver);
+  }
+
+  .mat-button {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: -12px;
+    font-weight: normal;
+    transition: var(--np-base-transition);
+
+    &:not(:hover):not(.menu-opened) {
+      color: var(--np-roman-silver);
+    }
+
+    mat-icon {
+      margin-right: -4px;
+      margin-left: 4px;
+    }
+  }
+}

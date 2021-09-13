@@ -58,15 +58,22 @@ button {
       border-width: 2px;
     }
 
-    color: var(--np-gunmetal);
-    border-color: var(--np-gunmetal);
+    &:not(.light) {
+      color: var(--np-gunmetal);
+      border-color: var(--np-gunmetal);
 
-    &:not(:disabled):hover {
-      color: var(--np-raisin-black);
-      border-color: var(--np-raisin-black);
+      &:not(:disabled):hover {
+        color: var(--np-raisin-black);
+        border-color: var(--np-raisin-black);
+      }
+
+      &:disabled {
+        color: var(--np-roman-silver);
+        border-color: var(--np-roman-silver);
+      }
     }
 
-    &:disabled {
+    &.light {
       color: var(--np-roman-silver);
       border-color: var(--np-roman-silver);
     }

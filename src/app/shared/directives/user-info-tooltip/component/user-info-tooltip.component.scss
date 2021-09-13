@@ -1,0 +1,134 @@
+@import "../../../../../assets/styles/mixins";
+
+.user-card {
+  background: var(--np-primary-white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 16px;
+  width: 420px;
+
+  .user-card_header {
+    display: flex;
+    margin-bottom: 35px;
+
+    np-avatar {
+      margin-right: 16px;
+      flex: 0 0 auto;
+    }
+
+    span {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 24px;
+      flex: 1;
+      align-self: center;
+    }
+
+    button {
+      flex: 0 0 auto;
+      margin-right: 0;
+      margin-left: auto;
+      margin-bottom: auto;
+    }
+  }
+
+  .user-card_body {
+    ul {
+      font-size: 14px;
+
+      li {
+        display: flex;
+        align-self: center;
+        margin-left: -10px;
+        margin-right: -10px;
+
+        span {
+          padding-left: 10px;
+          padding-right: 10px;
+
+          &:first-child {
+            flex: 0 0 120px;
+            max-width: 120px;
+            color: var(--np-storm-dust);
+          }
+
+          &:last-child {
+            flex: 0 0 calc(100% - 120px);
+            max-width: calc(100% - 120px);
+          }
+
+          a {
+            color: var(--np-indigo);
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        & + li {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+}
+
+.user-card_skeleton {
+  @include skeleton;
+
+  .user-card_skeleton__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 35px;
+
+    span {
+      &:nth-child(1) {
+        height: 68px;
+        flex: 0 0 68px;
+        max-width: 68px;
+        border-radius: 50%;
+        margin-right: 17px;
+      }
+
+      &:nth-child(2) {
+        height: 32px;
+        flex: 0 0 230px;
+        max-width: 230px;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .user-card_skeleton__body {
+    span {
+      height: 20px;
+      width: 100%;
+      border-radius: 6px;
+
+      &:nth-child(even) {
+        max-width: 225px;
+      }
+
+      &:nth-child(odd) {
+        max-width: 365px;
+      }
+
+      & + span {
+        margin-top: 5px;
+      }
+    }
+  }
+}
+
+.user-card_error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+
+  p {
+    margin-bottom: 0;
+    color: var(--np-roman-silver);
+  }
+}

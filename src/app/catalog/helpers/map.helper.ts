@@ -13,7 +13,7 @@ export class MapHelper {
           id: folder.id,
           name: folder.name,
           type: CatalogEntityEnum.FOLDER,
-          permissions: CatalogEntityPermissionEnum.EDIT,
+          permissions: CatalogEntityPermissionEnum.EDITOR,
           original: folder,
           icon: folder.icon,
           hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count
@@ -30,7 +30,7 @@ export class MapHelper {
           id: process.id,
           name: process.name,
           type: CatalogEntityEnum.PROCESS,
-          permissions: CatalogEntityPermissionEnum.EDIT,
+          permissions: CatalogEntityPermissionEnum.EDITOR,
           link: process.url,
           original: process
         };

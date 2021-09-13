@@ -1,0 +1,46 @@
+mat-chip-list {
+  display: inline-block;
+  width: 100%;
+
+  &.has-chips {
+    margin-top: -4px;
+    margin-bottom: -4px;
+
+    &:not(:focus-within) {
+      .mat-chip-list-wrapper {
+        input {
+          display: none !important;
+        }
+      }
+    }
+  }
+
+  .mat-chip-list-wrapper {
+    width: 100%;
+
+    mat-chip {
+      &.mat-chip {
+        margin: 2px 4px !important;
+
+        &:after {
+          content: none !important;
+        }
+
+        &.mat-standard-chip {
+          background: var(--np-whisper);
+          padding: 4px 9.5px 4px 4px;
+
+          np-avatar {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+
+    input {
+      flex: 1;
+      width: 100%;
+    }
+  }
+
+}
