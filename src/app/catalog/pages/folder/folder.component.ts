@@ -10,6 +10,13 @@ import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {MapHelper} from '../../helpers/map.helper';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
+import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
+import {TranslateService} from '@ngx-translate/core';
+import {FolderService} from './folder.service';
+import {ProcessService} from './process.service';
+import {MatDialog} from '@angular/material/dialog';
+import {CantDeleteFolderModalComponent} from './cant-delete-folder-modal/cant-delete-folder-modal.component';
 
 @Component({
   selector: 'np-folder',
@@ -30,7 +37,12 @@ export class FolderComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService,
+    private translateService: TranslateService,
+    private folderService: FolderService,
+    private processService: ProcessService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -81,4 +93,67 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
+  onDeleteEntity(entityToDelete: CatalogEntityModel) {
+    if (entityToDelete.type === CatalogEntityEnum.FOLDER) {
+      this.deleteFolder(entityToDelete);
+    } else if (entityToDelete.type === CatalogEntityEnum.PROCESS) {
+      this.deleteProcess(entityToDelete);
+    } else {
+      throw new Error('Unknown entity to delete');
+    }
+  }
+
+  private deleteFolder(folderToDelete: CatalogEntityModel) {
+    if (folderToDelete.hasProcesses || folderToDelete.hasSubFolders) {
+     this.showCantDeleteFolderModal();
+    } else {
+      this.deleteFolderWithUndo(folderToDelete);
+    }
+  }
+
+  private showCantDeleteFolderModal() {
+    this.dialog.open(CantDeleteFolderModalComponent, {
+      width: '700px',
+      autoFocus: true
+    });
+  }
+
+  private deleteFolderWithUndo(folderToDelete: CatalogEntityModel) {
+    let isDeleteWasUndo = false;
+    const undoFolderStructure = this.folderEntities;
+    const folderEntitiesWithoutDeletedFolder = this.folderEntities
+      .filter(({id} : CatalogEntityModel) => id != folderToDelete.id);
+
+    this.folderEntities = folderEntitiesWithoutDeletedFolder;
+
+    const deleteToast = this.createDeleteWithUndoToast(folderToDelete);
+
+    deleteToast.onAction().subscribe(() => {
+      isDeleteWasUndo = true;
+      this.folderEntities = undoFolderStructure;
+    });
+
+    deleteToast.afterDismissed().subscribe(() => {
+      if (!isDeleteWasUndo) {
+       this.folderService.deleteFolder(folderToDelete.id)
+      }
+    })
+  }
+
+  private createDeleteWithUndoToast(folderToDelete: CatalogEntityModel) {
+    const undoTranslation = this.translateService.instant('common.undo');
+    return this.toastService.show(
+      'common.entityDeleted',
+      3000,
+      undoTranslation,
+      null,
+      null,
+      null,
+      {entityName: folderToDelete.name}
+    );
+  }
+
+  private deleteProcess(processToDelete: CatalogEntityModel) {
+   this.processService.deleteProcess(processToDelete.original.parentId, processToDelete.id);
+  }
 }

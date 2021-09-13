@@ -8,6 +8,13 @@ import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../../environments/environment';
+import {SearchAutocompleteDto} from './searchAutocomplete.dto';
+
+interface AutocompleteSearchDTO {
+  value: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +23,13 @@ export class SearchService {
   public entities$ = new BehaviorSubject<CatalogEntityModel[]>([]);
   public readonly limit = 20;
 
+  private recentSearchUrl = `${environment.apiV1}/search/recent`;
+  private autocompleteSearchUrl = `${environment.apiV1}/search/autocomplete`;
+
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     this.entities$.next(this.savedEntities);
   }
@@ -80,4 +91,21 @@ export class SearchService {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${queryStr}`]);
   }
 
+  public recentSearch$(): Observable<any> {
+    return this.http.get(this.recentSearchUrl)
+      .pipe(
+        tap(resentRequest => console.log('recent data ' + resentRequest)
+        )
+      )
+  }
+
+  public fetchAutocompleteSearchResults(query: string): Observable<SearchAutocompleteDto> {
+    const searchQuery: AutocompleteSearchDTO = {
+      value: query
+    }
+    return this.http.post<SearchAutocompleteDto>(this.autocompleteSearchUrl, searchQuery)
+      .pipe(tap((result) => {
+      console.log('[SearchService] fetchSearchResults: ', result);
+    }));
+  }
 }

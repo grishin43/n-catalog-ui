@@ -17,7 +17,8 @@ export class MapHelper {
           permissions: CatalogEntityPermissionEnum.EDITOR,
           original: folder,
           icon: folder.icon,
-          hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count
+          hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count,
+          hasProcesses: !!folder[FolderFieldKey.PROCESSES]?.count
         };
       });
     }

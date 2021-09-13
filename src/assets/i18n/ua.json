@@ -5,7 +5,9 @@
     "catalog": "Каталог",
     "create": "Створити",
     "process": "Процес",
+    "processes": "Процеси",
     "folder": "Папка",
+    "folders": "Папки",
     "mainFolders": "Головні папки",
     "createFolder": "Створити папку",
     "createProcess": "Створити процес",
@@ -120,6 +122,7 @@
     "tryAgain": "Спробувати знову",
     "folderLoading": "Завантаження папки",
     "delete": "Видалити",
+    "entityDeleted": "{{entityName}} видалено",
     "rootFoldersNotFound": "Рутові папки не знайдені",
     "save": "Зберегти",
     "folderRenamesSuccessfully": "Папка успішно перейменована",
@@ -190,6 +193,10 @@
   },
   "loaders": {
     "rename": "Йде перейменування “{{name}}”"
+  },
+  "folder": {
+    "cantDeleteNotEmptyFolderTitle": "Неможливо видалити папку з процессами",
+    "cantDeleteNotEmptyFolderDescription": "Щоб вадалити цю папку, вона має бути порожня"
   },
   "permissions": {
     "owner": "Власник",

@@ -127,8 +127,7 @@ export class TableActionsService {
         cb: (entity: CatalogEntityModel) => {
           console.log(entity);
         },
-        class: 'danger',
-        disabled: true
+        class: 'danger'
       }
     ];
   }

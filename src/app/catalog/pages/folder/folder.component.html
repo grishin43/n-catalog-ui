@@ -11,6 +11,7 @@
         *ngIf="folderEntities?.length; else noEntities">
         <np-entities-table
           (entityRenamed)="getFolderById()"
+          (entityDeleted)="onDeleteEntity($event)"
           [parentFolder]="folder"
           [displayedColumns]="tableDisplayedColumns"
           [data]="folderEntities"

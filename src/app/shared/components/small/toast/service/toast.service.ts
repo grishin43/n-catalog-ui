@@ -6,6 +6,8 @@ import {ToastLoaderComponent} from '../components/toast-loader/toast-loader.comp
 import {ToastErrorComponent} from '../components/toast-error/toast-error.component';
 import {ToastErrorDataModel} from '../models/toast-error-data.model';
 import {ToastMessageComponent} from '../components/toast-message/toast-message.component';
+import {MatSnackBarRef} from '@angular/material/snack-bar/snack-bar-ref';
+import {TextOnlySnackBar} from '@angular/material/snack-bar/simple-snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +26,10 @@ export class ToastService {
     action?: string,
     vertical?: MatSnackBarVerticalPosition,
     horizontal?: MatSnackBarHorizontalPosition,
-    panelClass?: string
-  ): void {
-    this.snackBar.open(this.translateService.instant(i18nKey), action, {
+    panelClass?: string,
+    translateInterpolateParams?: Object
+  ): MatSnackBarRef<TextOnlySnackBar> {
+    return this.snackBar.open(this.translateService.instant(i18nKey, translateInterpolateParams), action, {
       duration,
       verticalPosition: vertical,
       horizontalPosition: horizontal,

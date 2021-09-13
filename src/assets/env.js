@@ -3,7 +3,7 @@
 
   // Environment variables
   window["env"]["homeUri"] = "http://localhost:4200";
-  window["env"]["apiV1"] = "https://novacontactapi.nc.dev.digital.np.work/api/v1";
+  window["env"]["apiV1"] = "https://businesscatalogapi.bc.dev.digital.np.work/api/v1";
   window["env"]["production"] = false;
   window["env"]["defaultLanguage"] = 'ua';
 

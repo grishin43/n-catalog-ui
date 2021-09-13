@@ -1,0 +1,15 @@
+<div mat-dialog-title>
+  <h4>{{"folder.cantDeleteNotEmptyFolderTitle" | translate }}</h4>
+</div>
+<mat-dialog-content>
+  <p>{{"folder.cantDeleteNotEmptyFolderDescription" | translate}}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'button'"
+    [type]="'primary'"
+    (click)="closeModal()">
+    {{'common.gotIt' | translate}}
+  </np-button>
+</mat-dialog-actions>

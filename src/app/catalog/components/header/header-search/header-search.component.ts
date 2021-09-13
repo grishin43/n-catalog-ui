@@ -9,6 +9,7 @@ import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {SearchService} from '../../../services/search/search.service';
 import {ContentHelper} from '../../../helpers/content.helper';
+import {SearchAutocompleteDto} from '../../../services/search/searchAutocomplete.dto';
 
 @Component({
   selector: 'np-header-search',
@@ -19,6 +20,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   public formControl = new FormControl();
   public entities: CatalogEntityModel[];
   public filteredOptions: CatalogEntityModel[];
+  public autoCompleteResults: SearchAutocompleteDto;
   public catalogEntityType = CatalogEntityEnum;
   public formStretched: boolean;
   public loader: boolean;
@@ -163,6 +165,12 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   private showSearchOptions(query: string): void {
+    this.searchService.fetchAutocompleteSearchResults(query).subscribe(
+      (result) => {
+      this.autoCompleteResults = result;
+    }, (error) => {
+        console.error('[HeaderSearch] autocomplete search error', error);
+      })
     this.filteredOptions = ContentHelper.testEntities
       .filter((option: CatalogEntityModel) => {
         return option.name.toLowerCase().indexOf(query?.toLowerCase()) === 0;
@@ -170,7 +178,11 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   private showPreviousSearchResults(): void {
-    this.filteredOptions = this.entities || [];
+    this.filteredOptions = [];
+    this.searchService.recentSearch$().subscribe((recentSearch) => {
+      console.log('[HeaderSearch] recent search ', recentSearch);
+      this.filteredOptions = recentSearch;
+    })
   }
 
 }

@@ -11,6 +11,7 @@ import {CatalogEntityPermissionEnum} from '../../../../../catalog/models/catalog
 import {EntityTableColumnName} from '../../../../../catalog/helpers/table.helper';
 import {MatRippleHelper} from '../../../../../catalog/helpers/mat-ripple.helper';
 import {FolderModel} from '../../../../../models/domain/folder.model';
+import {CatalogEntityActionEnum} from '../models/catalog-entity-action.enum';
 
 @Component({
   selector: 'np-entities-table',
@@ -22,6 +23,7 @@ export class EntitiesTableComponent implements OnInit {
   @Input() tableClass: string;
   @Input() parentFolder: FolderModel;
   @Output() entityRenamed = new EventEmitter<void>();
+  @Output() entityDeleted = new EventEmitter<CatalogEntityModel>();
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
 
@@ -46,6 +48,16 @@ export class EntitiesTableComponent implements OnInit {
   ngOnInit(): void {
     this.processActions = this.tableActionsService.processActions;
     this.folderActions = this.tableActionsService.folderActions;
+    this.addDeleteCallback();
+  }
+
+  private addDeleteCallback() {
+   const deleteAction:TableActionModel = this.folderActions
+     .find(({name}: TableActionModel) => name === CatalogEntityActionEnum.DELETE);
+
+   deleteAction.cb = (value?: any, parent?: FolderModel, ssCb?: () => void) => {
+      this.entityDeleted.emit(value);
+   }
   }
 
   public openItem(item: CatalogEntityModel): void {

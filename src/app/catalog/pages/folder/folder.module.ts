@@ -12,6 +12,8 @@ import {MatRippleModule} from '@angular/material/core';
 import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CreateEntityButtonModule} from '../../../shared/components/big/create-entity-button/create-entity-button.module';
+import {CantDeleteFolderModalComponent} from './cant-delete-folder-modal/cant-delete-folder-modal.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 const routes: Routes = [
   {
@@ -27,7 +29,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     FolderComponent,
-    FolderBreadcrumbsComponent
+    FolderBreadcrumbsComponent,
+    CantDeleteFolderModalComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -40,7 +43,8 @@ const routes: Routes = [
     MatRippleModule,
     NpButtonModule,
     MatProgressSpinnerModule,
-    CreateEntityButtonModule
+    CreateEntityButtonModule,
+    MatDialogModule
   ]
 })
 export class FolderModule {
