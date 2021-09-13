@@ -206,12 +206,14 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       this.api.createProcess(this.currentFolderId, processType.code, processName)
         .subscribe(
           () => {
-            this.formLoader = false;
-            this.showToast('common.processCreated');
-            this.closeModal();
-            if (typeof this.data.ssCb === 'function') {
-              this.data.ssCb();
-            }
+            setTimeout(() => {
+              this.formLoader = false;
+              this.showToast('common.processCreated');
+              this.closeModal();
+              if (typeof this.data.ssCb === 'function') {
+                this.data.ssCb();
+              }
+            }, 2000);
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
@@ -227,16 +229,16 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       this.api.createFolder(parentFolderId, this.form.value[FormFieldEnum.ENTITY_NAME])
         .subscribe(
           () => {
-            this.formLoader = false;
-            this.showToast('common.folderCreated');
-            this.closeModal();
             // TODO
             setTimeout(() => {
+              this.formLoader = false;
+              this.showToast('common.folderCreated');
+              this.closeModal();
               this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
+              if (typeof this.data.ssCb === 'function') {
+                this.data.ssCb();
+              }
             }, 2000);
-            if (typeof this.data.ssCb === 'function') {
-              this.data.ssCb();
-            }
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
@@ -287,11 +289,11 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.api.createFolder(parentFolderId, folderName)
         .subscribe(() => {
-          this.newFolderLoader = false;
-          this.showToast('common.folderCreated');
-          this.closeNewFolderMode();
           // TODO
           setTimeout(() => {
+            this.newFolderLoader = false;
+            this.showToast('common.folderCreated');
+            this.closeNewFolderMode();
             this.patchOpenedFolder(this.openedFolder.id);
           }, 2000);
         }, () => {

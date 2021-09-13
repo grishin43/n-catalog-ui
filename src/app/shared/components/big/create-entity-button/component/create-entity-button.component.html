@@ -1,11 +1,12 @@
 <div class="d-inline-flex"
+     #menuTrigger="matMenuTrigger"
      [matMenuTriggerFor]="menu">
   <ng-content></ng-content>
 </div>
 <mat-menu #menu="matMenu">
   <button
     mat-menu-item
-    (click)="createEntity($event, eCatalogEntity.FOLDER)">
+    (click)="createEntity($event, eCatalogEntity.FOLDER); menuTrigger.closeMenu();">
     <mat-icon>
       <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -19,7 +20,7 @@
   </button>
   <button
     mat-menu-item
-    (click)="createEntity($event, eCatalogEntity.PROCESS)">
+    (click)="createEntity($event, eCatalogEntity.PROCESS); menuTrigger.closeMenu();">
     <mat-icon>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path

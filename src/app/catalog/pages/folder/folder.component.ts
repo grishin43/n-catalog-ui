@@ -77,13 +77,6 @@ export class FolderComponent implements OnInit, OnDestroy {
     );
   }
 
-  public onEntityChanged(): void {
-    // TODO
-    setTimeout(() => {
-      this.getFolderById();
-    }, 2000);
-  }
-
   public goHome(): void {
     this.router.navigate(['/']);
   }

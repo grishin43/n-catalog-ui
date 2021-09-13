@@ -20,7 +20,6 @@
   <div class="row main-folders"
        *ngIf="loader || rootFolders">
     <div class="col-12">
-      <h6>{{'common.mainFolders' | translate}}</h6>
       <div class="row folders-row">
         <ng-container
           *ngIf="loader; else rootFoldersTemplate">
@@ -54,7 +53,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="(recentProcesses$ | async) as recentProcesses">
+  <!--<div class="row" *ngIf="(recentProcesses$ | async) as recentProcesses">
     <div class="col-12">
       <h6>{{'common.recently' | translate}}</h6>
     </div>
@@ -65,6 +64,6 @@
         [tableClass]="'hide-details_tablets-and-below truncate-entity-name-45'">
       </np-entities-table>
     </div>
-  </div>
+  </div>-->
 </div>
 

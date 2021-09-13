@@ -3,6 +3,7 @@ import {CatalogEntityModel} from '../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../models/catalog-entity.enum';
 import {ProcessModel} from '../../models/domain/process.model';
 import {CatalogEntityPermissionEnum} from '../models/catalog-entity-permission.enum';
+import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
 
 export class MapHelper {
 
@@ -32,7 +33,8 @@ export class MapHelper {
           type: CatalogEntityEnum.PROCESS,
           permissions: CatalogEntityPermissionEnum.EDITOR,
           link: process.url,
-          original: process
+          original: process,
+          status: NpStatusPillEnum.DRAFT
         };
       });
     }

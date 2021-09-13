@@ -3,14 +3,14 @@
     <div class="col-12" *ngIf="folder">
       <np-folder-breadcrumbs
         [folder]="folder"
-        (entityCreated)="onEntityChanged()">
+        (entityCreated)="getFolderById()">
       </np-folder-breadcrumbs>
     </div>
     <div class="col-12">
       <ng-container
         *ngIf="folderEntities?.length; else noEntities">
         <np-entities-table
-          (entityRenamed)="onEntityChanged()"
+          (entityRenamed)="getFolderById()"
           [parentFolder]="folder"
           [displayedColumns]="tableDisplayedColumns"
           [data]="folderEntities"
@@ -42,7 +42,7 @@
               </p>
               <np-create-entity-button
                 (click)="$event.preventDefault(); $event.stopPropagation();"
-                (entityCreated)="onEntityChanged()"
+                (entityCreated)="getFolderById()"
                 [parentFolder]="folder">
                 <np-button>
                   <mat-icon class="ml-0">
