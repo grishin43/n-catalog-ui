@@ -32,6 +32,7 @@ import {ProcessAutosaveService} from './services/process-autosave/process-autosa
 import {ToastModule} from '../shared/components/small/toast/toast.module';
 import {GrantAccessModalModule} from '../shared/components/big/grant-access-modal/grant-access-modal.module';
 import {ProcessAccessDeniedModalModule} from '../shared/components/big/process-access-denied-modal/process-access-denied-modal.module';
+import {ProcessGuard} from './guards/process-guard';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import {ProcessAccessDeniedModalModule} from '../shared/components/big/process-a
     SearchService,
     BpmnToolbarService,
     BpmnModelerService,
-    ProcessAutosaveService
+    ProcessAutosaveService,
+    ProcessGuard
   ]
 })
 export class CatalogModule {

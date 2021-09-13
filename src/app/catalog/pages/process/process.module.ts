@@ -17,6 +17,7 @@ import {AngularEditorModule} from '@kolkov/angular-editor';
 import {FormsModule} from '@angular/forms';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {XmlEditorComponent} from './xml-editor/xml-editor.component';
 
 const routes: Routes = [
   {
@@ -35,7 +36,8 @@ const routes: Routes = [
     ProcessToolbarComponent,
     BpmnEditorComponent,
     ToolbarActionBtnComponent,
-    WysiwygEditorComponent
+    WysiwygEditorComponent,
+    XmlEditorComponent
   ],
   imports: [
     CommonModule,

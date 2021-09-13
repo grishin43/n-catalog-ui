@@ -35,6 +35,8 @@ enum ApiRoute {
   providedIn: 'root'
 })
 export class ApiService {
+  public requestedProcess: ProcessModel;
+
   private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
 
   constructor(
@@ -184,6 +186,9 @@ export class ApiService {
   }
 
   public getProcessById(folderId: string, processId: string): Observable<ProcessModel> {
+    if (this.requestedProcess?.id === processId) {
+      return of(this.requestedProcess);
+    }
     return this.http.get<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`)
       .pipe(
         map((res: ProcessModel) => {
@@ -194,7 +199,8 @@ export class ApiService {
               : res.path[0].id,
             activeResource: res.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML)
           };
-        })
+        }),
+        tap((res: ProcessModel) => this.requestedProcess = res)
       );
   }
 

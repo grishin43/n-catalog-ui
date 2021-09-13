@@ -449,7 +449,7 @@ export class BpmnModelerService {
 
   public async openDiagram(xml: string): Promise<void> {
     try {
-      await this.bpmnModeler.importXML(xml);
+      await this.bpmnModeler?.importXML(xml);
     } catch (err) {
       console.error('Could not import BPMN 2.0 diagram\n', err);
     }

@@ -14,7 +14,7 @@
   }
 }
 
-np-bpmn-editor {
+np-bpmn-editor, np-xml-editor {
   display: block;
   overflow-x: hidden;
 }
@@ -32,4 +32,29 @@ np-bpmn-editor {
   }
 }
 
+button {
+  &.xml-mode-button {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    white-space: nowrap;
+    font-size: 13px;
+    border: solid 1px #cccccc;
+    cursor: pointer;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 0;
+    border-left: 0;
+    z-index: 10;
 
+    &.active {
+      background: #4d90ff;
+      color: #ffffff;
+    }
+
+    &:not(.active):hover {
+      background: #ececec;
+    }
+  }
+}

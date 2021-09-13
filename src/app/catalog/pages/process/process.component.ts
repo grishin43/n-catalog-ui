@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
 import {ApiService} from '../../services/api/api.service';
@@ -12,7 +12,6 @@ import {ToastService} from '../../../shared/components/small/toast/service/toast
 import {TranslateService} from '@ngx-translate/core';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {MatDialog} from '@angular/material/dialog';
-import {ProcessAccessDeniedModalComponent} from '../../../shared/components/big/process-access-denied-modal/component/process-access-denied-modal.component';
 
 @Component({
   selector: 'np-process',
@@ -22,6 +21,7 @@ import {ProcessAccessDeniedModalComponent} from '../../../shared/components/big/
 export class ProcessComponent implements OnInit, OnDestroy {
   public process: ProcessModel;
   public errorResponse: HttpErrorResponse;
+  public xmlMode: boolean;
 
   private subscriptions = new Subscription();
 
@@ -32,8 +32,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     public processAutosave: ProcessAutosaveService,
     private toast: ToastService,
     private translate: TranslateService,
-    private dialog: MatDialog,
-    private router: Router
+    private dialog: MatDialog
   ) {
   }
 
@@ -69,26 +68,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
           this.entitiesTab.addEntity(res);
           // this.runAutoSave(res);
         }, (err: HttpErrorResponse) => {
-          if (err.status === HttpStatusCodeEnum.FORBIDDEN) {
-            this.handleForbiddenError(folderId, processId);
-          } else {
-            this.handleGeneralErrors(err, processId);
-          }
+          this.handleGeneralErrors(err, processId);
         })
     );
-  }
-
-  private handleForbiddenError(folderId: string, processId: string): void {
-    this.router.navigate(['/']).then(() => {
-      this.dialog.open(ProcessAccessDeniedModalComponent, {
-        width: '700px',
-        autoFocus: false,
-        data: {
-          folderId,
-          processId
-        }
-      });
-    });
   }
 
   private handleGeneralErrors(err: HttpErrorResponse, processId: string): void {
@@ -114,6 +96,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: this.process
     });
+  }
+
+  public xmlDestroyed(xml: string): void {
+    this.process.activeResource.content = xml;
   }
 
 }

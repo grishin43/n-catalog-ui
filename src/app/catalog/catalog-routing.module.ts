@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CatalogComponent} from './catalog.component';
 import {CatalogRouteEnum} from './models/catalog-route.enum';
+import {ProcessGuard} from './guards/process-guard';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
       },
       {
         path: `${CatalogRouteEnum.PROCESS}`,
-        loadChildren: () => import('./pages/process/process.module').then(m => m.ProcessModule)
+        loadChildren: () => import('./pages/process/process.module').then(m => m.ProcessModule),
+        canActivate: [ProcessGuard]
       },
       {
         path: `${CatalogRouteEnum.SEARCH_RESULTS}/:${CatalogRouteEnum._QUERY}`,

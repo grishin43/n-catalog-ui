@@ -41,8 +41,23 @@
   </div>
 </div>
 
-<np-bpmn-editor
-  [data]="process"
-  [processLoadError]="errorResponse">
-</np-bpmn-editor>
+<ng-container *ngIf="xmlMode; else bpmnEditorTemplate">
+  <np-xml-editor
+    [xml]="process.activeResource.content"
+    (destroyed)="xmlDestroyed($event)">
+  </np-xml-editor>
+</ng-container>
 
+<ng-template #bpmnEditorTemplate>
+  <np-bpmn-editor
+    [data]="process"
+    [processLoadError]="errorResponse">
+  </np-bpmn-editor>
+</ng-template>
+
+<button
+  [ngClass]="{'active': xmlMode}"
+  class="xml-mode-button"
+  (click)="xmlMode = !xmlMode">
+  XML
+</button>

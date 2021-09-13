@@ -20,7 +20,8 @@
             "allowedCommonJsDependencies": [
               "bpmn-js-transaction-boundaries",
               "bpmn-js-properties-panel",
-              "fast-xml-parser"
+              "fast-xml-parser",
+              "codemirror"
             ],
             "customWebpackConfig": {
               "path": "./custom-webpack.config.js",
@@ -44,6 +45,7 @@
               "node_modules/bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css",
               "node_modules/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css",
               "node_modules/bpmn-js-bpmnlint/dist/assets/css/bpmn-js-bpmnlint.css",
+              "node_modules/codemirror/lib/codemirror.css",
               "src/styles.scss"
             ],
             "scripts": [
@@ -116,6 +118,7 @@
               "node_modules/bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css",
               "node_modules/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css",
               "node_modules/bpmn-js-bpmnlint/dist/assets/css/bpmn-js-bpmnlint.css",
+              "node_modules/codemirror/lib/codemirror.css",
               "src/styles.scss"
             ],
             "scripts": [
