@@ -7,9 +7,6 @@
       </np-process-toolbar>
     </div>
     <div class="col-auto">
-      {{processAutosave.shouldSaved}}
-    </div>
-    <div class="col-auto">
       <span class="saving-state autosaving"
             *ngIf="processAutosave.requestLoader$ | async">
         {{'common.saving' | translate}}
