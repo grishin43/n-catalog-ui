@@ -50,19 +50,25 @@
     autoActiveFirstOption
     [class]="'search-panel'"
     [panelWidth]="panelWidth">
-    <ng-container *ngIf="autoCompleteResults; else noResults">
+    <ng-container *ngIf="autoCompleteResults || recentSearchOptions.length; else noResults">
       <mat-optgroup
         *ngIf="input?.value?.length === 0"
         [label]="formControl.value ? ('common.searchResults' | translate) : ('common.recentResults' | translate)">
-      </mat-optgroup>
-        <!--        Folder section-->
-      <mat-optgroup
-        [label]="('common.folders' | translate)">
-<!--        Folder section-->
+        <mat-option
+          *ngFor="let recent of recentSearchOptions"
+          [value]="recent.value">
+          <span>
+            {{recent.value}}
+          </span>
+        </mat-option>
 
+      </mat-optgroup>
+      <mat-optgroup
+        *ngIf="autoCompleteResults?.folders?.items.length"
+        [label]="('common.folders' | translate)">
         <mat-option
           *ngFor="let folder of autoCompleteResults.folders.items"
-          (click)="onOptionClicked(folder)"
+          (click)="onFolderSelected(folder.id, folder.name)"
           [value]="folder.name">
             <mat-icon>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +93,10 @@
         *ngIf="autoCompleteResults?.processes?.items?.length"
         [label]="'common.processes' | translate"
       >
-        <mat-option *ngFor="let process of autoCompleteResults.processes.items">
+        <mat-option
+          *ngFor="let process of autoCompleteResults.processes.items"
+          (click)="onProcessSelected(process.id, process.name)"
+        >
           <mat-icon>
             <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g filter="url(#filter0_d)">

@@ -16,6 +16,11 @@ interface AutocompleteSearchDTO {
   value: string
 }
 
+export interface RecentSearchDto {
+  count: number
+  items: ({value: string})[]
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -91,8 +96,8 @@ export class SearchService {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${queryStr}`]);
   }
 
-  public recentSearch$(): Observable<any> {
-    return this.http.get(this.recentSearchUrl)
+  public recentSearch$(): Observable<RecentSearchDto> {
+    return this.http.get<RecentSearchDto>(this.recentSearchUrl)
       .pipe(
         tap(resentRequest => console.log('recent data ' + resentRequest)
         )
@@ -107,5 +112,11 @@ export class SearchService {
       .pipe(tap((result) => {
       console.log('[SearchService] fetchSearchResults: ', result);
     }));
+  }
+
+  public addRecentSearchResult(query: string): Promise<any> {
+    return this.http.post<AutocompleteSearchDTO>(this.recentSearchUrl, {
+      value: query
+    }).toPromise();
   }
 }

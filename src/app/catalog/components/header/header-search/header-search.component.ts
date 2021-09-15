@@ -7,8 +7,7 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
-import {SearchService} from '../../../services/search/search.service';
-import {ContentHelper} from '../../../helpers/content.helper';
+import {RecentSearchDto, SearchService} from '../../../services/search/search.service';
 import {SearchAutocompleteDto} from '../../../services/search/searchAutocomplete.dto';
 
 @Component({
@@ -19,7 +18,7 @@ import {SearchAutocompleteDto} from '../../../services/search/searchAutocomplete
 export class HeaderSearchComponent implements OnInit, OnDestroy {
   public formControl = new FormControl();
   public entities: CatalogEntityModel[];
-  public filteredOptions: CatalogEntityModel[];
+  public recentSearchOptions: ({value: string})[];
   public autoCompleteResults: SearchAutocompleteDto;
   public catalogEntityType = CatalogEntityEnum;
   public formStretched: boolean;
@@ -57,10 +56,6 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.patchControlBySearchQuery();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
   private patchControlBySearchQuery(): void {
     if (location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
       const query = location.pathname.split('/').pop();
@@ -68,12 +63,6 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
         this.formControl.patchValue(query);
       }
     }
-  }
-
-  private filterEntities(value: string): CatalogEntityModel[] {
-    return this.entities?.filter((option: CatalogEntityModel) => {
-      return option.name.toLowerCase().indexOf(value?.toLowerCase()) === 0;
-    });
   }
 
   public onCrossClicked(event: MouseEvent): void {
@@ -85,22 +74,22 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.formHasStretched.emit(false);
   }
 
-  public onOptionClicked(entity: CatalogEntityModel): void {
-    this.searchService.saveEntities([entity]);
-    this.entities = this.searchService.savedEntities;
-    if (entity.type === CatalogEntityEnum.FOLDER) {
-      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
-    } else if (entity.type === CatalogEntityEnum.PROCESS) {
-      this.router.navigate(
-        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
-        {
-          queryParams: {
-            [CatalogRouteEnum._ID]: entity.id,
-            [CatalogRouteEnum._NAME]: entity.name
-          }
+  public onFolderSelected(entityId: string, folderName: string) {
+    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entityId}`]);
+    this.searchService.addRecentSearchResult(folderName);
+  }
+
+  onProcessSelected(processId: string, processName: string) {
+    this.router.navigate(
+      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
+      {
+        queryParams: {
+          [CatalogRouteEnum._ID]: processId,
+          [CatalogRouteEnum._NAME]: processName
         }
-      );
-    }
+      }
+    );
+    this.searchService.addRecentSearchResult(processName);
   }
 
   public submit(): void {
@@ -171,18 +160,21 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     }, (error) => {
         console.error('[HeaderSearch] autocomplete search error', error);
       })
-    this.filteredOptions = ContentHelper.testEntities
-      .filter((option: CatalogEntityModel) => {
-        return option.name.toLowerCase().indexOf(query?.toLowerCase()) === 0;
-      });
   }
 
   private showPreviousSearchResults(): void {
-    this.filteredOptions = [];
-    this.searchService.recentSearch$().subscribe((recentSearch) => {
-      console.log('[HeaderSearch] recent search ', recentSearch);
-      this.filteredOptions = recentSearch;
-    })
+    this.recentSearchOptions = [];
+    this.autoCompleteResults = null;
+    this.searchService.recentSearch$()
+      .subscribe((recentSearch: RecentSearchDto) => {
+        if (recentSearch.count) {
+          this.recentSearchOptions = recentSearch.items;
+        }
+      });
   }
 
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }
