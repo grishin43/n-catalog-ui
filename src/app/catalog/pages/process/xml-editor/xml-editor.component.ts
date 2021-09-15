@@ -19,11 +19,11 @@ export class XmlEditorComponent implements OnDestroy, AfterViewInit {
     htmlMode: true
   };
 
-  constructor() {
-  }
-
   ngOnDestroy(): void {
-    this.destroyed.emit(this.codeEditor.getValue());
+    const str: string = this.codeEditor.getValue();
+    if (str?.trim().length) {
+      this.destroyed.emit(str);
+    }
   }
 
   ngAfterViewInit(): void {

@@ -26,10 +26,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
+    public processAutosave: ProcessAutosaveService,
     private activateRoute: ActivatedRoute,
     private entitiesTab: EntitiesTabService,
     private api: ApiService,
-    public processAutosave: ProcessAutosaveService,
     private toast: ToastService,
     private translate: TranslateService,
     private dialog: MatDialog
@@ -39,11 +39,11 @@ export class ProcessComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     document.body.classList.add('cdk-overflow');
     this.subscribeRoute();
+    this.processAutosave.checkLocalResources();
   }
 
   ngOnDestroy(): void {
     document.body.classList.remove('cdk-overflow');
-    this.processAutosave.destroy();
     this.subscriptions.unsubscribe();
   }
 
@@ -66,7 +66,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
         .subscribe((res: ProcessModel) => {
           this.process = res;
           this.entitiesTab.addEntity(res);
-          // this.runAutoSave(res);
         }, (err: HttpErrorResponse) => {
           this.handleGeneralErrors(err, processId);
         })
@@ -83,11 +82,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
       toastErrorMessage = err.error?.message || err.message;
     }
     this.toast.showError('errors.errorOccurred', toastErrorMessage);
-  }
-
-  private runAutoSave(process: ProcessModel): void {
-    this.processAutosave.destroy();
-    this.processAutosave.init(process);
   }
 
   public openGrantAccessModal(): void {

@@ -1,48 +1,49 @@
 <ul class="list-unstyled">
-  <li *ngFor="let tool of tools">
-    <button
-      mat-button
-      #menuTrigger="matMenuTrigger"
-      [matMenuTriggerFor]="menu"
-      [ngClass]="{
+  <ng-container *ngFor="let tool of tools">
+    <li *ngIf="xmlMode ? tool.name === toolbarItem.PROCESS : true">
+      <button
+        mat-button
+        #menuTrigger="matMenuTrigger"
+        [matMenuTriggerFor]="menu"
+        [ngClass]="{
         'menu-opened': menuTrigger.menuOpen
        }">
-      {{'common.' + tool.name | translate}}
-    </button>
-    <mat-menu
-      [class]="tool.name"
-      class="toolbar-menu"
-      #menu="matMenu">
-      <ng-container *ngFor="let item of tool?.subItems">
-        <ng-container *ngIf="item.subItems?.length; else withoutSubItemsTemplate">
-          <button
-            mat-menu-item
-            [matMenuTriggerFor]="subMenu"
-            [disabled]="
+        {{'common.' + tool.name | translate}}
+      </button>
+      <mat-menu
+        [class]="tool.name"
+        class="toolbar-menu"
+        #menu="matMenu">
+        <ng-container *ngFor="let item of tool?.subItems">
+          <ng-container *ngIf="item.subItems?.length; else withoutSubItemsTemplate">
+            <button
+              mat-menu-item
+              [matMenuTriggerFor]="subMenu"
+              [disabled]="
               (item.name === toolbarEditItem.ALIGN_ELEMENTS ||
               item.name === toolbarEditItem.DISTRIBUTE_ELEMENTS ||
               item.name === toolbarEditItem.MOVE_SELECTION) &&
-              !bpmnModeler.hasSelectedElements
-            ">
-            {{'common.' + item.name | translate}}
-          </button>
-          <mat-menu #subMenu="matMenu">
-            <ng-container *ngFor="let subItem of item.subItems">
-              <np-toolbar-action-btn
-                [action]="subItem"
-                [process]="process">
-              </np-toolbar-action-btn>
-            </ng-container>
-          </mat-menu>
+              !bpmnModeler.hasSelectedElements">
+              {{'common.' + item.name | translate}}
+            </button>
+            <mat-menu #subMenu="matMenu">
+              <ng-container *ngFor="let subItem of item.subItems">
+                <np-toolbar-action-btn
+                  [action]="subItem"
+                  [process]="process">
+                </np-toolbar-action-btn>
+              </ng-container>
+            </mat-menu>
+          </ng-container>
+          <ng-template #withoutSubItemsTemplate>
+            <np-toolbar-action-btn
+              [action]="item"
+              [process]="process">
+            </np-toolbar-action-btn>
+          </ng-template>
+          <mat-divider *ngIf="item.delimiterAfter"></mat-divider>
         </ng-container>
-        <ng-template #withoutSubItemsTemplate>
-          <np-toolbar-action-btn
-            [action]="item"
-            [process]="process">
-          </np-toolbar-action-btn>
-        </ng-template>
-        <mat-divider *ngIf="item.delimiterAfter"></mat-divider>
-      </ng-container>
-    </mat-menu>
-  </li>
+      </mat-menu>
+    </li>
+  </ng-container>
 </ul>

@@ -8,6 +8,9 @@ import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {AuthService} from '../../../auth/services/auth/auth.service';
 import {UrlHelper} from '../../helpers/url.helper';
 import {ProcessModel} from '../../../models/domain/process.model';
+import {MatDialog} from '@angular/material/dialog';
+import {ProcessAutosaveService} from '../../services/process-autosave/process-autosave.service';
+import {PreventProcessCloseModalComponent} from '../../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
 
 @Component({
   selector: 'np-header',
@@ -26,7 +29,9 @@ export class HeaderComponent implements OnInit {
   constructor(
     private entitiesTabService: EntitiesTabService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private processAutosave: ProcessAutosaveService,
+    private dialog: MatDialog
   ) {
     this.subscribeRouteChanges();
   }
@@ -60,7 +65,18 @@ export class HeaderComponent implements OnInit {
   public onDeleteClicked(event: MouseEvent, entity: ProcessModel): void {
     event.stopPropagation();
     event.preventDefault();
-    this.entitiesTabService.deleteEntity(entity);
+    if (this.processAutosave.shouldSaved) {
+      this.dialog.open(PreventProcessCloseModalComponent, {
+        width: '700px',
+        autoFocus: false
+      }).afterClosed().subscribe((res: boolean) => {
+        if (res) {
+          this.entitiesTabService.deleteEntity(entity);
+        }
+      });
+    } else {
+      this.entitiesTabService.deleteEntity(entity);
+    }
   }
 
   public openProcess(process: ProcessModel): void {

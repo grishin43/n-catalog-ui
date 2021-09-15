@@ -32,7 +32,9 @@ import {ProcessAutosaveService} from './services/process-autosave/process-autosa
 import {ToastModule} from '../shared/components/small/toast/toast.module';
 import {GrantAccessModalModule} from '../shared/components/big/grant-access-modal/grant-access-modal.module';
 import {ProcessAccessDeniedModalModule} from '../shared/components/big/process-access-denied-modal/process-access-denied-modal.module';
-import {ProcessGuard} from './guards/process-guard';
+import {ProcessActivateGuard} from './guards/process-activate-guard';
+import {ProcessDeactivateGuard} from './guards/process-deactivate-guard';
+import {PreventProcessCloseModalModule} from '../shared/components/big/prevent-process-close-modal/prevent-process-close-modal.module';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,8 @@ import {ProcessGuard} from './guards/process-guard';
     MatMenuModule,
     ToastModule,
     GrantAccessModalModule,
-    ProcessAccessDeniedModalModule
+    ProcessAccessDeniedModalModule,
+    PreventProcessCloseModalModule
   ],
   providers: [
     EntitiesTabService,
@@ -71,7 +74,8 @@ import {ProcessGuard} from './guards/process-guard';
     BpmnToolbarService,
     BpmnModelerService,
     ProcessAutosaveService,
-    ProcessGuard
+    ProcessActivateGuard,
+    ProcessDeactivateGuard
   ]
 })
 export class CatalogModule {

@@ -152,7 +152,13 @@
     "email2": "Ел. пошта",
     "userNotFound": "Працівника не знайдено",
     "noAccess": "Немає доступу",
-    "contactTheOwnerToProvideAccessToTheProcess": "Зверніться до власника для надання доступу до процесу."
+    "contactTheOwnerToProvideAccessToTheProcess": "Зверніться до власника для надання доступу до процесу.",
+    "areYouWantToCloseProcess": "Закрити процес?",
+    "changesMadeWillNotBeSaved": "Внесені зміни не будуть збережені",
+    "close": "Закрити",
+    "processSaving": "Збереження процесу",
+    "youWantToSaveTheProcessChanges": "Ви бажаєте зберегти зміни процесу",
+    "dontSave": "Не зберігати"
   },
   "statuses": {
     "undefined": "Невизначений",

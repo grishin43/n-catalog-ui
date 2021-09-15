@@ -22,12 +22,12 @@ export class ToastService {
 
   public show(
     i18nKey: string,
-    duration: number = 1500,
+    duration?: number,
     action?: string,
     vertical?: MatSnackBarVerticalPosition,
     horizontal?: MatSnackBarHorizontalPosition,
     panelClass?: string,
-    translateInterpolateParams?: Object
+    translateInterpolateParams?: any
   ): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(this.translateService.instant(i18nKey, translateInterpolateParams), action, {
       duration,

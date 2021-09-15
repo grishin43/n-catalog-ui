@@ -1,0 +1,32 @@
+<div mat-dialog-title>
+  <h4>{{'common.processSaving' | translate}}</h4>
+</div>
+<mat-dialog-content>
+  <p>
+    {{'common.youWantToSaveTheProcessChanges' | translate}}
+    <b *ngIf="processName">«{{processName}}»</b>
+    ?
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'reset'"
+    [type]="'secondary'"
+    (click)="dontSave()">
+    {{'common.dontSave' | translate}}
+  </np-button>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'submit'"
+    [type]="'primary'"
+    (click)="save()">
+    <span>
+      {{'common.save' | translate}}
+    </span>
+    <mat-spinner
+      *ngIf="processAutosave.requestLoader$ | async"
+      [diameter]="20">
+    </mat-spinner>
+  </np-button>
+</mat-dialog-actions>

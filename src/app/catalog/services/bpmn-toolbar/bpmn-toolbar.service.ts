@@ -75,6 +75,7 @@ export class BpmnToolbarService {
             cb: (process: ProcessModel) => {
               this.processAutosave.saveProcess(process);
             },
+            hotkey: 'Ctrl + S',
             delimiterAfter: true
           },
           {

@@ -4,6 +4,7 @@ import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.se
 import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enum';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 import {ProcessModel} from '../../../../models/domain/process.model';
+import {ToolbarItemEnum} from '../../../models/toolbar/toolbar-item.enum';
 
 @Component({
   selector: 'np-process-toolbar',
@@ -12,9 +13,11 @@ import {ProcessModel} from '../../../../models/domain/process.model';
 })
 export class ProcessToolbarComponent implements OnInit {
   @Input() process: ProcessModel;
+  @Input() xmlMode: boolean;
 
   public tools: ToolbarItemModel[];
   public toolbarEditItem = ToolbarEditItemEnum;
+  public toolbarItem = ToolbarItemEnum;
 
   constructor(
     private bpmnToolbar: BpmnToolbarService,

@@ -15,6 +15,7 @@ import {ToastService} from '../../../../shared/components/small/toast/service/to
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {HttpStatusCodeEnum} from '../../../../models/http-status-code.enum';
+import {WindowHelper} from '../../../../helpers/window.helper';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -25,8 +26,12 @@ import {HttpStatusCodeEnum} from '../../../../models/http-status-code.enum';
 export class BpmnEditorComponent implements OnInit, OnDestroy {
   @Input() set data(value: ProcessModel) {
     if (value) {
+      if (this.process && value.id !== this.process.id) {
+        this.disableSaveHelpers();
+      }
       this.process = value;
       this.processLoader = true;
+      this.processAutosave.init(value);
       this.openProcess();
     }
   }
@@ -109,6 +114,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.processAutosave.destroy();
     this.subscriptions.unsubscribe();
   }
 
@@ -117,6 +123,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       '#bpmn-canvas',
       '#bpmn-properties',
       () => {
+        this.listenModelerChanges();
         this.openProcess();
       }
     );
@@ -145,6 +152,22 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
         this.translate.instant('errors.processCannotBeOpened')
       );
     }
+  }
+
+  private listenModelerChanges(): void {
+    this.bpmnModeler.listenChanges(() => {
+      if (this.bpmnModeler.canUndo) {
+        this.processAutosave.startTimer();
+        WindowHelper.enableBeforeUnload();
+      } else {
+        this.disableSaveHelpers();
+      }
+    });
+  }
+
+  private disableSaveHelpers(): void {
+    this.processAutosave.destroyTimer();
+    WindowHelper.disableBeforeUnload();
   }
 
   private openNewDiagram(): void {

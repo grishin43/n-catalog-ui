@@ -10,7 +10,7 @@ import {ProcessAccessDeniedModalComponent} from '../../shared/components/big/pro
 import {AppRouteEnum} from '../../models/app-route.enum';
 
 @Injectable()
-export class ProcessGuard implements CanActivate {
+export class ProcessActivateGuard implements CanActivate {
 
   constructor(
     private api: ApiService,
@@ -30,7 +30,7 @@ export class ProcessGuard implements CanActivate {
             return true;
           }
         }),
-        catchError(() => {
+        catchError((e) => {
           this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${folderId}`]).then(() => {
             this.openAccessDeniedModal(folderId, processId);
           });

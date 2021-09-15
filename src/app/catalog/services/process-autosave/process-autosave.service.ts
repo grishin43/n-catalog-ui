@@ -17,14 +17,14 @@ import {HttpHelper} from '../../../helpers/http.helper';
   providedIn: 'root'
 })
 export class ProcessAutosaveService {
-  readonly delay = 60 * 1000;
-
+  private readonly delay = 60 * 1000;
   private timer$: Subscription;
   private networkState$: Subscription;
-  private process: ProcessModel;
 
+  public process: ProcessModel;
   public requestLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public resourceSaved$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public shouldSaved: boolean;
 
   constructor(
     private api: ApiService,
@@ -34,19 +34,23 @@ export class ProcessAutosaveService {
   ) {
   }
 
-  public init(process: ProcessModel): void {
-    this.process = process;
+  public init(value: ProcessModel): void {
+    this.process = value;
     this.listenNetwork();
-    this.checkLocalResources();
-    this.startTimer();
   }
 
   public destroy(): void {
     this.destroyNetworkListener();
-    this.destroyTimer();
+    this.disableSaving();
   }
 
-  public handleServerErrors(): void {
+  public disableSaving(): void {
+    this.destroyTimer();
+    WindowHelper.disableBeforeUnload();
+    this.shouldSaved = false;
+  }
+
+  private handleServerErrors(): void {
     this.saveResourceLocal();
     this.showServerErrorToast();
   }
@@ -70,10 +74,10 @@ export class ProcessAutosaveService {
   }
 
   private showServerErrorToast(): void {
-    this.bpmnModeler.showToast('common.directoryServerErrorTheChangesHaveBeenSaved', 3000, 'OK');
+    this.bpmnModeler.showToast('common.directoryServerErrorTheChangesHaveBeenSaved', 3000);
   }
 
-  private destroyTimer(): void {
+  public destroyTimer(): void {
     if (this.timer$) {
       this.timer$.unsubscribe();
     }
@@ -85,14 +89,15 @@ export class ProcessAutosaveService {
     }
   }
 
-  private startTimer(): void {
+  public startTimer(): void {
+    this.shouldSaved = true;
     this.timer$ = interval(this.delay)
       .pipe(
         timeInterval(),
         concatMap(() => this.saveProcess(this.process))
       )
       .subscribe(() => {
-        this.restartTimer();
+        this.destroyTimer();
       }, (err: HttpErrorResponse) => {
         if (HttpHelper.http5xxStatuses.includes(err.status)) {
           this.handleServerErrors();
@@ -122,7 +127,7 @@ export class ProcessAutosaveService {
     this.showNetworkConnectionToast(online);
   }
 
-  private checkLocalResources(): void {
+  public checkLocalResources(): void {
     const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
     if (currentSavedProcesses?.length) {
       this.resourceSaved$.next(false);
@@ -172,14 +177,14 @@ export class ProcessAutosaveService {
   private savingSuccessCb(): void {
     this.requestLoader$.next(false);
     this.resourceSaved$.next(true);
-    WindowHelper.disableBeforeUnload();
+    this.disableSaving();
   }
 
   private showNetworkConnectionToast(online: boolean): void {
     if (online) {
       this.bpmnModeler.showToast('common.internetConnectionRestored', 3000, 'OK');
     } else {
-      this.bpmnModeler.showToast('common.noInternetConnectionTheChangesHaveBeenSaved', 3000);
+      this.bpmnModeler.showToast('common.noInternetConnectionTheChangesHaveBeenSaved', undefined);
     }
   }
 

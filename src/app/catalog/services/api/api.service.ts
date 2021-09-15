@@ -16,6 +16,9 @@ import {EntitiesTabService} from '../entities-tab/entities-tab.service';
 import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
+import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
+import {StorageEnum} from '../../../models/storageEnum';
+import {LocalSaverHelper} from '../../helpers/local-saver.helper';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -192,13 +195,26 @@ export class ApiService {
     return this.http.get<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`)
       .pipe(
         map((res: ProcessModel) => {
-          return {
+          // TODO
+          const mappedProcess: ProcessModel = {
             ...res,
             subRoot: res.path.length > 1
               ? res.path[res.path.length - 1].id
               : res.path[0].id,
             activeResource: res.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML)
           };
+          if (mappedProcess.activeResource) {
+            const lsResource = LocalSaverHelper.getResource(folderId, processId);
+            if (lsResource?.trim()?.length) {
+              const serverContent = mappedProcess.activeResource.content;
+              if (serverContent?.trim() === lsResource?.trim()) {
+                LocalSaverHelper.deleteResource(folderId, processId);
+              } else {
+                mappedProcess.activeResource.content = lsResource;
+              }
+            }
+          }
+          return mappedProcess;
         }),
         tap((res: ProcessModel) => this.requestedProcess = res)
       );
@@ -249,6 +265,8 @@ export class ApiService {
   public saveResource(
     process: ProcessModel,
     content: string): Observable<void> {
+    // TODO
+    LocalSaverHelper.saveResource(process.parent.id, process.id, content);
     if (process.activeResource?.id) {
       return this.updateResource(process.parent.id, process.id, process.activeResource.id, content);
     } else {

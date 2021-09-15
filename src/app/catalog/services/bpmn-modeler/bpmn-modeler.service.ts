@@ -11,11 +11,9 @@ import lintModule from 'bpmn-js-bpmnlint';
 import bpmnlintConfig from '.bpmnlintrc';
 import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
-import {TranslateService} from '@ngx-translate/core';
 import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
 import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
-import {WindowHelper} from '../../../helpers/window.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +29,7 @@ export class BpmnModelerService {
   private undoCounter = 0;
 
   constructor(
-    private toast: ToastService,
-    private translateService: TranslateService
+    private toast: ToastService
   ) {
   }
 
@@ -97,19 +94,12 @@ export class BpmnModelerService {
       });
       cb();
       this.listenPasteElements();
-      this.listenChanged();
     }
   }
 
-  private listenChanged(): void {
+  public listenChanges(cb: () => void): void {
     try {
-      this.bpmnModeler.get('eventBus').on('commandStack.changed', 999999, (e) => {
-        if (this.canUndo) {
-          WindowHelper.enableBeforeUnload();
-        } else {
-          WindowHelper.disableBeforeUnload();
-        }
-      });
+      this.bpmnModeler.get('eventBus').on('commandStack.changed', 999999, cb);
     } catch (e) {
       console.error('Could not set `changes` listener\n', e);
     }
@@ -473,7 +463,7 @@ export class BpmnModelerService {
       const messageKey = this.schemeValidatorActive
         ? 'common.schemeValidatorActivated'
         : 'common.schemeValidatorDeActivated';
-      this.showToast(messageKey);
+      this.showToast(messageKey, 1500);
     } catch (err) {
       console.error('Could not toggle scheme validator plugin\n', err);
     }
@@ -486,7 +476,7 @@ export class BpmnModelerService {
       const messageKey = this.tokenSimulationActive
         ? 'common.tokenSimulationActivated'
         : 'common.tokenSimulationDeActivated';
-      this.showToast(messageKey);
+      this.showToast(messageKey, 1500);
     } catch (err) {
       console.error('Could not toggle token simulation plugin\n', err);
     }
@@ -500,13 +490,13 @@ export class BpmnModelerService {
       const messageKey = this.transactionBoundariesActive
         ? 'common.transactionBoundariesActivated'
         : 'common.transactionBoundariesDeActivated';
-      this.showToast(messageKey);
+      this.showToast(messageKey, 1500);
     } catch (err) {
       console.error('Could not toggle transaction boundaries plugin\n', err);
     }
   }
 
-  public showToast(i18nKey: string, duration: number = 1000, action?: string): void {
+  public showToast(i18nKey: string, duration?: number, action?: string): void {
     this.toast.show(i18nKey, duration, action, 'top', 'center', 'modeler-toast');
   }
 
