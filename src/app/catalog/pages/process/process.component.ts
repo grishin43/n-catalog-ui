@@ -12,6 +12,7 @@ import {ToastService} from '../../../shared/components/small/toast/service/toast
 import {TranslateService} from '@ngx-translate/core';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {MatDialog} from '@angular/material/dialog';
+import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
 
 @Component({
   selector: 'np-process',
@@ -22,6 +23,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   public process: ProcessModel;
   public errorResponse: HttpErrorResponse;
   public xmlMode: boolean;
+  public modelerXml: string;
 
   private subscriptions = new Subscription();
 
@@ -32,7 +34,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private toast: ToastService,
     private translate: TranslateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private bpmnModeler: BpmnModelerService
   ) {
   }
 
@@ -94,6 +97,18 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   public xmlDestroyed(xml: string): void {
     this.process.activeResource.content = xml;
+  }
+
+  public toggleXmlMode(): void {
+    if (!this.xmlMode) {
+      this.bpmnModeler.getDiagramXml().then((res: string) => {
+        this.xmlMode = true;
+        this.modelerXml = res;
+      });
+    } else {
+      this.xmlMode = false;
+    }
+    this.processAutosave.shouldSavedCheckout(this.modelerXml);
   }
 
 }

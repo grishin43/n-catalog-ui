@@ -21,8 +21,9 @@ export class PreventProcessCloseModalComponent {
   }
 
   public save(): void {
-    this.processAutosave.saveProcess(this.processAutosave.process)
-      .then(() => this.dialogRef.close(true));
+    this.processAutosave.saveProcess(this.processAutosave.process, () => {
+      this.dialogRef.close(true);
+    });
   }
 
   public closeModal(res: boolean): void {

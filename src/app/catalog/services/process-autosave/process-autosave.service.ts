@@ -55,7 +55,7 @@ export class ProcessAutosaveService {
     this.showServerErrorToast();
   }
 
-  public saveProcess(process: ProcessModel): Promise<void> {
+  public saveProcess(process: ProcessModel, ssCb?: () => void): Promise<void> {
     this.resourceSaved$.next(false);
     this.requestLoader$.next(true);
     return this.bpmnModeler.getDiagramXml().then((content: string) => {
@@ -64,6 +64,9 @@ export class ProcessAutosaveService {
           () => {
             this.savingSuccessCb();
             this.toast.show('common.diagramVersionSaved', 3000, 'OK');
+            if (typeof ssCb === 'function') {
+              ssCb();
+            }
           },
           () => {
             this.requestLoader$.next(false);
@@ -185,6 +188,12 @@ export class ProcessAutosaveService {
       this.bpmnModeler.showToast('common.internetConnectionRestored', 3000, 'OK');
     } else {
       this.bpmnModeler.showToast('common.noInternetConnectionTheChangesHaveBeenSaved', undefined);
+    }
+  }
+
+  public shouldSavedCheckout(currentModelerXml: string): void {
+    if (currentModelerXml !== this.process?.activeResource) {
+      this.shouldSaved = true;
     }
   }
 

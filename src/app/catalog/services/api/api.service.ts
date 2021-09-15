@@ -266,6 +266,9 @@ export class ApiService {
     process: ProcessModel,
     content: string): Observable<void> {
     // TODO
+    if (this.requestedProcess?.id === process.id) {
+      this.requestedProcess.activeResource.content = content;
+    }
     LocalSaverHelper.saveResource(process.parent.id, process.id, content);
     if (process.activeResource?.id) {
       return this.updateResource(process.parent.id, process.id, process.activeResource.id, content);
