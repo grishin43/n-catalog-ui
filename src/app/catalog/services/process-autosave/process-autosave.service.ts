@@ -12,12 +12,14 @@ import {StorageEnum} from '../../../models/storageEnum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {WindowHelper} from '../../../helpers/window.helper';
 import {HttpHelper} from '../../../helpers/http.helper';
+import {ActivatedRoute, Params} from '@angular/router';
+import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessAutosaveService {
-  private readonly delay = 60 * 1000;
+  private delay = 60 * 1000;
   private timer$: Subscription;
   private networkState$: Subscription;
 
@@ -30,8 +32,16 @@ export class ProcessAutosaveService {
     private api: ApiService,
     private bpmnModeler: BpmnModelerService,
     private connectionService: ConnectionService,
-    private toast: ToastService
+    private toast: ToastService,
+    private activateRoute: ActivatedRoute
   ) {
+    this.activateRoute.queryParams
+      .subscribe((queryParams: Params) => {
+        const autosaveTime = queryParams[CatalogRouteEnum._AUTOSAVE_TIME];
+        if (autosaveTime) {
+          this.delay = autosaveTime;
+        }
+      });
   }
 
   public init(value: ProcessModel): void {
@@ -62,6 +72,15 @@ export class ProcessAutosaveService {
       this.api.saveResource(process, content)
         .subscribe(
           () => {
+            if (this.process.activeResource) {
+              this.process.activeResource.content = content;
+            } else {
+              this.process.activeResource = {
+                type: ResourceTypeEnum.XML,
+                processId: this.process.id,
+                content
+              };
+            }
             this.savingSuccessCb();
             this.toast.show('common.diagramVersionSaved', 3000, 'OK');
             if (typeof ssCb === 'function') {
