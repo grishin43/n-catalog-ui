@@ -1,16 +1,9 @@
 @import "../../../../assets/styles/breakpoints";
-
-@mixin mainHeight {
-  height: 64px;
-
-  @media screen and (max-width: $tablet-medium - 1px) {
-    height: 56px;
-  }
-}
+@import "../../../../assets/styles/mixins";
 
 header {
   background: var(--np-primary-white);
-  @include mainHeight;
+  @include headerMainHeight;
   overflow: hidden;
 
   .container-fluid {
@@ -19,17 +12,7 @@ header {
       padding-right: 10px;
     }
 
-    .row {
-      @media screen and (max-width: $tablet-medium - 1px) {
-        margin-left: -10px;
-        margin-right: -10px;
-
-        .col, .col-auto {
-          padding-left: 10px;
-          padding-right: 10px;
-        }
-      }
-
+    @include headerRow {
       .logo-col {
         flex: 0 0 108px;
         max-width: 108px;
@@ -40,22 +23,7 @@ header {
           max-width: 78px;
         }
       }
-
-      a {
-        &.profile-col {
-          cursor: pointer;
-          @include mainHeight;
-          display: inline-flex;
-          align-items: center;
-          transition: var(--np-base-transition);
-
-          &:hover {
-            background: var(--np-white-lilac);
-          }
-        }
-      }
-
-      .process-tab-col {
+      .tabs-col {
         max-width: calc(100% - 108px - 165px - 70px - 54px);
         transition: var(--np-base-transition);
         overflow-x: hidden;
@@ -80,58 +48,22 @@ header {
           }
         }
       }
-    }
-  }
+      a {
+        &.profile-col {
+          cursor: pointer;
+          @include headerMainHeight;
+          display: inline-flex;
+          align-items: center;
+          transition: var(--np-base-transition);
 
-  .tab {
-    @include mainHeight;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    cursor: pointer;
-
-    &.active {
-      background: var(--np-white-lilac);
-    }
-
-    .entity-name {
-      font-size: 14px;
-      color: var(--np-gunmetal);
-      font-weight: 500;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      display: inline-block;
-
-      @media screen and (max-width: $tablet-medium - 1px) {
-        font-size: 12px;
-      }
-
-      & + button {
-        margin-left: 12px;
-
-        @media screen and (max-width: $tablet-medium - 1px) {
-          margin-left: 8px;
+          &:hover {
+            background: var(--np-white-lilac);
+          }
         }
       }
     }
-
-    button {
-      min-width: auto;
-      padding: 0;
-      height: 24px;
-      line-height: 24px;
-
-      @media screen and (max-width: $tablet-medium - 1px) {
-        height: 20px;
-        line-height: 20px;
-        svg {
-          width: 20px;
-          height: 20px;
-        }
-      }
-    }
+  ;
   }
+
+  @include headerTab;
 }

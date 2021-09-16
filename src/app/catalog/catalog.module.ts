@@ -35,12 +35,15 @@ import {ProcessAccessDeniedModalModule} from '../shared/components/big/process-a
 import {ProcessActivateGuard} from './guards/process-activate-guard';
 import {ProcessDeactivateGuard} from './guards/process-deactivate-guard';
 import {PreventProcessCloseModalModule} from '../shared/components/big/prevent-process-close-modal/prevent-process-close-modal.module';
+import {HeaderTabsComponent} from './components/header/header-tabs/header-tabs.component';
+import {AcronymModule} from '../shared/pipes/acronym/acronym.module';
 
 @NgModule({
   declarations: [
     CatalogComponent,
     HeaderComponent,
-    HeaderSearchComponent
+    HeaderSearchComponent,
+    HeaderTabsComponent
   ],
   imports: [
     CommonModule,
@@ -65,7 +68,8 @@ import {PreventProcessCloseModalModule} from '../shared/components/big/prevent-p
     ToastModule,
     GrantAccessModalModule,
     ProcessAccessDeniedModalModule,
-    PreventProcessCloseModalModule
+    PreventProcessCloseModalModule,
+    AcronymModule
   ],
   providers: [
     EntitiesTabService,

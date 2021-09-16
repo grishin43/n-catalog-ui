@@ -1,4 +1,5 @@
 @import "keyframes";
+@import "breakpoints";
 
 @mixin skeleton {
   background: var(--np-primary-white);
@@ -20,5 +21,48 @@
   span {
     background: var(--np-desert-storm);
     display: inline-block;
+  }
+}
+
+@mixin headerMainHeight {
+  height: 64px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    height: 56px;
+  }
+}
+
+@mixin headerTab {
+  .tab {
+    @include headerMainHeight;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    cursor: pointer;
+    transition: var(--np-base-transition);
+
+    &.active {
+      background: var(--np-white-lilac);
+    }
+
+    @content;
+  }
+}
+
+@mixin headerRow {
+  .row {
+    @media screen and (max-width: $tablet-medium - 1px) {
+      margin-left: -10px;
+      margin-right: -10px;
+
+      .col, .col-auto {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @content;
   }
 }

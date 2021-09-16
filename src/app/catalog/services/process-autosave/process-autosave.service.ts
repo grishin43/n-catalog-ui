@@ -192,7 +192,7 @@ export class ProcessAutosaveService {
   }
 
   public shouldSavedCheckout(currentModelerXml: string): void {
-    if (currentModelerXml !== this.process?.activeResource) {
+    if (currentModelerXml !== this.process?.activeResource?.content) {
       this.shouldSaved = true;
     }
   }

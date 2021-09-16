@@ -13,6 +13,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
+import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 
 @Component({
   selector: 'np-process',
@@ -96,7 +97,15 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   public xmlDestroyed(xml: string): void {
-    this.process.activeResource.content = xml;
+    if (this.process.activeResource) {
+      this.process.activeResource.content = xml;
+    } else {
+      this.process.activeResource = {
+        type: ResourceTypeEnum.XML,
+        processId: this.process.id,
+        content: xml
+      };
+    }
   }
 
   public toggleXmlMode(): void {
@@ -104,11 +113,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this.bpmnModeler.getDiagramXml().then((res: string) => {
         this.xmlMode = true;
         this.modelerXml = res;
+        this.processAutosave.shouldSavedCheckout(res);
       });
     } else {
       this.xmlMode = false;
+      this.processAutosave.shouldSavedCheckout(this.modelerXml);
     }
-    this.processAutosave.shouldSavedCheckout(this.modelerXml);
   }
 
 }

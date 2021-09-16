@@ -1,0 +1,61 @@
+@import "../../../../../assets/styles/mixins";
+
+@include headerRow;
+@include headerTab {
+  .entity-name {
+    font-size: 14px;
+    color: var(--np-gunmetal);
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      font-size: 12px;
+    }
+
+    & + button {
+      margin-left: 12px;
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  &.process-tab {
+    &:hover {
+      background: var(--np-white-lilac);
+    }
+  }
+
+  button {
+    min-width: auto;
+    padding: 0;
+    height: 24px;
+    line-height: 24px;
+    flex: 0 0 24px;
+    max-width: 24px;
+    transition: var(--np-base-transition);
+
+    &:not(.visible) {
+      opacity: 0;
+      visibility: hidden;
+      line-height: 0;
+      margin-left: 0;
+    }
+
+    @media screen and (max-width: $tablet-medium - 1px) {
+      height: 20px;
+      flex: 0 0 20px;
+      max-width: 20px;
+      line-height: 20px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

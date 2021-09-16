@@ -1,99 +1,79 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatRippleHelper} from '../../helpers/mat-ripple.helper';
-import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {NavigationEnd, Router, Event} from '@angular/router';
-import {AppRouteEnum} from '../../../models/app-route.enum';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {AuthService} from '../../../auth/services/auth/auth.service';
-import {UrlHelper} from '../../helpers/url.helper';
-import {ProcessModel} from '../../../models/domain/process.model';
-import {MatDialog} from '@angular/material/dialog';
-import {ProcessAutosaveService} from '../../services/process-autosave/process-autosave.service';
-import {PreventProcessCloseModalComponent} from '../../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
+import {KeycloakService} from 'keycloak-angular';
+import {KeycloakProfile} from 'keycloak-js';
 
 @Component({
   selector: 'np-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   public rippleLightColor = MatRippleHelper.lightRippleColor;
-  public catalogProcesses: BehaviorSubject<ProcessModel[]>;
-  public currentId: string;
+  public processId: string;
+  public folderId: string;
   public searchFormStretched: boolean;
   public hideRightBar: boolean;
+  public userFirstLastName: string;
+  public showAllCrosses: boolean;
 
-  private subscriptions = new Subscription();
+  private subs = new Subscription();
 
   constructor(
-    private entitiesTabService: EntitiesTabService,
-    private router: Router,
-    private authService: AuthService,
-    private processAutosave: ProcessAutosaveService,
-    private dialog: MatDialog
+    private activateRoute: ActivatedRoute,
+    private auth: AuthService,
+    private kc: KeycloakService
   ) {
     this.subscribeRouteChanges();
   }
 
   ngOnInit(): void {
-    this.setupCatalogEntities();
+    this.getUserProfile();
   }
 
-  private setupCatalogEntities(): void {
-    this.catalogProcesses = this.entitiesTabService.processes;
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  private getUserProfile(): void {
+    this.kc.loadUserProfile().then((res: KeycloakProfile) => {
+      this.patchUserFirstLastName(res);
+    });
+  }
+
+  private patchUserFirstLastName(kp: KeycloakProfile): void {
+    if (kp?.firstName?.trim().length) {
+      const firstNameArr = kp.firstName.split(' ');
+      if (firstNameArr?.length > 1) {
+        this.userFirstLastName = `${firstNameArr[0]} ${firstNameArr[1]}`;
+      } else {
+        this.userFirstLastName = `${kp.firstName} ${kp.lastName}`;
+      }
+    } else {
+      this.userFirstLastName = undefined;
+    }
   }
 
   private subscribeRouteChanges(): void {
-    this.subscriptions.add(
-      this.router.events.subscribe((event: Event) => {
-        if (event instanceof NavigationEnd) {
-          this.setupCurrentEntityId(event.url);
-        }
-      })
+    this.subs.add(
+      this.activateRoute.queryParams
+        .subscribe((queryParams: Params) => {
+          this.processId = queryParams[CatalogRouteEnum._ID];
+          this.folderId = queryParams[CatalogRouteEnum._PARENT_ID];
+        })
     );
   }
 
-  private setupCurrentEntityId(url: string): void {
-    if (url.match(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`)) {
-      this.currentId = UrlHelper.getParameterByName(CatalogRouteEnum._ID, url);
-    } else {
-      this.currentId = undefined;
-    }
-  }
-
-  public onDeleteClicked(event: MouseEvent, entity: ProcessModel): void {
-    event.stopPropagation();
-    event.preventDefault();
-    if (this.processAutosave.shouldSaved) {
-      this.dialog.open(PreventProcessCloseModalComponent, {
-        width: '700px',
-        autoFocus: false
-      }).afterClosed().subscribe((res: boolean) => {
-        if (res) {
-          this.entitiesTabService.deleteEntity(entity);
-        }
-      });
-    } else {
-      this.entitiesTabService.deleteEntity(entity);
-    }
-  }
-
-  public openProcess(process: ProcessModel): void {
-    this.router.navigate(
-      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
-      {
-        queryParams: {
-          [CatalogRouteEnum._ID]: process.id,
-          [CatalogRouteEnum._NAME]: process.name,
-          [CatalogRouteEnum._PARENT_ID]: process.parent.id
-        }
-      }
-    );
+  public get isProcessPath(): boolean {
+    return !!this.processId && !!this.folderId;
   }
 
   public logout(): void {
-    this.authService.logout();
+    this.auth.logout();
   }
 
 }

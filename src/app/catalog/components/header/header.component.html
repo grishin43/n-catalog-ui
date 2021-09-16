@@ -1,8 +1,10 @@
-<header>
+<header
+  (mouseenter)="showAllCrosses = true"
+  (mouseleave)="showAllCrosses = false">
   <div class="container-fluid h-100 mw-100">
     <div class="row h-100 align-items-center flex-nowrap">
       <a class="col-auto logo-col tab"
-         [ngClass]="{'active': !currentId}"
+         [ngClass]="{'active': !isProcessPath}"
          matRipple
          matRippleColor="{{rippleLightColor}}"
          [routerLink]="'/'">
@@ -13,36 +15,19 @@
         </svg>
       </a>
       <div
-        class="col process-tab-col"
+        class="col tabs-col"
         [ngClass]="{
            'search-form-stretched': searchFormStretched,
-           'mw-100': currentId
+           'mw-100': isProcessPath
         }">
-        <div class="row align-items-center flex-nowrap">
-          <div class="col-auto tab"
-               *ngFor="let entity of catalogProcesses | async"
-               matRipple
-               matRippleColor="{{rippleLightColor}}"
-               matTooltip="{{entity.name}}"
-               [ngClass]="{'active': entity.id === currentId}"
-               [ngStyle]="{'max-width': 'calc(100% / ' + (catalogProcesses | async).length + ')'}"
-               (click)="openProcess(entity)">
-            <span class="entity-name">
-               {{entity.name}}
-            </span>
-            <button
-              mat-button
-              (click)="onDeleteClicked($event, entity)">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M18.3 5.7107C17.91 5.3207 17.28 5.3207 16.89 5.7107L12 10.5907L7.10997 5.7007C6.71997 5.3107 6.08997 5.3107 5.69997 5.7007C5.30997 6.0907 5.30997 6.7207 5.69997 7.1107L10.59 12.0007L5.69997 16.8907C5.30997 17.2807 5.30997 17.9107 5.69997 18.3007C6.08997 18.6907 6.71997 18.6907 7.10997 18.3007L12 13.4107L16.89 18.3007C17.28 18.6907 17.91 18.6907 18.3 18.3007C18.69 17.9107 18.69 17.2807 18.3 16.8907L13.41 12.0007L18.3 7.1107C18.68 6.7307 18.68 6.0907 18.3 5.7107Z"
-                  fill="#B8C1CB"/>
-              </svg>
-            </button>
-          </div>
-        </div>
+        <np-header-tabs
+          class="d-inline-flex w-100"
+          [processId]="processId"
+          [folderId]="folderId"
+          [showAllCrosses]="showAllCrosses">
+        </np-header-tabs>
       </div>
-      <ng-container *ngIf="!currentId">
+      <ng-container *ngIf="!isProcessPath">
         <div class="col-auto ml-auto">
           <np-header-search
             (formHasStretched)="searchFormStretched = $event">
@@ -54,7 +39,9 @@
            [matMenuTriggerFor]="notifications">
           <mat-icon>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.37 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.64 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16ZM16 17H8V11C8 8.52 9.51 6.5 12 6.5C14.49 6.5 16 8.52 16 11V17Z" fill="#8A95A3"/>
+              <path
+                d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.37 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.64 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16ZM16 17H8V11C8 8.52 9.51 6.5 12 6.5C14.49 6.5 16 8.52 16 11V17Z"
+                fill="#8A95A3"/>
             </svg>
           </mat-icon>
         </a>
@@ -74,7 +61,7 @@
           <np-avatar
             [type]="'initials'"
             [size]="'md'"
-            [data]="'MO'"
+            [data]="userFirstLastName | acronym : 2"
             [theme]="'dark'">
           </np-avatar>
         </a>
