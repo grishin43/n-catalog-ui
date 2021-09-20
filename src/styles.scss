@@ -35,10 +35,16 @@ body {
   }
 
   .container-fluid {
-    max-width: calc(1440px + 15px + 15px);
+    &:not(.mw-100):not(.no-mw) {
+      max-width: calc(1440px + 15px + 15px);
+    }
 
     &.mw-100 {
       max-width: 1920px !important;
+    }
+
+    &.no-mw {
+      max-width: 100%;
     }
   }
 

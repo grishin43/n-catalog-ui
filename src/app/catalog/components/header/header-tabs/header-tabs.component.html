@@ -1,28 +1,110 @@
-<div class="row align-items-center flex-nowrap"
-     *ngIf="catalogProcesses$ | async as processes">
+<div class="container-fluid no-mw">
   <div
-    class="col-auto process-tab tab"
-    *ngFor="let process of processes"
-    matRipple
-    matRippleColor="{{rippleLightColor}}"
-    matTooltip="{{process.name}}"
-    [ngClass]="{'active': process.id === processId && process.parent.id === folderId}"
-    [ngStyle]="{'max-width': 'calc(100% / ' + processes.length + ')'}"
-    (click)="openProcess(process)">
-    <span class="entity-name">
-       {{process.name}}
-    </span>
-    <button
-      mat-button
-      [ngClass]="{
-        'visible': showAllCrosses
-      }"
-      (click)="onDeleteClicked($event, process)">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M18.3 5.7107C17.91 5.3207 17.28 5.3207 16.89 5.7107L12 10.5907L7.10997 5.7007C6.71997 5.3107 6.08997 5.3107 5.69997 5.7007C5.30997 6.0907 5.30997 6.7207 5.69997 7.1107L10.59 12.0007L5.69997 16.8907C5.30997 17.2807 5.30997 17.9107 5.69997 18.3007C6.08997 18.6907 6.71997 18.6907 7.10997 18.3007L12 13.4107L16.89 18.3007C17.28 18.6907 17.91 18.6907 18.3 18.3007C18.69 17.9107 18.69 17.2807 18.3 16.8907L13.41 12.0007L18.3 7.1107C18.68 6.7307 18.68 6.0907 18.3 5.7107Z"
-          fill="#B8C1CB"/>
-      </svg>
-    </button>
+    #processesRow
+    class="row align-items-center flex-nowrap"
+    *ngIf="catalogProcesses$ | async as processes">
+    <ng-container *ngIf="maxCount != null">
+      <div
+        class="col-auto process-tab tab"
+        *ngFor="let process of processes | slice: 0: maxCount"
+        matRipple
+        matRippleColor="{{rippleLightColor}}"
+        matTooltip="{{process.name}}"
+        [ngClass]="{
+          'active': process.id === processId && process.parent.id === folderId
+        }"
+        [ngStyle]="{
+          'max-width': processes.length > maxCount
+            ? 'calc((100% - ' + menuBtnWidth + 'px)/ ' + maxCount + ')'
+            : '100%',
+          'min-width': tabMinWidth + 'px',
+          'flex': processes.length > maxCount ? '0 0 100%' : '0 0 auto'
+        }"
+        (click)="openProcess(process)">
+        <span class="entity-name">
+           {{process.name}}
+        </span>
+        <button
+          mat-button
+          [ngClass]="{
+            'visible': showAllCrosses
+          }"
+          (click)="onDeleteClicked($event, process)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M18.3 5.7107C17.91 5.3207 17.28 5.3207 16.89 5.7107L12 10.5907L7.10997 5.7007C6.71997 5.3107 6.08997 5.3107 5.69997 5.7007C5.30997 6.0907 5.30997 6.7207 5.69997 7.1107L10.59 12.0007L5.69997 16.8907C5.30997 17.2807 5.30997 17.9107 5.69997 18.3007C6.08997 18.6907 6.71997 18.6907 7.10997 18.3007L12 13.4107L16.89 18.3007C17.28 18.6907 17.91 18.6907 18.3 18.3007C18.69 17.9107 18.69 17.2807 18.3 16.8907L13.41 12.0007L18.3 7.1107C18.68 6.7307 18.68 6.0907 18.3 5.7107Z"
+              fill="#B8C1CB"/>
+          </svg>
+        </button>
+      </div>
+      <ng-container *ngIf="processes.length > maxCount">
+        <div
+          class="hidden-processes-menu-col"
+          [ngStyle]="{
+            'width': menuBtnWidth + 'px'
+          }">
+          <button
+            mat-button
+            [npCenterMatMenu]="menuTrigger"
+            class="min-width-auto p-0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M9.31002 17.29C8.92002 16.9 8.92002 16.27 9.31002 15.88L13.19 12L9.31002 8.11998C8.92002 7.72998 8.92002 7.09998 9.31002 6.70998C9.70002 6.31998 10.33 6.31998 10.72 6.70998L15.31 11.3C15.7 11.69 15.7 12.32 15.31 12.71L10.72 17.3C10.34 17.68 9.70002 17.68 9.31002 17.29Z"
+                fill="black"/>
+            </svg>
+          </button>
+        </div>
+        <div #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu">
+          <mat-menu
+          class="hidden-processes-menu"
+          #menu="matMenu">
+          <ng-container
+            *ngFor="let process of processes | slice: maxCount">
+            <button
+              *ngIf="process"
+              (click)="openProcess(process)"
+              mat-menu-item>
+              <mat-icon>
+                <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#filter0_d)">
+                    <path
+                      d="M5.99998 3.5H21.9287C23.1221 3.5 24.2667 3.97409 25.1106 4.81797L30.1819 9.88908C31.0258 10.733 31.4999 11.8776 31.4999 13.0711V33C31.4999 33.8287 30.828 34.5 30 34.5H5.99998C5.17194 34.5 4.5 33.8287 4.5 33V4.99998C4.5 4.17133 5.17203 3.5 5.99998 3.5Z"
+                      fill="white" stroke="#E7EDF5"/>
+                  </g>
+                  <path
+                    d="M18 27C22.4183 27 26 23.4183 26 19C26 14.5817 22.4183 11 18 11C13.5817 11 10 14.5817 10 19C10 23.4183 13.5817 27 18 27Z"
+                    fill="url(#paint0_linear)"/>
+                  <path
+                    d="M21.7509 20.0194L22.8737 20.023V17.9967L21.7629 17.9943C21.678 17.6779 21.5533 17.3736 21.3917 17.0887L22.1752 16.3142L20.7426 14.8751L19.9579 15.6496C19.6727 15.4836 19.3669 15.3559 19.0484 15.2698L19.0521 14.1767H17.0048L17.0108 15.2594C16.6931 15.3437 16.3873 15.4679 16.1009 15.6291L15.3419 14.8678L13.8943 16.2919L14.6537 17.0538C14.5712 17.195 14.4977 17.3413 14.4338 17.4919C14.3701 17.6425 14.3163 17.797 14.2729 17.9546L13.1729 17.9487V19.973L14.2609 19.9797C14.3455 20.2968 14.4704 20.6018 14.6327 20.8871L13.8318 21.6756L15.2654 23.1142L16.0656 22.3257C16.3513 22.4914 16.6572 22.6192 16.9757 22.7061V23.8502L19.0109 23.849V22.717C19.3301 22.6328 19.6371 22.508 19.9246 22.3458L20.7248 23.1418L22.1734 21.72L21.3706 20.9202C21.5354 20.6375 21.6633 20.3348 21.7509 20.0195V20.0194ZM18.0233 21.6945C17.493 21.6945 16.9747 21.5373 16.5337 21.2427C16.0928 20.9481 15.7492 20.5293 15.5463 20.0394C15.3434 19.5495 15.2903 19.0105 15.3937 18.4904C15.4972 17.9703 15.7525 17.4926 16.1275 17.1176C16.5024 16.7427 16.9801 16.4873 17.5002 16.3839C18.0203 16.2804 18.5594 16.3335 19.0493 16.5364C19.5392 16.7394 19.9579 17.083 20.2525 17.5239C20.5471 17.9648 20.7044 18.4832 20.7044 19.0134C20.7044 19.7245 20.4219 20.4064 19.9191 20.9092C19.4163 21.412 18.7343 21.6945 18.0233 21.6945Z"
+                    fill="white"/>
+                  <defs>
+                    <filter id="filter0_d" x="0" y="0" width="35.9999" height="40" filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                                     result="hardAlpha"/>
+                      <feOffset dy="1"/>
+                      <feGaussianBlur stdDeviation="2"/>
+                      <feColorMatrix type="matrix"
+                                     values="0 0 0 0 0.283038 0 0 0 0 0.412791 0 0 0 0 0.495833 0 0 0 0.13 0"/>
+                      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+                    </filter>
+                    <linearGradient id="paint0_linear" x1="10" y1="27" x2="26" y2="27" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#FF1E00"/>
+                      <stop offset="1" stop-color="#FF8B00"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </mat-icon>
+              <span>
+                {{process.name}}
+              </span>
+            </button>
+          </ng-container>
+        </mat-menu>
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 </div>

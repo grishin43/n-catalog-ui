@@ -42,6 +42,28 @@
       max-width: 100%;
     }
 
+    &.hidden-processes-menu {
+      width: 250px;
+      max-height: 300px;
+
+      .mat-menu-item {
+        height: 40px;
+        line-height: 40px;
+        padding-left: 12px;
+        padding-right: 12px;
+
+        mat-icon {
+          width: 28px;
+          height: auto;
+          margin-right: 12px;
+        }
+
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+
     .mat-menu-content:not(:empty) {
       padding: 8px;
     }

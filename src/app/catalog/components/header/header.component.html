@@ -17,20 +17,20 @@
       <div
         class="col tabs-col"
         [ngClass]="{
-           'search-form-stretched': searchFormStretched,
+           'search-form-stretched': searchFormStretched | async,
            'mw-100': isProcessPath
         }">
         <np-header-tabs
-          class="d-inline-flex w-100"
           [processId]="processId"
           [folderId]="folderId"
-          [showAllCrosses]="showAllCrosses">
+          [showAllCrosses]="showAllCrosses"
+          [searchFormStretched]="searchFormStretched">
         </np-header-tabs>
       </div>
       <ng-container *ngIf="!isProcessPath">
         <div class="col-auto ml-auto">
           <np-header-search
-            (formHasStretched)="searchFormStretched = $event">
+            (formHasStretched)="searchFormStretched.next($event)">
           </np-header-search>
         </div>
         <a matRipple

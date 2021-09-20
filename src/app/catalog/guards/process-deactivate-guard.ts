@@ -26,7 +26,8 @@ export class ProcessDeactivateGuard implements CanDeactivate<ProcessComponent> {
       str = str.substr(0, str.indexOf('?'));
       this.dialog.open(PreventProcessCloseModalComponent, {
         width: '700px',
-        autoFocus: false
+        autoFocus: false,
+        scrollStrategy: undefined
       }).afterClosed().subscribe((res: boolean) => {
         if (res) {
           this.router.navigate(

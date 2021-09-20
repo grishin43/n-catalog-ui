@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {ProcessModel} from '../../../../models/domain/process.model';
 import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.service';
@@ -15,30 +15,58 @@ import {Router} from '@angular/router';
   templateUrl: './header-tabs.component.html',
   styleUrls: ['./header-tabs.component.scss']
 })
-export class HeaderTabsComponent implements OnInit, OnDestroy {
-  @Input() processId: string;
-  @Input() folderId: string;
-  @Input() showAllCrosses: boolean;
-
-  public catalogProcesses$: BehaviorSubject<ProcessModel[]>;
-  public rippleLightColor = MatRippleHelper.lightRippleColor;
-
-  private subs = new Subscription();
+export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private router: Router,
     private entitiesTabService: EntitiesTabService,
     private processAutosave: ProcessAutosaveService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdRef: ChangeDetectorRef
   ) {
+  }
+  @Input() processId: string;
+  @Input() folderId: string;
+  @Input() showAllCrosses: boolean;
+  @Input() searchFormStretched: BehaviorSubject<boolean>;
+
+  public catalogProcesses$: BehaviorSubject<ProcessModel[]>;
+  public rippleLightColor = MatRippleHelper.lightRippleColor;
+  public readonly tabMinWidth = 125;
+  public readonly menuBtnWidth = 56;
+  public maxCount: number;
+
+  private subs = new Subscription();
+
+  @ViewChild('processesRow') rowRef: ElementRef;
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.patchMaxCount();
   }
 
   ngOnInit(): void {
     this.setupCatalogEntities();
+    this.listenSearchStretching();
+  }
+
+  ngAfterViewInit(): void {
+    this.patchMaxCount();
+    this.cdRef.detectChanges();
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+  }
+
+  private listenSearchStretching(): void {
+    this.subs.add(
+      this.searchFormStretched?.subscribe(() => {
+        setTimeout(() => {
+          this.patchMaxCount();
+        }, 200);
+      })
+    );
   }
 
   private setupCatalogEntities(): void {
@@ -74,6 +102,14 @@ export class HeaderTabsComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  public patchMaxCount(): void {
+    if (this.rowRef?.nativeElement) {
+      const row: HTMLElement = this.rowRef.nativeElement;
+      const freeWidth = row.offsetWidth - this.menuBtnWidth;
+      this.maxCount = Math.floor(freeWidth / this.tabMinWidth);
+    }
   }
 
 }

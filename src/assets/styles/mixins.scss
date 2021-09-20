@@ -53,6 +53,7 @@
 
 @mixin headerRow {
   .row {
+
     @media screen and (max-width: $tablet-medium - 1px) {
       margin-left: -10px;
       margin-right: -10px;

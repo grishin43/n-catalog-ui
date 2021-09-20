@@ -1,15 +1,17 @@
 @import "../../../../../assets/styles/mixins";
+@import "../../../../../assets/styles/breakpoints";
 
 @include headerRow;
 @include headerTab {
   .entity-name {
     font-size: 14px;
-    color: var(--np-gunmetal);
+    color: var(--np-roman-silver);
     font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     display: inline-block;
+    transition: var(--np-base-transition);
 
     @media screen and (max-width: $tablet-medium - 1px) {
       font-size: 12px;
@@ -26,7 +28,9 @@
 
   &.process-tab {
     &:hover {
-      background: var(--np-white-lilac);
+      .entity-name {
+        color: var(--np-gunmetal);
+      }
     }
   }
 
@@ -55,6 +59,38 @@
       svg {
         width: 20px;
         height: 20px;
+      }
+    }
+  }
+}
+
+.container-fluid {
+  @media screen and (max-width: $tablet-medium - 1px) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .row {
+    overflow: hidden;
+    position: relative;
+
+    .hidden-processes-menu-col {
+      flex: 0 0 56px;
+      max-width: 56px;
+      text-align: center;
+      background: linear-gradient(
+          270deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 0;
+      z-index: 1;
+
+      button {
+        width: 32px;
+        height: 32px;
+        background: var(--np-ghost-white);
+        border-radius: 10px;
       }
     }
   }

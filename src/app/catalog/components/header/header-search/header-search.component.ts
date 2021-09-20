@@ -18,7 +18,7 @@ import {SearchAutocompleteDto} from '../../../services/search/searchAutocomplete
 export class HeaderSearchComponent implements OnInit, OnDestroy {
   public formControl = new FormControl();
   public entities: CatalogEntityModel[];
-  public recentSearchOptions: ({value: string})[];
+  public recentSearchOptions: ({ value: string })[];
   public autoCompleteResults: SearchAutocompleteDto;
   public catalogEntityType = CatalogEntityEnum;
   public formStretched: boolean;
@@ -36,10 +36,12 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     const clickedInside = this.formRef.nativeElement.contains(targetElement);
     if (!clickedInside) {
       document.body.classList.remove('search-form-stretched');
-      this.formStretched = false;
       if (!this.formControl.value?.length) {
-        this.formHasStretched.emit(false);
+        if (this.formStretched) {
+          this.formHasStretched.emit(false);
+        }
       }
+      this.formStretched = false;
     }
   }
 
@@ -74,12 +76,12 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.formHasStretched.emit(false);
   }
 
-  public onFolderSelected(entityId: string, folderName: string) {
+  public onFolderSelected(entityId: string, folderName: string): void {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entityId}`]);
     this.searchService.addRecentSearchResult(folderName);
   }
 
-  onProcessSelected(processId: string, processName: string) {
+  public onProcessSelected(processId: string, processName: string): void {
     this.router.navigate(
       [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
       {
@@ -156,10 +158,10 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   private showSearchOptions(query: string): void {
     this.searchService.fetchAutocompleteSearchResults(query).subscribe(
       (result) => {
-      this.autoCompleteResults = result;
-    }, (error) => {
+        this.autoCompleteResults = result;
+      }, (error) => {
         console.error('[HeaderSearch] autocomplete search error', error);
-      })
+      });
   }
 
   private showPreviousSearchResults(): void {

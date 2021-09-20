@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatRippleHelper} from '../../helpers/mat-ripple.helper';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {AuthService} from '../../../auth/services/auth/auth.service';
@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public rippleLightColor = MatRippleHelper.lightRippleColor;
   public processId: string;
   public folderId: string;
-  public searchFormStretched: boolean;
+  public searchFormStretched = new BehaviorSubject<boolean>(false);
   public hideRightBar: boolean;
   public userFirstLastName: string;
   public showAllCrosses: boolean;

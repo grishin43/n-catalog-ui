@@ -26,7 +26,7 @@ header {
       .tabs-col {
         max-width: calc(100% - 108px - 165px - 70px - 54px);
         transition: var(--np-base-transition);
-        overflow-x: hidden;
+        padding: 0;
 
         @media screen and (max-width: $tablet-medium - 1px) {
           max-width: calc(100% - 78px - 125px - 39px - 50px);
