@@ -13,6 +13,7 @@ import {TableActionsService} from './services/table-actions/table-actions.servic
 import {NpButtonModule} from '../../small/np-button/np-button.module';
 import {MatRippleModule} from '@angular/material/core';
 import {RenameEntityModalModule} from '../rename-entity-modal/rename-entity-modal.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {RenameEntityModalModule} from '../rename-entity-modal/rename-entity-moda
     NpPersonsModule,
     NpButtonModule,
     MatRippleModule,
-    RenameEntityModalModule
+    RenameEntityModalModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     TableActionsService

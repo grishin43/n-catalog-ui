@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CreateEntityButtonComponent} from './component/create-entity-button.component';
+import {FolderActionsButtonComponent} from './component/folder-actions-button.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {TranslateModule} from '@ngx-translate/core';
@@ -8,10 +8,10 @@ import {CreateEntityModalModule} from '../create-entity-modal/create-entity-moda
 
 @NgModule({
   declarations: [
-    CreateEntityButtonComponent
+    FolderActionsButtonComponent
   ],
   exports: [
-    CreateEntityButtonComponent
+    FolderActionsButtonComponent
   ],
   imports: [
     CommonModule,
@@ -21,5 +21,5 @@ import {CreateEntityModalModule} from '../create-entity-modal/create-entity-moda
     CreateEntityModalModule
   ]
 })
-export class CreateEntityButtonModule {
+export class FolderActionsButtonModule {
 }

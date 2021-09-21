@@ -158,7 +158,8 @@
     "close": "Закрити",
     "processSaving": "Збереження процесу",
     "youWantToSaveTheProcessChanges": "Ви бажаєте зберегти зміни процесу",
-    "dontSave": "Не зберігати"
+    "dontSave": "Не зберігати",
+    "renaming": "Йде перейменування..."
   },
   "statuses": {
     "undefined": "Невизначений",

@@ -4,16 +4,20 @@ import {MatDialog} from '@angular/material/dialog';
 import {CreateEntityModalComponent} from '../../create-entity-modal/component/create-entity-modal.component';
 import {ModalInjectableDataModel} from '../../../../../models/modal-injectable-data.model';
 import {FolderModel} from '../../../../../models/domain/folder.model';
+import {RenameEntityModalComponent} from '../../rename-entity-modal/component/rename-entity-modal.component';
 
 @Component({
-  selector: 'np-create-entity-button',
-  templateUrl: './create-entity-button.component.html',
-  styleUrls: ['./create-entity-button.component.scss']
+  selector: 'np-folder-actions-button',
+  templateUrl: './folder-actions-button.component.html',
+  styleUrls: ['./folder-actions-button.component.scss']
 })
-export class CreateEntityButtonComponent {
+export class FolderActionsButtonComponent {
   @Input() parentFolder: FolderModel;
+  @Input() renameOnly: boolean;
+  @Input() createPrefix: boolean;
 
   @Output() entityCreated = new EventEmitter<void>();
+  @Output() entityRenamed = new EventEmitter<void>();
 
   public eCatalogEntity = CatalogEntityEnum;
 
@@ -33,6 +37,22 @@ export class CreateEntityButtonComponent {
         type,
         ssCb: () => {
           this.entityCreated.emit();
+        }
+      } as ModalInjectableDataModel
+    });
+  }
+
+  public renameEntity(event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.dialog.open(RenameEntityModalComponent, {
+      width: '700px',
+      autoFocus: false,
+      data: {
+        entity: this.parentFolder,
+        type: CatalogEntityEnum.FOLDER,
+        ssCb: () => {
+          this.entityRenamed.emit();
         }
       } as ModalInjectableDataModel
     });

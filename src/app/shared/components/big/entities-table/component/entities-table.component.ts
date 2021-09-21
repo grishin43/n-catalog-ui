@@ -32,7 +32,7 @@ export class EntitiesTableComponent implements OnInit {
   }
 
   constructor(
-    private tableActionsService: TableActionsService
+    public tableActions: TableActionsService
   ) {
   }
 
@@ -46,25 +46,25 @@ export class EntitiesTableComponent implements OnInit {
   public entityTableColumnName = EntityTableColumnName;
 
   ngOnInit(): void {
-    this.processActions = this.tableActionsService.processActions;
-    this.folderActions = this.tableActionsService.folderActions;
+    this.processActions = this.tableActions.processActions;
+    this.folderActions = this.tableActions.folderActions;
     this.addDeleteCallback();
   }
 
-  private addDeleteCallback() {
-   const deleteAction:TableActionModel = this.folderActions
-     .find(({name}: TableActionModel) => name === CatalogEntityActionEnum.DELETE);
+  private addDeleteCallback(): void {
+    const deleteAction: TableActionModel = this.folderActions
+      .find(({name}: TableActionModel) => name === CatalogEntityActionEnum.DELETE);
 
-   deleteAction.cb = (value?: any, parent?: FolderModel, ssCb?: () => void) => {
+    deleteAction.cb = (value?: any, parent?: FolderModel, ssCb?: () => void) => {
       this.entityDeleted.emit(value);
-   }
+    };
   }
 
   public openItem(item: CatalogEntityModel): void {
     if (item.type === CatalogEntityEnum.FOLDER) {
-      this.tableActionsService.openFolder(item);
+      this.tableActions.openFolder(item);
     } else if (item.type === CatalogEntityEnum.PROCESS) {
-      this.tableActionsService.openProcess(item);
+      this.tableActions.openProcess(item);
     }
   }
 

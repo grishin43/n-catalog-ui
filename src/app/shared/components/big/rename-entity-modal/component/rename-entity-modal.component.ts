@@ -26,7 +26,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableDataModel,
     private api: ApiService,
     private toast: ToastService,
-    private translateService: TranslateService
+    private translate: TranslateService
   ) {
   }
 
@@ -53,27 +53,27 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
       const entityId = this.data.entity.id;
       const entityName = this.data.entity.name;
       const controlValue = this.form.value[FormFieldEnum.ENTITY_NAME];
-      const loaderTitle = this.translateService.instant('loaders.rename', {name: entityName});
+      const loaderTitle = this.translate.instant('loaders.rename', {name: entityName});
       if (this.isFolder) {
         this.renameEntity(
           this.api.renameFolder(entityId, controlValue),
           loaderTitle,
-          this.translateService.instant(
+          this.translate.instant(
             'common.folderSuccessfullyRenamed',
-            {processOldName: entityName, processNewName: controlValue}
+            {folderOldName: entityName, folderNewName: controlValue}
           ),
-          this.translateService.instant('errors.failedToRenameFolder', {folderName: entityName}),
+          this.translate.instant('errors.failedToRenameFolder', {folderName: entityName}),
           controlValue
         );
       } else if (this.isProcess) {
         this.renameEntity(
           this.api.renameProcess(this.data.parent.id, entityId, controlValue),
           loaderTitle,
-          this.translateService.instant(
+          this.translate.instant(
             'common.processSuccessfullyRenamed',
             {processOldName: entityName, processNewName: controlValue}
           ),
-          this.translateService.instant('errors.failedToRenameProcess', {processName: entityName}),
+          this.translate.instant('errors.failedToRenameProcess', {processName: entityName}),
           controlValue
         );
       }
@@ -88,15 +88,29 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     newName: string
   ): void {
     this.closeModal();
-    this.toast.showLoader(loaderTitle);
+    if (this.data.asyncLoader) {
+      this.data.asyncLoader.next(this.data.entity.id);
+    } else {
+      this.toast.showLoader(loaderTitle);
+    }
     this.subscription.add(
       request.subscribe(() => {
-        this.toast.close();
-        this.toast.showMessage(successTitle);
-        if (typeof this.data.ssCb === 'function') {
-          this.data.ssCb(newName);
-        }
+        // TODO
+        setTimeout(() => {
+          if (this.data.asyncLoader) {
+            this.data.asyncLoader.next(undefined);
+          } else {
+            this.toast.close();
+          }
+          this.toast.showMessage(successTitle);
+          if (typeof this.data.ssCb === 'function') {
+            this.data.ssCb(newName);
+          }
+        }, 2000);
       }, (err: HttpErrorResponse) => {
+        if (this.data.asyncLoader) {
+          this.data.asyncLoader.next(undefined);
+        }
         this.toast.showError(
           errorTitle,
           err?.message

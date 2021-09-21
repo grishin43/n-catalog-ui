@@ -29,6 +29,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() folderId: string;
   @Input() showAllCrosses: boolean;
   @Input() searchFormStretched: BehaviorSubject<boolean>;
+  @Input() isProcessPath: boolean;
 
   public catalogProcesses$: BehaviorSubject<ProcessModel[]>;
   public rippleLightColor = MatRippleHelper.lightRippleColor;

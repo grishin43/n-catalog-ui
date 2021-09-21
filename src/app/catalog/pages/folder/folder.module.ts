@@ -11,7 +11,7 @@ import {EntityTableModule} from '../../../shared/components/big/entities-table/e
 import {MatRippleModule} from '@angular/material/core';
 import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {CreateEntityButtonModule} from '../../../shared/components/big/create-entity-button/create-entity-button.module';
+import {FolderActionsButtonModule} from '../../../shared/components/big/folder-actions-button/folder-actions-button.module';
 import {CantDeleteFolderModalComponent} from './cant-delete-folder-modal/cant-delete-folder-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 
@@ -43,7 +43,7 @@ const routes: Routes = [
     MatRippleModule,
     NpButtonModule,
     MatProgressSpinnerModule,
-    CreateEntityButtonModule,
+    FolderActionsButtonModule,
     MatDialogModule
   ]
 })

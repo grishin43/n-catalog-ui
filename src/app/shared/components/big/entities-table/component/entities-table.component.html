@@ -90,10 +90,22 @@
                   </svg>
                 </mat-icon>
               </ng-container>
-              <span class="entity-name">
-                {{row?.name || '-'}}
+              <ng-container
+                *ngIf="(tableActions.renameLoader | async) === row?.id; else entityNameTemplate">
+                <span class="entity-name">
+                 {{'common.renaming' | translate}}
+                </span>
+                <mat-spinner
+                  style="margin-left: 8px"
+                  [diameter]="20">
+                </mat-spinner>
+              </ng-container>
+              <ng-template #entityNameTemplate>
+                 <span class="entity-name">
+                  {{row?.name || '-'}}
+                 </span>
+              </ng-template>
               </span>
-            </span>
           </ng-container>
 
           <ng-container *ngSwitchCase="tableDataType.PARTICIPANTS">
@@ -208,7 +220,8 @@
       matRippleColor="{{rippleLightColor}}"
       (click)="openItem(row)"
       [ngClass]="{
-        'disabled': row.permissions !== entityPermission.VIEWER && row.permissions !== entityPermission.EDITOR
+        'blocked': row.permissions !== entityPermission.VIEWER && row.permissions !== entityPermission.EDITOR,
+        'disabled': (tableActions.renameLoader | async) === row?.id
       }"
       *matRowDef="let row; columns: displayedColumns | toStringArray : 'name';">
     </mat-row>

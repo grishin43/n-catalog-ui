@@ -13,10 +13,14 @@
   </ng-container>
   <li>
     <span>{{folder?.name || ('common.newFolder' | translate)}}</span>
-    <np-create-entity-button
+    <np-folder-actions-button
+      *ngIf="!folder.root"
       (click)="$event.preventDefault(); $event.stopPropagation();"
-      (entityCreated)="entityCreated.emit()"
-      [parentFolder]="folder">
+      (entityCreated)="folderUpdated.emit()"
+      [parentFolder]="folder"
+      [renameOnly]="true"
+      [createPrefix]="true"
+      (entityRenamed)="folderRenamed()">
       <button
         matRipple
         matRippleColor="{{rippleLightColor}}">
@@ -28,6 +32,6 @@
           </svg>
         </mat-icon>
       </button>
-    </np-create-entity-button>
+    </np-folder-actions-button>
   </li>
 </ul>

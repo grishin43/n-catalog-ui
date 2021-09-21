@@ -85,12 +85,27 @@
       transform: translateY(-50%);
       right: 0;
       z-index: 1;
+      @include headerMainHeight;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       button {
         width: 32px;
         height: 32px;
         background: var(--np-ghost-white);
         border-radius: 10px;
+      }
+    }
+
+    .mat-menu-helper {
+      position: absolute;
+      bottom: 0;
+      left: calc(((250px - 56px) / 2) + 56px);
+      display: inline-block;
+
+      @media screen and (max-width: $tablet-medium - 1px) {
+        left: calc(((200px - 56px) / 2) + 56px);
       }
     }
   }

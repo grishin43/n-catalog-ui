@@ -13,9 +13,14 @@ import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 export class FolderBreadcrumbsComponent {
   @Input() folder: FolderModel;
 
-  @Output() entityCreated = new EventEmitter<void>();
+  @Output() folderUpdated = new EventEmitter<void>();
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
   public eCatalogEntity = CatalogEntityEnum;
   public folderRoute = `/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/`;
+
+  public folderRenamed(): void {
+    this.folderUpdated.emit();
+  }
+
 }

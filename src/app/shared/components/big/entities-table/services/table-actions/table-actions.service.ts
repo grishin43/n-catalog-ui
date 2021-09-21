@@ -15,11 +15,15 @@ import {FolderModel} from '../../../../../../models/domain/folder.model';
 import {ApiService} from '../../../../../../catalog/services/api/api.service';
 import {ToastService} from '../../../../small/toast/service/toast.service';
 import {EntitiesTabService} from '../../../../../../catalog/services/entities-tab/entities-tab.service';
+import {GrantAccessModalComponent} from '../../../grant-access-modal/component/grant-access-modal.component';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableActionsService {
+
+  public renameLoader = new BehaviorSubject<string>(undefined);
 
   constructor(
     private router: Router,
@@ -40,9 +44,12 @@ export class TableActionsService {
       }, {
         name: CatalogEntityActionEnum.PROVIDE_ACCESS,
         cb: (entity: CatalogEntityModel) => {
-          console.log(entity);
-        },
-        disabled: true
+          this.dialog.open(GrantAccessModalComponent, {
+            width: '700px',
+            autoFocus: false,
+            data: entity.original
+          });
+        }
       },
       {
         name: CatalogEntityActionEnum.RENAME,
@@ -51,7 +58,8 @@ export class TableActionsService {
             entity: MapHelper.mapEntityToProcess(entity),
             type: CatalogEntityEnum.PROCESS,
             parent: parentFolder,
-            ssCb
+            ssCb,
+            asyncLoader: this.renameLoader
           } as ModalInjectableDataModel);
         }
       },
@@ -88,19 +96,13 @@ export class TableActionsService {
         }
       },
       {
-        name: CatalogEntityActionEnum.PROVIDE_ACCESS,
-        cb: (entity: CatalogEntityModel) => {
-          console.log(entity);
-        },
-        disabled: true
-      },
-      {
         name: CatalogEntityActionEnum.RENAME,
         cb: (entity: CatalogEntityModel, parentFolder: FolderModel, ssCb?: () => void) => {
           this.openRenameEntityModal({
             entity: MapHelper.mapEntityToFolder(entity),
             type: CatalogEntityEnum.FOLDER,
-            ssCb
+            ssCb,
+            asyncLoader: this.renameLoader
           } as ModalInjectableDataModel);
         }
       },

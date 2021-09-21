@@ -15,12 +15,3 @@
     }
   }
 }
-
-np-folder-breadcrumbs {
-  display: block;
-  margin-bottom: 32px;
-
-  @media screen and (max-width: $tablet-medium - 1px) {
-    margin-bottom: 20px;
-  }
-}

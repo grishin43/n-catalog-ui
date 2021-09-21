@@ -37,7 +37,6 @@ import {ProcessDeactivateGuard} from './guards/process-deactivate-guard';
 import {PreventProcessCloseModalModule} from '../shared/components/big/prevent-process-close-modal/prevent-process-close-modal.module';
 import {HeaderTabsComponent} from './components/header/header-tabs/header-tabs.component';
 import {AcronymModule} from '../shared/pipes/acronym/acronym.module';
-import {CenterMatMenuModule} from '../shared/directives/center-mat-menu/center-mat-menu.module';
 
 @NgModule({
   declarations: [
@@ -70,8 +69,7 @@ import {CenterMatMenuModule} from '../shared/directives/center-mat-menu/center-m
     GrantAccessModalModule,
     ProcessAccessDeniedModalModule,
     PreventProcessCloseModalModule,
-    AcronymModule,
-    CenterMatMenuModule
+    AcronymModule
   ],
   providers: [
     EntitiesTabService,

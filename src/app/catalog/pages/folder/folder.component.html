@@ -1,11 +1,30 @@
 <div class="container-fluid container-top-gap">
-  <div class="row">
-    <div class="col-12" *ngIf="folder">
+  <div
+    class="row align-items-center"
+    style="margin-bottom: 16px;">
+    <div class="col" *ngIf="folder">
       <np-folder-breadcrumbs
         [folder]="folder"
-        (entityCreated)="getFolderById()">
+        (folderUpdated)="getFolderById()">
       </np-folder-breadcrumbs>
     </div>
+    <div class="col-auto ml-auto">
+      <np-folder-actions-button
+        (entityCreated)="getFolderById()">
+        <np-button>
+          <mat-icon>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M19 12C19 12.5523 18.5523 13 18 13H13V18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18V13H6C5.44772 13 5 12.5523 5 12C5 11.4477 5.44772 11 6 11H11V6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6V11H18C18.5523 11 19 11.4477 19 12Z"
+                fill="white"/>
+            </svg>
+          </mat-icon>
+          <span>{{'common.create' | translate}}</span>
+        </np-button>
+      </np-folder-actions-button>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-12">
       <ng-container
         *ngIf="folderEntities?.length; else noEntities">
@@ -30,8 +49,8 @@
             <ng-container *ngIf="errorResponse; else emptyFolder">
               <p>
                 {{(errorResponse.status === httpStatusCode.NOT_FOUND
-                  ? 'errors.folderNotFoundOrHasBeenDeleted'
-                  : 'errors.errorOccurred') | translate}}
+                ? 'errors.folderNotFoundOrHasBeenDeleted'
+                : 'errors.errorOccurred') | translate}}
               </p>
               <np-button (click)="goHome()">
                 <span>{{'common.goHome' | translate}}</span>
@@ -41,7 +60,7 @@
               <p>
                 {{'common.folderIsEmpty' | translate}}
               </p>
-              <np-create-entity-button
+              <np-folder-actions-button
                 (click)="$event.preventDefault(); $event.stopPropagation();"
                 (entityCreated)="getFolderById()"
                 [parentFolder]="folder">
@@ -55,7 +74,7 @@
                   </mat-icon>
                   <span>{{'common.create' | translate}}</span>
                 </np-button>
-              </np-create-entity-button>
+              </np-folder-actions-button>
             </ng-template>
           </ng-template>
         </div>

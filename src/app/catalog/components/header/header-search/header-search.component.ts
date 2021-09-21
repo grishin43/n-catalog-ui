@@ -31,9 +31,9 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
   @ViewChild('formRef') formRef;
 
-  @HostListener('document:click', ['$event.target'])
-  public onOutsideClick(targetElement): void {
-    const clickedInside = this.formRef.nativeElement.contains(targetElement);
+  @HostListener('document:click', ['$event'])
+  public onOutsideClick(event: MouseEvent): void {
+    const clickedInside = this.formRef.nativeElement.contains(event.target);
     if (!clickedInside) {
       document.body.classList.remove('search-form-stretched');
       if (!this.formControl.value?.length) {

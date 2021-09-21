@@ -38,6 +38,19 @@
       }
 
       &.disabled {
+        pointer-events: none !important;
+
+        mat-cell {
+
+          &:first-child {
+            mat-icon, .entity-name {
+              opacity: 0.5;
+            }
+          }
+        }
+      }
+
+      &.blocked {
         position: relative;
 
         mat-cell {

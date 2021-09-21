@@ -206,6 +206,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       this.api.createProcess(this.currentFolderId, processType.code, processName)
         .subscribe(
           () => {
+            // TODO
             setTimeout(() => {
               this.formLoader = false;
               this.showToast('common.processCreated');
