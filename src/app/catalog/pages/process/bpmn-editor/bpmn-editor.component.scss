@@ -1,19 +1,19 @@
 @import "../../../../../assets/styles/breakpoints";
 
 .bpmn-editor-wrapper {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 155px);
   min-height: 350px;
   display: flex;
   position: relative;
+  border-right: 0;
   border-top: 1px;
-  border-left: 1px;
-  border-right: 1px;
-  border-bottom: 0;
+  border-left: 0;
+  border-bottom: 1px;
   border-style: solid;
   border-color: var(--np-silver-sand);
 
   @media screen and (max-width: $tablet-medium - 1px) {
-    height: calc(100vh - 106px);
+    height: calc(100vh - 141px);
   }
 
   #bpmn-canvas {

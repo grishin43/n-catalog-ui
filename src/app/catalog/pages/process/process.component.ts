@@ -108,15 +108,15 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  public toggleXmlMode(): void {
+  public toggleXmlMode(flag: boolean): void {
     if (!this.xmlMode) {
       this.bpmnModeler.getDiagramXml().then((res: string) => {
-        this.xmlMode = true;
+        this.xmlMode = flag;
         this.modelerXml = res;
         this.processAutosave.shouldSavedCheckout(res);
       });
     } else {
-      this.xmlMode = false;
+      this.xmlMode = flag;
       this.processAutosave.shouldSavedCheckout(this.modelerXml);
     }
   }

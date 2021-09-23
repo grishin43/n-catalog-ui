@@ -147,6 +147,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
         .subscribe((res: FolderModel) => {
           this.explorerLoader = false;
           this.openedFolder = res;
+          this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
         }, (err: HttpErrorResponse) => {
           this.explorerLoader = false;
           this.showToast(err.error?.message || err.message);

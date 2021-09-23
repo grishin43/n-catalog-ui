@@ -28,6 +28,8 @@ export class ProcessAutosaveService {
   public resourceSaved$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public shouldSaved: boolean;
 
+  private subs = new Subscription();
+
   constructor(
     private api: ApiService,
     private bpmnModeler: BpmnModelerService,
@@ -35,7 +37,7 @@ export class ProcessAutosaveService {
     private toast: ToastService,
     private activateRoute: ActivatedRoute
   ) {
-    this.activateRoute.queryParams
+    this.subs = this.activateRoute.queryParams
       .subscribe((queryParams: Params) => {
         const autosaveTime = queryParams[CatalogRouteEnum._AUTOSAVE_TIME];
         if (autosaveTime) {
@@ -52,6 +54,7 @@ export class ProcessAutosaveService {
   public destroy(): void {
     this.destroyNetworkListener();
     this.disableSaving();
+    this.subs.unsubscribe();
   }
 
   public disableSaving(): void {

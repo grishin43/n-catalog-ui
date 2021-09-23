@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatRippleHelper} from '../../../helpers/mat-ripple.helper';
-import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
-import {FolderModel} from '../../../../models/domain/folder.model';
-import {AppRouteEnum} from '../../../../models/app-route.enum';
-import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
+import {MatRippleHelper} from '../../../../helpers/mat-ripple.helper';
+import {CatalogEntityEnum} from '../../../../models/catalog-entity.enum';
+import {FolderModel} from '../../../../../models/domain/folder.model';
+import {AppRouteEnum} from '../../../../../models/app-route.enum';
+import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 
 @Component({
   selector: 'np-folder-breadcrumbs',

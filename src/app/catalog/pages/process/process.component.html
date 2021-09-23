@@ -56,9 +56,17 @@
   </np-bpmn-editor>
 </ng-template>
 
-<button
-  [ngClass]="{'active': xmlMode}"
-  class="xml-mode-button"
-  (click)="toggleXmlMode()">
-  XML
-</button>
+<div class="mode-tabs">
+  <button
+    [ngClass]="{'active': !xmlMode}"
+    class="mode-button"
+    (click)="toggleXmlMode(false)">
+    Diagram
+  </button>
+  <button
+    [ngClass]="{'active': xmlMode}"
+    class="mode-button xml"
+    (click)="toggleXmlMode(true)">
+    XML
+  </button>
+</div>
