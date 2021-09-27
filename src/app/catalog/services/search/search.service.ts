@@ -11,9 +11,18 @@ import {StorageEnum} from '../../../models/storageEnum';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {SearchAutocompleteDto} from './searchAutocomplete.dto';
+import {GeneralSearchWrapperDto} from './general-search-wrapper.dto';
+import {SearchModel} from '../../../models/domain/search.model';
 
 interface AutocompleteSearchDTO {
   value: string
+}
+
+interface GeneralSearchDTO {
+  searchType: string, // all
+  searchValue: string,
+  pageNumber: number, // for ex 0
+  pageSize: number // for ex 10
 }
 
 export interface RecentSearchDto {
@@ -30,6 +39,7 @@ export class SearchService {
 
   private recentSearchUrl = `${environment.apiV1}/search/recent`;
   private autocompleteSearchUrl = `${environment.apiV1}/search/autocomplete`;
+  private generalSearchUrl = `${environment.apiV1}/search/general`;
 
   constructor(
     private apiService: ApiService,
@@ -44,6 +54,7 @@ export class SearchService {
   }
 
   public searchEntities(str: string): Observable<CatalogEntityModel[]> {
+    // call real request
     return this.apiService.searchEntities(str)
       .pipe(
         tap((res: CatalogEntityModel[]) => {
@@ -92,7 +103,12 @@ export class SearchService {
     }
   }
 
-  private navigateToSearchResults(queryStr: string): void {
+  public openGeneralSearchPage(query: string): void {
+    this.addRecentSearchResult(query);
+    this.navigateToSearchResults(query);
+  }
+
+  public navigateToSearchResults(queryStr: string): void {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${queryStr}`]);
   }
 
@@ -112,6 +128,17 @@ export class SearchService {
       .pipe(tap((result) => {
       console.log('[SearchService] fetchSearchResults: ', result);
     }));
+  }
+
+  public generalSearch(query: string): Observable<GeneralSearchWrapperDto> {
+    const searchRequestParams: GeneralSearchDTO = {
+      searchType: 'all',
+      searchValue: query,
+      pageNumber: 0,
+      pageSize: 10
+    }
+
+    return this.http.post<GeneralSearchWrapperDto>(this.generalSearchUrl, searchRequestParams)
   }
 
   public addRecentSearchResult(query: string): Promise<any> {

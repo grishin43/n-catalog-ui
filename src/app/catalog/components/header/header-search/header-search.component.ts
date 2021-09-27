@@ -95,33 +95,10 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   public submit(): void {
-    if (this.formControl.value?.trim().length) {
-      this.toggleFormState(true);
-      this.searchEntities(
-        () => {
-          this.toggleFormState(false);
-          this.entities = this.searchService.savedEntities;
-        },
-        () => this.toggleFormState(false));
+    const submittedQuery = this.formControl.value?.trim()
+    if (submittedQuery.length) {
+      this.searchService.openGeneralSearchPage(submittedQuery);
     }
-  }
-
-  private searchEntities(sucCb?: () => void, errCb?: () => void): void {
-    this.subscription.add(
-      this.searchService.searchEntities(this.formControl.value)
-        .subscribe(
-          () => {
-            if (typeof sucCb === 'function') {
-              sucCb();
-            }
-          },
-          () => {
-            if (typeof errCb === 'function') {
-              errCb();
-            }
-          }
-        )
-    );
   }
 
   private toggleFormState(flag: boolean): void {
@@ -148,7 +125,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   public typeAHeadSearch(query: string): void {
-    if (query.trim() === '') {
+    if (!query || query && query.trim() === '') {
       this.showPreviousSearchResults();
     } else {
       this.showSearchOptions(query);
@@ -173,6 +150,10 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
           this.recentSearchOptions = recentSearch.items;
         }
       });
+  }
+
+  public recentSelected(recentQuery: string) {
+    this.searchService.navigateToSearchResults(recentQuery);
   }
 
 

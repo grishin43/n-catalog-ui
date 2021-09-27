@@ -4,6 +4,7 @@ import {CatalogEntityEnum} from '../models/catalog-entity.enum';
 import {ProcessModel} from '../../models/domain/process.model';
 import {CatalogEntityPermissionEnum} from '../models/catalog-entity-permission.enum';
 import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
+import {GeneralSearchItem} from '../services/search/general-search-item';
 
 export class MapHelper {
 
@@ -58,6 +59,28 @@ export class MapHelper {
         id: entity.id,
         name: entity.name
       };
+    }
+    return undefined;
+  }
+
+
+  public static mapSearchToCatalogModel(entity: GeneralSearchItem): CatalogEntityModel {
+    if (entity) {
+
+
+      const permissions =
+        entity.permissionLevel?.code === 'owner' ? CatalogEntityPermissionEnum.EDITOR :
+        entity.permissionLevel?.code === 'viewer' ? CatalogEntityPermissionEnum.VIEWER :
+        CatalogEntityPermissionEnum.NO_PERMISSIONS
+
+      return {
+        id: entity.id,
+        name: entity.name,
+        type: (entity.type === 'folder')? CatalogEntityEnum.FOLDER : CatalogEntityEnum.PROCESS,
+        lastUpdated: new Date(entity.lastUpdatedAt),
+        permissions,
+        status: entity.status?.code
+      } as CatalogEntityModel;
     }
     return undefined;
   }

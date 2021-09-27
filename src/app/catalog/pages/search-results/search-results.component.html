@@ -4,10 +4,10 @@
       <h3 class="mb-0">{{'common.searchResults' | translate}}</h3>
     </div>
     <div class="col-12">
-      <ng-container *ngIf="(searchService.entities$ | async)?.length; else noResults">
+      <ng-container *ngIf="(searchResult$ | async)?.length; else noResults">
         <np-entities-table
           [displayedColumns]="tableDisplayedColumns"
-          [data]="searchService.entities$ | async"
+          [data]="(searchResult$ | async)"
           [tableClass]="'truncate-entity-name-30'">
         </np-entities-table>
       </ng-container>

@@ -141,7 +141,7 @@ export class TableActionsService {
         queryParams: {
           [CatalogRouteEnum._ID]: entity.id,
           [CatalogRouteEnum._NAME]: entity.name,
-          [CatalogRouteEnum._PARENT_ID]: entity.original.parent.id
+          [CatalogRouteEnum._PARENT_ID]: entity.original?.parent?.id
         }
       }
     );
