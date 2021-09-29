@@ -1,5 +1,6 @@
 @import "../../../../assets/styles/breakpoints";
 @import "../../../../assets/styles/keyframes";
+@import "../../../../assets/styles/mixins";
 
 .container-fluid {
   padding: 8px 34px;
@@ -88,4 +89,18 @@ np-bpmn-editor, np-xml-editor {
       margin-left: 5px;
     }
   }
+}
+
+.editor {
+  padding-right: 48px;
+  position: relative;
+
+  np-version-history {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    z-index: 100;
+  }
+
 }

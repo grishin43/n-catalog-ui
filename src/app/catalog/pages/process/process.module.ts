@@ -18,6 +18,7 @@ import {FormsModule} from '@angular/forms';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {XmlEditorComponent} from './xml-editor/xml-editor.component';
+import {VersionHistoryModule} from '../../modules/version-history/version-history.module';
 
 const routes: Routes = [
   {
@@ -39,21 +40,22 @@ const routes: Routes = [
     WysiwygEditorComponent,
     XmlEditorComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    TranslateModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatIconModule,
-    NpButtonModule,
-    MatTooltipModule,
-    AngularEditorModule,
-    FormsModule,
-    MatBottomSheetModule,
-    MatProgressSpinnerModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatIconModule,
+        NpButtonModule,
+        MatTooltipModule,
+        AngularEditorModule,
+        FormsModule,
+        MatBottomSheetModule,
+        MatProgressSpinnerModule,
+        VersionHistoryModule
+    ]
 })
 export class ProcessModule {
 }

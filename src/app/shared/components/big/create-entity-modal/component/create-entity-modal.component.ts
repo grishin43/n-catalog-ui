@@ -8,7 +8,7 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {Router} from '@angular/router';
 import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../../catalog/models/catalog-route.enum';
-import {ModalInjectableDataModel} from '../../../../../models/modal-injectable-data.model';
+import {ModalInjectableEntityModel} from '../../../../../models/modal-injectable-entity.model';
 import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {SearchModel} from '../../../../../models/domain/search.model';
@@ -44,7 +44,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<CreateEntityModalComponent>,
     private api: ApiService,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: ModalInjectableDataModel,
+    @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private translateService: TranslateService,
     private toast: ToastService
   ) {

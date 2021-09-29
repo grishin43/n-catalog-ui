@@ -60,9 +60,9 @@ export class ToastService {
     });
   }
 
-  public showMessage(i18nKey: string, duration: number = 10000): void {
+  public showMessage(i18nKeyOrString: string, duration: number = 10000): void {
     this.snackBar.openFromComponent(ToastMessageComponent, {
-      data: this.translateService.instant(i18nKey),
+      data: this.translateService.instant(i18nKeyOrString),
       duration,
       verticalPosition: 'bottom',
       horizontalPosition: 'right',

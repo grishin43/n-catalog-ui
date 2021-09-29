@@ -1,12 +1,8 @@
 @import "../breakpoints";
+@import "../mixins";
 
 .CodeMirror {
-  height: calc(100vh - 155px);
-  min-height: 350px;
   border-top: 1px solid var(--np-silver-sand);
   border-bottom: 1px solid var(--np-silver-sand);
-
-  @media screen and (max-width: $tablet-medium - 1px) {
-    height: calc(100vh - 141px);
-  }
+  @include processComponent;
 }

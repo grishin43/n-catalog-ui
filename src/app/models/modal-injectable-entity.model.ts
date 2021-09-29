@@ -3,7 +3,7 @@ import {FolderModel} from './domain/folder.model';
 import {ProcessModel} from './domain/process.model';
 import {BehaviorSubject} from 'rxjs';
 
-export interface ModalInjectableDataModel {
+export interface ModalInjectableEntityModel {
   entity?: FolderModel | ProcessModel;
   parent?: FolderModel;
   type?: CatalogEntityEnum;

@@ -1,8 +1,7 @@
 @import "../../../../../assets/styles/breakpoints";
+@import "../../../../../assets/styles/mixins";
 
 .bpmn-editor-wrapper {
-  height: calc(100vh - 155px);
-  min-height: 350px;
   display: flex;
   position: relative;
   border-right: 0;
@@ -11,10 +10,7 @@
   border-bottom: 1px;
   border-style: solid;
   border-color: var(--np-silver-sand);
-
-  @media screen and (max-width: $tablet-medium - 1px) {
-    height: calc(100vh - 141px);
-  }
+  @include processComponent;
 
   #bpmn-canvas {
     height: 100%;

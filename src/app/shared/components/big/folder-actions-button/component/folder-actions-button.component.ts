@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.enum';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateEntityModalComponent} from '../../create-entity-modal/component/create-entity-modal.component';
-import {ModalInjectableDataModel} from '../../../../../models/modal-injectable-data.model';
+import {ModalInjectableEntityModel} from '../../../../../models/modal-injectable-entity.model';
 import {FolderModel} from '../../../../../models/domain/folder.model';
 import {RenameEntityModalComponent} from '../../rename-entity-modal/component/rename-entity-modal.component';
 
@@ -38,7 +38,7 @@ export class FolderActionsButtonComponent {
         ssCb: () => {
           this.entityCreated.emit();
         }
-      } as ModalInjectableDataModel
+      } as ModalInjectableEntityModel
     });
   }
 
@@ -54,7 +54,7 @@ export class FolderActionsButtonComponent {
         ssCb: () => {
           this.entityRenamed.emit();
         }
-      } as ModalInjectableDataModel
+      } as ModalInjectableEntityModel
     });
   }
 

@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
-import {ModalInjectableDataModel} from '../../../../../models/modal-injectable-data.model';
+import {ModalInjectableEntityModel} from '../../../../../models/modal-injectable-entity.model';
 import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.enum';
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {Observable, Subscription} from 'rxjs';
@@ -23,7 +23,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialogRef: MatDialogRef<RenameEntityModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ModalInjectableDataModel,
+    @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private api: ApiService,
     private toast: ToastService,
     private translate: TranslateService

@@ -159,7 +159,21 @@
     "processSaving": "Збереження процесу",
     "youWantToSaveTheProcessChanges": "Ви бажаєте зберегти зміни процесу",
     "dontSave": "Не зберігати",
-    "renaming": "Йде перейменування..."
+    "renaming": "Йде перейменування...",
+    "show": "Показати",
+    "versionHistory": "Історія версій",
+    "hide": "Скрити",
+    "startAndStopHistory": "Історія запуску та зупинки",
+    "currentVersion": "Поточна версія",
+    "createNewVersion": "Створити нову версію",
+    "showDetails": "Показати деталі",
+    "launchVersion": "Запустити версію",
+    "versionXxLaunched": "Версію “{{versionName}}” запущено",
+    "versionXxOpened": "Версію “{{versionName}}” відкрито",
+    "author": "Автор",
+    "dateOfCreation": "Дата створення",
+    "you": "Ви",
+    "autosaving": "автозбереження"
   },
   "statuses": {
     "undefined": "Невизначений",

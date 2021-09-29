@@ -42,31 +42,38 @@
   </div>
 </div>
 
-<ng-container *ngIf="xmlMode; else bpmnEditorTemplate">
-  <np-xml-editor
-    [xml]="modelerXml"
-    (destroyed)="xmlDestroyed($event)">
-  </np-xml-editor>
-</ng-container>
+<div class="editor">
+  <ng-container *ngIf="xmlMode; else bpmnEditorTemplate">
+    <np-xml-editor
+      [xml]="modelerXml"
+      (destroyed)="xmlDestroyed($event)">
+    </np-xml-editor>
+  </ng-container>
 
-<ng-template #bpmnEditorTemplate>
-  <np-bpmn-editor
-    [data]="process"
-    [processLoadError]="errorResponse">
-  </np-bpmn-editor>
-</ng-template>
+  <ng-template #bpmnEditorTemplate>
+    <np-bpmn-editor
+      [data]="process"
+      [processLoadError]="errorResponse">
+    </np-bpmn-editor>
+  </ng-template>
 
-<div class="mode-tabs">
-  <button
-    [ngClass]="{'active': !xmlMode}"
-    class="mode-button"
-    (click)="toggleXmlMode(false)">
-    Diagram
-  </button>
-  <button
-    [ngClass]="{'active': xmlMode}"
-    class="mode-button xml"
-    (click)="toggleXmlMode(true)">
-    XML
-  </button>
+  <div class="mode-tabs">
+    <button
+      [ngClass]="{'active': !xmlMode}"
+      class="mode-button"
+      (click)="toggleXmlMode(false)">
+      Diagram
+    </button>
+    <button
+      [ngClass]="{'active': xmlMode}"
+      class="mode-button xml"
+      (click)="toggleXmlMode(true)">
+      XML
+    </button>
+  </div>
+
+  <np-version-history
+    (versionOpened)="onVersionOpened($event)">
+  </np-version-history>
+
 </div>

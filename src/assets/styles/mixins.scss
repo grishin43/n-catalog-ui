@@ -67,3 +67,12 @@
     @content;
   }
 }
+
+@mixin processComponent {
+  height: calc(100vh - 155px);
+  min-height: 350px;
+
+  @media screen and (max-width: $tablet-medium - 1px) {
+    height: calc(100vh - 141px);
+  }
+}

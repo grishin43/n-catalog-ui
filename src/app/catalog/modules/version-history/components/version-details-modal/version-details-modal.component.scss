@@ -1,0 +1,35 @@
+p {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 24px;
+  color: var(--np-gunmetal);
+}
+
+ul {
+  margin-bottom: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 20px;
+
+    & + li {
+      margin-top: 16px;
+    }
+
+    span {
+      &:first-child {
+        color: var(--np-roman-silver);
+        flex: 0 0 150px;
+        max-width: 150px;
+      }
+
+      &:last-child {
+        color: var(--np-gunmetal);
+        flex: 0 0 calc(100% - 150px);
+        max-width: calc(100% - 150px);
+      }
+    }
+  }
+}

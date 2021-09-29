@@ -19,6 +19,8 @@ import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
+import {ProcessVersionModel} from '../../../models/domain/process-version.model';
+import {HistoryTypeEnum} from '../../modules/version-history/models/history-type.enum';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -330,6 +332,14 @@ export class ApiService {
   public getProcessOwner(folderId: string, processId: string): Observable<UserModel> {
     return this.http.get<UserModel>
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.OWNER}`);
+  }
+
+  public getVersionHistory(): Observable<SearchModel<ProcessVersionModel>> {
+    return of(ContentHelper.getVersions(HistoryTypeEnum.VERSION_HISTORY));
+  }
+
+  public getStartAndStopHistory(): Observable<SearchModel<ProcessVersionModel>> {
+    return of(ContentHelper.getVersions(HistoryTypeEnum.START_AND_STOP_HISTORY));
   }
 
 }

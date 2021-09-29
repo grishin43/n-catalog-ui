@@ -17,7 +17,7 @@ import {ToolbarBlockerModel} from '../../models/toolbar/toolbar-blocker.model';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
 import {ToolbarPluginEnum} from '../../models/toolbar/toolbar-plugin.enum';
 import {CreateEntityModalComponent} from '../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
-import {ModalInjectableDataModel} from '../../../models/modal-injectable-data.model';
+import {ModalInjectableEntityModel} from '../../../models/modal-injectable-entity.model';
 import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
@@ -49,7 +49,7 @@ export class BpmnToolbarService {
                 autoFocus: false,
                 data: {
                   type: CatalogEntityEnum.PROCESS
-                } as ModalInjectableDataModel
+                } as ModalInjectableEntityModel
               });
             }
           },
@@ -105,7 +105,7 @@ export class BpmnToolbarService {
                   ssCb: (newName: string) => {
                     process.name = newName;
                   }
-                } as ModalInjectableDataModel
+                } as ModalInjectableEntityModel
               });
             }
           },

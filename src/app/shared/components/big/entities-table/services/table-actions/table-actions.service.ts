@@ -5,7 +5,7 @@ import {AppRouteEnum} from '../../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../../../catalog/models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {CreateEntityModalComponent} from '../../../create-entity-modal/component/create-entity-modal.component';
-import {ModalInjectableDataModel} from '../../../../../../models/modal-injectable-data.model';
+import {ModalInjectableEntityModel} from '../../../../../../models/modal-injectable-entity.model';
 import {MatDialog} from '@angular/material/dialog';
 import {CatalogEntityModel} from '../../../../../../catalog/models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../../../../catalog/models/catalog-entity.enum';
@@ -60,7 +60,7 @@ export class TableActionsService {
             parent: parentFolder,
             ssCb,
             asyncLoader: this.renameLoader
-          } as ModalInjectableDataModel);
+          } as ModalInjectableEntityModel);
         }
       },
       {
@@ -103,7 +103,7 @@ export class TableActionsService {
             type: CatalogEntityEnum.FOLDER,
             ssCb,
             asyncLoader: this.renameLoader
-          } as ModalInjectableDataModel);
+          } as ModalInjectableEntityModel);
         }
       },
       {
@@ -112,7 +112,7 @@ export class TableActionsService {
           this.openCreateEntityModal({
             parent: MapHelper.mapEntityToFolder(entity),
             type: CatalogEntityEnum.FOLDER
-          } as ModalInjectableDataModel);
+          } as ModalInjectableEntityModel);
         }
       },
       {
@@ -121,7 +121,7 @@ export class TableActionsService {
           this.openCreateEntityModal({
             parent: MapHelper.mapEntityToProcess(entity),
             type: CatalogEntityEnum.PROCESS
-          } as ModalInjectableDataModel);
+          } as ModalInjectableEntityModel);
         }
       },
       {
@@ -151,7 +151,7 @@ export class TableActionsService {
     this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${entity.id}`]);
   }
 
-  public openCreateEntityModal(data: ModalInjectableDataModel): void {
+  public openCreateEntityModal(data: ModalInjectableEntityModel): void {
     this.dialog.open(CreateEntityModalComponent, {
       width: '700px',
       autoFocus: false,
@@ -159,7 +159,7 @@ export class TableActionsService {
     });
   }
 
-  public openRenameEntityModal(data: ModalInjectableDataModel): void {
+  public openRenameEntityModal(data: ModalInjectableEntityModel): void {
     this.dialog.open(RenameEntityModalComponent, {
       width: '700px',
       autoFocus: false,

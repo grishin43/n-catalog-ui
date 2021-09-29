@@ -14,6 +14,7 @@ import {GrantAccessModalComponent} from '../../../shared/components/big/grant-ac
 import {MatDialog} from '@angular/material/dialog';
 import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
+import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 
 @Component({
   selector: 'np-process',
@@ -119,6 +120,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this.xmlMode = flag;
       this.processAutosave.shouldSavedCheckout(this.modelerXml);
     }
+  }
+
+  public onVersionOpened(version: ProcessVersionModel): void {
+    // TODO
   }
 
 }

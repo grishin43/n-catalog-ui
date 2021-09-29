@@ -1,0 +1,14 @@
+<ng-container *ngIf="versions">
+  <div class="d-flex flex-column">
+    <np-version-list-item
+      *ngFor="let commit of versions"
+      [ngClass]="{
+        'active': commit.active
+      }"
+      [version]="commit"
+      [type]="type"
+      (versionOpened)="onVersionOpened($event)"
+      (versionLaunched)="onVersionLaunched($event)">
+    </np-version-list-item>
+  </div>
+</ng-container>

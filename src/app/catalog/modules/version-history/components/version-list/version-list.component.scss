@@ -1,0 +1,13 @@
+.d-flex {
+  &.flex-column {
+    np-version-list-item {
+      &.active {
+        order: 1;
+      }
+
+      &:not(.active) {
+        order: 2;
+      }
+    }
+  }
+}
