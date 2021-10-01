@@ -14,6 +14,7 @@ import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.mode
 import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
 import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import { default as camundaModdleDescriptor } from 'camunda-bpmn-moddle/resources/camunda.json';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +82,7 @@ export class BpmnModelerService {
         additionalModules: [
           propertiesPanelModule,
           propertiesProviderModule,
+          camundaModdleDescriptor,
           // Re-use original palette, see CustomPaletteProvider
           {[InjectionNames.originalPaletteProvider]: ['type', OriginalPaletteProvider]},
           {[InjectionNames.paletteProvider]: ['type', CustomPaletteProvider]},
@@ -90,6 +92,9 @@ export class BpmnModelerService {
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
+        },
+        moddleExtensions: {
+          camunda: camundaModdleDescriptor
         }
       });
       cb();

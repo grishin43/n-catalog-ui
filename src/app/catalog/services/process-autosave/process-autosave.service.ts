@@ -131,7 +131,7 @@ export class ProcessAutosaveService {
       });
   }
 
-  private restartTimer(): void {
+  public restartTimer(): void {
     this.destroyTimer();
     this.startTimer();
   }

@@ -157,7 +157,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   private listenModelerChanges(): void {
     this.bpmnModeler.listenChanges(() => {
       if (this.bpmnModeler.canUndo) {
-        this.processAutosave.startTimer();
+        this.processAutosave.restartTimer();
         WindowHelper.enableBeforeUnload();
       } else {
         this.disableSaveHelpers();
