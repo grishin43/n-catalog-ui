@@ -14,7 +14,8 @@ import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.mode
 import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
 import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
-import { default as camundaModdleDescriptor } from 'camunda-bpmn-moddle/resources/camunda.json';
+import {default as camundaModdleDescriptor} from 'camunda-bpmn-moddle/resources/camunda.json';
+import resizeTask from 'bpmn-js-task-resize/lib';
 
 @Injectable({
   providedIn: 'root'
@@ -88,14 +89,16 @@ export class BpmnModelerService {
           {[InjectionNames.paletteProvider]: ['type', CustomPaletteProvider]},
           TokenSimulationModule,
           lintModule,
-          transactionBoundariesModule
+          transactionBoundariesModule,
+          resizeTask
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
         },
         moddleExtensions: {
           camunda: camundaModdleDescriptor
-        }
+        },
+        taskResizingEnabled: true
       });
       cb();
       this.listenPasteElements();
