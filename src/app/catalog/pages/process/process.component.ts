@@ -14,6 +14,7 @@ import {GrantAccessModalComponent} from '../../../shared/components/big/grant-ac
 import {MatDialog} from '@angular/material/dialog';
 import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
+import {SaveVersionModalComponent} from '../../../shared/components/big/save-version-modal/component/save-version-modal.component';
 import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 
 @Component({
@@ -124,6 +125,22 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   public onVersionOpened(version: ProcessVersionModel): void {
     // TODO
+  }
+
+  public onVersionSave(): void {
+    const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {
+      width: '700px',
+      autoFocus: false
+    })
+      .afterClosed()
+      .subscribe(
+        (saveVersionDetails: ({versionName, description})) => {
+          if (saveVersionDetails) {
+           this.processAutosave.saveVersion(this.process, saveVersionDetails.versionName, saveVersionDetails.description);
+          }
+        });
+
+    this.subscriptions.add(saveVersionResultSubscription)
   }
 
 }

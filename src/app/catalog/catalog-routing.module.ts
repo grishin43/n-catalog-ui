@@ -26,9 +26,9 @@ const routes: Routes = [
       {
         path: `${CatalogRouteEnum.PROCESS}`,
         loadChildren: () => import('./pages/process/process.module').then(m => m.ProcessModule),
-        canActivate: [ProcessActivateGuard],
+        // canActivate: [ProcessActivateGuard],
         canDeactivate: [ProcessDeactivateGuard],
-        runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+        // runGuardsAndResolvers: 'paramsOrQueryParamsChange'
       },
       {
         path: `${CatalogRouteEnum.SEARCH_RESULTS}/:${CatalogRouteEnum._QUERY}`,

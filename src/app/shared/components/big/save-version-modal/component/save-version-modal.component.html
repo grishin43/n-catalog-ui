@@ -1,0 +1,70 @@
+<div mat-dialog-title>
+  <h4>{{'saveProcessVersionModal.AddToVersionHistory' | translate}}</h4>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="saveVersionFrom"
+    (submit)="saveVersion()"
+  >
+    <div
+      class="form-group mb-0">
+      <mat-label>{{"saveProcessVersionModal.nameTitle" | translate}}</mat-label>
+      <mat-form-field
+        appearance="outline"
+         floatLabel="never">
+        <input
+          type="text"
+          matInput
+          formControlName="versionName"
+          name="versionName"
+          [placeholder]="'saveProcessVersionModal.namePlaceholder' | translate">
+        <mat-error *ngIf="saveVersionFrom.get('versionName').invalid">
+          <ng-container *ngIf="saveVersionFrom.get('versionName').hasError('required')">
+            {{'errors.required' | translate}}
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div
+      class="form-group mb-0">
+      <mat-label>{{"saveProcessVersionModal.descriptionTitle" | translate}}</mat-label>
+      <mat-form-field
+        appearance="outline"
+         floatLabel="never">
+        <textarea
+          type="text"
+          class="np-text-area"
+          matInput
+          formControlName="description"
+          name="description"
+          [placeholder]="'saveProcessVersionModal.descriptionPlaceholder' | translate">
+        </textarea>
+        <mat-error *ngIf="saveVersionFrom.get('description').invalid">
+          <ng-container *ngIf="saveVersionFrom.get('description').hasError('required')">
+            {{'errors.required' | translate}}
+          </ng-container>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'reset'"
+    [type]="'secondary'"
+    (click)="closeModal()"
+
+  >
+    {{'common.cancel' | translate}}
+  </np-button>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'submit'"
+    [type]="'primary'"
+    (click)="saveVersion()"
+  >
+    <span>
+      {{'common.save' | translate}}
+    </span>
+  </np-button>
+</mat-dialog-actions>

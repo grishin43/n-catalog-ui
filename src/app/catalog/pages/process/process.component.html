@@ -24,6 +24,19 @@
             [type]="'secondary'"
             [size]="'sm'"
             [light]="true"
+            (click)="onVersionSave()"
+            >
+            <span>
+               {{"common.saveVersion" | translate}}
+            </span>
+          </np-button>
+        </div>
+        <div class="col-auto">
+          <np-button
+            [autoMinWidth]="true"
+            [type]="'secondary'"
+            [size]="'sm'"
+            [light]="true"
             (click)="openGrantAccessModal()">
             <mat-icon>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

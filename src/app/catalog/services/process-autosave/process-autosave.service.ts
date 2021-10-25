@@ -219,4 +219,8 @@ export class ProcessAutosaveService {
     }
   }
 
+
+  saveVersion(process: ProcessModel, versionName: string, description: string) {
+    console.warn('mocked save of process version. Pending integration with BE', process, versionName, description);
+  }
 }
