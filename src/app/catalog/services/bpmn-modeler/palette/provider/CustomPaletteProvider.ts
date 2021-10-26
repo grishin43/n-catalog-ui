@@ -38,21 +38,6 @@ export class CustomPaletteProvider implements IPaletteProvider {
             }
           }
         }
-      },
-      wysiwyg: {
-        group: 'tools',
-        className: ['wysiwyg-editor', 'svg-icon'],
-        title: 'Open WYSIWYG editor',
-        action: {
-          click: () => {
-            try {
-              const paletteTrigger = document.getElementById('wysiwyg-editor-trigger');
-              paletteTrigger.click();
-            } catch (error) {
-              console.log('Could not open WYSIWYG editor\n', error);
-            }
-          }
-        }
       }
     };
   }

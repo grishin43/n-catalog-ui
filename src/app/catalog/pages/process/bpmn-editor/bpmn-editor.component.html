@@ -4,14 +4,10 @@
       <div class="bpmn-editor-wrapper"
            id="bpmn-drop-zone"
            [ngClass]="{
-          'show-scheme-validator': bpmnModeler.schemeValidatorActive,
-          'show-token-simulation': bpmnModeler.tokenSimulationActive
+          'show-scheme-validator': bpmnModelerService.schemeValidatorActive,
+          'show-token-simulation': bpmnModelerService.tokenSimulationActive
         }">
         <div class="bpmn-bad-actions">
-          <button
-            id="wysiwyg-editor-trigger"
-            (click)="openWysiwygEditor()">
-          </button>
           <button
             id="color-palette-trigger"
             [matMenuTriggerFor]="colorMenu">
@@ -74,7 +70,7 @@
       <button
         mat-menu-item
         title="{{item.title | translate}}"
-        (click)="bpmnModeler.paintElements(item)">
+        (click)="bpmnModelerService.paintElements(item)">
         <span
           [ngStyle]="{'background': item.fill, 'border-color': item.stroke}"
           class="color-scheme-sample">

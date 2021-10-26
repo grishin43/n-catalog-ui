@@ -5,7 +5,6 @@ import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.se
 import {AnimationsHelper} from '../../../helpers/animations.helper';
 import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.model';
 import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
-import {WysiwygEditorComponent} from '../wysiwyg-editor/wysiwyg-editor.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
@@ -16,6 +15,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {HttpStatusCodeEnum} from '../../../../models/http-status-code.enum';
 import {WindowHelper} from '../../../../helpers/window.helper';
+import {MatDialog} from '@angular/material/dialog';
+import {DocumentationDialogComponent} from '../documentation-dialog/documentation-dialog.component';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -50,25 +51,25 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.ctrlKey && e.code === 'Digit1') {
       e.preventDefault();
-      this.bpmnModeler.zoomTo(true);
+      this.bpmnModelerService.zoomTo(true);
     } else if (e.ctrlKey && e.code === 'KeyX') {
       e.preventDefault();
-      this.bpmnModeler.cutElements();
+      this.bpmnModelerService.cutElements();
     } else if (e.code === 'Escape') {
       e.preventDefault();
-      this.bpmnModeler.cancelCutElements();
+      this.bpmnModelerService.cancelCutElements();
     } else if (e.ctrlKey && e.code === 'KeyP') {
       e.preventDefault();
-      this.bpmnModeler.togglePropertiesPanel();
+      this.bpmnModelerService.togglePropertiesPanel();
     } else if (e.ctrlKey && e.shiftKey && e.code === 'KeyP') {
       e.preventDefault();
-      this.bpmnModeler.resetPropertiesPanel();
+      this.bpmnModelerService.resetPropertiesPanel();
     } else if (e.ctrlKey && e.code === 'KeyZ') {
       e.preventDefault();
-      this.bpmnModeler.increaseUndoCounter();
+      this.bpmnModelerService.increaseUndoCounter();
     } else if (e.ctrlKey && e.code === 'KeyY') {
       e.preventDefault();
-      this.bpmnModeler.decreaseUndoCounter();
+      this.bpmnModelerService.decreaseUndoCounter();
     } else if (e.ctrlKey && e.code === 'KeyS') {
       e.preventDefault();
       if (this.process) {
@@ -98,18 +99,19 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ApiService,
-    public bpmnModeler: BpmnModelerService,
-    private bpmnToolbar: BpmnToolbarService,
+    public bpmnModelerService: BpmnModelerService,
+    private bpmnToolbarService: BpmnToolbarService,
     private bottomSheet: MatBottomSheet,
     private processAutosave: ProcessAutosaveService,
     private toast: ToastService,
     private translate: TranslateService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
   }
 
   ngOnInit(): void {
-    this.paletteColors = this.bpmnToolbar.paletteColors;
+    this.paletteColors = this.bpmnToolbarService.paletteColors;
     this.initEditor();
   }
 
@@ -119,17 +121,41 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private initEditor(): void {
-    this.bpmnModeler.initModeler(
+    this.bpmnModelerService.initModeler(
       '#bpmn-canvas',
       '#bpmn-properties',
       () => {
         this.listenModelerChanges();
+        this.listenOpenWysiwygEditor();
         this.openProcess();
       }
     );
   }
 
-  private openProcess(): any {
+  private listenOpenWysiwygEditor(): void {
+    this.bpmnModelerService.listenOpenWysiwygEditor((e: any) => {
+      const dialogRef = this.dialog.open(DocumentationDialogComponent, {
+        width: '100%',
+        autoFocus: false,
+        data: e?.data
+      });
+      this.subscriptions.add(
+        dialogRef.afterClosed().subscribe((res: string) => {
+          e.eventBus.fire(
+            'wysiwygEditor.saveData',
+            {
+              element: e?.element,
+              node: e?.node,
+              isProcessDocumentation: e?.isProcessDocumentation,
+              data: res
+            }
+          );
+        })
+      );
+    });
+  }
+
+  private openProcess(): void {
     if (this.process) {
       if (this.process.activeResource) {
         this.openDiagram(this.process.activeResource.content);
@@ -141,8 +167,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   private openDiagram(xml: string): void {
     if (validate(xml) === true) {
-      this.bpmnModeler.openDiagram(xml).then(() => {
-        this.bpmnModeler.zoomTo(true);
+      this.bpmnModelerService.openDiagram(xml).then(() => {
+        this.bpmnModelerService.zoomTo(true);
         this.processLoader = false;
       });
     } else {
@@ -155,8 +181,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private listenModelerChanges(): void {
-    this.bpmnModeler.listenChanges(() => {
-      if (this.bpmnModeler.canUndo) {
+    this.bpmnModelerService.listenChanges(() => {
+      if (this.bpmnModelerService.canUndo) {
         this.processAutosave.restartTimer();
         WindowHelper.enableBeforeUnload();
       } else {
@@ -186,11 +212,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   public togglePropertiesPanel(): void {
-    this.bpmnModeler.togglePropertiesPanel();
-  }
-
-  public openWysiwygEditor(): void {
-    this.bottomSheet.open(WysiwygEditorComponent);
+    this.bpmnModelerService.togglePropertiesPanel();
   }
 
   public reloadPage(): void {

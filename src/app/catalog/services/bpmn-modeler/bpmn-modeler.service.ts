@@ -3,7 +3,7 @@ import {Base64} from 'js-base64';
 import {BpmnPositionEnum} from '../../models/bpmn/bpmn-position.enum';
 import {BpmnDirectionEnum} from '../../models/bpmn/bpmn-direction.enum';
 import propertiesPanelModule from 'bpmn-js-properties-panel';
-import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
+import bpmnPropertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn';
 import {BpmnSpeedEnum} from '../../models/bpmn/bpmn-speed.enum';
 import TokenSimulationModule from 'bpmn-js-token-simulation';
 import lintModule from 'bpmn-js-bpmnlint';
@@ -11,11 +11,13 @@ import lintModule from 'bpmn-js-bpmnlint';
 import bpmnlintConfig from '.bpmnlintrc';
 import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
-import {InjectionNames, OriginalPaletteProvider} from './bpmn-js/bpmn-js';
-import {CustomPaletteProvider} from './providers/CustomPaletteProvider';
+import {InjectionNames, OriginalPaletteProvider} from './palette/bpmn-js/bpmn-js';
+import {CustomPaletteProvider} from './palette/provider/CustomPaletteProvider';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {default as camundaModdleDescriptor} from 'camunda-bpmn-moddle/resources/camunda.json';
 import resizeTask from 'bpmn-js-task-resize/lib';
+import extendedDocumentationPropertiesProviderModule from './properties-panel/provider';
+import {default as documentationModdleDescriptor} from './properties-panel/descriptors/documentation.json';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +27,8 @@ export class BpmnModelerService {
   public tokenSimulationActive = false;
   public transactionBoundariesActive = false;
 
-  public bpmnModeler: any;
-  public bpmnPanelSelector: string;
+  public modeler: any;
+  public panelSelector: string;
 
   private undoCounter = 0;
 
@@ -37,7 +39,7 @@ export class BpmnModelerService {
 
   public get canPaste(): boolean {
     try {
-      const clipboardData = this.bpmnModeler.get('copyPaste')._clipboard._data;
+      const clipboardData = this.modeler.get('copyPaste')._clipboard._data;
       if (clipboardData) {
         return !!Object.keys(clipboardData).length;
       } else {
@@ -54,7 +56,7 @@ export class BpmnModelerService {
 
   public get canUndo(): boolean {
     try {
-      return this.bpmnModeler.get('commandStack')._stackIdx !== -1;
+      return this.modeler.get('commandStack')._stackIdx !== -1;
     } catch (e) {
       console.error('Could not get `stackIdx`\n', e);
     }
@@ -62,7 +64,7 @@ export class BpmnModelerService {
 
   public get hasSelectedElements(): boolean {
     try {
-      return this.bpmnModeler.get('selection').get('selectedElements').length;
+      return this.modeler.get('selection').get('selectedElements').length;
     } catch (e) {
       console.error('Could not get `selectedElements`\n', e);
     }
@@ -70,9 +72,9 @@ export class BpmnModelerService {
 
   public initModeler(containerSelector: string, propertiesPanelSelector: string, cb: () => void): void {
     if (window.hasOwnProperty('BpmnJS')) {
-      this.bpmnPanelSelector = propertiesPanelSelector;
+      this.panelSelector = propertiesPanelSelector;
       // @ts-ignore
-      this.bpmnModeler = new BpmnJS({
+      this.modeler = new BpmnJS({
         container: containerSelector,
         keyboard: {
           bindTo: window
@@ -82,7 +84,7 @@ export class BpmnModelerService {
         },
         additionalModules: [
           propertiesPanelModule,
-          propertiesProviderModule,
+          bpmnPropertiesProviderModule,
           camundaModdleDescriptor,
           // Re-use original palette, see CustomPaletteProvider
           {[InjectionNames.originalPaletteProvider]: ['type', OriginalPaletteProvider]},
@@ -90,13 +92,15 @@ export class BpmnModelerService {
           TokenSimulationModule,
           lintModule,
           transactionBoundariesModule,
-          resizeTask
+          resizeTask,
+          extendedDocumentationPropertiesProviderModule
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
         },
         moddleExtensions: {
-          camunda: camundaModdleDescriptor
+          camunda: camundaModdleDescriptor,
+          documentation: documentationModdleDescriptor
         },
         taskResizingEnabled: true
       });
@@ -105,9 +109,17 @@ export class BpmnModelerService {
     }
   }
 
+  public listenOpenWysiwygEditor(cb: (e?: any) => void): void {
+    try {
+      this.modeler.get('eventBus').on('wysiwygEditor.open', 999999, cb);
+    } catch (e) {
+      console.error('Could not set `wysiwygEditor.open` listener\n', e);
+    }
+  }
+
   public listenChanges(cb: () => void): void {
     try {
-      this.bpmnModeler.get('eventBus').on('commandStack.changed', 999999, cb);
+      this.modeler.get('eventBus').on('commandStack.changed', 999999, cb);
     } catch (e) {
       console.error('Could not set `changes` listener\n', e);
     }
@@ -115,7 +127,7 @@ export class BpmnModelerService {
 
   private listenPasteElements(): void {
     try {
-      this.bpmnModeler.get('eventBus').on('copyPaste.pasteElement', 999999, () => {
+      this.modeler.get('eventBus').on('copyPaste.pasteElement', 999999, () => {
         this.cancelCutElements();
       });
     } catch (e) {
@@ -125,8 +137,8 @@ export class BpmnModelerService {
 
   public paintElements(paletteColor: BpmnPaletteSchemeModel): void {
     try {
-      const modeling = this.bpmnModeler.get('modeling');
-      const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
+      const modeling = this.modeler.get('modeling');
+      const selectedElements = this.modeler.get('selection').get('selectedElements');
       if (selectedElements.length) {
         modeling.setColor(selectedElements, paletteColor);
       }
@@ -137,7 +149,7 @@ export class BpmnModelerService {
 
   public moveCanvasSelection(direction: BpmnDirectionEnum, speed: BpmnSpeedEnum): void {
     try {
-      const keyboardMoveSelection = this.bpmnModeler.get('keyboardMoveSelection');
+      const keyboardMoveSelection = this.modeler.get('keyboardMoveSelection');
       if (keyboardMoveSelection) {
         keyboardMoveSelection.moveSelection(direction, speed);
       }
@@ -148,7 +160,7 @@ export class BpmnModelerService {
 
   public moveCanvas(direction: BpmnDirectionEnum, speed: BpmnSpeedEnum, invertY?: boolean): void {
     try {
-      const canvasRef = this.bpmnModeler.get('canvas');
+      const canvasRef = this.modeler.get('canvas');
       const actualSpeed = speed / Math.min(Math.sqrt(canvasRef.viewbox().scale), 1);
       let dx = 0;
       let dy = 0;
@@ -177,9 +189,9 @@ export class BpmnModelerService {
 
   public distributeElements(type: BpmnDirectionEnum): void {
     try {
-      const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
+      const selectedElements = this.modeler.get('selection').get('selectedElements');
       if (selectedElements) {
-        this.bpmnModeler.get('distributeElements').trigger(selectedElements, type);
+        this.modeler.get('distributeElements').trigger(selectedElements, type);
       }
     } catch (e) {
       console.error('Could not distribute elements\n', e);
@@ -188,9 +200,9 @@ export class BpmnModelerService {
 
   public alignElements(type: BpmnPositionEnum): void {
     try {
-      const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
+      const selectedElements = this.modeler.get('selection').get('selectedElements');
       if (selectedElements) {
-        this.bpmnModeler.get('alignElements').trigger(selectedElements, type);
+        this.modeler.get('alignElements').trigger(selectedElements, type);
       }
     } catch (e) {
       console.error('Could not align elements\n', e);
@@ -199,11 +211,11 @@ export class BpmnModelerService {
 
   public selectAllElements(): void {
     try {
-      const rootElement = this.bpmnModeler.get('canvas').getRootElement();
-      const elements = this.bpmnModeler.get('elementRegistry').filter((element) => {
+      const rootElement = this.modeler.get('canvas').getRootElement();
+      const elements = this.modeler.get('elementRegistry').filter((element) => {
         return element !== rootElement;
       });
-      this.bpmnModeler.get('selection').select(elements);
+      this.modeler.get('selection').select(elements);
     } catch (e) {
       console.error('Could not select all elements\n', e);
     }
@@ -212,7 +224,7 @@ export class BpmnModelerService {
   public openSearchPad(): void {
     try {
       setTimeout(() => {
-        this.bpmnModeler.get('searchPad').open();
+        this.modeler.get('searchPad').open();
       }, 0);
     } catch (e) {
       console.error('Could not open search pad\n', e);
@@ -231,7 +243,7 @@ export class BpmnModelerService {
 
   public selectGlobalConnectTool(): void {
     try {
-      this.bpmnModeler.get('globalConnect').toggle();
+      this.modeler.get('globalConnect').toggle();
     } catch (e) {
       console.error('Could not select global connect tool\n', e);
     }
@@ -239,7 +251,7 @@ export class BpmnModelerService {
 
   public selectSpaceTool(): void {
     try {
-      this.bpmnModeler.get('spaceTool').toggle();
+      this.modeler.get('spaceTool').toggle();
     } catch (e) {
       console.error('Could not select space tool\n', e);
     }
@@ -247,7 +259,7 @@ export class BpmnModelerService {
 
   public selectLassoTool(): void {
     try {
-      this.bpmnModeler.get('lassoTool').toggle();
+      this.modeler.get('lassoTool').toggle();
     } catch (e) {
       console.error('Could not select lasso tool\n', e);
     }
@@ -255,7 +267,7 @@ export class BpmnModelerService {
 
   public selectHandTool(): void {
     try {
-      this.bpmnModeler.get('handTool').toggle();
+      this.modeler.get('handTool').toggle();
     } catch (e) {
       console.error('Could not select hand tool\n', e);
     }
@@ -263,7 +275,7 @@ export class BpmnModelerService {
 
   public redoAction(): void {
     try {
-      this.bpmnModeler.get('commandStack').redo();
+      this.modeler.get('commandStack').redo();
       this.decreaseUndoCounter();
     } catch (e) {
       console.error('Could not redo action\n', e);
@@ -272,7 +284,7 @@ export class BpmnModelerService {
 
   public undoAction(): void {
     try {
-      this.bpmnModeler.get('commandStack').undo();
+      this.modeler.get('commandStack').undo();
       this.increaseUndoCounter();
     } catch (e) {
       console.error('Could not undo action\n', e);
@@ -281,8 +293,8 @@ export class BpmnModelerService {
 
   public copyElements(): void {
     try {
-      const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
-      this.bpmnModeler.get('copyPaste').copy(selectedElements);
+      const selectedElements = this.modeler.get('selection').get('selectedElements');
+      this.modeler.get('copyPaste').copy(selectedElements);
     } catch (e) {
       console.error('Could not copy elements\n', e);
     }
@@ -290,9 +302,9 @@ export class BpmnModelerService {
 
   public cutElements(): void {
     try {
-      this.bpmnModeler.get('canvas')._container.classList.add('transparency-selections');
-      const selectedElements = this.bpmnModeler.get('selection').get('selectedElements');
-      this.bpmnModeler.get('copyPaste').copy(selectedElements);
+      this.modeler.get('canvas')._container.classList.add('transparency-selections');
+      const selectedElements = this.modeler.get('selection').get('selectedElements');
+      this.modeler.get('copyPaste').copy(selectedElements);
     } catch (e) {
       console.error('Could not cut elements\n', e);
     }
@@ -300,8 +312,8 @@ export class BpmnModelerService {
 
   public cancelCutElements(): void {
     try {
-      this.bpmnModeler.get('copyPaste').copy([]);
-      this.bpmnModeler.get('canvas')._container.classList.remove('transparency-selections');
+      this.modeler.get('copyPaste').copy([]);
+      this.modeler.get('canvas')._container.classList.remove('transparency-selections');
     } catch (e) {
       console.error('Could not toggle container class\n', e);
     }
@@ -309,8 +321,8 @@ export class BpmnModelerService {
 
   public pasteElements(): void {
     try {
-      const elements = this.bpmnModeler.get('copyPaste')._clipboard._data;
-      this.bpmnModeler.get('copyPaste').paste(elements);
+      const elements = this.modeler.get('copyPaste')._clipboard._data;
+      this.modeler.get('copyPaste').paste(elements);
     } catch (e) {
       console.error('Could not paste elements\n', e);
     }
@@ -328,8 +340,8 @@ export class BpmnModelerService {
 
   public resetPropertiesPanel(): void {
     try {
-      this.bpmnModeler.get('propertiesPanel').detach();
-      this.bpmnModeler.get('propertiesPanel').attachTo(this.bpmnPanelSelector);
+      this.modeler.get('propertiesPanel').detach();
+      this.modeler.get('propertiesPanel').attachTo(this.panelSelector);
     } catch (e) {
       console.error('Could not reset properties panel\n', e);
     }
@@ -337,7 +349,7 @@ export class BpmnModelerService {
 
   public togglePropertiesPanel(): void {
     try {
-      const containerRef = this.bpmnModeler.get('propertiesPanel')._container;
+      const containerRef = this.modeler.get('propertiesPanel')._container;
       if (containerRef.classList.contains('closed')) {
         containerRef.classList.remove('closed');
       } else {
@@ -360,7 +372,7 @@ export class BpmnModelerService {
 
   public zoomTo(auto?: boolean): void {
     try {
-      const canvas = this.bpmnModeler.get('canvas');
+      const canvas = this.modeler.get('canvas');
       if (auto) {
         canvas.zoom('fit-viewport', 'auto');
       } else {
@@ -373,7 +385,7 @@ export class BpmnModelerService {
 
   public zoomIn(): void {
     try {
-      this.bpmnModeler.get('zoomScroll').stepZoom(1);
+      this.modeler.get('zoomScroll').stepZoom(1);
     } catch (e) {
       console.error('Could not zoom in\n', e);
     }
@@ -381,7 +393,7 @@ export class BpmnModelerService {
 
   public zoomOut(): void {
     try {
-      this.bpmnModeler.get('zoomScroll').stepZoom(-1);
+      this.modeler.get('zoomScroll').stepZoom(-1);
     } catch (e) {
       console.error('Could not zoom out\n', e);
     }
@@ -389,7 +401,7 @@ export class BpmnModelerService {
 
   public async exportDiagramAsSVG(processName: string): Promise<void> {
     try {
-      const {svg} = await this.bpmnModeler.saveSVG();
+      const {svg} = await this.modeler.saveSVG();
       const encodedData = encodeURIComponent(svg);
       const a = document.createElement('a');
       a.href = `data:application/bpmn20-xml;charset=UTF-8,${encodedData}`;
@@ -402,7 +414,7 @@ export class BpmnModelerService {
 
   public async exportDiagramAsJpeg(processName: string): Promise<void> {
     try {
-      const {svg} = await this.bpmnModeler.saveSVG();
+      const {svg} = await this.modeler.saveSVG();
       const imgWidth = +svg.match(/width="(.*?)"/)[1] || 0;
       const imgHeight = +svg.match(/height="(.*?)"/)[1] || 0;
       const imgSrc = `data:image/svg+xml;base64,${Base64.encode(svg)}`;
@@ -428,13 +440,13 @@ export class BpmnModelerService {
   }
 
   public async getDiagramXml(): Promise<string> {
-    const {xml} = await this.bpmnModeler.saveXML({format: true});
+    const {xml} = await this.modeler.saveXML({format: true});
     return xml;
   }
 
   public async exportDiagramAsXML(processName: string): Promise<void> {
     try {
-      const {xml} = await this.bpmnModeler.saveXML({format: true});
+      const {xml} = await this.modeler.saveXML({format: true});
       const encodedData = encodeURIComponent(xml);
       const a = document.createElement('a');
       a.href = `data:application/bpmn20-xml;charset=UTF-8,${encodedData}`;
@@ -447,7 +459,7 @@ export class BpmnModelerService {
 
   public async openDiagram(xml: string): Promise<void> {
     try {
-      await this.bpmnModeler?.importXML(xml);
+      await this.modeler?.importXML(xml);
     } catch (err) {
       console.error('Could not import BPMN 2.0 diagram\n', err);
     }
@@ -463,7 +475,7 @@ export class BpmnModelerService {
 
   public toggleSchemeValidatorPlugin(): void {
     try {
-      const linting = this.bpmnModeler.get('linting');
+      const linting = this.modeler.get('linting');
       if (this.schemeValidatorActive === linting.isActive()) {
         linting.toggle();
       }
@@ -479,7 +491,7 @@ export class BpmnModelerService {
 
   public toggleTokenSimulationPlugin(): void {
     try {
-      this.bpmnModeler.get('toggleMode').toggleMode();
+      this.modeler.get('toggleMode').toggleMode();
       this.tokenSimulationActive = !this.tokenSimulationActive;
       const messageKey = this.tokenSimulationActive
         ? 'common.tokenSimulationActivated'
@@ -492,7 +504,7 @@ export class BpmnModelerService {
 
   public toggleTransactionBoundariesPlugin(): void {
     try {
-      const transactionBoundaries = this.bpmnModeler.get('transactionBoundaries');
+      const transactionBoundaries = this.modeler.get('transactionBoundaries');
       this.transactionBoundariesActive ? transactionBoundaries.hide() : transactionBoundaries.show();
       this.transactionBoundariesActive = !this.transactionBoundariesActive;
       const messageKey = this.transactionBoundariesActive

@@ -149,3 +149,29 @@ ul.bpp-properties-tabs-links {
     }
   }
 }
+
+.bpp-properties-entry {
+  .bpp-field-wrapper {
+    display: flex;
+
+    input {
+      padding-right: 6px;
+    }
+
+    button {
+      &.openWysiwygEditor {
+        position: static;
+        height: auto;
+        width: auto;
+        padding: 0;
+
+        > span {
+          display: inline-flex;
+          height: 100%;
+          align-items: center;
+          padding: 0 6px;
+        }
+      }
+    }
+  }
+}
