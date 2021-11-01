@@ -1,0 +1,11 @@
+.angular-editor {
+  .angular-editor-wrapper {
+    .angular-editor-textarea {
+      resize: none !important;
+
+      &:focus-visible {
+        outline: none !important;
+      }
+    }
+  }
+}

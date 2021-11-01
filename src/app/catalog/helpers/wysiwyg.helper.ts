@@ -6,13 +6,16 @@ export class WysiwygHelper {
     return {
       editable: true,
       spellcheck: true,
-      height: '15rem',
-      minHeight: '10rem',
+      height: '360px',
+      minHeight: '200px',
       translate: 'no',
       defaultParagraphSeparator: 'p',
       defaultFontName: 'Arial',
       toolbarHiddenButtons: [
-        ['bold']
+        [
+          'insertImage',
+          'insertVideo'
+        ]
       ],
       customClasses: [
         {

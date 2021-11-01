@@ -19,7 +19,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {XmlEditorComponent} from './xml-editor/xml-editor.component';
 import {VersionHistoryModule} from '../../modules/version-history/version-history.module';
 import {DocumentationDialogComponent} from './documentation-dialog/documentation-dialog.component';
-import {MatDialogModule} from '@angular/material/dialog';
 import {SaveVersionModalModule} from '../../../shared/components/big/save-version-modal/save-version-modal.module';
 
 const routes: Routes = [
@@ -57,7 +56,6 @@ const routes: Routes = [
     MatBottomSheetModule,
     MatProgressSpinnerModule,
     VersionHistoryModule,
-    MatDialogModule,
     SaveVersionModalModule
   ]
 })

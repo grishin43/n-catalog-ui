@@ -89,12 +89,14 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     e.preventDefault();
     const files = e.dataTransfer.files;
     const file = files[0];
-    const reader = new FileReader();
-    reader.onload = (pe: ProgressEvent<FileReader>): void => {
-      const xml = pe.target.result;
-      this.openDiagram(xml as string);
-    };
-    reader.readAsText(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (pe: ProgressEvent<FileReader>): void => {
+        const xml = pe.target.result;
+        this.openDiagram(xml as string);
+      };
+      reader.readAsText(file);
+    }
   }
 
   constructor(
@@ -134,13 +136,12 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   private listenOpenWysiwygEditor(): void {
     this.bpmnModelerService.listenOpenWysiwygEditor((e: any) => {
-      const dialogRef = this.dialog.open(DocumentationDialogComponent, {
-        width: '100%',
-        autoFocus: false,
-        data: e?.data
+      const bottomSheetRef = this.bottomSheet.open(DocumentationDialogComponent, {
+        data: e?.data,
+        panelClass: 'wysiwygEditor'
       });
       this.subscriptions.add(
-        dialogRef.afterClosed().subscribe((res: string) => {
+        bottomSheetRef.afterDismissed().subscribe((res: string) => {
           e.eventBus.fire(
             'wysiwygEditor.saveData',
             {

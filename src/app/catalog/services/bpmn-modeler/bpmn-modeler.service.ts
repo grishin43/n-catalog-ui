@@ -16,7 +16,6 @@ import {CustomPaletteProvider} from './palette/provider/CustomPaletteProvider';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {default as camundaModdleDescriptor} from 'camunda-bpmn-moddle/resources/camunda.json';
 import resizeTask from 'bpmn-js-task-resize/lib';
-import extendedDocumentationPropertiesProviderModule from './properties-panel/provider';
 import {default as documentationModdleDescriptor} from './properties-panel/descriptors/documentation.json';
 
 @Injectable({
@@ -92,8 +91,7 @@ export class BpmnModelerService {
           TokenSimulationModule,
           lintModule,
           transactionBoundariesModule,
-          resizeTask,
-          extendedDocumentationPropertiesProviderModule
+          resizeTask
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
