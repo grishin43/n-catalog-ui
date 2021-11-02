@@ -31,7 +31,7 @@ const routes: Routes = [
         // runGuardsAndResolvers: 'paramsOrQueryParamsChange'
       },
       {
-        path: `${CatalogRouteEnum.SEARCH_RESULTS}/:${CatalogRouteEnum._QUERY}`,
+        path: `${CatalogRouteEnum.SEARCH_RESULTS}/:${CatalogRouteEnum._QUERY}/:${CatalogRouteEnum._TYPE}`,
         loadChildren: () => import('./pages/search-results/search-results.module').then(m => m.SearchResultsModule)
       },
       {

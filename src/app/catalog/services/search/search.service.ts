@@ -12,14 +12,14 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {SearchAutocompleteDto} from './searchAutocomplete.dto';
 import {GeneralSearchWrapperDto} from './general-search-wrapper.dto';
-import {SearchModel} from '../../../models/domain/search.model';
+import {SearchType} from './search-type.enum';
 
 interface AutocompleteSearchDTO {
   value: string
 }
 
 interface GeneralSearchDTO {
-  searchType: string, // all
+  searchType: SearchType, // all
   searchValue: string,
   pageNumber: number, // for ex 0
   pageSize: number // for ex 10
@@ -59,7 +59,7 @@ export class SearchService {
       .pipe(
         tap((res: CatalogEntityModel[]) => {
           this.entities$.next(res);
-          this.navigateToSearchResults(str);
+          this.navigateToSearchResults(str, SearchType.all);
           this.saveEntities(res);
         })
       );
@@ -103,13 +103,13 @@ export class SearchService {
     }
   }
 
-  public openGeneralSearchPage(query: string): void {
+  public openGeneralSearchPage(query: string, searchType= SearchType.all): void {
     this.addRecentSearchResult(query);
-    this.navigateToSearchResults(query);
+    this.navigateToSearchResults(query, searchType);
   }
 
-  public navigateToSearchResults(queryStr: string): void {
-    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${queryStr}`]);
+  public navigateToSearchResults(queryStr: string, searchType: SearchType): void {
+    this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/${queryStr}/${searchType}`]);
   }
 
   public recentSearch$(): Observable<RecentSearchDto> {
@@ -130,12 +130,12 @@ export class SearchService {
     }));
   }
 
-  public generalSearch(query: string): Observable<GeneralSearchWrapperDto> {
+  public generalSearch(query: string, searchType = SearchType.all): Observable<GeneralSearchWrapperDto> {
     const searchRequestParams: GeneralSearchDTO = {
-      searchType: 'all',
+      searchType,
       searchValue: query,
       pageNumber: 0,
-      pageSize: 10
+      pageSize: 100
     }
 
     return this.http.post<GeneralSearchWrapperDto>(this.generalSearchUrl, searchRequestParams)

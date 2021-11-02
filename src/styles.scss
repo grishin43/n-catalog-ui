@@ -156,3 +156,13 @@ mat-icon {
     margin-top: 20px;
   }
 }
+
+i {
+  &.np-icon-recent-search {
+    background: url("/assets/images/recent.svg") no-repeat center;
+    background-size: 20px 20px;
+    width: 28px;
+    height: 20px;
+    display: inline-block;
+  }
+}

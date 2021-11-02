@@ -9,6 +9,7 @@ import {map, tap} from 'rxjs/operators';
 import {MapHelper} from '../../helpers/map.helper';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {GeneralSearchItem} from '../../services/search/general-search-item';
+import {SearchType} from '../../services/search/search-type.enum';
 
 @Component({
   selector: 'np-search-results',
@@ -17,6 +18,7 @@ import {GeneralSearchItem} from '../../services/search/general-search-item';
 })
 export class SearchResultsComponent implements OnInit, OnDestroy {
   public query: string;
+  public searchType: SearchType = SearchType.all;
   public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns();
   public searchResult$: Observable<CatalogEntityModel[]>
 
@@ -41,6 +43,7 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activateRoute.params.subscribe((params: Params) => {
         this.query = params[CatalogRouteEnum._QUERY];
+        this.searchType = params[CatalogRouteEnum._TYPE] || SearchType.all;
         this.fetchGeneralSearchResults();
       })
     );
@@ -48,7 +51,7 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
 
   private fetchGeneralSearchResults() {
     // map to TableColumnsModel as easy please in service
-    this.searchResult$ = this.searchService.generalSearch(this.query).pipe(
+    this.searchResult$ = this.searchService.generalSearch(this.query, this.searchType).pipe(
       tap((parsed) => console.log('not parsed data', parsed)),
       tap((parsed) => console.log('not parsed pppp', this.mapToCatalogEntities(parsed.foundItems))),
       map((data) =>

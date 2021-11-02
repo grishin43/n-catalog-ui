@@ -1,4 +1,4 @@
-import {Component, HostListener, EventEmitter, OnInit, Output, ViewChild, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
@@ -9,6 +9,7 @@ import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {RecentSearchDto, SearchService} from '../../../services/search/search.service';
 import {SearchAutocompleteDto} from '../../../services/search/searchAutocomplete.dto';
+import {SearchType} from '../../../services/search/search-type.enum';
 
 @Component({
   selector: 'np-header-search',
@@ -23,6 +24,8 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   public catalogEntityType = CatalogEntityEnum;
   public formStretched: boolean;
   public loader: boolean;
+
+  searchType = SearchType;
 
   private subscription = new Subscription();
 
@@ -58,21 +61,17 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.patchControlBySearchQuery();
   }
 
-  private patchControlBySearchQuery(): void {
-    this.subscription.add(
-      this.router.events.subscribe((val: RouterEvent) => {
-        if (val instanceof NavigationEnd) {
-          if (val.url.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
-            const query = val.url.split('/').pop();
-            if (query?.length) {
-              this.formControl.patchValue(query);
-            }
-          } else {
-            this.formHasStretched.next(false);
-          }
+  private async patchControlBySearchQuery() {
+    if (location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
+      const querySub = await this.activateRoute.params.subscribe((params: Params) => {
+        const query = params[CatalogRouteEnum._QUERY];
+        if (query?.trim().length) {
+          this.formControl.patchValue(query);
         }
-      })
-    );
+      });
+      this.subscription.add(querySub);
+
+    }
   }
 
   public onCrossClicked(event: MouseEvent): void {
@@ -105,8 +104,20 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   public submit(): void {
     const submittedQuery = this.formControl.value?.trim();
     if (submittedQuery.length) {
-      this.searchService.openGeneralSearchPage(submittedQuery);
+      this.openGeneralSearchPage(submittedQuery);
     }
+  }
+
+  public openSearchPage(searchType: SearchType) {
+    const submittedQuery = this.formControl.value?.trim()
+    if (submittedQuery.length) {
+      this.openGeneralSearchPage(submittedQuery, searchType);
+    }
+  }
+
+  private openGeneralSearchPage(searchQuery: string, searchType = SearchType.all) {
+    this.autocomplete.closePanel();
+    this.searchService.openGeneralSearchPage(searchQuery, searchType);
   }
 
   private toggleFormState(flag: boolean): void {
@@ -161,7 +172,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   public recentSelected(recentQuery: string): void {
-    this.searchService.navigateToSearchResults(recentQuery);
+    this.searchService.navigateToSearchResults(recentQuery, SearchType.all);
   }
 
 

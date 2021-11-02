@@ -48,7 +48,7 @@
   </mat-form-field>
   <mat-autocomplete
     #auto="matAutocomplete"
-    [class]="'search-panel'"
+    class='search-panel'
     [panelWidth]="panelWidth">
     <ng-container *ngIf="!formControl.value && recentSearchOptions.length; else autoCompleteResult">
       <!--        Recent section-->
@@ -58,18 +58,32 @@
           *ngFor="let recent of recentSearchOptions"
           (click)="recentSelected(recent.value)"
           [value]="recent.value">
-          <span>
-            {{recent.value}}
-          </span>
+           <i class="np-icon-recent-search mr-3"></i>
+          {{recent.value}}
         </mat-option>
 
       </mat-optgroup>
     </ng-container>
     <ng-template #autoCompleteResult>
       <ng-container *ngIf="autoCompleteResults; else noResults">
+        <mat-option>
+          <i class="np-icon-recent-search mr-3"></i>
+          {{formControl.value}}
+        </mat-option>
         <ng-container *ngIf="autoCompleteResults.folders?.items?.length">
-          <mat-optgroup
-            [label]="('common.folders' | translate)">
+          <mat-optgroup>
+            <mat-lable
+              (click)="openSearchPage(searchType.foldersOnly)"
+            >
+              <div class="row">
+                <div class="col-11">{{'counters.foldersCount4' | translate : {count: autoCompleteResults.folders?.totalResults} }}</div>
+                <div class="col-1">
+                  <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.29006 2.44323L5.17006 5.9999L1.29006 9.55656C0.900059 9.91406 0.900059 10.4916 1.29006 10.8491C1.68006 11.2066 2.31006 11.2066 2.70006 10.8491L7.29006 6.64156C7.68006 6.28406 7.68006 5.70656 7.29006 5.34906L2.70006 1.14156C2.31006 0.784063 1.68006 0.784063 1.29006 1.14156C0.910059 1.49906 0.900059 2.08573 1.29006 2.44323Z" fill="#8A95A3"/>
+                  </svg>
+                </div>
+              </div>
+            </mat-lable>
             <!--        Folder section-->
             <mat-option
               *ngFor="let folder of autoCompleteResults.folders.items"
@@ -98,9 +112,19 @@
 
         <ng-container *ngIf="autoCompleteResults.processes?.items?.length">
           <mat-optgroup
-            *ngIf="autoCompleteResults?.processes?.items?.length"
-            [label]="'common.processes' | translate"
-          >
+            *ngIf="autoCompleteResults?.processes?.items?.length">
+            <mat-lable
+              (click)="openSearchPage(searchType.processOnly)"
+            >
+              <div class="row">
+                <div class="col-11">{{'counters.processesCount4' | translate : {count: autoCompleteResults.processes?.totalResults} }}</div>
+                <div class="col-1">
+                  <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.29006 2.44323L5.17006 5.9999L1.29006 9.55656C0.900059 9.91406 0.900059 10.4916 1.29006 10.8491C1.68006 11.2066 2.31006 11.2066 2.70006 10.8491L7.29006 6.64156C7.68006 6.28406 7.68006 5.70656 7.29006 5.34906L2.70006 1.14156C2.31006 0.784063 1.68006 0.784063 1.29006 1.14156C0.910059 1.49906 0.900059 2.08573 1.29006 2.44323Z" fill="#8A95A3"/>
+                  </svg>
+                </div>
+              </div>
+            </mat-lable>
             <mat-option *ngFor="let process of autoCompleteResults.processes.items"
                 (click)="onProcessSelected(process.id, process.name)"
                 [value]="process.name"

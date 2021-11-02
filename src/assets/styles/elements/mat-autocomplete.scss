@@ -1,6 +1,9 @@
 @import "../breakpoints";
 
 .mat-autocomplete-panel {
+  &.search-panel {
+    max-height: 660px;
+  }
 
   &:not([class*=mat-elevation-z]) {
     box-shadow: 0 2px 5px rgba(74, 84, 97, 0.1);

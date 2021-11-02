@@ -216,9 +216,11 @@
     "foldersCount1": "{{count}} папка",
     "foldersCount2": "{{count}} папки",
     "foldersCount3": "{{count}} папок",
+    "foldersCount4": "Папок ({{count}})",
     "processesCount1": "{{count}} процес",
     "processesCount2": "{{count}} процеси",
-    "processesCount3": "{{count}} процесів"
+    "processesCount3": "{{count}} процесів",
+    "processesCount4": "Процесів ({{count}})"
   },
   "loaders": {
     "rename": "Йде перейменування “{{name}}”"
