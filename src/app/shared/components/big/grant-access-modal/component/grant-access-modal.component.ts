@@ -2,7 +2,7 @@ import {
   AfterViewChecked,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, HostListener,
   Inject,
   OnDestroy,
   OnInit,
@@ -48,6 +48,13 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   public workgroupLoader: boolean;
 
   private subs = new Subscription();
+
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.formSubmit();
+    }
+  }
 
   constructor(
     private dialogRef: MatDialogRef<GrantAccessModalComponent>,

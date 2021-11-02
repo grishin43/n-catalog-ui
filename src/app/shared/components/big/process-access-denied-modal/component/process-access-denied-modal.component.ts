@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {UserModel} from '../../../../../models/domain/user.model';
@@ -14,6 +14,13 @@ export class ProcessAccessDeniedModalComponent implements OnInit, OnDestroy {
   public loader: boolean;
 
   private subs = new Subscription();
+
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.closeModal();
+    }
+  }
 
   constructor(
     private dialogRef: MatDialogRef<ProcessAccessDeniedModalComponent>,

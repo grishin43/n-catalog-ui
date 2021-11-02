@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ProcessAutosaveService} from '../../../../../catalog/services/process-autosave/process-autosave.service';
 
@@ -8,6 +8,13 @@ import {ProcessAutosaveService} from '../../../../../catalog/services/process-au
   styleUrls: ['./prevent-process-close-modal.component.scss']
 })
 export class PreventProcessCloseModalComponent {
+
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.save();
+    }
+  }
 
   constructor(
     private dialogRef: MatDialogRef<PreventProcessCloseModalComponent>,

@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -39,6 +39,13 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public newFolderMode: boolean;
 
   private subscription = new Subscription();
+
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.formSubmit();
+    }
+  }
 
   constructor(
     private dialogRef: MatDialogRef<CreateEntityModalComponent>,

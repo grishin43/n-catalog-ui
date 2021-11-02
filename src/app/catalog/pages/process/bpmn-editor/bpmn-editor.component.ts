@@ -15,7 +15,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {HttpStatusCodeEnum} from '../../../../models/http-status-code.enum';
 import {WindowHelper} from '../../../../helpers/window.helper';
-import {MatDialog} from '@angular/material/dialog';
 import {DocumentationDialogComponent} from '../documentation-dialog/documentation-dialog.component';
 
 @Component({
@@ -107,8 +106,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     private processAutosave: ProcessAutosaveService,
     private toast: ToastService,
     private translate: TranslateService,
-    private router: Router,
-    private dialog: MatDialog
+    private router: Router
   ) {
   }
 

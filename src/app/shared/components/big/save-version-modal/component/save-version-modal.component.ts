@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
@@ -9,24 +9,32 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class SaveVersionModalComponent implements OnInit {
 
-  saveVersionFrom: FormGroup;
+  public saveVersionFrom: FormGroup;
+
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.saveVersion();
+    }
+  }
 
   constructor(
     private dialogRef: MatDialogRef<SaveVersionModalComponent>,
-  ) { }
+  ) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initForm();
   }
 
   private initForm(): void {
     this.saveVersionFrom = new FormGroup({
-      'versionName': new FormControl('', [Validators.required]),
-      'description': new FormControl('')
+      versionName: new FormControl('', [Validators.required]),
+      description: new FormControl('')
     });
   }
 
-  saveVersion() {
+  saveVersion(): void {
     if (this.saveVersionFrom.valid) {
       const formDetails = this.saveVersionFrom.value;
       this.dialogRef.close(formDetails);

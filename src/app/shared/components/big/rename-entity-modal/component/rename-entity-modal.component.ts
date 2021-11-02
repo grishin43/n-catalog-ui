@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
@@ -20,6 +20,13 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
   public formControlName = FormFieldEnum;
 
   private subscription = new Subscription();
+
+  @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.formSubmit();
+    }
+  }
 
   constructor(
     private dialogRef: MatDialogRef<RenameEntityModalComponent>,
