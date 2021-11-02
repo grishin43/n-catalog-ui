@@ -4,7 +4,7 @@ import {FormControl} from '@angular/forms';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Params, Router, RouterEvent} from '@angular/router';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {RecentSearchDto, SearchService} from '../../../services/search/search.service';
@@ -59,12 +59,20 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   private patchControlBySearchQuery(): void {
-    if (location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
-      const query = location.pathname.split('/').pop();
-      if (query?.trim().length) {
-        this.formControl.patchValue(query);
-      }
-    }
+    this.subscription.add(
+      this.router.events.subscribe((val: RouterEvent) => {
+        if (val instanceof NavigationEnd) {
+          if (val.url.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
+            const query = val.url.split('/').pop();
+            if (query?.length) {
+              this.formControl.patchValue(query);
+            }
+          } else {
+            this.formHasStretched.next(false);
+          }
+        }
+      })
+    );
   }
 
   public onCrossClicked(event: MouseEvent): void {
@@ -95,7 +103,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   public submit(): void {
-    const submittedQuery = this.formControl.value?.trim()
+    const submittedQuery = this.formControl.value?.trim();
     if (submittedQuery.length) {
       this.searchService.openGeneralSearchPage(submittedQuery);
     }
@@ -152,7 +160,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
       });
   }
 
-  public recentSelected(recentQuery: string) {
+  public recentSelected(recentQuery: string): void {
     this.searchService.navigateToSearchResults(recentQuery);
   }
 
