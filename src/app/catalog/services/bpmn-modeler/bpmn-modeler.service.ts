@@ -17,6 +17,7 @@ import {ToastService} from '../../../shared/components/small/toast/service/toast
 import {default as camundaModdleDescriptor} from 'camunda-bpmn-moddle/resources/camunda.json';
 import resizeTask from 'bpmn-js-task-resize/lib';
 import {default as documentationModdleDescriptor} from './properties-panel/descriptors/documentation.json';
+import embeddedCommentsModule from './embedded-comments';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class BpmnModelerService {
   public schemeValidatorActive = false;
   public tokenSimulationActive = false;
   public transactionBoundariesActive = false;
+  public embeddedCommentsActive = false;
 
   public modeler: any;
   public panelSelector: string;
@@ -91,7 +93,8 @@ export class BpmnModelerService {
           TokenSimulationModule,
           lintModule,
           transactionBoundariesModule,
-          resizeTask
+          resizeTask,
+          embeddedCommentsModule
         ],
         propertiesPanel: {
           parent: propertiesPanelSelector
@@ -511,6 +514,20 @@ export class BpmnModelerService {
       this.showToast(messageKey, 1500);
     } catch (err) {
       console.error('Could not toggle transaction boundaries plugin\n', err);
+    }
+  }
+
+  public toggleEmbeddedCommentsPlugin(): void {
+    try {
+      const comments = this.modeler.get('comments');
+      this.embeddedCommentsActive ? comments.hide() : comments.show();
+      this.embeddedCommentsActive = !this.embeddedCommentsActive;
+      const messageKey = this.embeddedCommentsActive
+        ? 'common.embeddedCommentsActivated'
+        : 'common.embeddedCommentsDeActivated';
+      this.showToast(messageKey, 1500);
+    } catch (err) {
+      console.error('Could not toggle embedded comments plugin\n', err);
     }
   }
 

@@ -174,7 +174,10 @@
     "dateOfCreation": "Дата створення",
     "you": "Ви",
     "autosaving": "автозбереження",
-    "documentation": "Документація"
+    "documentation": "Документація",
+    "embeddedComments": "Вбудовані коментарі",
+    "embeddedCommentsActivated": "Вбудовані коментарі активовано",
+    "embeddedCommentsDeActivated": "Вбудовані коментарі деактивовано"
   },
   "saveProcessVersionModal": {
     "AddToVersionHistory": "Додати до історії версій",

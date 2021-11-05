@@ -334,6 +334,10 @@ export class BpmnToolbarService {
           {
             name: ToolbarPluginEnum.TRANSACTION_BOUNDARIES,
             cb: () => this.bpmnModeler.toggleTransactionBoundariesPlugin()
+          },
+          {
+            name: ToolbarPluginEnum.EMBEDDED_COMMENTS,
+            cb: () => this.bpmnModeler.toggleEmbeddedCommentsPlugin()
           }
         ]
       },

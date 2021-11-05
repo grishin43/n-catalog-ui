@@ -31,7 +31,7 @@ export class ToolbarActionBtnComponent {
   }
 
   public get showTick(): boolean {
-    return this.isTransactionBoundariesAndActive || this.isTokenSimulationAndActive || this.isSchemeValidatorAndActive;
+    return this.isTransactionBoundariesAndActive || this.isTokenSimulationAndActive || this.isSchemeValidatorAndActive || this.isEmbeddedCommentsAndActive;
   }
 
   public get isTransactionBoundariesAndActive(): boolean {
@@ -44,6 +44,10 @@ export class ToolbarActionBtnComponent {
 
   public get isSchemeValidatorAndActive(): boolean {
     return this.action.name === this.toolbarPlugin.SCHEME_VALIDATOR && this.bpmnModeler.schemeValidatorActive;
+  }
+
+  public get isEmbeddedCommentsAndActive(): boolean {
+    return this.action.name === this.toolbarPlugin.EMBEDDED_COMMENTS && this.bpmnModeler.embeddedCommentsActive;
   }
 
 }

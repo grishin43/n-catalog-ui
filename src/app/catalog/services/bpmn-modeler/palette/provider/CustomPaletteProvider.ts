@@ -76,6 +76,7 @@ export class CustomPaletteProvider implements IPaletteProvider {
                 const updateElement = this.setValue(getCorrectBusinessObject(element, isProcessDocumentation), element, {
                   extendedDocumentation: data
                 });
+                console.log(updateElement);
                 if (updateElement) {
                   const oldValue = this.getValue(bo).extendedDocumentation;
                   const newValue = updateElement.context?.properties?.extendedDocumentation;

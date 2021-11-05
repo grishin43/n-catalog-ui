@@ -1,0 +1,157 @@
+.comments-overlay {
+  background: #CCC;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.comments-overlay.expanded {
+  z-index: 100;
+  position: absolute; /* for z-index to work */
+}
+
+.comments-overlay .toggle {
+  white-space: nowrap;
+}
+
+.comments-overlay.expanded .comment-count,
+.comments-overlay .content {
+  display: none;
+}
+
+.comments-overlay .comment-count {
+  display: inline;
+}
+
+.comments-overlay.expanded .content {
+  display: block;
+}
+
+.comments-overlay .comment {
+  border-top: dotted 1px #666;
+  margin-top: 4px;
+  padding-top: 4px;
+  white-space: pre-wrap;
+
+  position: relative;
+}
+
+.comments-overlay .comment .delete {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+
+  text-decoration: none;
+
+  display: none;
+}
+
+.comments-overlay .comment:hover .delete {
+  display: block;
+}
+
+.comments-overlay .edit {
+
+}
+
+body, html {
+  font-family: sans-serif;
+}
+
+.comments-overlay {
+  background: #FAFAFA;
+  border: solid 1px #CCC;
+  font-size: 12px;
+  display: none;
+  border-radius: 2px;
+}
+
+.selected .comments-overlay,
+.comments-overlay.with-comments {
+  display: block;
+}
+
+.comments-overlay .edit {
+  margin: 2px 0 0 0;
+  padding-top: 2px;
+}
+
+.comments-overlay .edit textarea {
+  border: none;
+  margin: 0;
+}
+
+.comments-overlay .icon-comment:hover {
+  color: #666;
+  cursor: pointer;
+}
+
+.comments-overlay .comment {
+  padding: 4px;
+  border: none;
+  border-bottom: solid 2px #FAFAFA;
+  margin-bottom: 4px;
+}
+
+
+.comments-overlay .icon-comment {
+  margin-right: 2px;
+}
+
+.comments-overlay .edit textarea {
+  padding: 4px;
+}
+
+.comments-overlay .edit textarea:active,
+.comments-overlay .edit textarea:focus {
+  outline: none;
+}
+
+/** fonts **/
+@font-face {
+  font-family: 'bpmn-js-comments';
+  src: url('../../fonts/bpmn-js-comments/bpmn-js-comments.eot?23532594');
+  src: url('../../fonts/bpmn-js-comments/bpmn-js-comments.eot?23532594#iefix') format('embedded-opentype'),
+  url('../../fonts/bpmn-js-comments/bpmn-js-comments.woff?23532594') format('woff'),
+  url('../../fonts/bpmn-js-comments/bpmn-js-comments.ttf?23532594') format('truetype'),
+  url('../../fonts/bpmn-js-comments/bpmn-js-comments.svg?23532594#bpmn-js-comments') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-comment"]:before,
+[class*=" icon-comment"]:before,
+[class^="icon-delete"]:before,
+[class*=" icon-delete"]:before {
+  font-family: "bpmn-js-comments", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  text-align: center;
+
+  font-variant: normal;
+  text-transform: none;
+
+  line-height: 1em;
+}
+
+.icon-comment:before {
+  content: '\e800';
+}
+
+.icon-delete:before {
+  content: '\e802';
+}
+
+.djs-overlay {
+  &.djs-overlay-comments {
+    .comments-overlay {
+      &.hidden {
+        display: none !important;
+      }
+    }
+  }
+}
