@@ -255,7 +255,7 @@ export class ApiService {
           (recentProcesses: CatalogEntityModel[]) => {
             return recentProcesses.map((process: CatalogEntityModel) => {
               if (!process.permissions) {
-                process.permissions = CatalogEntityPermissionEnum.NO_PERMISSIONS;
+                process.permissions = CatalogEntityPermissionEnum.NO_ACCESS;
               }
               return process;
             });

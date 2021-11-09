@@ -69,7 +69,7 @@
         }
       }
 
-      &:not(.disabled) {
+      &:not(.disabled):not(.blocked) {
         cursor: pointer;
 
         &:hover {

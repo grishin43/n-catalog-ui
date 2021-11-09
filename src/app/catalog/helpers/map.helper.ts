@@ -33,7 +33,7 @@ export class MapHelper {
           id: process.id,
           name: process.name,
           type: CatalogEntityEnum.PROCESS,
-          permissions: CatalogEntityPermissionEnum.EDITOR,
+          permissions: process.currentUserPermissionLevel?.code,
           link: process.url,
           original: process,
           status: NpStatusPillEnum.DRAFT
@@ -66,20 +66,20 @@ export class MapHelper {
 
   public static mapSearchToCatalogModel(entity: GeneralSearchItem): CatalogEntityModel {
     if (entity) {
-
-
       const permissions =
-        entity.permissionLevel?.code === 'owner' ? CatalogEntityPermissionEnum.EDITOR :
-        entity.permissionLevel?.code === 'viewer' ? CatalogEntityPermissionEnum.VIEWER :
-        CatalogEntityPermissionEnum.NO_PERMISSIONS
-
+        entity.permissionLevel?.code === 'owner'
+          ? CatalogEntityPermissionEnum.EDITOR
+          : entity.permissionLevel?.code === 'viewer'
+            ? CatalogEntityPermissionEnum.VIEWER
+            : CatalogEntityPermissionEnum.NO_ACCESS;
       return {
         id: entity.id,
         name: entity.name,
-        type: (entity.type === 'folder')? CatalogEntityEnum.FOLDER : CatalogEntityEnum.PROCESS,
+        type: (entity.type === 'folder') ? CatalogEntityEnum.FOLDER : CatalogEntityEnum.PROCESS,
         lastUpdated: new Date(entity.lastUpdatedAt),
         permissions,
-        status: entity.status?.code
+        status: entity.status?.code,
+        original: entity
       } as CatalogEntityModel;
     }
     return undefined;

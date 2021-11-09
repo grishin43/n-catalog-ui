@@ -26,8 +26,10 @@ export class EntitiesTableComponent implements OnInit {
   @Output() entityDeleted = new EventEmitter<CatalogEntityModel>();
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
+  public eCatalogEntityAction = CatalogEntityActionEnum;
 
   @Input() set data(value: CatalogEntityModel[] | any) {
+    console.log(value);
     this.dataSource = new MatTableDataSource(value);
   }
 
@@ -61,15 +63,17 @@ export class EntitiesTableComponent implements OnInit {
   }
 
   public openItem(item: CatalogEntityModel): void {
-    if (item.type === CatalogEntityEnum.FOLDER) {
-      this.tableActions.openFolder(item);
-    } else if (item.type === CatalogEntityEnum.PROCESS) {
-      this.tableActions.openProcess(item);
+    if (item.permissions !== CatalogEntityPermissionEnum.NO_ACCESS) {
+      if (item.type === CatalogEntityEnum.FOLDER) {
+        this.tableActions.openFolder(item);
+      } else if (item.type === CatalogEntityEnum.PROCESS) {
+        this.tableActions.openProcess(item);
+      }
     }
   }
 
   public entityRenamedSsCb = () => {
     this.entityRenamed.emit();
-  }
+  };
 
 }

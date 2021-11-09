@@ -175,7 +175,7 @@ export class ContentHelper {
         lastUpdated: new Date(),
         status: NpStatusPillEnum.DRAFT,
         link: '../../../assets/bpmn/token-example.bpmn',
-        permissions: CatalogEntityPermissionEnum.NO_PERMISSIONS
+        permissions: CatalogEntityPermissionEnum.NO_ACCESS
       }
     ];
   }

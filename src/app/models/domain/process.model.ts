@@ -1,9 +1,11 @@
 import {FolderModel} from './folder.model';
 import {ResourceModel} from './resource.model';
+import {ProcessPermission} from './process-permission';
 
 export interface ProcessModel {
   id?: string;
   name?: string;
+  ownerUsername?: string;
   origin?: string;
   parent?: FolderModel;
   path?: FolderModel[];
@@ -11,5 +13,6 @@ export interface ProcessModel {
   url?: string;
   subRoot?: string;
   activeResource?: ResourceModel;
+  currentUserPermissionLevel?: ProcessPermission;
 }
 

@@ -177,7 +177,8 @@
     "documentation": "Документація",
     "embeddedComments": "Вбудовані коментарі",
     "embeddedCommentsActivated": "Вбудовані коментарі активовано",
-    "embeddedCommentsDeActivated": "Вбудовані коментарі деактивовано"
+    "embeddedCommentsDeActivated": "Вбудовані коментарі деактивовано",
+    "noaccess": "Немає прав"
   },
   "saveProcessVersionModal": {
     "AddToVersionHistory": "Додати до історії версій",

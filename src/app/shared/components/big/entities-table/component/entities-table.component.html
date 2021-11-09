@@ -122,7 +122,7 @@
 
           <ng-container *ngSwitchCase="tableDataType.STATUS">
             <ng-container
-              *ngIf="row.permissions === entityPermission.VIEWER || row.permissions === entityPermission.EDITOR">
+              *ngIf="row.permissions !== entityPermission.NO_ACCESS">
               <ng-container *ngIf="row?.type === catalogEntityType.PROCESS">
                 <np-status-pill
                   [status]="row[col?.name]">
@@ -133,7 +133,7 @@
 
           <ng-container *ngSwitchCase="tableDataType.ACTIONS">
             <ng-container
-              *ngIf="row.permissions === entityPermission.VIEWER || row.permissions === entityPermission.EDITOR; else requestPermission">
+              *ngIf="row.permissions !== entityPermission.NO_ACCESS; else requestAccess">
               <ng-container *ngIf="row?.type === catalogEntityType.PROCESS || row?.type === catalogEntityType.FOLDER">
                 <button mat-icon-button
                         (click)="$event.preventDefault(); $event.stopPropagation();"
@@ -162,7 +162,7 @@
                 </mat-menu>
               </ng-container>
             </ng-container>
-            <ng-template #requestPermission>
+            <ng-template #requestAccess>
               <np-button
                 [type]="'secondary'"
                 [size]="'sm'">
@@ -188,7 +188,7 @@
                       fill="#8A95A3"/>
                   </svg>
                 </ng-container>
-                <ng-container *ngIf="row[col?.name] === entityPermission.NO_PERMISSIONS">
+                <ng-container *ngIf="row[col?.name] === entityPermission.NO_ACCESS">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M15 6.66658H14.1667V4.99992C14.1667 2.69992 12.3 0.833252 10 0.833252C7.7 0.833252 5.83333 2.69992 5.83333 4.99992V6.66658H5C4.08333 6.66658 3.33333 7.41658 3.33333 8.33325V16.6666C3.33333 17.5833 4.08333 18.3333 5 18.3333H15C15.9167 18.3333 16.6667 17.5833 16.6667 16.6666V8.33325C16.6667 7.41658 15.9167 6.66658 15 6.66658ZM7.5 4.99992C7.5 3.61659 8.61666 2.49992 10 2.49992C11.3833 2.49992 12.5 3.61659 12.5 4.99992V6.66658H7.5V4.99992ZM15 16.6666H5V8.33325H15V16.6666ZM10 14.1666C10.9167 14.1666 11.6667 13.4166 11.6667 12.4999C11.6667 11.5833 10.9167 10.8333 10 10.8333C9.08333 10.8333 8.33333 11.5833 8.33333 12.4999C8.33333 13.4166 9.08333 14.1666 10 14.1666Z"
@@ -217,10 +217,11 @@
 
     <mat-row
       matRipple
-      matRippleColor="{{rippleLightColor}}"
+      [matRippleColor]="rippleLightColor"
+      [matRippleDisabled]="row.permissions === entityPermission.NO_ACCESS || (tableActions.renameLoader | async) === row?.id"
       (click)="openItem(row)"
       [ngClass]="{
-        'blocked': row.permissions !== entityPermission.VIEWER && row.permissions !== entityPermission.EDITOR,
+        'blocked': row.permissions === entityPermission.NO_ACCESS,
         'disabled': (tableActions.renameLoader | async) === row?.id
       }"
       *matRowDef="let row; columns: displayedColumns | toStringArray : 'name';">
@@ -234,11 +235,20 @@
   #rowActionButton
   let-action="action"
   let-entity="entity">
-  <button
-    mat-menu-item
-    [ngClass]="action.class"
-    [disabled]="action.disabled"
-    (click)="action.cb(entity, parentFolder, entityRenamedSsCb)">
-    {{'common.' + action.name | translate}}
-  </button>
+  <ng-container
+    *ngIf="
+    entity.type === catalogEntityType.PROCESS
+    && (action.name === eCatalogEntityAction.RENAME || action.name === eCatalogEntityAction.DELETE)
+    && entity.permissions !== entityPermission.OWNER;
+    else otherActionButton">
+  </ng-container>
+  <ng-template #otherActionButton>
+    <button
+      mat-menu-item
+      [ngClass]="action.class"
+      [disabled]="action.disabled"
+      (click)="action.cb(entity, parentFolder, entityRenamedSsCb)">
+      {{'common.' + action.name | translate}}
+    </button>
+  </ng-template>
 </ng-template>

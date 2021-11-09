@@ -38,7 +38,7 @@ export class EntitiesTabService {
     this.processes.next(entitiesValue);
     LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, entitiesValue);
     const entityToOpen = entitiesValue[removeIndex - 1] || entitiesValue[removeIndex + 1] || entitiesValue[0];
-    if (entitiesValue.length >= 1 && entityToOpen) {
+    if (entitiesValue.length >= 1 && entityToOpen && entity.parent?.id) {
       this.router.navigate(
         [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
         {
