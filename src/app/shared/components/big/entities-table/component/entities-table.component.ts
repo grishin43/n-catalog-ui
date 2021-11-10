@@ -29,7 +29,6 @@ export class EntitiesTableComponent implements OnInit {
   public eCatalogEntityAction = CatalogEntityActionEnum;
 
   @Input() set data(value: CatalogEntityModel[] | any) {
-    console.log(value);
     this.dataSource = new MatTableDataSource(value);
   }
 
@@ -74,6 +73,6 @@ export class EntitiesTableComponent implements OnInit {
 
   public entityRenamedSsCb = () => {
     this.entityRenamed.emit();
-  };
+  }
 
 }

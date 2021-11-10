@@ -95,7 +95,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     newName: string
   ): void {
     this.closeModal();
-    if (this.data.asyncLoader) {
+    if (!!this.data.asyncLoader.getValue()) {
       this.data.asyncLoader.next(this.data.entity.id);
     } else {
       this.toast.showLoader(loaderTitle);
@@ -104,7 +104,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
       request.subscribe(() => {
         // TODO
         setTimeout(() => {
-          if (this.data.asyncLoader) {
+          if (!!this.data.asyncLoader.getValue()) {
             this.data.asyncLoader.next(undefined);
           } else {
             this.toast.close();
@@ -115,7 +115,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
           }
         }, 2000);
       }, (err: HttpErrorResponse) => {
-        if (this.data.asyncLoader) {
+        if (!!this.data.asyncLoader.getValue()) {
           this.data.asyncLoader.next(undefined);
         }
         this.toast.showError(

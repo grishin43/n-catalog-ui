@@ -136,7 +136,7 @@
     "loading": "Завантаження...",
     "gotIt": "Зрозуміло",
     "processSuccessfullyRenamed": "Процес “{{processOldName}}” перейменовано на “{{processNewName}}”",
-    "folderSuccessfullyRenamed": "Процес “{{folderOldName}}” перейменовано на “{{folderNewName}}”",
+    "folderSuccessfullyRenamed": "Папку “{{folderOldName}}” перейменовано на “{{folderNewName}}”",
     "success": "Успішно!",
     "enterEmailOrName": "Введіть email або ім’я користувача",
     "email": "Email",
