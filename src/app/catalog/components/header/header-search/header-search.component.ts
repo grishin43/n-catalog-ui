@@ -144,7 +144,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   public typeAHeadSearch(query: string): void {
-    if (!query || query && query.trim() === '') {
+    if (!query || query.trim().length < 3) {
       this.showPreviousSearchResults();
     } else {
       this.showSearchOptions(query);
