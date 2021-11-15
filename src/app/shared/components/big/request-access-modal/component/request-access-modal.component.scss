@@ -1,0 +1,27 @@
+.mat-dialog-title {
+  margin-bottom: 16px;
+}
+
+mat-dialog-content {
+  p {
+    & + .user {
+      margin-top: 24px;
+    }
+  }
+
+  .user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+
+    np-avatar {
+      margin-right: 12px;
+    }
+
+    span {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
+}

@@ -1,7 +1,7 @@
 .cdk-global-overlay-wrapper {
   mat-dialog-container {
     box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
-    color: inherit;
+    color: var(--np-gunmetal);
     border-radius: 10px;
     padding: 32px;
 

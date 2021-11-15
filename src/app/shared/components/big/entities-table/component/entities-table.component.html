@@ -133,7 +133,7 @@
 
           <ng-container *ngSwitchCase="tableDataType.ACTIONS">
             <ng-container
-              *ngIf="row.permissions !== entityPermission.NO_ACCESS; else requestAccess">
+              *ngIf="row.permissions !== entityPermission.NO_ACCESS; else requestAccessTemp">
               <ng-container *ngIf="row?.type === catalogEntityType.PROCESS || row?.type === catalogEntityType.FOLDER">
                 <button mat-icon-button
                         (click)="$event.preventDefault(); $event.stopPropagation();"
@@ -162,10 +162,11 @@
                 </mat-menu>
               </ng-container>
             </ng-container>
-            <ng-template #requestAccess>
+            <ng-template #requestAccessTemp>
               <np-button
                 [type]="'secondary'"
-                [size]="'sm'">
+                [size]="'sm'"
+                (click)="requestEntityTemplate(row)">
                 {{'common.requestPermission' | translate}}
               </np-button>
             </ng-template>

@@ -12,6 +12,8 @@ import {EntityTableColumnName} from '../../../../../catalog/helpers/table.helper
 import {MatRippleHelper} from '../../../../../catalog/helpers/mat-ripple.helper';
 import {FolderModel} from '../../../../../models/domain/folder.model';
 import {CatalogEntityActionEnum} from '../models/catalog-entity-action.enum';
+import {MatDialog} from '@angular/material/dialog';
+import {RequestAccessModalComponent} from '../../request-access-modal/component/request-access-modal.component';
 
 @Component({
   selector: 'np-entities-table',
@@ -33,7 +35,8 @@ export class EntitiesTableComponent implements OnInit {
   }
 
   constructor(
-    public tableActions: TableActionsService
+    public tableActions: TableActionsService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -73,6 +76,14 @@ export class EntitiesTableComponent implements OnInit {
 
   public entityRenamedSsCb = () => {
     this.entityRenamed.emit();
+  };
+
+  public requestEntityTemplate(entity: CatalogEntityModel): void {
+    this.dialog.open(RequestAccessModalComponent, {
+      width: '700px',
+      autoFocus: false,
+      data: entity?.original?.ownerUsername
+    });
   }
 
 }

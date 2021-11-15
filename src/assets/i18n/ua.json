@@ -178,7 +178,9 @@
     "embeddedComments": "Вбудовані коментарі",
     "embeddedCommentsActivated": "Вбудовані коментарі активовано",
     "embeddedCommentsDeActivated": "Вбудовані коментарі деактивовано",
-    "noaccess": "Немає прав"
+    "noaccess": "Немає прав",
+    "requestAccess": "Запит на доступ",
+    "toAccessTheFileContactTheFileOwner": "Щоб отримати доступ до файлу зверніться до власника файла"
   },
   "saveProcessVersionModal": {
     "AddToVersionHistory": "Додати до історії версій",

@@ -14,6 +14,7 @@ import {NpButtonModule} from '../../small/np-button/np-button.module';
 import {MatRippleModule} from '@angular/material/core';
 import {RenameEntityModalModule} from '../rename-entity-modal/rename-entity-modal.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {RequestAccessModalModule} from '../request-access-modal/request-access-modal.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     NpButtonModule,
     MatRippleModule,
     RenameEntityModalModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RequestAccessModalModule
   ],
   providers: [
     TableActionsService

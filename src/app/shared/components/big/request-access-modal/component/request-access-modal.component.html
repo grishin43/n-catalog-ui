@@ -1,0 +1,30 @@
+<div mat-dialog-title>
+  <h4>{{'common.requestAccess' | translate}}</h4>
+</div>
+<mat-dialog-content>
+  <p>{{'common.toAccessTheFileContactTheFileOwner' | translate}}:</p>
+  <div
+    class="user"
+    *ngIf="data">
+    <np-avatar
+      [data]="data | acronym : 2"
+      [size]="'sm'"
+      [type]="'initials'"
+      npUserInfoTooltip
+      [npUserInfoTooltipUsername]="data">
+    </np-avatar>
+    <span>
+      {{data}}
+    </span>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    mat-dialog-close
+    [minWidth]="true"
+    [btnType]="'submit'">
+    <span>
+      {{'common.gotIt' | translate}}
+    </span>
+  </np-button>
+</mat-dialog-actions>
