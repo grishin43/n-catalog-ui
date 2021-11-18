@@ -3,7 +3,7 @@ import {forkJoin, merge, Observable, of, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, takeWhile, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, takeWhile, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -189,6 +189,7 @@ export class ApiService {
         const requiredNotification = notifications.find((notification) =>  notification.correlationID === correlationId)
         return this.sendNotificationProcessed(requiredNotification);
       }),
+        take(1),
         mapTo({correlationId, isChecked: true} as UiNotificationCheck)
       )
   }
