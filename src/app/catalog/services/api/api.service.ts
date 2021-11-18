@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable, of} from 'rxjs';
+import {forkJoin, merge, Observable, of, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, exhaustMap, map, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, takeWhile, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -16,11 +16,13 @@ import {EntitiesTabService} from '../entities-tab/entities-tab.service';
 import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
-import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
-import {StorageEnum} from '../../../models/storageEnum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
 import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {HistoryTypeEnum} from '../../modules/version-history/models/history-type.enum';
+import { v4 as uuid} from 'uuid';
+import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
+import {CollectionWrapperDto} from '../../../models/domain/collection-wrapper.dto';
+import {UiNotification} from '../../../models/domain/ui-notification';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -73,6 +75,7 @@ export class ApiService {
   }
 
   public createFolder(parentFolderId: string, name: string): Observable<{ name: string }> {
+
     return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`, {
       name
     });
@@ -145,11 +148,54 @@ export class ApiService {
     return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`);
   }
 
-  public createProcess(parentFolderId: string, processType: string, name: string): Observable<ProcessModel> {
-    return this.http.post<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}`, {
+  public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {
+    const correlationId = uuid();
+    const body = {
       origin: processType,
       name
-    });
+    };
+
+    const headers = new HttpHeaders().set(
+      'x-correlation-id', correlationId
+    )
+    return this.http.post<ProcessModel>(
+      `${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}`,
+      body,
+      {headers})
+      .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId))
+      );
+  }
+
+  private pendingNotificationChecked(correlationId: string) {
+    const createDraftProcess$ = of({correlationId, isChecked: false} as UiNotificationCheck);
+    const checkUiNotification$ = this.checkNotification(correlationId);
+    return merge(createDraftProcess$, checkUiNotification$);
+  }
+
+  private checkNotification(correlationId: string): Observable<any> {
+    return timer(0, 1000)
+      .pipe(
+        switchMap(() => {
+
+          return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/uiNotifications`);
+      }),
+      filter(({items}: CollectionWrapperDto<UiNotification>) => {
+        const isContain = items.some((notification) =>  notification.correlationID === correlationId)
+        return isContain;
+      }),
+      map(({items}: CollectionWrapperDto<UiNotification>) => items),
+      switchMap((notifications: UiNotification[]) => {
+        const requiredNotification = notifications.find((notification) =>  notification.correlationID === correlationId)
+        return this.sendNotificationProcessed(requiredNotification);
+      }),
+        mapTo({correlationId, isChecked: true} as UiNotificationCheck)
+      )
+  }
+
+  private sendNotificationProcessed(notification: UiNotification) {
+    const lastAckNotificationNumber = notification.notificationNumber;
+    return this.http.post(`${this.ApiUrl}/uiNotifications?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
   }
 
   public deleteProcess(folderId: string, processId: string): Observable<any> {

@@ -9,6 +9,7 @@ import {Observable, Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
+import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 
 @Component({
   selector: 'np-rename-entity-modal',
@@ -32,6 +33,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<RenameEntityModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private api: ApiService,
+    private processService: ProcessService,
     private toast: ToastService,
     private translate: TranslateService
   ) {
@@ -74,7 +76,7 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
         );
       } else if (this.isProcess) {
         this.renameEntity(
-          this.api.renameProcess(this.data.parent.id, entityId, controlValue),
+          this.processService.renameProcess(this.data.parent.id, entityId, controlValue),
           loaderTitle,
           this.translate.instant(
             'common.processSuccessfullyRenamed',

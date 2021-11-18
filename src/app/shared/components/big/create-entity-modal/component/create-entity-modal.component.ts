@@ -18,6 +18,7 @@ import {ProcessModel} from '../../../../../models/domain/process.model';
 import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
 import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
+import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 
 @Component({
   selector: 'np-create-entity-modal',
@@ -50,6 +51,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<CreateEntityModalComponent>,
     private api: ApiService,
+    private processService: ProcessService,
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private translateService: TranslateService,
@@ -211,7 +213,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     const processType = this.processTypes.find(ft => this.form.value[FormFieldEnum.PROCESS_TYPE] === ft.name);
     const processName = this.form.value[FormFieldEnum.ENTITY_NAME];
     this.subscription.add(
-      this.api.createProcess(this.currentFolderId, processType.code, processName)
+      this.processService.createProcess(this.currentFolderId, processType.code, processName)
         .subscribe(
           () => {
             // TODO

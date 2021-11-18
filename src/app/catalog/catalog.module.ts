@@ -37,6 +37,11 @@ import {ProcessDeactivateGuard} from './guards/process-deactivate-guard';
 import {PreventProcessCloseModalModule} from '../shared/components/big/prevent-process-close-modal/prevent-process-close-modal.module';
 import {HeaderTabsComponent} from './components/header/header-tabs/header-tabs.component';
 import {AcronymModule} from '../shared/pipes/acronym/acronym.module';
+import {ProcessState} from './store/process/process.state';
+import {NgxsStoragePluginModule, StorageOption} from '@ngxs/storage-plugin';
+import {FolderState} from './store/folder/folder.state';
+import {FolderService} from './pages/folder/services/folder/folder.service';
+import {ProcessService} from './pages/folder/services/process/process.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +53,18 @@ import {AcronymModule} from '../shared/pipes/acronym/acronym.module';
   imports: [
     CommonModule,
     CatalogRoutingModule,
-    NgxsModule.forRoot([CatalogState], {developmentMode: !environment.production}),
+    NgxsModule.forRoot([
+      CatalogState,
+      ProcessState,
+      FolderState,
+    ], {developmentMode: !environment.production}),
+    NgxsStoragePluginModule.forRoot({
+     key: [
+       ProcessState,
+       FolderState,
+     ],
+     storage: StorageOption.LocalStorage
+    }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NpInputModule,
     MatRippleModule,
@@ -73,6 +89,8 @@ import {AcronymModule} from '../shared/pipes/acronym/acronym.module';
   ],
   providers: [
     EntitiesTabService,
+    FolderService,
+    ProcessService,
     ApiService,
     SearchService,
     BpmnToolbarService,

@@ -9,38 +9,42 @@ import {GeneralSearchItem} from '../services/search/general-search-item';
 export class MapHelper {
 
   public static mapFoldersToEntities(folders: FolderModel[]): CatalogEntityModel[] {
-    if (folders) {
-      return folders.map((folder: FolderModel): CatalogEntityModel => {
-        return {
-          id: folder.id,
-          name: folder.name,
-          type: CatalogEntityEnum.FOLDER,
-          permissions: CatalogEntityPermissionEnum.EDITOR,
-          original: folder,
-          icon: folder.icon,
-          hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count,
-          hasProcesses: !!folder[FolderFieldKey.PROCESSES]?.count
-        };
-      });
+    if (folders && folders.length) {
+      return folders.map(MapHelper.mapFolderToCatalogEntity);
     }
     return [];
   }
 
+  public static mapFolderToCatalogEntity(folder: FolderModel): CatalogEntityModel {
+    return {
+      id: folder.id,
+      name: folder.name,
+      type: CatalogEntityEnum.FOLDER,
+      permissions: CatalogEntityPermissionEnum.EDITOR,
+      original: folder,
+      icon: folder.icon,
+      hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count,
+      hasProcesses: !!folder[FolderFieldKey.PROCESSES]?.count
+    } as CatalogEntityModel;
+}
+
   public static mapProcessesToEntities(processes: ProcessModel[]): CatalogEntityModel[] {
-    if (processes) {
-      return processes.map((process: ProcessModel): CatalogEntityModel => {
-        return {
-          id: process.id,
-          name: process.name,
-          type: CatalogEntityEnum.PROCESS,
-          permissions: process.currentUserPermissionLevel?.code,
-          link: process.url,
-          original: process,
-          status: NpStatusPillEnum.DRAFT
-        };
-      });
+    if (processes && processes.length) {
+      return processes.map(MapHelper.mapProcessToCatalogEntity);
     }
     return [];
+  }
+
+  public static mapProcessToCatalogEntity(process: ProcessModel): CatalogEntityModel {
+      return {
+        id: process.id,
+        name: process.name,
+        type: CatalogEntityEnum.PROCESS,
+        permissions: process.currentUserPermissionLevel?.code,
+        link: process.url,
+        original: process,
+        status: NpStatusPillEnum.DRAFT
+      } as CatalogEntityModel;
   }
 
   public static mapEntityToFolder(entity: CatalogEntityModel): FolderModel {

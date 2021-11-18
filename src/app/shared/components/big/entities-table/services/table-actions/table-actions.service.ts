@@ -17,6 +17,7 @@ import {ToastService} from '../../../../small/toast/service/toast.service';
 import {EntitiesTabService} from '../../../../../../catalog/services/entities-tab/entities-tab.service';
 import {GrantAccessModalComponent} from '../../../grant-access-modal/component/grant-access-modal.component';
 import {BehaviorSubject} from 'rxjs';
+import {ProcessService} from '../../../../../../catalog/pages/folder/services/process/process.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,8 @@ export class TableActionsService {
     private dialog: MatDialog,
     private api: ApiService,
     private toast: ToastService,
-    private entitiesTab: EntitiesTabService
+    private entitiesTab: EntitiesTabService,
+    private processService: ProcessService
   ) {
   }
 
@@ -73,7 +75,7 @@ export class TableActionsService {
       {
         name: CatalogEntityActionEnum.DELETE,
         cb: (entity: CatalogEntityModel, parentFolder?: FolderModel, ssCb?: () => void) => {
-          this.api.deleteProcess(parentFolder.id, entity.id)
+          this.processService.deleteProcess(parentFolder.id, entity.id)
             .subscribe(() => {
               this.entitiesTab.deleteEntity({id: entity.id});
               this.toast.show('common.processDeletedSuccessfully', 1500, undefined, 'bottom', 'right');

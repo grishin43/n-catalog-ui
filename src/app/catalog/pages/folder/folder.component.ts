@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TableColumnsModel} from '../../../shared/components/big/entities-table/models/table.model';
 import {TableHelper} from '../../helpers/table.helper';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {ApiService} from '../../services/api/api.service';
@@ -19,6 +19,15 @@ import {MatDialog} from '@angular/material/dialog';
 import {CantDeleteFolderModalComponent} from './components/cant-delete-folder-modal/cant-delete-folder-modal.component';
 import {MatSnackBarRef} from '@angular/material/snack-bar/snack-bar-ref';
 import {TextOnlySnackBar} from '@angular/material/snack-bar/simple-snack-bar';
+import {Store} from '@ngxs/store';
+import {ProcessSelectors} from '../../store/process/process.selectors';
+import {ProcessModel} from '../../../models/domain/process.model';
+import {ProcessState} from '../../store/process/process.state';
+import {ProcessActions} from '../../store/process/process.actions';
+import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
+import {FolderActions} from '../../store/folder/folder.actions';
+import {FolderSelectors} from '../../store/folder/folder.selectors';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'np-folder',
@@ -29,6 +38,9 @@ export class FolderComponent implements OnInit, OnDestroy {
   public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns();
   public folder: FolderModel;
   public folderEntities: CatalogEntityModel[] = [];
+  // @select from store
+  public folderChildren$: Observable<CatalogEntityModel[]>
+  public folder$: Observable<CatalogEntityModel>
   public loader: boolean;
   public errorResponse: HttpErrorResponse;
   public httpStatusCode = HttpStatusCodeEnum;
@@ -44,12 +56,14 @@ export class FolderComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private folderService: FolderService,
     private processService: ProcessService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private store: Store
   ) {
   }
 
   ngOnInit(): void {
     this.subscribeRouteParams();
+    // this.apiService.getNotifications();
   }
 
   ngOnDestroy(): void {
@@ -57,28 +71,22 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   public getFolderById(): void {
-    this.errorResponse = undefined;
-    this.loader = true;
-    this.subscriptions.add(
-      this.apiService.getFolderByIdWithSubs(this.folderId).subscribe(
-        (res: FolderModel) => {
-          this.loader = false;
-          this.handleResponse(res);
-        }, (err: HttpErrorResponse) => {
-          this.loader = false;
-          this.errorResponse = err;
-        }
-      )
-    );
+    this.getFolderDetails();
   }
 
-  private handleResponse(res: FolderModel): void {
-    this.folder = res;
-    this.folderEntities = [];
-    if (res?.[FolderFieldKey.FOLDERS]?.count || res?.[FolderFieldKey.PROCESSES]?.count) {
-      this.folderEntities.push(...MapHelper.mapFoldersToEntities(res[FolderFieldKey.FOLDERS]?.items));
-      this.folderEntities.push(...MapHelper.mapProcessesToEntities(res[FolderFieldKey.PROCESSES]?.items));
+  public async getFolderDetails() {
+    this.errorResponse = undefined;
+    this.loader = true;
+    this.folderChildren$ = this.store.select(CatalogSelectors.folderChildren(this.folderId));
+    this.folder$ = this.store.select(FolderSelectors.catalogEntityByFolderId(this.folderId));
+
+    try {
+      await this.folderService.fetchFolderDetails(this.folderId);
+    } catch (err) {
+      this.errorResponse = err;
     }
+    this.loader = false;
+
   }
 
   private subscribeRouteParams(): void {
@@ -122,6 +130,7 @@ export class FolderComponent implements OnInit, OnDestroy {
 
   private deleteFolderWithUndo(folderToDelete: CatalogEntityModel): void {
     let isDeleteWasUndo = false;
+    // move to actions
     const undoFolderStructure = this.folderEntities;
     this.folderEntities = this.folderEntities
       .filter(({id}: CatalogEntityModel) => id !== folderToDelete.id);
@@ -130,6 +139,7 @@ export class FolderComponent implements OnInit, OnDestroy {
 
     deleteToast.onAction().subscribe(() => {
       isDeleteWasUndo = true;
+      // move to actions
       this.folderEntities = undoFolderStructure;
     });
 
@@ -154,7 +164,7 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   private deleteProcess(processToDelete: CatalogEntityModel): void {
-    this.processService.deleteProcess(processToDelete.original.parentId, processToDelete.id);
+    this.processService.deleteProcess(processToDelete.original.parentId, processToDelete.id).toPromise();
   }
 
 }

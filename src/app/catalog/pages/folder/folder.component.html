@@ -2,7 +2,7 @@
   <div
     class="row align-items-center"
     style="margin-bottom: 16px;">
-    <div class="col" *ngIf="folder">
+    <div class="col" *ngIf="folder$ | async as folder">
       <np-folder-breadcrumbs
         [folder]="folder"
         (folderUpdated)="getFolderById()">
@@ -28,11 +28,11 @@
   <div class="row">
     <div class="col-12">
       <ng-container
-        *ngIf="folderEntities?.length; else noEntities">
+        *ngIf="(folderChildren$ | async) as folderEntities; else noEntities">
         <np-entities-table
           (entityRenamed)="getFolderById()"
           (entityDeleted)="onDeleteEntity($event)"
-          [parentFolder]="folder"
+          [parentFolder]="folder$ | async"
           [displayedColumns]="tableDisplayedColumns"
           [data]="folderEntities"
           [tableClass]="'truncate-entity-name-30'">
