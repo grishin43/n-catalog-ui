@@ -80,11 +80,20 @@ export class ApiService {
       );
   }
 
-  public createFolder(parentFolderId: string, name: string): Observable<{ name: string }> {
-
-    return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`, {
+  public createFolder(parentFolderId: string, name: string): Observable<UiNotificationCheck> {
+    const correlationId = uuid();
+    const body = {
       name
-    });
+    };
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
+    return this.http.post<{ name: string }>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`,
+      body,
+      {headers})
+      .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId))
+      );
   }
 
   public getFolderByIdWithSubs(id: string): Observable<FolderModel> {

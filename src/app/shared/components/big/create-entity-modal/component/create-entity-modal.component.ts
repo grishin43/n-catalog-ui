@@ -19,7 +19,7 @@ import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
 import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
-import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
+import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
 
 @Component({
   selector: 'np-create-entity-modal',
@@ -53,6 +53,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<CreateEntityModalComponent>,
     private api: ApiService,
     private processService: ProcessService,
+    private folderService: FolderService,
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private translateService: TranslateService,
@@ -235,19 +236,16 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     this.formLoader = true;
     const parentFolderId = this.openedFolder?.id || this.data?.parent?.id;
     this.subscription.add(
-      this.api.createFolder(parentFolderId, this.form.value[FormFieldEnum.ENTITY_NAME])
+      this.folderService.createFolder(parentFolderId, this.form.value[FormFieldEnum.ENTITY_NAME])
         .subscribe(
           () => {
-            // TODO
-            setTimeout(() => {
-              this.formLoader = false;
-              this.showToast('common.folderCreated');
-              this.closeModal();
-              this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
-              if (typeof this.data.ssCb === 'function') {
-                this.data.ssCb();
-              }
-            }, 2000);
+            this.formLoader = false;
+            this.showToast('common.folderCreated');
+            this.closeModal();
+            this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
+            if (typeof this.data.ssCb === 'function') {
+              this.data.ssCb();
+            }
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
@@ -289,22 +287,19 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     const control = this.form.get(FormFieldEnum.NEW_ENTITY_NAME);
     if (control.valid) {
-      this.createFolder(this.currentFolderId, control.value);
+      this.createFolderIntoOpenedFolder(this.currentFolderId, control.value);
     }
   }
 
-  private createFolder(parentFolderId: string, folderName: string): void {
+  private createFolderIntoOpenedFolder(parentFolderId: string, folderName: string): void {
     this.newFolderLoader = true;
     this.subscription.add(
-      this.api.createFolder(parentFolderId, folderName)
+      this.folderService.createFolder(parentFolderId, folderName)
         .subscribe(() => {
-          // TODO
-          setTimeout(() => {
-            this.newFolderLoader = false;
-            this.showToast('common.folderCreated');
-            this.closeNewFolderMode();
-            this.patchOpenedFolder(this.openedFolder.id);
-          }, 2000);
+          this.newFolderLoader = false;
+          this.showToast('common.folderCreated');
+          this.closeNewFolderMode();
+          this.patchOpenedFolder(this.openedFolder.id);
         }, () => {
           this.newFolderLoader = false;
         })
