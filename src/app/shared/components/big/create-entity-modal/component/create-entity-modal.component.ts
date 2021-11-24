@@ -19,6 +19,7 @@ import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
 import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
+import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
 
 @Component({
   selector: 'np-create-entity-modal',
@@ -216,15 +217,12 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       this.processService.createProcess(this.currentFolderId, processType.code, processName)
         .subscribe(
           () => {
-            // TODO
-            setTimeout(() => {
-              this.formLoader = false;
-              this.showToast('common.processCreated');
-              this.closeModal();
-              if (typeof this.data.ssCb === 'function') {
-                this.data.ssCb();
-              }
-            }, 2000);
+            this.formLoader = false;
+            this.showToast('common.processCreated');
+            this.closeModal();
+            if (typeof this.data.ssCb === 'function') {
+              this.data.ssCb();
+            }
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;

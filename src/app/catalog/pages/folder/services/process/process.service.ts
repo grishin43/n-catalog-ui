@@ -31,7 +31,7 @@ export class ProcessService {
       }));
   }
 
-  public createProcess(parentFolderId: string, processType: string, name: string): Observable<any> {
+  public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {
     return this.apiService.createProcess(parentFolderId, processType, name)
       .pipe(filter((notification: UiNotificationCheck) => {
         // create optimistic process creation
