@@ -4,7 +4,7 @@
     <ng-container *ngTemplateOutlet="menuBtnTemplate;"></ng-container>
   </div>
   <div class="version-info current-version">
-    <time>{{version.date | date : dateFormat}}</time>
+    <time>{{version.createdAt | date : dateFormat}}</time>
     <i *ngIf="autosaving"> ({{'common.autosaving' | translate}})</i>
     <ng-container *ngTemplateOutlet="userTemplate;"></ng-container>
   </div>
@@ -16,7 +16,7 @@
       'no-menu': type === eHistoryType.START_AND_STOP_HISTORY
     }">
     <div class="version-info_header">
-      <h4>{{version.name}}</h4>
+      <h4>{{version.title}}</h4>
       <mat-icon
         @fadeInOut
         *ngIf="version.launched">
@@ -34,9 +34,9 @@
         <ng-container *ngTemplateOutlet="menuBtnTemplate;"></ng-container>
       </ng-container>
     </div>
-    <p *ngIf="version.desc">{{version.desc}}</p>
+    <p *ngIf="version.description">{{version.description}}</p>
     <ng-container *ngTemplateOutlet="userTemplate;"></ng-container>
-    <time>{{version.date | date : dateFormat}}</time>
+    <time>{{version.createdAt | date : dateFormat}}</time>
   </div>
 </ng-template>
 
@@ -44,15 +44,15 @@
   #userTemplate>
   <div
     class="user"
-    *ngIf="version.user">
+    *ngIf="version.author as username">
     <np-avatar
-      [data]="userFirstLastName | acronym : 2"
+      [data]="username | acronym : 2"
       [type]="'initials'"
       npUserInfoTooltip
-      [npUserInfoTooltipUsername]="version.user?.username">
+      [npUserInfoTooltipUsername]="username">
     </np-avatar>
     <span>
-      {{userFirstLastName}}
+      {{username}}
     </span>
   </div>
 </ng-template>
@@ -91,7 +91,9 @@
     (click)="launchVersion()">
     {{'common.launchVersion' | translate}}
   </button>
-  <button mat-menu-item>
+  <button
+    mat-menu-item
+    (click)="createNewVersion()">
     {{'common.createNewVersion' | translate}}
   </button>
   <button

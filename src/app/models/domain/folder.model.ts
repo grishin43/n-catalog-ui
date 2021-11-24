@@ -16,4 +16,5 @@ export interface FolderModel {
   [FolderFieldKey.PROCESSES]?: SearchModel<ProcessModel>;
   root?: boolean;
   path?: EntityPathModel[];
+  updatedAt?: Date;
 }

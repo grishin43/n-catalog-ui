@@ -1,11 +1,12 @@
-import {UserModel} from './user.model';
+export interface VersionModel {
+  author: string;
+  createdAt: Date;
+  description: string;
+  title: string;
+  versionID: string;
+}
 
-export interface ProcessVersionModel {
-  id: string;
-  name: string;
-  desc?: string;
-  user: UserModel;
-  date: Date | string;
+export interface ProcessVersionModel extends VersionModel{
   launched?: boolean;
   active?: boolean;
 }

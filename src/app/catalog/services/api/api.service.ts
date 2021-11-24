@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {forkJoin, merge, Observable, of, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {ContentHelper} from '../../helpers/content.helper';
-import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, takeWhile, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -18,8 +17,7 @@ import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.mo
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
 import {ProcessVersionModel} from '../../../models/domain/process-version.model';
-import {HistoryTypeEnum} from '../../modules/version-history/models/history-type.enum';
-import { v4 as uuid} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {CollectionWrapperDto} from '../../../models/domain/collection-wrapper.dto';
 import {UiNotification} from '../../../models/domain/ui-notification';
@@ -35,7 +33,15 @@ enum ApiRoute {
   SEARCH_USERS = 'search/user',
   PERMISSIONS = 'permissions',
   OWNER = 'owner',
-  USERS = 'users'
+  USERS = 'users',
+  VERSIONS = 'versions',
+  CREATE_BASED_ON_PREVIOUS_VERSION = 'createBasedOnPreviousVersion',
+  UI_NOTIFICATIONS = 'uiNotifications',
+  NEW_VERSION = 'newVersion'
+}
+
+enum ApiHeader {
+  CORRELATION_ID = 'x-correlation-id'
 }
 
 @Injectable({
@@ -154,10 +160,9 @@ export class ApiService {
       origin: processType,
       name
     };
-
     const headers = new HttpHeaders().set(
-      'x-correlation-id', correlationId
-    )
+      ApiHeader.CORRELATION_ID, correlationId
+    );
     return this.http.post<ProcessModel>(
       `${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}`,
       body,
@@ -167,7 +172,7 @@ export class ApiService {
       );
   }
 
-  private pendingNotificationChecked(correlationId: string) {
+  private pendingNotificationChecked(correlationId: string): Observable<UiNotificationCheck> {
     const createDraftProcess$ = of({correlationId, isChecked: false} as UiNotificationCheck);
     const checkUiNotification$ = this.checkNotification(correlationId);
     return merge(createDraftProcess$, checkUiNotification$);
@@ -177,26 +182,24 @@ export class ApiService {
     return timer(0, 1000)
       .pipe(
         switchMap(() => {
-
-          return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/uiNotifications`);
-      }),
-      filter(({items}: CollectionWrapperDto<UiNotification>) => {
-        const isContain = items.some((notification) =>  notification.correlationID === correlationId)
-        return isContain;
-      }),
-      map(({items}: CollectionWrapperDto<UiNotification>) => items),
-      switchMap((notifications: UiNotification[]) => {
-        const requiredNotification = notifications.find((notification) =>  notification.correlationID === correlationId)
-        return this.sendNotificationProcessed(requiredNotification);
-      }),
+          return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
+        }),
+        filter(({items}: CollectionWrapperDto<UiNotification>) => {
+          return items.some((notification) => notification.correlationID === correlationId);
+        }),
+        map(({items}: CollectionWrapperDto<UiNotification>) => items),
+        switchMap((notifications: UiNotification[]) => {
+          const requiredNotification = notifications.find((notification) => notification.correlationID === correlationId);
+          return this.sendNotificationProcessed(requiredNotification);
+        }),
         take(1),
         mapTo({correlationId, isChecked: true} as UiNotificationCheck)
-      )
+      );
   }
 
-  private sendNotificationProcessed(notification: UiNotification) {
+  private sendNotificationProcessed(notification: UiNotification): Observable<any> {
     const lastAckNotificationNumber = notification.notificationNumber;
-    return this.http.post(`${this.ApiUrl}/uiNotifications?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
+    return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {});
   }
 
   public deleteProcess(folderId: string, processId: string): Observable<any> {
@@ -219,22 +222,6 @@ export class ApiService {
 
   public getProcessTypes(): Observable<SearchModel<ProcessTypeModel>> {
     return this.http.get<SearchModel<ProcessTypeModel>>(`${this.ApiUrl}/${ApiRoute.ORIGINS}`);
-  }
-
-  public getMockedRootFolders(): Observable<CatalogEntityModel[]> {
-    // TODO
-    // return this.http.get<CatalogEntityModel[]>(`${this.ApiUrl}`);
-    return of(ContentHelper.catalogMainFolders);
-  }
-
-  public getMockedFolderById(id: string): Observable<CatalogEntityModel> {
-    // TODO
-    // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
-    return this.getMockedRootFolders().pipe(
-      map((folders: CatalogEntityModel[]) => {
-        return folders.find((folder: CatalogEntityModel) => folder.id === id);
-      })
-    );
   }
 
   public getProcessById(folderId: string, processId: string): Observable<ProcessModel> {
@@ -267,20 +254,6 @@ export class ApiService {
         }),
         tap((res: ProcessModel) => this.requestedProcess = res)
       );
-  }
-
-  public searchEntities(str: string): Observable<CatalogEntityModel[]> {
-    // TODO
-    // return this.http.get<CatalogEntityModel>(`${this.ApiUrl}`);
-    return this.getMockedRootFolders().pipe(
-      map((folders: CatalogEntityModel[]) => {
-        return folders.find((folder: CatalogEntityModel) => {
-          return !!folder.entities?.length;
-        })?.entities.filter((process: CatalogEntityModel) => {
-          return process.name.indexOf(str) !== -1;
-        });
-      })
-    );
   }
 
   public getXML(url: string): Observable<any> {
@@ -381,12 +354,30 @@ export class ApiService {
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.OWNER}`);
   }
 
-  public getVersionHistory(): Observable<SearchModel<ProcessVersionModel>> {
-    return of(ContentHelper.getVersions(HistoryTypeEnum.VERSION_HISTORY));
+  public getStartAndStopHistory(): Observable<SearchModel<ProcessVersionModel>> {
+    return of({items: [], count: 0});
   }
 
-  public getStartAndStopHistory(): Observable<SearchModel<ProcessVersionModel>> {
-    return of(ContentHelper.getVersions(HistoryTypeEnum.START_AND_STOP_HISTORY));
+  public getVersions(folderId: string, processId: string): Observable<SearchModel<ProcessVersionModel>> {
+    return this.http.get<SearchModel<ProcessVersionModel>>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`);
+  }
+
+  public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string): Observable<void> {
+    return this.http.get<void>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`);
+  }
+
+  public createNewVersion(folderId: string, processId: string): Observable<UiNotificationCheck> {
+    const correlationId = uuid();
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
+    return this.http.post<void>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.NEW_VERSION}`, {}, {headers})
+      .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId))
+      );
   }
 
 }

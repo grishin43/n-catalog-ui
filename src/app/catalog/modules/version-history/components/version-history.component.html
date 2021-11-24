@@ -36,7 +36,7 @@
     <div class="panel_data__header">
       <h3>
         {{'common.versionHistory' | translate}}
-        <button
+        <!--<button
           mat-button
           [matMenuTriggerFor]="menu"
           class="min-width-auto p-0">
@@ -44,7 +44,7 @@
             <path d="M16.8555 9.60742L11.8555 14.6074L6.85547 9.60742" stroke="#2E3742" stroke-width="1.5"
                   stroke-linecap="round"/>
           </svg>
-        </button>
+        </button>-->
       </h3>
       <button
         mat-button
@@ -70,13 +70,32 @@
         </svg>
       </button>
     </div>
-    <np-version-list
-      [versions]="versions"
-      [loader]="loader"
-      [error]="error"
-      [type]="historyType"
-      (versionOpened)="versionOpened.emit($event)">
-    </np-version-list>
+    <div
+      class="panel_data__body"
+      *ngIf="versions?.length; else noResults">
+      <np-version-list
+        [versions]="versions"
+        [loader]="loader"
+        [error]="error"
+        [type]="historyType"
+        (versionOpened)="versionOpened.emit($event)">
+      </np-version-list>
+    </div>
+    <ng-template #noResults>
+      <div class="no-results">
+        <ng-container *ngIf="loader; else noData">
+          <mat-spinner
+            [diameter]="40">
+          </mat-spinner>
+          <p>{{'common.versionsLoading' | translate}}</p>
+        </ng-container>
+        <ng-template #noData>
+          <p class="mb-0">
+            {{'errors.versionsNotFound' | translate}}
+          </p>
+        </ng-template>
+      </div>
+    </ng-template>
   </div>
 </div>
 

@@ -25,12 +25,8 @@ export class VersionDetailsModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public get userFirstLastName(): string {
-    return `${this.data.user?.lastName} ${this.data.user?.firstName}`;
-  }
-
   public get isOwner(): boolean {
-    return this.data.user.username === this.kc.getUsername();
+    return this.data.author === this.kc.getUsername();
   }
 
 }

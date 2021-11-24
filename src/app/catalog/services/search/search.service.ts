@@ -15,19 +15,19 @@ import {GeneralSearchWrapperDto} from './general-search-wrapper.dto';
 import {SearchType} from './search-type.enum';
 
 interface AutocompleteSearchDTO {
-  value: string
+  value: string;
 }
 
 interface GeneralSearchDTO {
-  searchType: SearchType, // all
-  searchValue: string,
-  pageNumber: number, // for ex 0
-  pageSize: number // for ex 10
+  searchType: SearchType; // all
+  searchValue: string;
+  pageNumber: number; // for ex 0
+  pageSize: number; // for ex 10
 }
 
 export interface RecentSearchDto {
-  count: number
-  items: ({value: string})[]
+  count: number;
+  items: ({ value: string })[];
 }
 
 @Injectable({
@@ -51,18 +51,6 @@ export class SearchService {
 
   public get savedEntities(): CatalogEntityModel[] {
     return LocalStorageHelper.getData(StorageEnum.SEARCHED_ENTITIES) || [];
-  }
-
-  public searchEntities(str: string): Observable<CatalogEntityModel[]> {
-    // call real request
-    return this.apiService.searchEntities(str)
-      .pipe(
-        tap((res: CatalogEntityModel[]) => {
-          this.entities$.next(res);
-          this.navigateToSearchResults(str, SearchType.all);
-          this.saveEntities(res);
-        })
-      );
   }
 
   public saveEntities(entities: CatalogEntityModel[]): void {
@@ -103,7 +91,7 @@ export class SearchService {
     }
   }
 
-  public openGeneralSearchPage(query: string, searchType= SearchType.all): void {
+  public openGeneralSearchPage(query: string, searchType = SearchType.all): void {
     this.addRecentSearchResult(query);
     this.navigateToSearchResults(query, searchType);
   }
@@ -117,17 +105,17 @@ export class SearchService {
       .pipe(
         tap(resentRequest => console.log('recent data ' + resentRequest)
         )
-      )
+      );
   }
 
   public fetchAutocompleteSearchResults(query: string): Observable<SearchAutocompleteDto> {
     const searchQuery: AutocompleteSearchDTO = {
       value: query
-    }
+    };
     return this.http.post<SearchAutocompleteDto>(this.autocompleteSearchUrl, searchQuery)
       .pipe(tap((result) => {
-      console.log('[SearchService] fetchSearchResults: ', result);
-    }));
+        console.log('[SearchService] fetchSearchResults: ', result);
+      }));
   }
 
   public generalSearch(query: string, searchType = SearchType.all): Observable<GeneralSearchWrapperDto> {
@@ -136,9 +124,8 @@ export class SearchService {
       searchValue: query,
       pageNumber: 0,
       pageSize: 100
-    }
-
-    return this.http.post<GeneralSearchWrapperDto>(this.generalSearchUrl, searchRequestParams)
+    };
+    return this.http.post<GeneralSearchWrapperDto>(this.generalSearchUrl, searchRequestParams);
   }
 
   public addRecentSearchResult(query: string): Promise<any> {

@@ -179,6 +179,7 @@
     "embeddedCommentsActivated": "Вбудовані коментарі активовано",
     "embeddedCommentsDeActivated": "Вбудовані коментарі деактивовано",
     "noaccess": "Немає прав",
+    "versionsLoading": "Завантаження версій",
     "requestAccess": "Запит на доступ",
     "toAccessTheFileContactTheFileOwner": "Щоб отримати доступ до файлу зверніться до власника файла"
   },
@@ -216,7 +217,8 @@
     "processNotFoundOrHasBeenDeleted": "Процес не знайдений або він був видалений",
     "processCannotBeOpened": "Неможливо відкрити процес, діаграма пошкоджена, читання неможливо",
     "searchUsersFailed": "Неможливо знайти співробітників. Спробуйте пізніше",
-    "processAccessDenied": "Доступ до процесу заборонено"
+    "processAccessDenied": "Доступ до процесу заборонено",
+    "versionsNotFound": "Версій не знайдено"
   },
   "counters": {
     "foldersCount1": "{{count}} папка",

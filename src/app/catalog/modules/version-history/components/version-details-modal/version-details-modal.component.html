@@ -3,7 +3,7 @@
   class="d-flex justify-content-between align-items-center"
   style="margin-bottom: 16px;">
   <h4 class="mb-0">
-    {{data.name}}
+    {{data.title}}
   </h4>
   <button
     class="min-width-auto p-0"
@@ -17,33 +17,33 @@
   </button>
 </div>
 <mat-dialog-content>
-  <p *ngIf="data.desc">{{data.desc}}</p>
+  <p *ngIf="data.description">{{data.description}}</p>
   <ul class="list-unstyled">
-    <li *ngIf="data.user">
+    <li *ngIf="data.author">
       <span>
         {{'common.author' | translate}}:
       </span>
       <span>
-        {{userFirstLastName}}
+        {{data.author}}
         <ng-container *ngIf="isOwner">
           ({{'common.you' | translate}})
         </ng-container>
       </span>
     </li>
-    <li *ngIf="data.date">
+    <li *ngIf="data.createdAt">
       <span>
         {{'common.dateOfCreation' | translate}}:
       </span>
       <span>
-        {{data.date | date: dateFormat}}
+        {{data.createdAt | date: dateFormat}}
       </span>
     </li>
-    <li *ngIf="data.date">
+    <li *ngIf="data.createdAt">
       <span>
         ID:
       </span>
       <span>
-        {{data.id}}
+        {{data.versionID}}
       </span>
     </li>
   </ul>

@@ -24,8 +24,9 @@ export class MapHelper {
       original: folder,
       icon: folder.icon,
       hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count,
-      hasProcesses: !!folder[FolderFieldKey.PROCESSES]?.count
-    } as CatalogEntityModel;
+      hasProcesses: !!folder[FolderFieldKey.PROCESSES]?.count,
+          lastUpdated: folder?.updatedAt
+        }as CatalogEntityModel;
 }
 
   public static mapProcessesToEntities(processes: ProcessModel[]): CatalogEntityModel[] {

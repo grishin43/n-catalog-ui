@@ -5,9 +5,8 @@ import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {ApiService} from '../../services/api/api.service';
-import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
+import {FolderModel} from '../../../models/domain/folder.model';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {MapHelper} from '../../helpers/map.helper';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
@@ -20,14 +19,8 @@ import {CantDeleteFolderModalComponent} from './components/cant-delete-folder-mo
 import {MatSnackBarRef} from '@angular/material/snack-bar/snack-bar-ref';
 import {TextOnlySnackBar} from '@angular/material/snack-bar/simple-snack-bar';
 import {Store} from '@ngxs/store';
-import {ProcessSelectors} from '../../store/process/process.selectors';
-import {ProcessModel} from '../../../models/domain/process.model';
-import {ProcessState} from '../../store/process/process.state';
-import {ProcessActions} from '../../store/process/process.actions';
 import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
-import {FolderActions} from '../../store/folder/folder.actions';
 import {FolderSelectors} from '../../store/folder/folder.selectors';
-import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'np-folder',
@@ -39,8 +32,8 @@ export class FolderComponent implements OnInit, OnDestroy {
   public folder: FolderModel;
   public folderEntities: CatalogEntityModel[] = [];
   // @select from store
-  public folderChildren$: Observable<CatalogEntityModel[]>
-  public folder$: Observable<CatalogEntityModel>
+  public folderChildren$: Observable<CatalogEntityModel[]>;
+  public folder$: Observable<CatalogEntityModel>;
   public loader: boolean;
   public errorResponse: HttpErrorResponse;
   public httpStatusCode = HttpStatusCodeEnum;
@@ -74,7 +67,7 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.getFolderDetails();
   }
 
-  public async getFolderDetails() {
+  public async getFolderDetails(): Promise<void> {
     this.errorResponse = undefined;
     this.loader = true;
     this.folderChildren$ = this.store.select(CatalogSelectors.folderChildren(this.folderId));

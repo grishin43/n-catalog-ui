@@ -18,6 +18,7 @@ export class VersionListItemComponent implements OnInit {
 
   @Output() versionOpened = new EventEmitter<ProcessVersionModel>();
   @Output() versionLaunched = new EventEmitter<ProcessVersionModel>();
+  @Output() versionCreated = new EventEmitter<ProcessVersionModel>();
 
   public readonly dateFormat: string = 'dd MMMM yyyy, HH:mm:ss';
   public showMenu: boolean;
@@ -29,10 +30,6 @@ export class VersionListItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
-
-  public get userFirstLastName(): string {
-    return `${this.version.user?.lastName} ${this.version.user?.firstName}`;
   }
 
   public openVersion(): void {
@@ -49,6 +46,10 @@ export class VersionListItemComponent implements OnInit {
       autoFocus: false,
       data: this.version
     });
+  }
+
+  public createNewVersion(): void {
+    this.versionCreated.emit(this.version);
   }
 
 }
