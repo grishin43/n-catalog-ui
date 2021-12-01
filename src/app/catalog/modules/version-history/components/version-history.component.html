@@ -78,7 +78,8 @@
         [loader]="loader"
         [error]="error"
         [type]="historyType"
-        (versionOpened)="versionOpened.emit($event)">
+        (versionOpenClicked)="versionOpenClicked.emit($event)"
+        (versionCreatClicked)="createVersion($event)">
       </np-version-list>
     </div>
     <ng-template #noResults>

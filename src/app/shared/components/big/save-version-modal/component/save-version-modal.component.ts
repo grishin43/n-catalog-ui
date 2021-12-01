@@ -1,6 +1,8 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormsHelper} from '../../../../../helpers/forms.helper';
+import {FormFieldEnum} from '../../../../../models/form-field.enum';
 
 @Component({
   selector: 'np-save-version-modal',
@@ -8,8 +10,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./save-version-modal.component.scss']
 })
 export class SaveVersionModalComponent implements OnInit {
-
-  public saveVersionFrom: FormGroup;
+  public form: FormGroup;
+  public formControlName = FormFieldEnum;
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'Enter') {
@@ -28,18 +30,18 @@ export class SaveVersionModalComponent implements OnInit {
   }
 
   private initForm(): void {
-    this.saveVersionFrom = new FormGroup({
-      versionName: new FormControl('', [Validators.required]),
-      description: new FormControl('')
+    this.form = new FormGroup({
+      [FormFieldEnum.NAME]: new FormControl('', [Validators.required]),
+      [FormFieldEnum.DESCRIPTION]: new FormControl('')
     });
   }
 
-  saveVersion(): void {
-    if (this.saveVersionFrom.valid) {
-      const formDetails = this.saveVersionFrom.value;
+  public saveVersion(): void {
+    if (this.form.valid) {
+      const formDetails = this.form.value;
       this.dialogRef.close(formDetails);
     } else {
-      console.log('form invalid');
+      FormsHelper.markFormGroupTouched(this.form);
     }
   }
 

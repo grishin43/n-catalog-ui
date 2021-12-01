@@ -36,6 +36,17 @@ button {
     }
   }
 
+  &.xs {
+    height: 32px;
+    font-size: 14px;
+
+    &.min-width {
+      @media screen and (min-width: $notebook) {
+        min-width: 100px;
+      }
+    }
+  }
+
   &.mat-flat-button {
     &.mat-primary {
       &:not(:disabled):hover {

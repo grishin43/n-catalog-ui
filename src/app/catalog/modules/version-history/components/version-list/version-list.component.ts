@@ -15,8 +15,8 @@ export class VersionListComponent {
   @Input() loader: boolean;
   @Input() error: string;
 
-  @Output() versionOpened = new EventEmitter<ProcessVersionModel>();
-  @Output() versionCreated = new EventEmitter<ProcessVersionModel>();
+  @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
+  @Output() versionCreatClicked = new EventEmitter<ProcessVersionModel>();
 
   constructor(
     private toast: ToastService,
@@ -26,7 +26,7 @@ export class VersionListComponent {
 
   public onVersionOpened(version: ProcessVersionModel): void {
     this.patchVersion(version, 'active', 'common.versionXxLaunched');
-    this.versionOpened.emit(version);
+    this.versionOpenClicked.emit(version);
   }
 
   public onVersionLaunched(version: ProcessVersionModel): void {
@@ -34,7 +34,7 @@ export class VersionListComponent {
   }
 
   public onVersionCreated(version: ProcessVersionModel): void {
-    this.versionCreated.emit(version);
+    this.versionCreatClicked.emit(version);
   }
 
   private patchVersion(version: ProcessVersionModel, field: string, toastKey: string): void {

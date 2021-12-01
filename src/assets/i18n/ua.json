@@ -181,14 +181,12 @@
     "noaccess": "Немає прав",
     "versionsLoading": "Завантаження версій",
     "requestAccess": "Запит на доступ",
-    "toAccessTheFileContactTheFileOwner": "Щоб отримати доступ до файлу зверніться до власника файла"
-  },
-  "saveProcessVersionModal": {
-    "AddToVersionHistory": "Додати до історії версій",
-    "nameTitle": "Назва Версії",
-    "namePlaceholder": "Назва",
-    "descriptionTitle": "Опис",
-    "descriptionPlaceholder": "Опис, що змінилося"
+    "toAccessTheFileContactTheFileOwner": "Щоб отримати доступ до файлу зверніться до власника файла",
+    "done": "Готово",
+    "savingVersion": "Збереження версії",
+    "enterName": "Введіть назву",
+    "description": "Опис",
+    "descriptionThatChanged": "Опис, що змінилося"
   },
   "statuses": {
     "undefined": "Невизначений",

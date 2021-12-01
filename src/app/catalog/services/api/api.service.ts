@@ -16,7 +16,7 @@ import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
-import {ProcessVersionModel} from '../../../models/domain/process-version.model';
+import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {CollectionWrapperDto} from '../../../models/domain/collection-wrapper.dto';
@@ -37,7 +37,7 @@ enum ApiRoute {
   VERSIONS = 'versions',
   CREATE_BASED_ON_PREVIOUS_VERSION = 'createBasedOnPreviousVersion',
   UI_NOTIFICATIONS = 'uiNotifications',
-  NEW_VERSION = 'newVersion'
+  SAVE = 'save'
 }
 
 enum ApiHeader {
@@ -293,19 +293,27 @@ export class ApiService {
       );
   }
 
-  public saveResource(
+  public saveProcess(
     process: ProcessModel,
-    content: string): Observable<void> {
+    content: string): Observable<UiNotificationCheck> {
     // TODO
     if (this.requestedProcess?.id === process.id && this.requestedProcess?.activeResource) {
       this.requestedProcess.activeResource.content = content;
     }
     LocalSaverHelper.saveResource(process.parent.id, process.id, content);
-    if (process.activeResource?.id) {
-      return this.updateResource(process.parent.id, process.id, process.activeResource.id, content);
-    } else {
-      return this.createResource(process.parent.id, process.id, content, process.subRoot);
-    }
+    const correlationId = uuid();
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
+    return this.http.post<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.SAVE}`, {
+      resources: [{
+        id: process.activeResource.id || uuid(),
+        type: process.activeResource.type,
+        content
+      }]
+    }, {headers}).pipe(
+      switchMap(() => this.pendingNotificationChecked(correlationId))
+    );
   }
 
   public createResource(folderId: string, processId: string, content: string, subRoot: string): Observable<void> {
@@ -377,13 +385,13 @@ export class ApiService {
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`);
   }
 
-  public createNewVersion(folderId: string, processId: string): Observable<UiNotificationCheck> {
+  public createNewVersion(folderId: string, processId: string, version: CreateProcessVersionModel): Observable<UiNotificationCheck> {
     const correlationId = uuid();
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
     return this.http.post<void>
-    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.NEW_VERSION}`, {}, {headers})
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`, version, {headers})
       .pipe(
         switchMap(() => this.pendingNotificationChecked(correlationId))
       );

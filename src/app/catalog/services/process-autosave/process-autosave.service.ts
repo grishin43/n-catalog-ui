@@ -72,7 +72,7 @@ export class ProcessAutosaveService {
     this.resourceSaved$.next(false);
     this.requestLoader$.next(true);
     return this.bpmnModeler.getDiagramXml().then((content: string) => {
-      this.api.saveResource(process, content)
+      this.api.saveProcess(process, content)
         .subscribe(
           () => {
             if (this.process.activeResource) {
@@ -158,7 +158,7 @@ export class ProcessAutosaveService {
       this.resourceSaved$.next(false);
       this.requestLoader$.next(true);
       forkJoin(
-        currentSavedProcesses.map((p: ProcessModel) => this.api.saveResource(p, p.activeResource.content))
+        currentSavedProcesses.map((p: ProcessModel) => this.api.saveProcess(p, p.activeResource.content))
       ).subscribe(() => {
         LocalStorageHelper.deleteData(StorageEnum.SAVED_PROCESSES);
         this.savingSuccessCb();
@@ -219,8 +219,7 @@ export class ProcessAutosaveService {
     }
   }
 
-
-  saveVersion(process: ProcessModel, versionName: string, description: string) {
+  public saveVersion(process: ProcessModel, versionName: string, description: string): void {
     console.warn('mocked save of process version. Pending integration with BE', process, versionName, description);
   }
 }

@@ -1,9 +1,9 @@
 export interface UiNotification {
   correlationID: string;
   createdAt: string;
-  notificationNumber: number
+  notificationNumber: number;
   notificationType: string;
   parameters: {
-    processID:string;
-  }
+    processID: string;
+  };
 }

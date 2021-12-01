@@ -14,6 +14,10 @@ import {UserInfoTooltipModule} from '../../../shared/directives/user-info-toolti
 import {VersionDetailsModalComponent} from './components/version-details-modal/version-details-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     AcronymModule,
     UserInfoTooltipModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    NpButtonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class VersionHistoryModule {

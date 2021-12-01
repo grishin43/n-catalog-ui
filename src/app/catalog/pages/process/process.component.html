@@ -6,31 +6,35 @@
         [xmlMode]="xmlMode">
       </np-process-toolbar>
     </div>
-    <div class="col-auto">
-      <span class="saving-state autosaving"
-            *ngIf="processAutosave.requestLoader$ | async">
+    <div
+      class="col-auto"
+      *ngIf="(processAutosave.requestLoader$ | async) || (processAutosave.resourceSaved$ | async)">
+      <span
+        class="saving-state autosaving"
+        *ngIf="processAutosave.requestLoader$ | async">
         {{'common.saving' | translate}}
       </span>
-      <span class="saving-state"
-            *ngIf="processAutosave.resourceSaved$ | async">
+      <span
+        class="saving-state"
+        *ngIf="processAutosave.resourceSaved$ | async">
         {{'common.saved' | translate}}
       </span>
     </div>
+    <div
+      class="col-auto"
+      @fadeInOut
+      *ngIf="showDoneBtn">
+      <np-button
+        [size]="'xs'"
+        [minWidth]="true"
+        (click)="onVersionSave()">
+        <span>
+           {{"common.done" | translate}}
+        </span>
+      </np-button>
+    </div>
     <div class="col">
       <div class="row justify-content-end align-items-center md-gutters">
-        <div class="col-auto">
-          <np-button
-            [autoMinWidth]="true"
-            [type]="'secondary'"
-            [size]="'sm'"
-            [light]="true"
-            (click)="onVersionSave()"
-            >
-            <span>
-               {{"common.saveVersion" | translate}}
-            </span>
-          </np-button>
-        </div>
         <div class="col-auto">
           <np-button
             [autoMinWidth]="true"
@@ -87,7 +91,9 @@
 
   <np-version-history
     [processData]="process"
-    (versionOpened)="onVersionOpened($event)">
+    (versionOpenClicked)="onVersionOpened($event)"
+    (createNewVersionClicked)="patchProcessActiveResource()"
+    (versionsAvailabilityChanged)="handleVersionsAvailabilityChanges($event)">
   </np-version-history>
 
 </div>

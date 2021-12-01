@@ -15,18 +15,25 @@ import {MatDialog} from '@angular/material/dialog';
 import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {SaveVersionModalComponent} from '../../../shared/components/big/save-version-modal/component/save-version-modal.component';
-import {ProcessVersionModel} from '../../../models/domain/process-version.model';
+import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
+import {v4 as uuid} from 'uuid';
+import {AnimationsHelper} from '../../helpers/animations.helper';
+import {FormFieldEnum} from '../../../models/form-field.enum';
+import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
+import {ResourceModel} from '../../../models/domain/resource.model';
 
 @Component({
   selector: 'np-process',
   templateUrl: './process.component.html',
-  styleUrls: ['./process.component.scss']
+  styleUrls: ['./process.component.scss'],
+  animations: [AnimationsHelper.fadeInOut]
 })
 export class ProcessComponent implements OnInit, OnDestroy {
   public process: ProcessModel;
   public errorResponse: HttpErrorResponse;
   public xmlMode: boolean;
   public modelerXml: string;
+  public showDoneBtn: boolean;
 
   private subscriptions = new Subscription();
 
@@ -127,6 +134,21 @@ export class ProcessComponent implements OnInit, OnDestroy {
     // TODO
   }
 
+  public patchProcessActiveResource(): void {
+    if (!this.process.activeResource) {
+      this.bpmnModeler.getDiagramXml().then((res: string) => {
+        this.process = {
+          ...this.process,
+          activeResource: {
+            content: res,
+            id: uuid(),
+            type: ResourceTypeEnum.XML
+          }
+        };
+      });
+    }
+  }
+
   public onVersionSave(): void {
     const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {
       width: '700px',
@@ -134,13 +156,54 @@ export class ProcessComponent implements OnInit, OnDestroy {
     })
       .afterClosed()
       .subscribe(
-        (saveVersionDetails: ({versionName, description})) => {
-          if (saveVersionDetails) {
-           this.processAutosave.saveVersion(this.process, saveVersionDetails.versionName, saveVersionDetails.description);
+        (formData: ({ [FormFieldEnum.NAME], [FormFieldEnum.DESCRIPTION] })) => {
+          if (formData) {
+            this.saveVersion(formData[FormFieldEnum.NAME], formData[FormFieldEnum.DESCRIPTION]);
           }
         });
+    this.subscriptions.add(saveVersionResultSubscription);
+  }
 
-    this.subscriptions.add(saveVersionResultSubscription)
+  private patchProcessResources(content: string): void {
+    if (this.process.resources?.length && this.process.activeResource) {
+      this.process.resources.forEach((pr: ResourceModel, index: number) => {
+        if (pr.id === this.process.activeResource.id && pr.type === this.process.activeResource.type) {
+          this.process.resources[index] = {
+            ...this.process.activeResource,
+            content
+          };
+        }
+      });
+    } else {
+      this.process.resources = [{
+        id: uuid(),
+        processId: this.process.id,
+        type: ResourceTypeEnum.XML,
+        content
+      }];
+    }
+  }
+
+  private saveVersion(name: string, desc: string): void {
+    this.bpmnModeler.getDiagramXml().then((content: string) => {
+      this.patchProcessResources(content);
+      const cpv: CreateProcessVersionModel = {
+        versionTitle: name,
+        versionDescription: desc,
+        resources: this.process.resources || []
+      };
+      this.subscriptions.add(
+        this.api.createNewVersion(this.process.parent.id, this.process.id, cpv)
+          .subscribe((res: UiNotificationCheck) => {
+            // TODO
+            console.log(res);
+          })
+      );
+    });
+  }
+
+  public handleVersionsAvailabilityChanges(availability: boolean): void {
+    this.showDoneBtn = !availability;
   }
 
 }

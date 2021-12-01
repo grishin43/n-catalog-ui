@@ -1,14 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AnimationsHelper} from '../../../helpers/animations.helper';
-import {ProcessVersionModel} from '../../../../models/domain/process-version.model';
+import {CreateProcessVersionModel, ProcessVersionModel} from '../../../../models/domain/process-version.model';
 import {Observable, Subscription} from 'rxjs';
 import {ApiService} from '../../../services/api/api.service';
 import {HistoryTypeEnum} from '../models/history-type.enum';
 import {SearchModel} from '../../../../models/domain/search.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
-import {KeycloakService} from 'keycloak-angular';
-import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'np-version-history',
@@ -26,26 +24,29 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   public process: ProcessModel;
 
   private subs = new Subscription();
-  private currentDate: Date;
+  private versionAwaitingToPatch: ProcessVersionModel;
 
   @Input() set processData(value: ProcessModel) {
     this.process = value;
-    if (this.panelState) {
+    if (value) {
       this.getHistory();
+    }
+    if (this.versionAwaitingToPatch) {
+      this.createNewVersion(this.versionAwaitingToPatch);
+      this.versionAwaitingToPatch = null;
     }
   }
 
-  @Output() versionOpened = new EventEmitter<ProcessVersionModel>();
+  @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
+  @Output() createNewVersionClicked = new EventEmitter<void>();
+  @Output() versionsAvailabilityChanged = new EventEmitter<boolean>();
 
   constructor(
-    private api: ApiService,
-    private kc: KeycloakService,
-    private translate: TranslateService
+    private api: ApiService
   ) {
   }
 
   ngOnInit(): void {
-    this.currentDate = new Date();
   }
 
   ngOnDestroy(): void {
@@ -54,7 +55,6 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   public showPanel(): void {
     this.panelState = true;
-    this.getHistory();
   }
 
   public hidePanel(): void {
@@ -73,14 +73,21 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   private getHistory(): void {
     if (this.historyType === HistoryTypeEnum.VERSION_HISTORY) {
-      this.getData(this.api.getVersions(this.process.parent?.id, this.process.id), (res: SearchModel<ProcessVersionModel>) => {
-        this.versions = this.patchVersions(res?.items);
-      });
+      this.getData(
+        this.api.getVersions(this.process.parent?.id, this.process.id),
+        (res: SearchModel<ProcessVersionModel>) => this.getHistoryCb(res)
+      );
     } else if (this.historyType === HistoryTypeEnum.START_AND_STOP_HISTORY) {
-      this.getData(this.api.getStartAndStopHistory(), (res: SearchModel<ProcessVersionModel>) => {
-        this.versions = this.patchVersions(res?.items);
-      });
+      this.getData(
+        this.api.getStartAndStopHistory(),
+        (res: SearchModel<ProcessVersionModel>) => this.getHistoryCb(res)
+      );
     }
+  }
+
+  private getHistoryCb(res: SearchModel<ProcessVersionModel>): void {
+    this.versions = res?.items;
+    this.versionsAvailabilityChanged.emit(!!res?.count);
   }
 
   private getData(request: Observable<any>, cb: (res: any) => void): void {
@@ -99,33 +106,15 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
     );
   }
 
-  private patchVersions(versions: ProcessVersionModel[]): ProcessVersionModel[] {
-    return versions?.find((v: ProcessVersionModel) => v.active)
-      ? versions
-      : [
-        this.currentStaticVersion,
-        ...versions
-      ];
-  }
-
-  private get currentStaticVersion(): ProcessVersionModel {
-    return {
-      author: this.kc.getUsername(),
-      createdAt: this.currentDate,
-      description: '-',
-      title: this.translate.instant('common.currentVersion'),
-      versionID: '-',
-      active: true,
-      launched: true
-    };
-  }
-
-  public versionCreated(version: ProcessVersionModel): void {
+  public createVersion(version: ProcessVersionModel): void {
     if (this.versions?.length === 1) {
-      this.getData(
-        this.api.createNewVersion(this.process.parent.id, this.process.id), (res) => {
-          console.log(res);
-        });
+      if (!this.process.activeResource) {
+        // need to patch process active resource if empty
+        this.versionAwaitingToPatch = version;
+        this.createNewVersionClicked.emit();
+      } else {
+        this.createNewVersion(version);
+      }
     } else {
       this.getData(
         this.api.createBasedOnPreviousVersion(this.process.parent.id, this.process.id, version.versionID), (res) => {
@@ -133,6 +122,18 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  private createNewVersion(version: ProcessVersionModel): void {
+    const createVersion: CreateProcessVersionModel = {
+      versionTitle: version.title,
+      versionDescription: version.description,
+      resources: [this.process.activeResource]
+    };
+    this.getData(
+      this.api.createNewVersion(this.process.parent.id, this.process.id, createVersion), (res) => {
+        console.log(res);
+      });
   }
 
 }
