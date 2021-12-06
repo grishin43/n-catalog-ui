@@ -4,7 +4,7 @@ import {ProcessModel} from './domain/process.model';
 import {BehaviorSubject} from 'rxjs';
 
 export interface ModalInjectableEntityModel {
-  entity?: FolderModel | ProcessModel;
+  entity?: FolderModel |  ProcessModel;
   parent?: FolderModel;
   type?: CatalogEntityEnum;
   ssCb?: (str?: string) => void;

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, merge, Observable, of, timer} from 'rxjs';
+import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, takeLast, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -16,11 +16,12 @@ import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
-import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
+import { CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {CollectionWrapperDto} from '../../../models/domain/collection-wrapper.dto';
 import {UiNotification} from '../../../models/domain/ui-notification';
+import {environment} from '../../../../environments/environment';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -188,10 +189,16 @@ export class ApiService {
   }
 
   private checkNotification(correlationId: string): Observable<any> {
-    return timer(0, 1000)
+    const maxRetry = environment.checkNotificationMaxRetryNumber;
+    return timer(0, 2000)
       .pipe(
-        switchMap(() => {
-          return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
+        take(maxRetry + 1),
+        switchMap((i) => {
+          if (i < maxRetry) {
+            return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
+          } else {
+            return throwError( new Error(`Max retry number ${maxRetry} for getting notification reached. Please retry later`));
+          }
         }),
         filter(({items}: CollectionWrapperDto<UiNotification>) => {
           return items.some((notification) => notification.correlationID === correlationId);

@@ -7,5 +7,6 @@ export const environment = {
   auth: window['env']['auth'] || AuthHelper.settings,
   apiV1: window['env']['apiV1'] || 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1',
   production:  window['env']['production'] || true,
-  refreshTokenInterval: 60000
+  refreshTokenInterval: 60000,
+  checkNotificationMaxRetryNumber: 15
 };

@@ -228,6 +228,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           (err: HttpErrorResponse) => {
             this.formLoader = false;
             this.showToast(err.error?.message || err.message);
+            this.closeModal();
           })
     );
   }
@@ -255,7 +256,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   private showToast(i18nKey: string): void {
-    this.toast.show(i18nKey, 1500, undefined, 'bottom', 'right');
+    this.toast.show(i18nKey, 3000, undefined, 'bottom', 'right');
   }
 
   public processTypeSelected(event: MouseEvent, option: ProcessTypeModel): void {
