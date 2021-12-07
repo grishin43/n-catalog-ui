@@ -30,15 +30,15 @@
         </ng-container>
       </span>
     </li>
-    <li *ngIf="data.createdAt">
+    <li *ngIf="data.changedAt">
       <span>
         {{'common.dateOfCreation' | translate}}:
       </span>
       <span>
-        {{data.createdAt | date: dateFormat}}
+        {{data.changedAt | date: dateFormat}}
       </span>
     </li>
-    <li *ngIf="data.createdAt">
+    <li *ngIf="data.versionID">
       <span>
         ID:
       </span>

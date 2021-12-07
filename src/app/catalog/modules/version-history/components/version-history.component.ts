@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AnimationsHelper} from '../../../helpers/animations.helper';
-import {CreateProcessVersionModel, ProcessVersionModel} from '../../../../models/domain/process-version.model';
+import {ProcessVersionModel} from '../../../../models/domain/process-version.model';
 import {Observable, Subscription} from 'rxjs';
 import {ApiService} from '../../../services/api/api.service';
 import {HistoryTypeEnum} from '../models/history-type.enum';
 import {SearchModel} from '../../../../models/domain/search.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
+import {UiNotificationCheck} from '../../../../models/domain/ui-notification.check';
 
 @Component({
   selector: 'np-version-history',
@@ -24,16 +25,17 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   public process: ProcessModel;
 
   private subs = new Subscription();
-  private versionAwaitingToPatch: ProcessVersionModel;
 
   @Input() set processData(value: ProcessModel) {
     this.process = value;
     if (value) {
       this.getHistory();
     }
-    if (this.versionAwaitingToPatch) {
-      this.createNewVersion(this.versionAwaitingToPatch);
-      this.versionAwaitingToPatch = null;
+  }
+
+  @Input() set newVersionCreated(value: UiNotificationCheck) {
+    if (value) {
+      this.getHistory();
     }
   }
 
@@ -107,33 +109,12 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   }
 
   public createVersion(version: ProcessVersionModel): void {
-    if (this.versions?.length === 1) {
-      if (!this.process.activeResource) {
-        // need to patch process active resource if empty
-        this.versionAwaitingToPatch = version;
-        this.createNewVersionClicked.emit();
-      } else {
-        this.createNewVersion(version);
-      }
-    } else {
-      this.getData(
-        this.api.createBasedOnPreviousVersion(this.process.parent.id, this.process.id, version.versionID), (res) => {
-          console.log(res);
-        }
-      );
-    }
-  }
-
-  private createNewVersion(version: ProcessVersionModel): void {
-    const createVersion: CreateProcessVersionModel = {
-      versionTitle: version.title,
-      versionDescription: version.description,
-      resources: [this.process.activeResource]
-    };
     this.getData(
-      this.api.createNewVersion(this.process.parent.id, this.process.id, createVersion), (res) => {
+      this.api.createBasedOnPreviousVersion(this.process.parent.id, this.process.id, version.versionID), (res) => {
+        this.getHistory();
         console.log(res);
-      });
+      }
+    );
   }
 
 }

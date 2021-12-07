@@ -18,8 +18,11 @@
           [attr.name]="formControlName.NAME"
           [placeholder]="'common.enterName' | translate">
         <mat-error *ngIf="form.get(formControlName.NAME).invalid">
-          <ng-container *ngIf="form.get(formControlName.NAME).hasError('required')">
+          <ng-container *ngIf="form.get(formControlName.NAME).hasError('required') && !form.get(formControlName.NAME).hasError('maxLength')">
             {{'errors.required' | translate}}
+          </ng-container>
+          <ng-container *ngIf="form.get(formControlName.NAME).hasError('maxLength')">
+            {{'errors.maxLength' | translate: {count: 72} }}
           </ng-container>
         </mat-error>
       </mat-form-field>
@@ -41,6 +44,9 @@
         <mat-error *ngIf="form.get(formControlName.DESCRIPTION).invalid">
           <ng-container *ngIf="form.get(formControlName.DESCRIPTION).hasError('required')">
             {{'errors.required' | translate}}
+          </ng-container>
+          <ng-container *ngIf="form.get(formControlName.DESCRIPTION).hasError('maxLength')">
+            {{'errors.maxLength' | translate: {count: 200} }}
           </ng-container>
         </mat-error>
       </mat-form-field>

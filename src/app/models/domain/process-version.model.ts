@@ -2,7 +2,7 @@ import {ResourceModel} from './resource.model';
 
 export interface VersionModel {
   author: string;
-  createdAt: Date;
+  changedAt: Date;
   description: string;
   title: string;
   versionID?: string;

@@ -16,7 +16,7 @@ import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
-import { CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
+import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {CollectionWrapperDto} from '../../../models/domain/collection-wrapper.dto';
@@ -197,7 +197,7 @@ export class ApiService {
           if (i < maxRetry) {
             return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
           } else {
-            return throwError( new Error(`Max retry number ${maxRetry} for getting notification reached. Please retry later`));
+            return throwError(new Error(`Max retry number ${maxRetry} for getting notification reached. Please retry later`));
           }
         }),
         filter(({items}: CollectionWrapperDto<UiNotification>) => {
@@ -219,7 +219,14 @@ export class ApiService {
   }
 
   public deleteProcess(folderId: string, processId: string): Observable<any> {
-    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`);
+    const correlationId = uuid();
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
+    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`, {headers})
+      .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId))
+      );
   }
 
   public renameProcess(parentFolderId: string, processId: string, name: string): Observable<null> {
@@ -312,13 +319,11 @@ export class ApiService {
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
-    return this.http.post<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.SAVE}`, {
-      resources: [{
-        id: process.activeResource.id || uuid(),
-        type: process.activeResource.type,
-        content
-      }]
-    }, {headers}).pipe(
+    return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.RESOURCES}`, [{
+      id: process.activeResource?.id || uuid(),
+      type: process.activeResource?.type || ResourceTypeEnum.XML,
+      content
+    }], {headers}).pipe(
       switchMap(() => this.pendingNotificationChecked(correlationId))
     );
   }
@@ -387,9 +392,16 @@ export class ApiService {
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`);
   }
 
-  public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string): Observable<void> {
-    return this.http.get<void>
-    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`);
+  public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string): Observable<UiNotificationCheck> {
+    const correlationId = uuid();
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
+    return this.http.post<void>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`, {headers})
+      .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId))
+      );
   }
 
   public createNewVersion(folderId: string, processId: string, version: CreateProcessVersionModel): Observable<UiNotificationCheck> {

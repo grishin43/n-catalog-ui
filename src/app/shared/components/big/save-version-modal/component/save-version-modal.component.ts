@@ -31,8 +31,8 @@ export class SaveVersionModalComponent implements OnInit {
 
   private initForm(): void {
     this.form = new FormGroup({
-      [FormFieldEnum.NAME]: new FormControl('', [Validators.required]),
-      [FormFieldEnum.DESCRIPTION]: new FormControl('')
+      [FormFieldEnum.NAME]: new FormControl('', [Validators.required, Validators.maxLength(72)]),
+      [FormFieldEnum.DESCRIPTION]: new FormControl('', [Validators.maxLength(200)])
     });
   }
 

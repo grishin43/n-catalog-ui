@@ -6,6 +6,7 @@ import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
 import {ProcessActions} from '../../../../store/process/process.actions';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
+import {CreateProcessVersionModel} from '../../../../../models/domain/process-version.model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,15 @@ export class ProcessService {
     return this.apiService.renameProcess(parentFolderId, processId, name)
       .pipe(tap(() => this.store.dispatch(new ProcessActions.ProcessRenamed(processId, name))));
   }
+
+  public createNewVersion(parentId: string, processId: string, cpv: CreateProcessVersionModel): Observable<UiNotificationCheck> {
+    return this.apiService.createNewVersion(parentId, processId, cpv);
+      /*.pipe(
+        filter((notification: UiNotificationCheck) => {
+          return notification.isChecked;
+        })
+      );*/
+  }
+
 }
 

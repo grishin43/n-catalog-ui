@@ -4,13 +4,13 @@
     style="margin-bottom: 16px;">
     <div class="col" *ngIf="folder$ | async as folder">
       <np-folder-breadcrumbs
-        [folder]="folder"
+        [folder]="folder.original"
         (folderUpdated)="getFolderById()">
       </np-folder-breadcrumbs>
     </div>
     <div class="col-auto ml-auto">
       <np-folder-actions-button
-        [parentFolder]="folder"
+        [parentFolder]="(folder$ | async)?.original"
         (entityCreated)="getFolderById()">
         <np-button>
           <mat-icon>
@@ -28,13 +28,13 @@
   <div class="row">
     <div class="col-12">
       <ng-container
-        *ngIf="(folderChildren$ | async) as folderEntities; else noEntities">
+        *ngIf="(folderChildren$ | async)?.length; else noEntities">
         <np-entities-table
           (entityRenamed)="getFolderById()"
           (entityDeleted)="onDeleteEntity($event)"
-          [parentFolder]="folder$ | async"
+          [parentFolder]="(folder$ | async)?.original"
           [displayedColumns]="tableDisplayedColumns"
-          [data]="folderEntities"
+          [data]="folderChildren$ | async"
           [tableClass]="'truncate-entity-name-30'">
         </np-entities-table>
       </ng-container>

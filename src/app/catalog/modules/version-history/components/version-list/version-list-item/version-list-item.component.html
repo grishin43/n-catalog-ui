@@ -4,7 +4,7 @@
     <ng-container *ngTemplateOutlet="menuBtnTemplate;"></ng-container>
   </div>
   <div class="version-info current-version">
-    <time>{{version.createdAt | date : dateFormat}}</time>
+    <time>{{version.changedAt | date : dateFormat}}</time>
     <i *ngIf="autosaving"> ({{'common.autosaving' | translate}})</i>
     <ng-container *ngTemplateOutlet="userTemplate;"></ng-container>
   </div>
@@ -36,7 +36,7 @@
     </div>
     <p *ngIf="version.description">{{version.description}}</p>
     <ng-container *ngTemplateOutlet="userTemplate;"></ng-container>
-    <time>{{version.createdAt | date : dateFormat}}</time>
+    <time>{{version.changedAt | date : dateFormat}}</time>
   </div>
 </ng-template>
 

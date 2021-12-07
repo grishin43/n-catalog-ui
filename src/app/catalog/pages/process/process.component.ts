@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
@@ -21,6 +21,7 @@ import {AnimationsHelper} from '../../helpers/animations.helper';
 import {FormFieldEnum} from '../../../models/form-field.enum';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {ResourceModel} from '../../../models/domain/resource.model';
+import {ProcessService} from '../folder/services/process/process.service';
 
 @Component({
   selector: 'np-process',
@@ -34,6 +35,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   public xmlMode: boolean;
   public modelerXml: string;
   public showDoneBtn: boolean;
+  public versionCreated: UiNotificationCheck;
 
   private subscriptions = new Subscription();
 
@@ -45,7 +47,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private translate: TranslateService,
     private dialog: MatDialog,
-    private bpmnModeler: BpmnModelerService
+    private bpmnModeler: BpmnModelerService,
+    private processService: ProcessService
   ) {
   }
 
@@ -149,7 +152,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onVersionSave(): void {
+  public onVersionCreate(): void {
     const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {
       width: '700px',
       autoFocus: false
@@ -193,10 +196,13 @@ export class ProcessComponent implements OnInit, OnDestroy {
         resources: this.process.resources || []
       };
       this.subscriptions.add(
-        this.api.createNewVersion(this.process.parent.id, this.process.id, cpv)
+        this.processService.createNewVersion(this.process.parent.id, this.process.id, cpv)
           .subscribe((res: UiNotificationCheck) => {
-            // TODO
-            console.log(res);
+            this.versionCreated = res;
+            const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: cpv.versionTitle});
+            this.toast.showMessage(toastMessage);
+          }, (err: HttpErrorResponse) => {
+            this.handleGeneralErrors(err, this.process.id);
           })
       );
     });

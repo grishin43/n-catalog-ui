@@ -186,7 +186,8 @@
     "savingVersion": "Збереження версії",
     "enterName": "Введіть назву",
     "description": "Опис",
-    "descriptionThatChanged": "Опис, що змінилося"
+    "descriptionThatChanged": "Опис, що змінилося",
+    "newProcessVersionCreated": "Версію “{{versionName}}” збережено"
   },
   "statuses": {
     "undefined": "Невизначений",
@@ -216,7 +217,8 @@
     "processCannotBeOpened": "Неможливо відкрити процес, діаграма пошкоджена, читання неможливо",
     "searchUsersFailed": "Неможливо знайти співробітників. Спробуйте пізніше",
     "processAccessDenied": "Доступ до процесу заборонено",
-    "versionsNotFound": "Версій не знайдено"
+    "versionsNotFound": "Версій не знайдено",
+    "maxLength": "Максимальна кількість сиволів {{count}}"
   },
   "counters": {
     "foldersCount1": "{{count}} папка",

@@ -27,7 +27,7 @@
       <np-button
         [size]="'xs'"
         [minWidth]="true"
-        (click)="onVersionSave()">
+        (click)="onVersionCreate()">
         <span>
            {{"common.done" | translate}}
         </span>
@@ -91,6 +91,7 @@
 
   <np-version-history
     [processData]="process"
+    [newVersionCreated]="versionCreated"
     (versionOpenClicked)="onVersionOpened($event)"
     (createNewVersionClicked)="patchProcessActiveResource()"
     (versionsAvailabilityChanged)="handleVersionsAvailabilityChanges($event)">

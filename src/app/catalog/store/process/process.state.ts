@@ -22,24 +22,28 @@ export class ProcessState extends EntityState<ProcessModel> {
   @Action(ProcessActions.ProcessesFetched)
   processFetched(ctx: StateContext<EntityStateModel<ProcessModel>>, {processes}: ProcessActions.ProcessesFetched): void {
 
-      ctx.dispatch(new CreateOrReplace(ProcessState, processes));
+    ctx.dispatch(new CreateOrReplace(ProcessState, processes));
   }
 
   @Action(ProcessActions.DraftProcessCreated)
-  draftProcessCreated(ctx: StateContext<EntityStateModel<ProcessModel>>, {draftProcess, correlationId}: ProcessActions.DraftProcessCreated): void {
-      draftProcess.id = correlationId;
-      ctx.dispatch(new CreateOrReplace(ProcessState, [draftProcess]));
+  draftProcessCreated(ctx: StateContext<EntityStateModel<ProcessModel>>, {
+    draftProcess,
+    correlationId
+  }: ProcessActions.DraftProcessCreated): void {
+    draftProcess.id = correlationId;
+    ctx.dispatch(new CreateOrReplace(ProcessState, [draftProcess]));
   }
 
   @Action(ProcessActions.ProcessDeleted)
   processDeleted(ctx: StateContext<EntityStateModel<ProcessModel>>, {processId}: ProcessActions.ProcessDeleted): void {
-      // const state = ctx.getState();
-      // const process = EntitySelector<ProcessModel>(processId)
-    ctx.dispatch(new Remove(ProcessState, [processId]))
+    // const state = ctx.getState();
+    // const process = EntitySelector<ProcessModel>(processId)
+    ctx.dispatch(new Remove(ProcessState, [processId]));
   }
 
   @Action(ProcessActions.ProcessRenamed)
   processRenamed(ctx: StateContext<EntityStateModel<ProcessModel>>, {processId, newName}: ProcessActions.ProcessRenamed): void {
-      ctx.dispatch(new Update(ProcessState, [processId], {name: newName}))
+    ctx.dispatch(new Update(ProcessState, [processId], {name: newName}));
   }
+
 }
