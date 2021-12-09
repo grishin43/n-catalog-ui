@@ -65,7 +65,7 @@ export class RenameEntityModalComponent implements OnInit {
   }
 
   private checkParentFolder(entityId: string, parentId: string, oldName: string, newName: string): void {
-    const loaderTitle = this.translate.instant('loaders.rename', {oldName});
+    const loaderTitle = this.translate.instant('loaders.rename', {name: oldName});
     this.closeModal();
     if (!!this.data?.asyncLoader?.getValue()) {
       this.data.asyncLoader.next(this.data.entity.id);
