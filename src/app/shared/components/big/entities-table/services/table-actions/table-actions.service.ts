@@ -103,6 +103,7 @@ export class TableActionsService {
           this.openRenameEntityModal({
             entity: MapHelper.mapEntityToFolder(entity),
             type: CatalogEntityEnum.FOLDER,
+            parent: parentFolder,
             ssCb,
             asyncLoader: this.renameLoader
           } as ModalInjectableEntityModel);

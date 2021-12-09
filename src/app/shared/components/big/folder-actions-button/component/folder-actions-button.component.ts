@@ -52,6 +52,7 @@ export class FolderActionsButtonComponent {
       data: {
         entity: this.parentFolder,
         type: CatalogEntityEnum.FOLDER,
+        parent: this.parentFolder?.parent,
         ssCb: () => {
           this.entityRenamed.emit();
         }
