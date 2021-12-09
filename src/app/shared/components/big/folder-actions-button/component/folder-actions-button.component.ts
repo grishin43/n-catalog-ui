@@ -37,7 +37,8 @@ export class FolderActionsButtonComponent {
         type,
         ssCb: () => {
           this.entityCreated.emit();
-        }
+        },
+        openCreatedInstance: true
       } as ModalInjectableEntityModel
     });
   }

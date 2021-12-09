@@ -7,6 +7,9 @@ import {Store} from '@ngxs/store';
 import {ProcessActions} from '../../../../store/process/process.actions';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
 import {CreateProcessVersionModel} from '../../../../../models/domain/process-version.model';
+import {AppRouteEnum} from '../../../../../models/app-route.enum';
+import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,8 @@ export class ProcessService {
   constructor(
     private httpClient: HttpClient,
     private apiService: ApiService,
-    private store: Store
+    private store: Store,
+    private router: Router
   ) {
   }
 
@@ -34,9 +38,10 @@ export class ProcessService {
 
   public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {
     return this.apiService.createProcess(parentFolderId, processType, name)
-      .pipe(filter((notification: UiNotificationCheck) => {
+      .pipe(
+        filter((notification: UiNotificationCheck) => {
         // create optimistic process creation
-        return notification.isChecked;
+          return notification.isChecked;
       }));
   }
 
@@ -54,5 +59,18 @@ export class ProcessService {
       );*/
   }
 
+
+  public openCreatedProcess(processId: string, processName: string, parentFolder: string): void {
+    this.router.navigate(
+      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
+      {
+        queryParams: {
+          [CatalogRouteEnum._ID]: processId,
+          [CatalogRouteEnum._NAME]: processName,
+          [CatalogRouteEnum._PARENT_ID]: parentFolder
+        }
+      }
+    );
+  }
 }
 

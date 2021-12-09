@@ -9,4 +9,5 @@ export interface ModalInjectableEntityModel {
   type?: CatalogEntityEnum;
   ssCb?: (str?: string) => void;
   asyncLoader?: BehaviorSubject<string>;
+  openCreatedInstance?: boolean;
 }

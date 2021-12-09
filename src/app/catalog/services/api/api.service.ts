@@ -209,13 +209,14 @@ export class ApiService {
           return this.sendNotificationProcessed(requiredNotification);
         }),
         take(1),
-        mapTo({correlationId, isChecked: true} as UiNotificationCheck)
+        map(({parameters}: UiNotification) => { return {correlationId, isChecked: true, parameters} as UiNotificationCheck})
       );
   }
 
-  private sendNotificationProcessed(notification: UiNotification): Observable<any> {
+  private sendNotificationProcessed(notification: UiNotification): Observable<UiNotification> {
     const lastAckNotificationNumber = notification.notificationNumber;
-    return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {});
+    return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
+      .pipe(mapTo(notification));
   }
 
   public deleteProcess(folderId: string, processId: string): Observable<any> {

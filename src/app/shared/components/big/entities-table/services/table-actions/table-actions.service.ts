@@ -122,7 +122,8 @@ export class TableActionsService {
         cb: (entity: CatalogEntityModel) => {
           this.openCreateEntityModal({
             parent: MapHelper.mapEntityToProcess(entity),
-            type: CatalogEntityEnum.PROCESS
+            type: CatalogEntityEnum.PROCESS,
+            openCreatedInstance: true
           } as ModalInjectableEntityModel);
         }
       },

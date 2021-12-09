@@ -48,7 +48,8 @@ export class BpmnToolbarService {
                 width: '700px',
                 autoFocus: false,
                 data: {
-                  type: CatalogEntityEnum.PROCESS
+                  type: CatalogEntityEnum.PROCESS,
+                  openCreatedInstance: true
                 } as ModalInjectableEntityModel
               });
             }
