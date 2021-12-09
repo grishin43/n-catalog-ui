@@ -34,23 +34,23 @@ export class EntitiesTabService {
     const removeIndex = entitiesValue.map(item => item.id).indexOf(entity.id);
     if (removeIndex !== -1) {
       entitiesValue.splice(removeIndex, 1);
-    }
-    this.processes.next(entitiesValue);
-    LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, entitiesValue);
-    const entityToOpen = entitiesValue[removeIndex - 1] || entitiesValue[removeIndex + 1] || entitiesValue[0];
-    if (entitiesValue.length >= 1 && entityToOpen && entity.parent?.id) {
-      this.router.navigate(
-        [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
-        {
-          queryParams: {
-            [CatalogRouteEnum._ID]: entityToOpen.id,
-            [CatalogRouteEnum._NAME]: entity.name,
-            [CatalogRouteEnum._PARENT_ID]: entity.parent.id
+      this.processes.next(entitiesValue);
+      LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, entitiesValue);
+      const entityToOpen = entitiesValue[removeIndex - 1] || entitiesValue[removeIndex + 1] || entitiesValue[0];
+      if (entitiesValue.length >= 1 && entityToOpen && entity.parent?.id) {
+        this.router.navigate(
+          [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
+          {
+            queryParams: {
+              [CatalogRouteEnum._ID]: entityToOpen.id,
+              [CatalogRouteEnum._NAME]: entity.name,
+              [CatalogRouteEnum._PARENT_ID]: entity.parent.id
+            }
           }
-        }
-      );
-    } else {
-      this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
+        );
+      } else {
+        this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
+      }
     }
   }
 

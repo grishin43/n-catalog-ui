@@ -29,6 +29,7 @@ np-bpmn-editor, np-xml-editor {
       display: inline-block;
       animation: dotty steps(1, end) 1s infinite;
       content: '';
+      min-width: 12px;
     }
   }
 }

@@ -218,7 +218,8 @@
     "searchUsersFailed": "Неможливо знайти співробітників. Спробуйте пізніше",
     "processAccessDenied": "Доступ до процесу заборонено",
     "versionsNotFound": "Версій не знайдено",
-    "maxLength": "Максимальна кількість сиволів {{count}}"
+    "maxLength": "Максимальна кількість сиволів {{count}}",
+    "processWithNameAlreadyExist": "Процес з назвою “{{name}}” вже існує у цій папці, спробуйте інше."
   },
   "counters": {
     "foldersCount1": "{{count}} папка",

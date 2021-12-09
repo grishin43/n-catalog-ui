@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
@@ -10,13 +10,15 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
+import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
+import {ProcessModel} from '../../../../../models/domain/process.model';
 
 @Component({
   selector: 'np-rename-entity-modal',
   templateUrl: './rename-entity-modal.component.html',
   styleUrls: ['./rename-entity-modal.component.scss']
 })
-export class RenameEntityModalComponent implements OnInit, OnDestroy {
+export class RenameEntityModalComponent implements OnInit {
   public form: FormGroup;
   public formControlName = FormFieldEnum;
 
@@ -43,10 +45,6 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
     this.initForm();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
   private initForm(): void {
     this.form = new FormGroup({
       [FormFieldEnum.ENTITY_NAME]: new FormControl(this.data?.entity?.name, [Validators.required])
@@ -62,68 +60,96 @@ export class RenameEntityModalComponent implements OnInit, OnDestroy {
       const entityId = this.data.entity.id;
       const entityName = this.data.entity.name;
       const controlValue = this.form.value[FormFieldEnum.ENTITY_NAME];
-      const loaderTitle = this.translate.instant('loaders.rename', {name: entityName});
-      if (this.isFolder) {
-        this.renameEntity(
-          this.api.renameFolder(entityId, controlValue),
-          loaderTitle,
-          this.translate.instant(
-            'common.folderSuccessfullyRenamed',
-            {folderOldName: entityName, folderNewName: controlValue}
-          ),
-          this.translate.instant('errors.failedToRenameFolder', {folderName: entityName}),
-          controlValue
-        );
-      } else if (this.isProcess) {
-        this.renameEntity(
-          this.processService.renameProcess(this.data.parent.id, entityId, controlValue),
-          loaderTitle,
-          this.translate.instant(
-            'common.processSuccessfullyRenamed',
-            {processOldName: entityName, processNewName: controlValue}
-          ),
-          this.translate.instant('errors.failedToRenameProcess', {processName: entityName}),
-          controlValue
-        );
-      }
+      this.checkParentFolder(entityId, this.data.parent.id, entityName, controlValue);
     }
   }
 
-  private renameEntity(
-    request: Observable<any>,
-    loaderTitle: string,
-    successTitle: string,
-    errorTitle: string,
-    newName: string
-  ): void {
+  private checkParentFolder(entityId: string, parentId: string, oldName: string, newName: string): void {
+    const loaderTitle = this.translate.instant('loaders.rename', {oldName});
     this.closeModal();
-    if (!!this.data.asyncLoader.getValue()) {
+    if (!!this.data?.asyncLoader?.getValue()) {
       this.data.asyncLoader.next(this.data.entity.id);
     } else {
       this.toast.showLoader(loaderTitle);
     }
     this.subscription.add(
-      request.subscribe(() => {
-        // TODO
-        setTimeout(() => {
-          if (!!this.data.asyncLoader.getValue()) {
-            this.data.asyncLoader.next(undefined);
+      this.api.getFolderByIdWithSubs(parentId)
+        .subscribe((res: FolderModel) => {
+          const duplicatedNotFound = !this.checkDuplicates(res, newName);
+          if (duplicatedNotFound) {
+            this.checkParentFolderCb(entityId, oldName, newName);
           } else {
-            this.toast.close();
+            if (!!this.data?.asyncLoader?.getValue()) {
+              this.data.asyncLoader.next(undefined);
+            } else {
+              this.toast.close();
+            }
+            const toastErrorMessage = this.translate.instant('errors.processWithNameAlreadyExist', {name: newName});
+            this.toast.showError('errors.errorOccurred', toastErrorMessage);
           }
-          this.toast.showMessage(successTitle);
-          if (typeof this.data.ssCb === 'function') {
-            this.data.ssCb(newName);
-          }
-        }, 2000);
+        })
+    );
+  }
+
+  private checkDuplicates(folder: FolderModel, name: string): boolean {
+    if (this.isFolder) {
+      return !!folder[FolderFieldKey.FOLDERS]?.items?.find((f: FolderModel) => f.name === name);
+    } else if (this.isProcess) {
+      return !!folder[FolderFieldKey.PROCESSES]?.items?.find((p: ProcessModel) => p.name === name);
+    }
+  }
+
+  private checkParentFolderCb(entityId: string, oldName: string, newName: string): void {
+    if (this.isFolder) {
+      this.renameEntity(
+        this.api.renameFolder(entityId, newName),
+        this.translate.instant(
+          'common.folderSuccessfullyRenamed',
+          {folderOldName: oldName, folderNewName: newName}
+        ),
+        this.translate.instant('errors.failedToRenameFolder', {folderName: oldName}),
+        newName
+      );
+    } else if (this.isProcess) {
+      this.renameEntity(
+        this.processService.renameProcess(this.data.parent.id, entityId, newName),
+        this.translate.instant(
+          'common.processSuccessfullyRenamed',
+          {processOldName: oldName, processNewName: newName}
+        ),
+        this.translate.instant('errors.failedToRenameProcess', {processName: oldName}),
+        newName
+      );
+    }
+  }
+
+  private renameEntity(
+    request: Observable<any>,
+    successTitle: string,
+    errorTitle: string,
+    newName: string
+  ): void {
+    this.subscription.add(
+      request.subscribe(() => {
+        if (!!this.data?.asyncLoader?.getValue()) {
+          this.data.asyncLoader.next(undefined);
+        } else {
+          this.toast.close();
+        }
+        this.toast.showMessage(successTitle);
+        if (typeof this.data.ssCb === 'function') {
+          this.data.ssCb(newName);
+        }
+        this.subscription.unsubscribe();
       }, (err: HttpErrorResponse) => {
-        if (!!this.data.asyncLoader.getValue()) {
+        if (!!this.data?.asyncLoader?.getValue()) {
           this.data.asyncLoader.next(undefined);
         }
         this.toast.showError(
           errorTitle,
           err?.message
         );
+        this.subscription.unsubscribe();
       })
     );
   }

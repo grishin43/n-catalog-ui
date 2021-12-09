@@ -31,32 +31,25 @@ export class ProcessService {
    */
   public deleteProcess(parentFolderId: string, processId: string): Observable<any> {
     return this.apiService.deleteProcess(parentFolderId, processId)
-      .pipe(tap(() => {
-        this.store.dispatch(new ProcessActions.ProcessDeleted(processId));
-      }));
+      .pipe(
+        tap(() => {
+          this.store.dispatch(new ProcessActions.ProcessDeleted(processId));
+        }));
   }
 
   public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {
-    return this.apiService.createProcess(parentFolderId, processType, name)
-      .pipe(
-        filter((notification: UiNotificationCheck) => {
-        // create optimistic process creation
-          return notification.isChecked;
-      }));
+    return this.apiService.createProcess(parentFolderId, processType, name);
   }
 
-  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<null> {
+  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<UiNotificationCheck> {
     return this.apiService.renameProcess(parentFolderId, processId, name)
-      .pipe(tap(() => this.store.dispatch(new ProcessActions.ProcessRenamed(processId, name))));
+      .pipe(
+        tap(() => this.store.dispatch(new ProcessActions.ProcessRenamed(processId, name)))
+      );
   }
 
   public createNewVersion(parentId: string, processId: string, cpv: CreateProcessVersionModel): Observable<UiNotificationCheck> {
     return this.apiService.createNewVersion(parentId, processId, cpv);
-      /*.pipe(
-        filter((notification: UiNotificationCheck) => {
-          return notification.isChecked;
-        })
-      );*/
   }
 
 

@@ -53,6 +53,8 @@ export class ApiService {
 
   private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
 
+  public lastNotification: UiNotification;
+
   constructor(
     private http: HttpClient,
     private entitiesTab: EntitiesTabService
@@ -93,7 +95,8 @@ export class ApiService {
       body,
       {headers})
       .pipe(
-        switchMap(() => this.pendingNotificationChecked(correlationId))
+        switchMap(() => this.pendingNotificationChecked(correlationId)),
+        filter((notification: UiNotificationCheck) => notification.isChecked)
       );
   }
 
@@ -160,8 +163,16 @@ export class ApiService {
    * Only an empty folder is allowed to be deleted.
    * When you try to delete a folder that contains other folders or processes, the response status will be 403.
    */
-  public deleteFolder(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`);
+  public deleteFolder(id: string): Observable<UiNotificationCheck> {
+    const correlationId = uuid();
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
+    return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`, {headers})
+      .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId)),
+        filter((notification: UiNotificationCheck) => notification.isChecked)
+      );
   }
 
   public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {
@@ -178,7 +189,8 @@ export class ApiService {
       body,
       {headers})
       .pipe(
-        switchMap(() => this.pendingNotificationChecked(correlationId))
+        switchMap(() => this.pendingNotificationChecked(correlationId)),
+        filter((notification: UiNotificationCheck) => notification.isChecked)
       );
   }
 
@@ -205,8 +217,9 @@ export class ApiService {
         }),
         map(({items}: CollectionWrapperDto<UiNotification>) => items),
         switchMap((notifications: UiNotification[]) => {
-          const requiredNotification = notifications.find((notification) => notification.correlationID === correlationId);
-          return this.sendNotificationProcessed(requiredNotification);
+          // TODO
+          this.lastNotification = notifications.find((notification) => notification.correlationID === correlationId);
+          return this.sendNotificationProcessed(this.lastNotification);
         }),
         take(1),
         map(({parameters}: UiNotification) => { return {correlationId, isChecked: true, parameters} as UiNotificationCheck})
@@ -219,21 +232,28 @@ export class ApiService {
       .pipe(mapTo(notification));
   }
 
-  public deleteProcess(folderId: string, processId: string): Observable<any> {
+  public deleteProcess(folderId: string, processId: string): Observable<UiNotificationCheck> {
     const correlationId = uuid();
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
     return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`, {headers})
       .pipe(
-        switchMap(() => this.pendingNotificationChecked(correlationId))
+        switchMap(() => this.pendingNotificationChecked(correlationId)),
+        filter((notification: UiNotificationCheck) => notification.isChecked)
       );
   }
 
-  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<null> {
+  public renameProcess(parentFolderId: string, processId: string, name: string): Observable<UiNotificationCheck> {
+    const correlationId = uuid();
+    const headers = new HttpHeaders().set(
+      ApiHeader.CORRELATION_ID, correlationId
+    );
     return this.http.put<null>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RENAME}`,
-      {name})
+      {name}, {headers})
       .pipe(
+        switchMap(() => this.pendingNotificationChecked(correlationId)),
+        filter((notification: UiNotificationCheck) => notification.isChecked),
         tap(() => this.entitiesTab.patchEntityName(parentFolderId, processId, name))
       );
   }
@@ -413,7 +433,8 @@ export class ApiService {
     return this.http.post<void>
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`, version, {headers})
       .pipe(
-        switchMap(() => this.pendingNotificationChecked(correlationId))
+        switchMap(() => this.pendingNotificationChecked(correlationId)),
+        filter((notification: UiNotificationCheck) => notification.isChecked)
       );
   }
 

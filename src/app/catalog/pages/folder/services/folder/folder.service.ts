@@ -1,15 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../../../environments/environment';
 import {Store} from '@ngxs/store';
 import {ApiService} from '../../../../services/api/api.service';
-import {filter, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {FolderActions} from '../../../../store/folder/folder.actions';
 import {ProcessActions} from '../../../../store/process/process.actions';
 import {Observable} from 'rxjs';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
-import {FormFieldEnum} from '../../../../../models/form-field.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -27,11 +25,7 @@ export class FolderService {
    * @param folderId - id of folder with should be deleted
    */
   public deleteFolder(folderId: string): Promise<any> {
-    return this.httpClient.delete(this.buildFolderDeleteUrl(folderId)).toPromise();
-  }
-
-  private buildFolderDeleteUrl(folderId: string): string {
-    return `${environment.apiV1}/folders/${folderId}`;
+    return this.apiService.deleteFolder(folderId).toPromise();
   }
 
   public async fetchFolderDetails(folderId: string): Promise<any> {
@@ -53,11 +47,7 @@ export class FolderService {
   }
 
   public createFolder(parentFolderId: string, name: string): Observable<UiNotificationCheck> {
-    return this.apiService.createFolder(parentFolderId, name)
-      .pipe(filter((notification: UiNotificationCheck) => {
-        // create optimistic process creation
-        return notification.isChecked;
-      }));
+    return this.apiService.createFolder(parentFolderId, name);
   }
 
 }

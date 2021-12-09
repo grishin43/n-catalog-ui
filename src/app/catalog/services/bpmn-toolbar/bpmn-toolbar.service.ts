@@ -43,12 +43,14 @@ export class BpmnToolbarService {
         subItems: [
           {
             name: ToolbarProcessItemEnum.NEW_PROCESS,
-            cb: () => {
+            cb: (process: ProcessModel) => {
               this.dialog.open(CreateEntityModalComponent, {
                 width: '700px',
                 autoFocus: false,
                 data: {
                   type: CatalogEntityEnum.PROCESS,
+                  entity: process,
+                  parent: process?.parent,
                   openCreatedInstance: true
                 } as ModalInjectableEntityModel
               });

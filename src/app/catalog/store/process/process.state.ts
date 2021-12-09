@@ -38,7 +38,7 @@ export class ProcessState extends EntityState<ProcessModel> {
   processDeleted(ctx: StateContext<EntityStateModel<ProcessModel>>, {processId}: ProcessActions.ProcessDeleted): void {
     // const state = ctx.getState();
     // const process = EntitySelector<ProcessModel>(processId)
-    ctx.dispatch(new Remove(ProcessState, [processId]));
+    ctx.dispatch(new Remove(ProcessState, processId));
   }
 
   @Action(ProcessActions.ProcessRenamed)
