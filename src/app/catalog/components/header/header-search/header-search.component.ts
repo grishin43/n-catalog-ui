@@ -28,7 +28,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   searchType = SearchType;
 
   private subscription = new Subscription();
-
+  private previousQueryInputValue = '';
   @Output() formHasStretched = new EventEmitter<boolean>();
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
@@ -58,11 +58,22 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.entities = this.searchService.savedEntities;
     this.showPreviousSearchResults();
-    this.patchControlBySearchQuery();
+    this.applySearchResultPageRules();
+  }
+
+  private applySearchResultPageRules() {
+    if (this.isSearchPage()) {
+      this.patchControlBySearchQuery();
+    }
+  }
+
+  private isSearchPage(): boolean {
+    return location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1
   }
 
   private async patchControlBySearchQuery() {
-    if (location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1) {
+    // clear any previous subscription
+    this.subscription.unsubscribe();
       const querySub = await this.activateRoute.params.subscribe((params: Params) => {
         const query = params[CatalogRouteEnum._QUERY];
         if (query?.trim().length) {
@@ -70,8 +81,6 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
         }
       });
       this.subscription.add(querySub);
-
-    }
   }
 
   public onCrossClicked(event: MouseEvent): void {
@@ -81,6 +90,13 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.autocomplete.closePanel();
     this.formStretched = false;
     this.formHasStretched.emit(false);
+    this.returnFromSearchToHomePage()
+  }
+
+  private returnFromSearchToHomePage() {
+    if (this.isSearchPage()) {
+      this.router.navigate([`${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`])
+    }
   }
 
   public onFolderSelected(entityId: string, folderName: string): void {
@@ -148,6 +164,12 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
       this.showPreviousSearchResults();
     } else {
       this.showSearchOptions(query);
+    }
+    if (query === '' && this.previousQueryInputValue != '' && this.isSearchPage()) {
+      this.previousQueryInputValue = '';
+      this.returnFromSearchToHomePage();
+    } else {
+      this.previousQueryInputValue = query;
     }
   }
 
