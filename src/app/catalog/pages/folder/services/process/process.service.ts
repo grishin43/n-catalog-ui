@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {filter, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
 import {ProcessActions} from '../../../../store/process/process.actions';
@@ -10,6 +10,7 @@ import {CreateProcessVersionModel} from '../../../../../models/domain/process-ve
 import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 import {Router} from '@angular/router';
+import {EntitiesTabService} from '../../../../services/entities-tab/entities-tab.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class ProcessService {
     private httpClient: HttpClient,
     private apiService: ApiService,
     private store: Store,
-    private router: Router
+    private router: Router,
+    private entitiesTab: EntitiesTabService
   ) {
   }
 
@@ -44,6 +46,7 @@ export class ProcessService {
   public renameProcess(parentFolderId: string, processId: string, name: string): Observable<UiNotificationCheck> {
     return this.apiService.renameProcess(parentFolderId, processId, name)
       .pipe(
+        tap(() => this.entitiesTab.patchEntityName(parentFolderId, processId, name)),
         tap(() => this.store.dispatch(new ProcessActions.ProcessRenamed(processId, name)))
       );
   }

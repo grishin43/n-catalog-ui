@@ -29,11 +29,11 @@ import {FolderSelectors} from '../../store/folder/folder.selectors';
 })
 export class FolderComponent implements OnInit, OnDestroy {
   public tableDisplayedColumns: TableColumnsModel[] = TableHelper.getEntitiesTableColumns();
-  public folder: FolderModel;
   public folderEntities: CatalogEntityModel[] = [];
   // @select from store
   public folderChildren$: Observable<CatalogEntityModel[]>;
-  public folder$: Observable<CatalogEntityModel>;
+  public folderEntity$: Observable<CatalogEntityModel>;
+  public folder$: Observable<FolderModel>;
   public loader: boolean;
   public errorResponse: HttpErrorResponse;
   public httpStatusCode = HttpStatusCodeEnum;
@@ -71,15 +71,14 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.errorResponse = undefined;
     this.loader = true;
     this.folderChildren$ = this.store.select(CatalogSelectors.folderChildren(this.folderId));
-    this.folder$ = this.store.select(FolderSelectors.catalogEntityByFolderId(this.folderId));
-
+    this.folderEntity$ = this.store.select(FolderSelectors.catalogEntityByFolderId(this.folderId));
+    this.folder$ = this.store.select(FolderSelectors.folderById(this.folderId));
     try {
       await this.folderService.fetchFolderDetails(this.folderId);
     } catch (err) {
       this.errorResponse = err;
     }
     this.loader = false;
-
   }
 
   private subscribeRouteParams(): void {

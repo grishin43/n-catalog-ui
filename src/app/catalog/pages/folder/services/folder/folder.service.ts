@@ -50,4 +50,8 @@ export class FolderService {
     return this.apiService.createFolder(parentFolderId, name);
   }
 
+  public renameFolder(folderId: string, name: string): Observable<UiNotificationCheck> {
+    return this.apiService.renameFolder(folderId, name);
+  }
+
 }

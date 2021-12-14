@@ -64,6 +64,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getRootFolders();
+    console.log(this.data);
     if (this.data && this.data.parent) {
       this.openedFolder = this.data.parent;
       this.patchOpenedFolder(this.openedFolder.id);

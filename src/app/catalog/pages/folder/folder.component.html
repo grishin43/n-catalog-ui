@@ -2,7 +2,7 @@
   <div
     class="row align-items-center"
     style="margin-bottom: 16px;">
-    <div class="col" *ngIf="folder$ | async as folder">
+    <div class="col" *ngIf="folderEntity$ | async as folder">
       <np-folder-breadcrumbs
         [folder]="folder.original"
         (folderUpdated)="getFolderById()">
@@ -10,7 +10,7 @@
     </div>
     <div class="col-auto ml-auto">
       <np-folder-actions-button
-        [parentFolder]="(folder$ | async)?.original"
+        [parentFolder]="(folderEntity$ | async)?.original"
         (entityCreated)="getFolderById()">
         <np-button>
           <mat-icon>
@@ -32,7 +32,7 @@
         <np-entities-table
           (entityRenamed)="getFolderById()"
           (entityDeleted)="onDeleteEntity($event)"
-          [parentFolder]="(folder$ | async)?.original"
+          [parentFolder]="(folderEntity$ | async)?.original"
           [displayedColumns]="tableDisplayedColumns"
           [data]="folderChildren$ | async"
           [tableClass]="'truncate-entity-name-30'">
@@ -64,7 +64,7 @@
               <np-folder-actions-button
                 (click)="$event.preventDefault(); $event.stopPropagation();"
                 (entityCreated)="getFolderById()"
-                [parentFolder]="folder">
+                [parentFolder]="folder$ | async">
                 <np-button>
                   <mat-icon class="ml-0">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

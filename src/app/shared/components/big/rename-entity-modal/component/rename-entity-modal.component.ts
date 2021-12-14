@@ -12,6 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {ProcessModel} from '../../../../../models/domain/process.model';
+import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
 
 @Component({
   selector: 'np-rename-entity-modal',
@@ -36,6 +37,7 @@ export class RenameEntityModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private api: ApiService,
     private processService: ProcessService,
+    private folderService: FolderService,
     private toast: ToastService,
     private translate: TranslateService
   ) {
@@ -102,7 +104,7 @@ export class RenameEntityModalComponent implements OnInit {
   private checkParentFolderCb(entityId: string, oldName: string, newName: string): void {
     if (this.isFolder) {
       this.renameEntity(
-        this.api.renameFolder(entityId, newName),
+        this.folderService.renameFolder(entityId, newName),
         this.translate.instant(
           'common.folderSuccessfullyRenamed',
           {folderOldName: oldName, folderNewName: newName}
