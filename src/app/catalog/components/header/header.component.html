@@ -25,7 +25,8 @@
           [folderId]="folderId"
           [showAllCrosses]="showAllCrosses"
           [searchFormStretched]="searchFormStretched"
-          [isProcessPath]="isProcessPath">
+          [isProcessPath]="isProcessPath"
+          (processOpened)="searchFormStretched.next($event)">
         </np-header-tabs>
       </div>
       <ng-container *ngIf="!isProcessPath">

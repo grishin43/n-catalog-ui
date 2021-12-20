@@ -4,7 +4,7 @@ import {FormControl} from '@angular/forms';
 import {CatalogEntityModel} from '../../../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../../../models/catalog-entity.enum';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {ActivatedRoute, NavigationEnd, Params, Router, RouterEvent} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {RecentSearchDto, SearchService} from '../../../services/search/search.service';
@@ -61,26 +61,30 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.applySearchResultPageRules();
   }
 
-  private applySearchResultPageRules() {
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private applySearchResultPageRules(): void {
     if (this.isSearchPage()) {
       this.patchControlBySearchQuery();
     }
   }
 
   private isSearchPage(): boolean {
-    return location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1
+    return location.pathname.indexOf(`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.SEARCH_RESULTS}/`) !== -1;
   }
 
-  private async patchControlBySearchQuery() {
+  private async patchControlBySearchQuery(): Promise<void> {
     // clear any previous subscription
     this.subscription.unsubscribe();
-      const querySub = await this.activateRoute.params.subscribe((params: Params) => {
-        const query = params[CatalogRouteEnum._QUERY];
-        if (query?.trim().length) {
-          this.formControl.patchValue(query);
-        }
-      });
-      this.subscription.add(querySub);
+    const querySub = await this.activateRoute.params.subscribe((params: Params) => {
+      const query = params[CatalogRouteEnum._QUERY];
+      if (query?.trim().length) {
+        this.formControl.patchValue(query);
+      }
+    });
+    this.subscription.add(querySub);
   }
 
   public onCrossClicked(event: MouseEvent): void {
@@ -90,12 +94,12 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.autocomplete.closePanel();
     this.formStretched = false;
     this.formHasStretched.emit(false);
-    this.returnFromSearchToHomePage()
+    this.returnFromSearchToHomePage();
   }
 
-  private returnFromSearchToHomePage() {
+  private returnFromSearchToHomePage(): void {
     if (this.isSearchPage()) {
-      this.router.navigate([`${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`])
+      this.router.navigate([`${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
     }
   }
 
@@ -124,14 +128,14 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  public openSearchPage(searchType: SearchType) {
-    const submittedQuery = this.formControl.value?.trim()
+  public openSearchPage(searchType: SearchType): void {
+    const submittedQuery = this.formControl.value?.trim();
     if (submittedQuery.length) {
       this.openGeneralSearchPage(submittedQuery, searchType);
     }
   }
 
-  private openGeneralSearchPage(searchQuery: string, searchType = SearchType.all) {
+  private openGeneralSearchPage(searchQuery: string, searchType: SearchType = SearchType.all): void {
     this.autocomplete.closePanel();
     this.searchService.openGeneralSearchPage(searchQuery, searchType);
   }
@@ -165,7 +169,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     } else {
       this.showSearchOptions(query);
     }
-    if (query === '' && this.previousQueryInputValue != '' && this.isSearchPage()) {
+    if (query === '' && this.previousQueryInputValue !== '' && this.isSearchPage()) {
       this.previousQueryInputValue = '';
       this.returnFromSearchToHomePage();
     } else {
@@ -197,8 +201,4 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.searchService.navigateToSearchResults(recentQuery, SearchType.all);
   }
 
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
 }

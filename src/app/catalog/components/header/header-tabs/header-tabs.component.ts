@@ -1,4 +1,15 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef, EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {ProcessModel} from '../../../../models/domain/process.model';
 import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.service';
@@ -30,6 +41,8 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showAllCrosses: boolean;
   @Input() searchFormStretched: BehaviorSubject<boolean>;
   @Input() isProcessPath: boolean;
+
+  @Output() processOpened = new EventEmitter<boolean>();
 
   public catalogProcesses$: BehaviorSubject<ProcessModel[]>;
   public rippleLightColor = MatRippleHelper.lightRippleColor;
@@ -102,7 +115,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
           [CatalogRouteEnum._PARENT_ID]: process.parent.id
         }
       }
-    );
+    ).then(() => this.processOpened.emit(false));
   }
 
   public patchMaxCount(): void {
