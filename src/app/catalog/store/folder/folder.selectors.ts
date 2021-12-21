@@ -9,7 +9,8 @@ export class FolderSelectors {
   static subFoldersInFolder(folderId) {
     return createSelector([FolderState.entities], (entities: FolderModel[]): CatalogEntityModel[] => {
       return entities.filter((folder: FolderModel) => {
-        return folder.parent?.id === folderId;
+        // hide folders witch have to be deleted
+        return !folder.toBeDeleted && folder.parent?.id === folderId;
       }).map(MapHelper.mapFolderToCatalogEntity);
     })
   }

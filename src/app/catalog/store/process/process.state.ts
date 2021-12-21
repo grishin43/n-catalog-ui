@@ -9,6 +9,8 @@ import {
 import {ProcessModel} from '../../../models/domain/process.model';
 import {Action, State, StateContext} from '@ngxs/store';
 import {ProcessActions} from './process.actions';
+import {ProcessSelectors} from './process.selectors';
+import {CatalogEntityModel} from '../../models/catalog-entity.model';
 
 @State<EntityStateModel<ProcessModel>>({
   name: 'npProcesses',
@@ -23,6 +25,23 @@ export class ProcessState extends EntityState<ProcessModel> {
   processFetched(ctx: StateContext<EntityStateModel<ProcessModel>>, {processes}: ProcessActions.ProcessesFetched): void {
 
     ctx.dispatch(new CreateOrReplace(ProcessState, processes));
+  }
+
+  @Action(ProcessActions.FolderProcessesFetched)
+  folderProcessesFetched(ctx: StateContext<EntityStateModel<ProcessModel>>, {processes, parentFolderId}: ProcessActions.FolderProcessesFetched): void {
+    const state = ctx.getState();
+
+    ctx.dispatch(new CreateOrReplace(ProcessState, processes));
+    // remove leftovers which doesn't exist
+    const recentIds = new Set(processes.map(({id}: ProcessModel) => id));
+
+    const allFoldersProcesses = ProcessSelectors.processesInFolder(parentFolderId)(Object.values(state.entities));
+    const idsToBeCleared = allFoldersProcesses
+      .filter(({id}: CatalogEntityModel) => !recentIds.has(id))
+      .map(({id}: CatalogEntityModel) => id);
+
+    ctx.dispatch(new Remove(ProcessState, idsToBeCleared))
+
   }
 
   @Action(ProcessActions.DraftProcessCreated)

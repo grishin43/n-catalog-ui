@@ -17,4 +17,5 @@ export interface FolderModel {
   root?: boolean;
   path?: EntityPathModel[];
   updatedAt?: Date;
+  toBeDeleted?: boolean;
 }

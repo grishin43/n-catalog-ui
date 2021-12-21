@@ -104,7 +104,7 @@ export class RenameEntityModalComponent implements OnInit {
   private checkParentFolderCb(entityId: string, oldName: string, newName: string): void {
     if (this.isFolder) {
       this.renameEntity(
-        this.folderService.renameFolder(entityId, newName),
+        this.folderService.renameFolder(entityId, newName, oldName),
         this.translate.instant(
           'common.folderSuccessfullyRenamed',
           {folderOldName: oldName, folderNewName: newName}
