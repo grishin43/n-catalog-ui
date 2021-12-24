@@ -5,6 +5,7 @@
     *ngIf="catalogProcesses$ | async as processes">
     <ng-container *ngIf="maxCount != null">
       <div
+        @fadeInOut
         class="col-auto process-tab tab"
         *ngFor="let process of processes | slice: 0: maxCount"
         matRipple

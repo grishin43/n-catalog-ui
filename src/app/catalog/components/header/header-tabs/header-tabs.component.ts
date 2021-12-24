@@ -20,11 +20,13 @@ import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
+import {AnimationsHelper} from '../../../helpers/animations.helper';
 
 @Component({
   selector: 'np-header-tabs',
   templateUrl: './header-tabs.component.html',
-  styleUrls: ['./header-tabs.component.scss']
+  styleUrls: ['./header-tabs.component.scss'],
+  animations: [AnimationsHelper.fadeInOut]
 })
 export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 

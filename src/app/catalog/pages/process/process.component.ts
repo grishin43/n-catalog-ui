@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
@@ -34,8 +34,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
   public errorResponse: HttpErrorResponse;
   public xmlMode: boolean;
   public modelerXml: string;
-  public showDoneBtn: boolean;
   public versionCreated: UiNotificationCheck;
+  public isLocked: boolean;
 
   private subscriptions = new Subscription();
 
@@ -61,6 +61,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     document.body.classList.remove('cdk-overflow');
     this.subscriptions.unsubscribe();
+    this.toast.close();
   }
 
   private subscribeRoute(): void {
@@ -82,10 +83,18 @@ export class ProcessComponent implements OnInit, OnDestroy {
         .subscribe((res: ProcessModel) => {
           this.process = res;
           this.entitiesTab.addEntity(res);
+          this.handleLockedBy(res?.lockedBy);
         }, (err: HttpErrorResponse) => {
           this.handleGeneralErrors(err, processId);
         })
     );
+  }
+
+  private handleLockedBy(username: string): void {
+    if (username) {
+      this.isLocked = true;
+      this.bpmnModeler.showToast('common.someUserIsEditingProcess', undefined, 'OK');
+    }
   }
 
   private handleGeneralErrors(err: HttpErrorResponse, processId: string): void {
@@ -152,7 +161,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onVersionCreate(): void {
+  public onVersionCreate(): boolean {
+    if (this.isLocked) {
+      return false;
+    }
     const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {
       width: '700px',
       autoFocus: false
@@ -161,7 +173,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
       .subscribe(
         (formData: ({ [FormFieldEnum.NAME], [FormFieldEnum.DESCRIPTION] })) => {
           if (formData) {
-            this.saveVersion(formData[FormFieldEnum.NAME], formData[FormFieldEnum.DESCRIPTION]);
+            this.createNewVersion(formData[FormFieldEnum.NAME], formData[FormFieldEnum.DESCRIPTION]);
           }
         });
     this.subscriptions.add(saveVersionResultSubscription);
@@ -187,13 +199,14 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  private saveVersion(name: string, desc: string): void {
+  private createNewVersion(name: string, desc: string): void {
     this.bpmnModeler.getDiagramXml().then((content: string) => {
       this.patchProcessResources(content);
       const cpv: CreateProcessVersionModel = {
         versionTitle: name,
         versionDescription: desc,
-        resources: this.process.resources || []
+        resources: this.process.resources || [],
+        generation: this.process.generation
       };
       this.subscriptions.add(
         this.processService.createNewVersion(this.process.parent.id, this.process.id, cpv)
@@ -201,15 +214,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
             this.versionCreated = res;
             const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: cpv.versionTitle});
             this.toast.showMessage(toastMessage);
+            this.processAutosave.canDiscardChanges = false;
           }, (err: HttpErrorResponse) => {
             this.handleGeneralErrors(err, this.process.id);
           })
       );
     });
-  }
-
-  public handleVersionsAvailabilityChanges(availability: boolean): void {
-    this.showDoneBtn = !availability;
   }
 
 }

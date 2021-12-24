@@ -31,7 +31,10 @@ export class ToolbarActionBtnComponent {
   }
 
   public get showTick(): boolean {
-    return this.isTransactionBoundariesAndActive || this.isTokenSimulationAndActive || this.isSchemeValidatorAndActive || this.isEmbeddedCommentsAndActive;
+    return this.isTransactionBoundariesAndActive
+      || this.isTokenSimulationAndActive
+      || this.isSchemeValidatorAndActive
+      || this.isEmbeddedCommentsAndActive;
   }
 
   public get isTransactionBoundariesAndActive(): boolean {

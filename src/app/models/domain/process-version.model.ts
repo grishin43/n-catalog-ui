@@ -17,4 +17,5 @@ export interface CreateProcessVersionModel {
   versionTitle: string;
   versionDescription: string;
   resources: ResourceModel[];
+  generation: number;
 }

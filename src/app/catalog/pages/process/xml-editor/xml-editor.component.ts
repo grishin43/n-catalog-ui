@@ -12,12 +12,24 @@ export class XmlEditorComponent implements OnDestroy, AfterViewInit {
   @ViewChild('host') hostComponent;
   @Output() destroyed = new EventEmitter<string>();
 
+  @Input() set isLocked(value: boolean) {
+    this.readOnly = value;
+    if (value != null && !!this.codeEditor) {
+      this.initEditor();
+    }
+  };
+
   private codeEditor: CodeMirror;
   private codemirrorEditorParams = {
     lineNumbers: true,
     mode: 'xml',
     htmlMode: true
   };
+  private readOnly: boolean;
+
+  ngAfterViewInit(): void {
+    this.initEditor();
+  }
 
   ngOnDestroy(): void {
     const str: string = this.codeEditor.getValue();
@@ -26,12 +38,9 @@ export class XmlEditorComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.initEditor();
-  }
-
   private initEditor(): void {
     if (!this.codeEditor && this.hostComponent) {
+      this.codemirrorEditorParams['readOnly'] = this.readOnly;
       this.codeEditor = CodeMirror.fromTextArea(this.hostComponent.nativeElement, this.codemirrorEditorParams);
     }
     if (this.codeEditor && this.xml) {

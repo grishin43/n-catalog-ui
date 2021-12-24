@@ -22,11 +22,11 @@
     </div>
     <div
       class="col-auto"
-      @fadeInOut
-      *ngIf="showDoneBtn">
+      @fadeInOut>
       <np-button
         [size]="'xs'"
         [minWidth]="true"
+        [disabled]="isLocked"
         (click)="onVersionCreate()">
         <span>
            {{"common.done" | translate}}
@@ -62,6 +62,7 @@
 <div class="editor">
   <ng-container *ngIf="xmlMode; else bpmnEditorTemplate">
     <np-xml-editor
+      [isLocked]="isLocked"
       [xml]="modelerXml"
       (destroyed)="xmlDestroyed($event)">
     </np-xml-editor>
@@ -90,11 +91,11 @@
   </div>
 
   <np-version-history
+    [isLocked]="isLocked"
     [processData]="process"
     [newVersionCreated]="versionCreated"
     (versionOpenClicked)="onVersionOpened($event)"
-    (createNewVersionClicked)="patchProcessActiveResource()"
-    (versionsAvailabilityChanged)="handleVersionsAvailabilityChanges($event)">
+    (createNewVersionClicked)="patchProcessActiveResource()">
   </np-version-history>
 
 </div>

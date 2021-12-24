@@ -5,6 +5,5 @@ export enum ToolbarWindowItemEnum {
   ZOOM_TO_FIT_DIAGRAM = 'zoomToFitDiagram',
   TOGGLE_PROPERTIES_PANEL = 'togglePropertiesPanel',
   RESET_PROPERTIES_PANEL = 'resetPropertiesPanel',
-  TOGGLE_DEVTOOLS = 'toggleDevtools',
   FULLSCREEN = 'fullScreen'
 }

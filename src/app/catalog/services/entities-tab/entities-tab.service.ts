@@ -34,7 +34,6 @@ export class EntitiesTabService {
     const removeIndex = entitiesValue.map(item => item.id).indexOf(entity.id);
     if (removeIndex !== -1) {
       entitiesValue.splice(removeIndex, 1);
-      this.processes.next(entitiesValue);
       LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, entitiesValue);
       const entityToOpen = entitiesValue[removeIndex - 1] || entitiesValue[removeIndex + 1] || entitiesValue[0];
       if (entitiesValue.length >= 1 && entityToOpen && entity.parent?.id) {
@@ -47,9 +46,10 @@ export class EntitiesTabService {
               [CatalogRouteEnum._PARENT_ID]: entity.parent.id
             }
           }
-        );
+        ).then(() => this.processes.next(entitiesValue));
       } else {
-        this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`]);
+        this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.MAIN}`])
+          .then(() => this.processes.next(entitiesValue));
       }
     }
   }

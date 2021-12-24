@@ -11,6 +11,7 @@ import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {EntitiesTabService} from '../../../../services/entities-tab/entities-tab.service';
+import {ProcessModel} from '../../../../../models/domain/process.model';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,14 @@ export class ProcessService {
     return this.apiService.createNewVersion(parentId, processId, cpv);
   }
 
+  public createVersionBasedOnPrevious(folderId: string, processId: string, previousVersionID: string, generation: number)
+    : Observable<UiNotificationCheck> {
+    return this.apiService.createBasedOnPreviousVersion(folderId, processId, previousVersionID, generation);
+  }
+
+  public discardVersionChanges(parentId: string, processId: string, generation: number): void {
+    this.apiService.discardChanges(parentId, processId, generation).toPromise();
+  }
 
   public openCreatedProcess(processId: string, processName: string, parentFolder: string): void {
     this.router.navigate(
@@ -68,5 +77,10 @@ export class ProcessService {
       }
     );
   }
+
+  public get isLockedBy(): boolean {
+    return !!this.apiService.requestedProcess?.lockedBy;
+  }
+
 }
 

@@ -8,5 +8,5 @@ export const environment = {
   apiV1: window['env']['apiV1'] || 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1',
   production:  window['env']['production'] || false,
   refreshTokenInterval: 60000,
-  checkNotificationMaxRetryNumber: 15
+  checkNotificationMaxRetryNumber: 30
 };

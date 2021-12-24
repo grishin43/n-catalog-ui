@@ -15,6 +15,7 @@ export class VersionListItemComponent implements OnInit {
   @Input() type: HistoryTypeEnum;
   @Input() version: ProcessVersionModel;
   @Input() autosaving: boolean;
+  @Input() isLocked: boolean;
 
   @Output() versionOpened = new EventEmitter<ProcessVersionModel>();
   @Output() versionLaunched = new EventEmitter<ProcessVersionModel>();

@@ -31,7 +31,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       }
       this.process = value;
       this.processLoader = true;
-      this.processAutosave.init(value);
+      this.handleLockedBy(value);
       this.openProcess();
     }
   }
@@ -46,6 +46,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private readonly newDiagramLink = '../../../assets/bpmn/newDiagram.bpmn';
   public httpStatusCode = HttpStatusCodeEnum;
+  public hasPropertiesPanel: boolean;
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.ctrlKey && e.code === 'Digit1') {
@@ -120,6 +121,26 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  private handleLockedBy(process: ProcessModel): void {
+    const paletteContainer = this.bpmnModelerService.modeler.get('palette')._container;
+    if (!process.lockedBy) {
+      this.processAutosave.init(process);
+      paletteContainer.classList.add('show');
+    } else {
+      this.processAutosave.destroy();
+      paletteContainer.classList.remove('show');
+    }
+    this.checkPropertiesPanel();
+  }
+
+  private checkPropertiesPanel(): void {
+    try {
+      this.hasPropertiesPanel = !!this.bpmnModelerService.modeler?.get('propertiesPanel');
+    } catch (e) {
+      this.hasPropertiesPanel = false;
+    }
+  }
+
   private initEditor(): void {
     this.bpmnModelerService.initModeler(
       '#bpmn-canvas',
@@ -128,7 +149,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
         this.listenModelerChanges();
         this.listenOpenWysiwygEditor();
         this.openProcess();
-      }
+      },
+      !!this.process?.lockedBy
     );
   }
 
@@ -220,6 +242,10 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   public goHome(): void {
     this.router.navigate(['/']);
+  }
+
+  public get lockedBy(): boolean {
+    return !!this.process?.lockedBy;
   }
 
 }

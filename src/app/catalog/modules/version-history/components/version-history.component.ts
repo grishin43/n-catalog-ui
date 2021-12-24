@@ -39,9 +39,10 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
     }
   }
 
+  @Input() isLocked: boolean;
+
   @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
   @Output() createNewVersionClicked = new EventEmitter<void>();
-  @Output() versionsAvailabilityChanged = new EventEmitter<boolean>();
 
   constructor(
     private api: ApiService
@@ -77,19 +78,14 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
     if (this.historyType === HistoryTypeEnum.VERSION_HISTORY) {
       this.getData(
         this.api.getVersions(this.process.parent?.id, this.process.id),
-        (res: SearchModel<ProcessVersionModel>) => this.getHistoryCb(res)
+        (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
       );
     } else if (this.historyType === HistoryTypeEnum.START_AND_STOP_HISTORY) {
       this.getData(
         this.api.getStartAndStopHistory(),
-        (res: SearchModel<ProcessVersionModel>) => this.getHistoryCb(res)
+        (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
       );
     }
-  }
-
-  private getHistoryCb(res: SearchModel<ProcessVersionModel>): void {
-    this.versions = res?.items;
-    this.versionsAvailabilityChanged.emit(!!res?.count);
   }
 
   private getData(request: Observable<any>, cb: (res: any) => void): void {
@@ -110,7 +106,7 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   public createVersion(version: ProcessVersionModel): void {
     this.getData(
-      this.api.createBasedOnPreviousVersion(this.process.parent.id, this.process.id, version.versionID), (res) => {
+      this.api.createBasedOnPreviousVersion(this.process.parent.id, this.process.id, version.versionID, this.process.generation), (res) => {
         this.getHistory();
         console.log(res);
       }

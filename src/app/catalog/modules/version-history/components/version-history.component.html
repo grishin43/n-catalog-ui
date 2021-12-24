@@ -34,7 +34,7 @@
     @fadeInOut
     class="panel_data">
     <div class="panel_data__header">
-      <h3>
+      <h3 class="text-truncate">
         {{'common.versionHistory' | translate}}
         <!--<button
           mat-button
@@ -74,6 +74,7 @@
       class="panel_data__body"
       *ngIf="versions?.length; else noResults">
       <np-version-list
+        [isLocked]="isLocked"
         [versions]="versions"
         [loader]="loader"
         [error]="error"

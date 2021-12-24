@@ -6,8 +6,9 @@
         #menuTrigger="matMenuTrigger"
         [matMenuTriggerFor]="menu"
         [ngClass]="{
-        'menu-opened': menuTrigger.menuOpen
-       }">
+         'menu-opened': menuTrigger.menuOpen
+        }"
+        [disabled]="isLocked && (tool.name === toolbarItem.EDIT || tool.name === toolbarItem.PLUGINS)">
         {{'common.' + tool.name | translate}}
       </button>
       <mat-menu

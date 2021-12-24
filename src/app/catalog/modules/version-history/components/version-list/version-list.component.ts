@@ -14,6 +14,7 @@ export class VersionListComponent {
   @Input() type: HistoryTypeEnum;
   @Input() loader: boolean;
   @Input() error: string;
+  @Input() isLocked: string;
 
   @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
   @Output() versionCreatClicked = new EventEmitter<ProcessVersionModel>();

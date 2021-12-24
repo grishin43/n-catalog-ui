@@ -14,5 +14,7 @@ export interface ProcessModel {
   subRoot?: string;
   activeResource?: ResourceModel;
   currentUserPermissionLevel?: ProcessPermission;
+  generation?: number;
+  lockedBy?: string;
 }
 

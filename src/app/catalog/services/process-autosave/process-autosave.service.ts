@@ -27,6 +27,7 @@ export class ProcessAutosaveService {
   public requestLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public resourceSaved$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public shouldSaved: boolean;
+  public canDiscardChanges: boolean;
 
   private subs = new Subscription();
 
@@ -89,6 +90,8 @@ export class ProcessAutosaveService {
             if (typeof ssCb === 'function') {
               ssCb();
             }
+            // TODO: if has any version
+            this.canDiscardChanges = true;
           },
           () => {
             this.requestLoader$.next(false);
@@ -217,9 +220,5 @@ export class ProcessAutosaveService {
     if (currentModelerXml !== this.process?.activeResource?.content) {
       this.shouldSaved = true;
     }
-  }
-
-  public saveVersion(process: ProcessModel, versionName: string, description: string): void {
-    console.warn('mocked save of process version. Pending integration with BE', process, versionName, description);
   }
 }

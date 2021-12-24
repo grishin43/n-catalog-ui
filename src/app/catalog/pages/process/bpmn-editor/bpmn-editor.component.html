@@ -4,19 +4,27 @@
       <div class="bpmn-editor-wrapper"
            id="bpmn-drop-zone"
            [ngClass]="{
-          'show-scheme-validator': bpmnModelerService.schemeValidatorActive,
-          'show-token-simulation': bpmnModelerService.tokenSimulationActive
-        }">
+             'show-scheme-validator': bpmnModelerService.schemeValidatorActive,
+             'show-token-simulation': bpmnModelerService.tokenSimulationActive
+           }">
         <div class="bpmn-bad-actions">
           <button
             id="color-palette-trigger"
             [matMenuTriggerFor]="colorMenu">
           </button>
         </div>
-        <div id="bpmn-canvas"></div>
-        <div id="bpmn-properties">
-          <button class="bpmn-properties-toggle-btn"
-                  (click)="togglePropertiesPanel()">
+        <div
+          id="bpmn-canvas"
+          [ngClass]="{
+            'lockedBy': lockedBy
+          }">
+        </div>
+        <div
+          id="bpmn-properties"
+          *ngIf="hasPropertiesPanel">
+          <button
+            class="bpmn-properties-toggle-btn"
+            (click)="togglePropertiesPanel()">
             Properties Panel
           </button>
         </div>

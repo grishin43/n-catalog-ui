@@ -64,7 +64,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getRootFolders();
-    console.log(this.data);
     if (this.data && this.data.parent) {
       this.openedFolder = this.data.parent;
       this.patchOpenedFolder(this.openedFolder.id);
@@ -92,7 +91,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           }
         }, (err: HttpErrorResponse) => {
           this.processTypesLoader = false;
-          this.showToast(err.error?.message || err.message);
+          this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
         })
     );
   }
@@ -106,7 +105,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           this.rootFolders = res?.items;
         }, (err: HttpErrorResponse) => {
           this.explorerLoader = false;
-          this.showToast(err.error?.message || err.message);
+          this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
         })
     );
   }
@@ -163,7 +162,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
         }, (err: HttpErrorResponse) => {
           this.explorerLoader = false;
-          this.showToast(err.error?.message || err.message);
+          this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
         })
     );
   }
@@ -232,7 +231,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
-            this.showToast(err.error?.message || err.message);
+            this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
             this.closeModal();
           })
     );
@@ -255,7 +254,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           },
           (err: HttpErrorResponse) => {
             this.formLoader = false;
-            this.showToast(err.error?.message || err.message);
+            this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
           })
     );
   }

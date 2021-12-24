@@ -23,6 +23,7 @@ import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
 import {RenameEntityModalComponent} from '../../../shared/components/big/rename-entity-modal/component/rename-entity-modal.component';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
+import {ProcessService} from '../../pages/folder/services/process/process.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,8 @@ export class BpmnToolbarService {
   constructor(
     private bpmnModeler: BpmnModelerService,
     private dialog: MatDialog,
-    private processAutosave: ProcessAutosaveService
+    private processAutosave: ProcessAutosaveService,
+    private processService: ProcessService
   ) {
   }
 
@@ -120,6 +122,11 @@ export class BpmnToolbarService {
       {
         name: ToolbarItemEnum.EDIT,
         subItems: [
+          {
+            name: ToolbarEditItemEnum.DISCARD_CHANGES,
+            cb: (process: ProcessModel) => this.processService.discardVersionChanges(process.parent.id, process.id, process.generation),
+            delimiterAfter: true
+          },
           {
             name: ToolbarEditItemEnum.UNDO,
             hotkey: 'Ctrl + Z',
@@ -418,6 +425,26 @@ export class BpmnToolbarService {
       {
         name: ToolbarEditItemEnum.EDIT_LABEL,
         allow: this.bpmnModeler.hasSelectedElements
+      },
+      {
+        name: ToolbarEditItemEnum.DISCARD_CHANGES,
+        allow: this.processAutosave.canDiscardChanges
+      },
+      {
+        name: ToolbarWindowItemEnum.TOGGLE_PROPERTIES_PANEL,
+        allow: !this.processService.isLockedBy
+      },
+      {
+        name: ToolbarWindowItemEnum.RESET_PROPERTIES_PANEL,
+        allow: !this.processService.isLockedBy
+      },
+      {
+        name: ToolbarProcessItemEnum.SAVE_VERSION,
+        allow: !this.processService.isLockedBy
+      },
+      {
+        name: ToolbarProcessItemEnum.RENAME,
+        allow: !this.processService.isLockedBy
       }
     ];
   }

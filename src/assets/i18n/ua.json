@@ -187,7 +187,9 @@
     "enterName": "Введіть назву",
     "description": "Опис",
     "descriptionThatChanged": "Опис, що змінилося",
-    "newProcessVersionCreated": "Версію “{{versionName}}” збережено"
+    "newProcessVersionCreated": "Версію “{{versionName}}” збережено",
+    "someUserIsEditingProcess": "Інший користувач редагує цей процес, тому зараз ви можете його лише переглядати",
+    "discardChanges": "Скасувати зміни"
   },
   "statuses": {
     "undefined": "Невизначений",

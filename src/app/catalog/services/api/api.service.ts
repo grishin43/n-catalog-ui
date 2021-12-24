@@ -34,11 +34,16 @@ enum ApiRoute {
   USERS = 'users',
   VERSIONS = 'versions',
   CREATE_BASED_ON_PREVIOUS_VERSION = 'createBasedOnPreviousVersion',
-  UI_NOTIFICATIONS = 'uiNotifications'
+  UI_NOTIFICATIONS = 'uiNotifications',
+  DISCARD_CHANGES = 'discardChanges'
 }
 
 enum ApiHeader {
   CORRELATION_ID = 'x-correlation-id'
+}
+
+enum UiNotificationType {
+  PROCESS_PERMISSION_ASSIGNED = 'process_permission_assigned'
 }
 
 @Injectable({
@@ -220,7 +225,7 @@ export class ApiService {
         {origin: processType, name},
         {headers}
       );
-    });
+    }, UiNotificationType.PROCESS_PERMISSION_ASSIGNED);
   }
 
   public renameProcess(parentFolderId: string, processId: string, name: string): Observable<UiNotificationCheck> {
@@ -258,51 +263,64 @@ export class ApiService {
     return this._checkRequestNotification((headers: HttpHeaders) => {
       return this.http.put<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.RESOURCES}`,
-        resources,
+        {resources, generation: process.generation},
         {headers}
       );
     });
   }
 
-  public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string): Observable<UiNotificationCheck> {
+  public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string, generation: number)
+    : Observable<UiNotificationCheck> {
     return this._checkRequestNotification((headers: HttpHeaders) => {
       return this.http.post<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`,
-        {},
+        {generation},
         {headers}
       );
     });
   }
 
   public createNewVersion(folderId: string, processId: string, version: CreateProcessVersionModel): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
-      return this.http.post<void>(
-        `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`,
-        version,
-        {headers}
-      );
-    });
+    return this._checkRequestNotification(
+      (headers: HttpHeaders) => {
+        return this.http.post<void>(
+          `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`,
+          version,
+          {headers}
+        );
+      });
   }
 
-  private _checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>): Observable<UiNotificationCheck> {
+  public discardChanges(folderId: string, processId: string, generation: number): Observable<UiNotificationCheck> {
+    return this._checkRequestNotification(
+      (headers: HttpHeaders) => {
+        return this.http.post<void>(
+          `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.DISCARD_CHANGES}`,
+          {generation},
+          {headers}
+        );
+      });
+  }
+
+  private _checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>, xType?: string): Observable<UiNotificationCheck> {
     const correlationId = uuid();
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
     return request(headers)
       .pipe(
-        switchMap(() => this._pendingNotificationChecked(correlationId)),
+        switchMap(() => this._pendingNotificationChecked(correlationId, xType)),
         filter((notification: UiNotificationCheck) => notification.isChecked)
       );
   }
 
-  private _pendingNotificationChecked(correlationId: string): Observable<UiNotificationCheck> {
+  private _pendingNotificationChecked(correlationId: string, notificationType?: string): Observable<UiNotificationCheck> {
     const createDraftProcess$ = of({correlationId, isChecked: false} as UiNotificationCheck);
-    const checkUiNotification$ = this._checkNotification(correlationId);
+    const checkUiNotification$ = this._checkNotification(correlationId, notificationType);
     return merge(createDraftProcess$, checkUiNotification$);
   }
 
-  private _checkNotification(correlationId: string): Observable<any> {
+  private _checkNotification(correlationId: string, notificationType?: string): Observable<any> {
     const maxRetry = environment.checkNotificationMaxRetryNumber;
     return timer(0, 2000)
       .pipe(
@@ -315,11 +333,19 @@ export class ApiService {
           }
         }),
         filter(({items}: CollectionWrapperDto<UiNotification>) => {
-          return items.some((notification) => notification.correlationID === correlationId);
+          return items.some((notification: UiNotification) => {
+            return notificationType != null
+              ? notification.correlationID === correlationId && notification.notificationType === notificationType
+              : notification.correlationID === correlationId;
+          });
         }),
         map(({items}: CollectionWrapperDto<UiNotification>) => items),
         switchMap((notifications: UiNotification[]) => {
-          const requiredNotification = notifications.find((notification: UiNotification) => notification.correlationID === correlationId);
+          const requiredNotification = notifications.find((notification: UiNotification) => {
+            return notificationType != null
+              ? notification.correlationID === correlationId && notification.notificationType === notificationType
+              : notification.correlationID === correlationId;
+          });
           return this._sendNotificationProcessed(requiredNotification);
         }),
         take(1),

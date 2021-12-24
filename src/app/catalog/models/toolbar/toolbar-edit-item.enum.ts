@@ -15,5 +15,6 @@ export enum ToolbarEditItemEnum {
   MOVE_CANVAS = 'moveCanvas',
   MOVE_SELECTION = 'moveSelection',
   SELECT_ALL = 'selectAll',
-  REMOVE_SELECTED = 'removeSelected'
+  REMOVE_SELECTED = 'removeSelected',
+  DISCARD_CHANGES = 'discardChanges'
 }

@@ -60,6 +60,7 @@
 <ng-template
   #menuBtnTemplate>
   <button
+    *ngIf="!isLocked"
     mat-button
     class="min-width-auto menu-dots"
     [ngClass]="{
