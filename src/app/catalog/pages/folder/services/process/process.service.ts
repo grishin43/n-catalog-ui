@@ -78,8 +78,8 @@ export class ProcessService {
     );
   }
 
-  public get isLockedBy(): boolean {
-    return !!this.apiService.requestedProcess?.lockedBy;
+  public get isLocked(): boolean {
+    return this.apiService.requestedProcess?.isLocked;
   }
 
 }

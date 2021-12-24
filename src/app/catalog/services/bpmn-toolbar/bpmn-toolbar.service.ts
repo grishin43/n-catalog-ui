@@ -432,19 +432,19 @@ export class BpmnToolbarService {
       },
       {
         name: ToolbarWindowItemEnum.TOGGLE_PROPERTIES_PANEL,
-        allow: !this.processService.isLockedBy
+        allow: !this.processService.isLocked
       },
       {
         name: ToolbarWindowItemEnum.RESET_PROPERTIES_PANEL,
-        allow: !this.processService.isLockedBy
+        allow: !this.processService.isLocked
       },
       {
         name: ToolbarProcessItemEnum.SAVE_VERSION,
-        allow: !this.processService.isLockedBy
+        allow: !this.processService.isLocked
       },
       {
         name: ToolbarProcessItemEnum.RENAME,
-        allow: !this.processService.isLockedBy
+        allow: !this.processService.isLocked
       }
     ];
   }

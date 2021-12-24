@@ -26,7 +26,7 @@
       <np-button
         [size]="'xs'"
         [minWidth]="true"
-        [disabled]="isLocked"
+        [disabled]="process?.isLocked"
         (click)="onVersionCreate()">
         <span>
            {{"common.done" | translate}}
@@ -62,7 +62,7 @@
 <div class="editor">
   <ng-container *ngIf="xmlMode; else bpmnEditorTemplate">
     <np-xml-editor
-      [isLocked]="isLocked"
+      [isLocked]="process?.isLocked"
       [xml]="modelerXml"
       (destroyed)="xmlDestroyed($event)">
     </np-xml-editor>
@@ -91,7 +91,7 @@
   </div>
 
   <np-version-history
-    [isLocked]="isLocked"
+    [isLocked]="process?.isLocked"
     [processData]="process"
     [newVersionCreated]="versionCreated"
     (versionOpenClicked)="onVersionOpened($event)"

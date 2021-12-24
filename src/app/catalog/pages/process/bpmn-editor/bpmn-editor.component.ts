@@ -46,7 +46,6 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private readonly newDiagramLink = '../../../assets/bpmn/newDiagram.bpmn';
   public httpStatusCode = HttpStatusCodeEnum;
-  public hasPropertiesPanel: boolean;
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.ctrlKey && e.code === 'Digit1') {
@@ -123,21 +122,12 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   private handleLockedBy(process: ProcessModel): void {
     const paletteContainer = this.bpmnModelerService.modeler.get('palette')._container;
-    if (!process.lockedBy) {
+    if (!process.isLocked) {
       this.processAutosave.init(process);
       paletteContainer.classList.add('show');
     } else {
       this.processAutosave.destroy();
       paletteContainer.classList.remove('show');
-    }
-    this.checkPropertiesPanel();
-  }
-
-  private checkPropertiesPanel(): void {
-    try {
-      this.hasPropertiesPanel = !!this.bpmnModelerService.modeler?.get('propertiesPanel');
-    } catch (e) {
-      this.hasPropertiesPanel = false;
     }
   }
 
@@ -149,8 +139,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
         this.listenModelerChanges();
         this.listenOpenWysiwygEditor();
         this.openProcess();
-      },
-      !!this.process?.lockedBy
+      }
     );
   }
 
@@ -244,8 +233,8 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  public get lockedBy(): boolean {
-    return !!this.process?.lockedBy;
+  public get isLocked(): boolean {
+    return this.process?.isLocked;
   }
 
 }

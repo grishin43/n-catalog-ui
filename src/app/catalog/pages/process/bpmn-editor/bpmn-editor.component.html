@@ -16,12 +16,14 @@
         <div
           id="bpmn-canvas"
           [ngClass]="{
-            'lockedBy': lockedBy
+            'lockedBy': isLocked
           }">
         </div>
         <div
           id="bpmn-properties"
-          *ngIf="hasPropertiesPanel">
+          [ngClass]="{
+            'lockedBy': isLocked
+          }">
           <button
             class="bpmn-properties-toggle-btn"
             (click)="togglePropertiesPanel()">

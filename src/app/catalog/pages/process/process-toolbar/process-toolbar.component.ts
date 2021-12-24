@@ -26,7 +26,7 @@ export class ProcessToolbarComponent {
   }
 
   public get isLocked(): boolean {
-    return !!this.process?.lockedBy;
+    return this.process?.isLocked;
   }
 
 }

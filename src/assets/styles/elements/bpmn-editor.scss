@@ -1,5 +1,10 @@
 @import "../breakpoints";
 
+@mixin locked {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
 np-bpmn-editor {
   .transparency-selections .djs-element.djs-shape.selected {
     opacity: 0.4;
@@ -187,16 +192,21 @@ ul.bpp-properties-tabs-links {
 
 #bpmn-canvas {
   &.lockedBy {
-    pointer-events: none !important;
-    user-select: none !important;
+    @include locked;
 
     * {
-      pointer-events: none !important;
-      user-select: none !important;
+      @include locked;
     }
   }
 
   .bjs-powered-by {
     display: none !important;
+  }
+}
+
+#bpmn-properties {
+  &.lockedBy {
+    display: none !important;
+    @include locked;
   }
 }

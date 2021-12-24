@@ -20,6 +20,7 @@ import {CollectionWrapperDto} from '../../../models/domain/collection-wrapper.dt
 import {UiNotification} from '../../../models/domain/ui-notification';
 import {environment} from '../../../../environments/environment';
 import {MapHelper} from '../../helpers/map.helper';
+import {KeycloakService} from 'keycloak-angular';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -55,7 +56,8 @@ export class ApiService {
   private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private kc: KeycloakService
   ) {
   }
 
@@ -109,6 +111,12 @@ export class ApiService {
     }
     return this.http.get<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`)
       .pipe(
+        map((res: ProcessModel) => {
+          return {
+            ...res,
+            isLocked: !!res?.lockedBy && res?.lockedBy !== this.kc.getUsername()
+          };
+        }),
         map((res: ProcessModel) => MapHelper.mapProcessResponse(res, folderId, processId)),
         tap((res: ProcessModel) => this.requestedProcess = res)
       );

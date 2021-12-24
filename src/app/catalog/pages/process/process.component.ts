@@ -35,7 +35,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
   public xmlMode: boolean;
   public modelerXml: string;
   public versionCreated: UiNotificationCheck;
-  public isLocked: boolean;
 
   private subscriptions = new Subscription();
 
@@ -83,16 +82,15 @@ export class ProcessComponent implements OnInit, OnDestroy {
         .subscribe((res: ProcessModel) => {
           this.process = res;
           this.entitiesTab.addEntity(res);
-          this.handleLockedBy(res?.lockedBy);
+          this.handleLockedBy(res?.isLocked);
         }, (err: HttpErrorResponse) => {
           this.handleGeneralErrors(err, processId);
         })
     );
   }
 
-  private handleLockedBy(username: string): void {
-    if (username) {
-      this.isLocked = true;
+  private handleLockedBy(locked: boolean): void {
+    if (locked) {
       this.bpmnModeler.showToast('common.someUserIsEditingProcess', undefined, 'OK');
     }
   }
@@ -162,7 +160,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   public onVersionCreate(): boolean {
-    if (this.isLocked) {
+    if (this.process?.isLocked) {
       return false;
     }
     const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {

@@ -16,5 +16,6 @@ export interface ProcessModel {
   currentUserPermissionLevel?: ProcessPermission;
   generation?: number;
   lockedBy?: string;
+  isLocked?: boolean; // not domain field
 }
 

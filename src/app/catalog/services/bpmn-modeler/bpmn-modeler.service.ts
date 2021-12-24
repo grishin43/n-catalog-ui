@@ -71,7 +71,7 @@ export class BpmnModelerService {
     }
   }
 
-  public initModeler(containerSelector: string, propertiesPanelSelector: string, cb: () => void, lockedBy: boolean): void {
+  public initModeler(containerSelector: string, propertiesPanelSelector: string, cb: () => void): void {
     if (window.hasOwnProperty('BpmnJS')) {
       this.panelSelector = propertiesPanelSelector;
       // @ts-ignore
@@ -83,7 +83,7 @@ export class BpmnModelerService {
         linting: {
           bpmnlint: bpmnlintConfig
         },
-        additionalModules: lockedBy ?? [
+        additionalModules: [
           propertiesPanelModule,
           bpmnPropertiesProviderModule,
           camundaModdleDescriptor,
@@ -96,19 +96,17 @@ export class BpmnModelerService {
           resizeTask,
           embeddedCommentsModule
         ],
-        propertiesPanel: lockedBy ?? {
+        propertiesPanel: {
           parent: propertiesPanelSelector
         },
-        moddleExtensions: lockedBy ?? {
+        moddleExtensions: {
           camunda: camundaModdleDescriptor,
           documentation: documentationModdleDescriptor
         },
-        taskResizingEnabled: !lockedBy
+        taskResizingEnabled: true
       });
       cb();
-      if (!lockedBy) {
-        this.listenPasteElements();
-      }
+      this.listenPasteElements();
     }
   }
 
