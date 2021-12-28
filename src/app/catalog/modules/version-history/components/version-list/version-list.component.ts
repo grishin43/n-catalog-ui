@@ -14,7 +14,7 @@ export class VersionListComponent {
   @Input() type: HistoryTypeEnum;
   @Input() loader: boolean;
   @Input() error: string;
-  @Input() isLocked: string;
+  @Input() isLocked: boolean;
 
   @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
   @Output() versionCreatClicked = new EventEmitter<ProcessVersionModel>();
@@ -26,7 +26,7 @@ export class VersionListComponent {
   }
 
   public onVersionOpened(version: ProcessVersionModel): void {
-    this.patchVersion(version, 'active', 'common.versionXxLaunched');
+    // this.patchVersion(version, 'active', 'common.versionXxLaunched');
     this.versionOpenClicked.emit(version);
   }
 

@@ -189,7 +189,9 @@
     "descriptionThatChanged": "Опис, що змінилося",
     "newProcessVersionCreated": "Версію “{{versionName}}” збережено",
     "someUserIsEditingProcess": "Інший користувач редагує цей процес, тому зараз ви можете його лише переглядати",
-    "discardChanges": "Скасувати зміни"
+    "discardChanges": "Скасувати зміни",
+    "cancelChanges": "Скасувати зміни",
+    "areYouWantToSaveVersionBasedOn": "Ви бажаєте зберегти версію створену на основі {{versionName}} ?"
   },
   "statuses": {
     "undefined": "Невизначений",

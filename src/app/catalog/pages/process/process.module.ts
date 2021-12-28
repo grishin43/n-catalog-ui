@@ -20,6 +20,7 @@ import {XmlEditorComponent} from './xml-editor/xml-editor.component';
 import {VersionHistoryModule} from '../../modules/version-history/version-history.module';
 import {DocumentationDialogComponent} from './documentation-dialog/documentation-dialog.component';
 import {SaveVersionModalModule} from '../../../shared/components/big/save-version-modal/save-version-modal.module';
+import {AskVersionSaveModalModule} from '../../../shared/components/big/ask-version-save-modal/ask-version-save-modal.module';
 
 const routes: Routes = [
   {
@@ -56,7 +57,8 @@ const routes: Routes = [
     MatBottomSheetModule,
     MatProgressSpinnerModule,
     VersionHistoryModule,
-    SaveVersionModalModule
+    SaveVersionModalModule,
+    AskVersionSaveModalModule
   ]
 })
 export class ProcessModule {

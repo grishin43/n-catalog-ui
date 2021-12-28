@@ -3,13 +3,13 @@ import {StorageEnum} from '../../models/storageEnum';
 
 export class LocalSaverHelper {
 
-  public static saveResource(folderId, processId, content): void {
+  public static saveResource(folderId: string, processId: string, content: string, generation: number): void {
     const lsResources = LocalStorageHelper.getData(StorageEnum.SAVED_RESOURCES) || [];
     const duplicateIndex = lsResources.findIndex((item) => item.folderId === folderId && item.processId === processId);
     if (duplicateIndex > -1) {
       lsResources.splice(duplicateIndex, 1);
     }
-    lsResources.push({folderId, processId, content});
+    lsResources.push({folderId, processId, content, generation});
     LocalStorageHelper.setData(StorageEnum.SAVED_RESOURCES, lsResources);
   }
 

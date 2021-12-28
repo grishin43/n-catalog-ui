@@ -82,19 +82,19 @@
   #menu="matMenu">
   <button
     mat-menu-item
-    *ngIf="!version.active"
     (click)="openVersion()">
     {{'common.open' | translate}}
   </button>
   <button
-    *ngIf="!version.launched"
     mat-menu-item
-    (click)="launchVersion()">
+    (click)="launchVersion()"
+    [disabled]="true">
     {{'common.launchVersion' | translate}}
   </button>
   <button
     mat-menu-item
-    (click)="createNewVersion()">
+    (click)="createNewVersion()"
+    [disabled]="true">
     {{'common.createNewVersion' | translate}}
   </button>
   <button

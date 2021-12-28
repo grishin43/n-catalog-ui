@@ -2,7 +2,6 @@ import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from '../../../services/api/api.service';
 import {Subscription} from 'rxjs';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
-import {AnimationsHelper} from '../../../helpers/animations.helper';
 import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.model';
 import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
@@ -12,16 +11,13 @@ import {ProcessAutosaveService} from '../../../services/process-autosave/process
 import {validate} from 'fast-xml-parser';
 import {ToastService} from '../../../../shared/components/small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Router} from '@angular/router';
-import {HttpStatusCodeEnum} from '../../../../models/http-status-code.enum';
 import {WindowHelper} from '../../../../helpers/window.helper';
 import {DocumentationDialogComponent} from '../documentation-dialog/documentation-dialog.component';
 
 @Component({
   selector: 'np-bpmn-editor',
   templateUrl: './bpmn-editor.component.html',
-  styleUrls: ['./bpmn-editor.component.scss'],
-  animations: [AnimationsHelper.fadeInOut]
+  styleUrls: ['./bpmn-editor.component.scss']
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
   @Input() set data(value: ProcessModel) {
@@ -31,21 +27,17 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       }
       this.process = value;
       this.processLoader = true;
-      this.handleLockedBy(value);
       this.openProcess();
     }
   }
-
-  @Input() processLoadError: HttpErrorResponse;
+  @Input() processLoader: boolean;
 
   public process: ProcessModel;
-  public processLoader: boolean;
   public errorResponse: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
   private subscriptions = new Subscription();
   private readonly newDiagramLink = '../../../assets/bpmn/newDiagram.bpmn';
-  public httpStatusCode = HttpStatusCodeEnum;
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.ctrlKey && e.code === 'Digit1') {
@@ -105,8 +97,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private processAutosave: ProcessAutosaveService,
     private toast: ToastService,
-    private translate: TranslateService,
-    private router: Router
+    private translate: TranslateService
   ) {
   }
 
@@ -116,19 +107,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.processAutosave.destroy();
     this.subscriptions.unsubscribe();
-  }
-
-  private handleLockedBy(process: ProcessModel): void {
-    const paletteContainer = this.bpmnModelerService.modeler.get('palette')._container;
-    if (!process.isLocked) {
-      this.processAutosave.init(process);
-      paletteContainer.classList.add('show');
-    } else {
-      this.processAutosave.destroy();
-      paletteContainer.classList.remove('show');
-    }
   }
 
   private initEditor(): void {
@@ -223,14 +202,6 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   public togglePropertiesPanel(): void {
     this.bpmnModelerService.togglePropertiesPanel();
-  }
-
-  public reloadPage(): void {
-    window.location.reload();
-  }
-
-  public goHome(): void {
-    this.router.navigate(['/']);
   }
 
   public get isLocked(): boolean {

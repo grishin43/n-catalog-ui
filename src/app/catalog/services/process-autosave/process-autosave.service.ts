@@ -14,6 +14,7 @@ import {WindowHelper} from '../../../helpers/window.helper';
 import {HttpHelper} from '../../../helpers/http.helper';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
+import {LocalSaverHelper} from '../../helpers/local-saver.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -38,13 +39,7 @@ export class ProcessAutosaveService {
     private toast: ToastService,
     private activateRoute: ActivatedRoute
   ) {
-    this.subs = this.activateRoute.queryParams
-      .subscribe((queryParams: Params) => {
-        const autosaveTime = queryParams[CatalogRouteEnum._AUTOSAVE_TIME];
-        if (autosaveTime) {
-          this.delay = autosaveTime;
-        }
-      });
+    this.subscribeRoute();
   }
 
   public init(value: ProcessModel): void {
@@ -64,9 +59,9 @@ export class ProcessAutosaveService {
     this.shouldSaved = false;
   }
 
-  private handleServerErrors(): void {
-    this.saveResourceLocal();
-    this.showServerErrorToast();
+  public enableSaving(): void {
+    this.startTimer();
+    WindowHelper.enableBeforeUnload();
   }
 
   public saveProcess(process: ProcessModel, ssCb?: () => void): Promise<void> {
@@ -101,19 +96,9 @@ export class ProcessAutosaveService {
     });
   }
 
-  private showServerErrorToast(): void {
-    this.bpmnModeler.showToast('common.directoryServerErrorTheChangesHaveBeenSaved', 3000);
-  }
-
   public destroyTimer(): void {
     if (this.timer$) {
       this.timer$.unsubscribe();
-    }
-  }
-
-  private destroyNetworkListener(): void {
-    if (this.networkState$) {
-      this.networkState$.unsubscribe();
     }
   }
 
@@ -139,38 +124,41 @@ export class ProcessAutosaveService {
     this.startTimer();
   }
 
+  public checkLocalResources(process: ProcessModel): void {
+    const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
+    const matchedSavedProcess: ProcessModel = currentSavedProcesses.find((p: ProcessModel) => p?.id === process?.id);
+    if (matchedSavedProcess) {
+      if (matchedSavedProcess.generation < process.generation) {
+        LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
+      } else {
+        this.resourceSaved$.next(false);
+        this.requestLoader$.next(true);
+        this.api.saveProcess(matchedSavedProcess, matchedSavedProcess.activeResource.content)
+          .subscribe(() => {
+            LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
+            this.savingSuccessCb();
+            this.toast.show('common.diagramVersionSaved', 3000, 'OK');
+          }, () => {
+            this.requestLoader$.next(false);
+            this.showServerErrorToast();
+          });
+      }
+    }
+  }
+
+  public shouldSavedCheckout(currentModelerXml: string): void {
+    if (currentModelerXml !== this.process?.activeResource?.content) {
+      this.shouldSaved = true;
+    }
+  }
+
   private listenNetwork(): void {
     this.networkState$ = this.connectionService.monitor()
       .subscribe((res: boolean) => this.handleNetworkConnection(res));
   }
 
-  private handleNetworkConnection(online: boolean): void {
-    if (online) {
-      this.checkLocalResources();
-      this.restartTimer();
-    } else {
-      this.destroyTimer();
-      this.saveResourceLocal();
-    }
-    this.showNetworkConnectionToast(online);
-  }
-
-  public checkLocalResources(): void {
-    const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
-    if (currentSavedProcesses?.length) {
-      this.resourceSaved$.next(false);
-      this.requestLoader$.next(true);
-      forkJoin(
-        currentSavedProcesses.map((p: ProcessModel) => this.api.saveProcess(p, p.activeResource.content))
-      ).subscribe(() => {
-        LocalStorageHelper.deleteData(StorageEnum.SAVED_PROCESSES);
-        this.savingSuccessCb();
-        this.toast.show('common.diagramVersionSaved', 3000, 'OK');
-      }, () => {
-        this.requestLoader$.next(false);
-        this.showServerErrorToast();
-      });
-    }
+  private showServerErrorToast(): void {
+    this.bpmnModeler.showToast('common.directoryServerErrorTheChangesHaveBeenSaved', 3000);
   }
 
   private saveResourceLocal(): void {
@@ -184,22 +172,27 @@ export class ProcessAutosaveService {
       if (findIndex >= 0) {
         currentSavedProcesses.splice(findIndex, 1);
       }
-      const newValue: ProcessModel[] = [{
-        id: this.process.id,
-        name: this.process.name,
-        parent: this.process.parent,
-        activeResource: {
-          id: this.process.activeResource?.id,
-          content: resource,
-          type: ResourceTypeEnum.XML
-        }
-      } as ProcessModel, ...currentSavedProcesses || []];
+      const newValue: ProcessModel[] = [this.getProcessNewValue(resource), ...currentSavedProcesses || []];
       LocalStorageHelper.setData(StorageEnum.SAVED_PROCESSES, newValue);
       this.savingSuccessCb();
     }).catch((e) => {
       this.requestLoader$.next(false);
       console.error('Could save resource locally`\n', e);
     });
+  }
+
+  private getProcessNewValue(resource: string): ProcessModel {
+    return {
+      id: this.process.id,
+      name: this.process.name,
+      parent: this.process.parent,
+      generation: this.process.generation,
+      activeResource: {
+        id: this.process.activeResource?.id,
+        content: resource,
+        type: ResourceTypeEnum.XML
+      }
+    };
   }
 
   private savingSuccessCb(): void {
@@ -216,9 +209,35 @@ export class ProcessAutosaveService {
     }
   }
 
-  public shouldSavedCheckout(currentModelerXml: string): void {
-    if (currentModelerXml !== this.process?.activeResource?.content) {
-      this.shouldSaved = true;
+  private subscribeRoute(): void {
+    this.subs = this.activateRoute.queryParams
+      .subscribe((queryParams: Params) => {
+        const autosaveTime = queryParams[CatalogRouteEnum._AUTOSAVE_TIME];
+        if (autosaveTime) {
+          this.delay = autosaveTime;
+        }
+      });
+  }
+
+  private handleNetworkConnection(online: boolean): void {
+    if (online) {
+      this.checkLocalResources(this.process);
+      this.restartTimer();
+    } else {
+      this.destroyTimer();
+      this.saveResourceLocal();
     }
+    this.showNetworkConnectionToast(online);
+  }
+
+  private destroyNetworkListener(): void {
+    if (this.networkState$) {
+      this.networkState$.unsubscribe();
+    }
+  }
+
+  private handleServerErrors(): void {
+    this.saveResourceLocal();
+    this.showServerErrorToast();
   }
 }

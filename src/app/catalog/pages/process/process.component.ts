@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
 import {ApiService} from '../../services/api/api.service';
@@ -22,6 +22,7 @@ import {FormFieldEnum} from '../../../models/form-field.enum';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {ResourceModel} from '../../../models/domain/resource.model';
 import {ProcessService} from '../folder/services/process/process.service';
+import {AskVersionSaveModalComponent} from '../../../shared/components/big/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
 
 @Component({
   selector: 'np-process',
@@ -35,6 +36,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
   public xmlMode: boolean;
   public modelerXml: string;
   public versionCreated: UiNotificationCheck;
+  public loader: boolean;
+  public httpStatusCode = HttpStatusCodeEnum;
 
   private subscriptions = new Subscription();
 
@@ -46,21 +49,22 @@ export class ProcessComponent implements OnInit, OnDestroy {
     private toast: ToastService,
     private translate: TranslateService,
     private dialog: MatDialog,
-    private bpmnModeler: BpmnModelerService,
-    private processService: ProcessService
+    private bpmnModelerService: BpmnModelerService,
+    private processService: ProcessService,
+    private router: Router
   ) {
   }
 
   ngOnInit(): void {
     document.body.classList.add('cdk-overflow');
     this.subscribeRoute();
-    this.processAutosave.checkLocalResources();
   }
 
   ngOnDestroy(): void {
     document.body.classList.remove('cdk-overflow');
     this.subscriptions.unsubscribe();
     this.toast.close();
+    this.processAutosave.destroy();
   }
 
   private subscribeRoute(): void {
@@ -82,16 +86,45 @@ export class ProcessComponent implements OnInit, OnDestroy {
         .subscribe((res: ProcessModel) => {
           this.process = res;
           this.entitiesTab.addEntity(res);
-          this.handleLockedBy(res?.isLocked);
+          this.handlePaletteVisibility();
+          this.handleLockedBy();
         }, (err: HttpErrorResponse) => {
           this.handleGeneralErrors(err, processId);
         })
     );
   }
 
-  private handleLockedBy(locked: boolean): void {
-    if (locked) {
-      this.bpmnModeler.showToast('common.someUserIsEditingProcess', undefined, 'OK');
+  private subscribeVersion(versionId: string): void {
+    this.errorResponse = undefined;
+    this.loader = true;
+    this.subscriptions.add(
+      this.api.getVersionById(this.process.parent.id, this.process.id, versionId)
+        .subscribe((res: ProcessModel) => {
+          this.process = res;
+          this.loader = false;
+        }, (err: HttpErrorResponse) => {
+          this.handleGeneralErrors(err, this.process.id);
+          this.loader = false;
+        })
+    );
+  }
+
+  private handleLockedBy(): void {
+    if (this.process?.isLocked) {
+      this.processAutosave.destroy();
+      this.bpmnModelerService.showToast('common.someUserIsEditingProcess', undefined, 'OK');
+    } else {
+      this.processAutosave.init(this.process);
+      this.processAutosave.checkLocalResources(this.process);
+    }
+  }
+
+  private handlePaletteVisibility(): void {
+    const paletteContainer = this.bpmnModelerService.modeler.get('palette')._container;
+    if (this.process?.isLocked) {
+      paletteContainer.classList.remove('show');
+    } else {
+      paletteContainer.classList.add('show');
     }
   }
 
@@ -127,26 +160,43 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  public toggleXmlMode(flag: boolean): void {
-    if (!this.xmlMode) {
-      this.bpmnModeler.getDiagramXml().then((res: string) => {
-        this.xmlMode = flag;
-        this.modelerXml = res;
-        this.processAutosave.shouldSavedCheckout(res);
-      });
-    } else {
-      this.xmlMode = flag;
-      this.processAutosave.shouldSavedCheckout(this.modelerXml);
-    }
+  public changeModelerMode(flag: boolean): void {
+    this.toggleXmlMode(flag);
+    setTimeout(() => {
+      this.handlePaletteVisibility();
+    }, 0);
   }
 
   public onVersionOpened(version: ProcessVersionModel): void {
-    // TODO
+    if (this.processAutosave.shouldSaved) {
+      this.subscribeVersion(version.versionID);
+    } else {
+      this.openAskVersionSaveModal(version);
+    }
+  }
+
+  private openAskVersionSaveModal(version: ProcessVersionModel): void {
+    const saveVersionResultSubscription = this.dialog.open(AskVersionSaveModalComponent, {
+      width: '700px',
+      autoFocus: false,
+      data: version.title
+    })
+      .afterClosed()
+      .subscribe(
+        (res: boolean) => {
+          if (res === true) {
+            this.openCreateNewVersionModal();
+          }
+          if (res === false) {
+            this.subscribeVersion(version.versionID);
+          }
+        });
+    this.subscriptions.add(saveVersionResultSubscription);
   }
 
   public patchProcessActiveResource(): void {
     if (!this.process.activeResource) {
-      this.bpmnModeler.getDiagramXml().then((res: string) => {
+      this.bpmnModelerService.getDiagramXml().then((res: string) => {
         this.process = {
           ...this.process,
           activeResource: {
@@ -159,10 +209,11 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onVersionCreate(): boolean {
+  public openCreateNewVersionModal(): boolean {
     if (this.process?.isLocked) {
       return false;
     }
+    this.processAutosave.disableSaving();
     const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {
       width: '700px',
       autoFocus: false
@@ -173,8 +224,27 @@ export class ProcessComponent implements OnInit, OnDestroy {
           if (formData) {
             this.createNewVersion(formData[FormFieldEnum.NAME], formData[FormFieldEnum.DESCRIPTION]);
           }
+        }, () => {
+          this.processAutosave.enableSaving();
         });
     this.subscriptions.add(saveVersionResultSubscription);
+  }
+
+  private toggleXmlMode(flag: boolean): void {
+    if (!this.xmlMode) {
+      this.bpmnModelerService.getDiagramXml().then((res: string) => {
+        this.xmlMode = flag;
+        this.modelerXml = res;
+        if (!this.process.isLocked) {
+          this.processAutosave.shouldSavedCheckout(res);
+        }
+      });
+    } else {
+      this.xmlMode = flag;
+      if (!this.process.isLocked) {
+        this.processAutosave.shouldSavedCheckout(this.modelerXml);
+      }
+    }
   }
 
   private patchProcessResources(content: string): void {
@@ -198,7 +268,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   private createNewVersion(name: string, desc: string): void {
-    this.bpmnModeler.getDiagramXml().then((content: string) => {
+    this.bpmnModelerService.getDiagramXml().then((content: string) => {
       this.patchProcessResources(content);
       const cpv: CreateProcessVersionModel = {
         versionTitle: name,
@@ -212,12 +282,22 @@ export class ProcessComponent implements OnInit, OnDestroy {
             this.versionCreated = res;
             const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: cpv.versionTitle});
             this.toast.showMessage(toastMessage);
+            this.processAutosave.enableSaving();
             this.processAutosave.canDiscardChanges = false;
           }, (err: HttpErrorResponse) => {
             this.handleGeneralErrors(err, this.process.id);
+            this.processAutosave.enableSaving();
           })
       );
     });
+  }
+
+  public reloadPage(): void {
+    window.location.reload();
+  }
+
+  public goHome(): void {
+    this.router.navigate(['/']);
   }
 
 }

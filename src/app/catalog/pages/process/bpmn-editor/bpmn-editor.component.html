@@ -30,41 +30,6 @@
             Properties Panel
           </button>
         </div>
-        <div
-          @fadeInOut
-          *ngIf="processLoader"
-          class="bpmn-overlay">
-          <mat-spinner
-            [diameter]="50">
-          </mat-spinner>
-          <p>{{'common.processLoading' | translate}}</p>
-        </div>
-        <div
-          @fadeInOut
-          *ngIf="!processLoadError && errorResponse"
-          class="bpmn-overlay">
-          <p>{{'errors.failedToLoadProcess' | translate}}</p>
-          <np-button (click)="reloadPage()">
-            <span>{{'common.tryAgain' | translate}}</span>
-          </np-button>
-        </div>
-        <div
-          @fadeInOut
-          *ngIf="processLoadError"
-          class="bpmn-overlay">
-          <ng-container *ngIf="processLoadError.status === httpStatusCode.FORBIDDEN">
-            <p>{{'errors.processAccessDenied' | translate}}</p>
-            <np-button (click)="goHome()">
-              <span>{{'common.goHome' | translate}}</span>
-            </np-button>
-          </ng-container>
-          <ng-template>
-            <p>{{'errors.errorOccurred' | translate}}</p>
-            <np-button (click)="reloadPage()">
-              <span>{{'common.tryAgain' | translate}}</span>
-            </np-button>
-          </ng-template>
-        </div>
       </div>
     </div>
   </div>

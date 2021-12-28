@@ -191,12 +191,17 @@ export class ApiService {
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`);
   }
 
+  public getVersionById(folderId: string, processId: string, versionId: string): Observable<ProcessModel> {
+    return this.http.get<ProcessModel>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${versionId}`);
+  }
+
   /******************
    * Async requests *
    ******************/
 
   public createFolder(parentFolderId: string, name: string): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.post<{ name: string }>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.FOLDERS}`,
         {name},
@@ -205,7 +210,7 @@ export class ApiService {
   }
 
   public renameFolder(id: string, name: string): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.put<{ name: string }>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}/${ApiRoute.RENAME}`,
         {name},
@@ -218,7 +223,7 @@ export class ApiService {
    * When you try to delete a folder that contains other folders or processes, the response status will be 403.
    */
   public deleteFolder(id: string): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.delete<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${id}`,
         {headers}
@@ -227,7 +232,7 @@ export class ApiService {
   }
 
   public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.post<ProcessModel>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}`,
         {origin: processType, name},
@@ -237,7 +242,7 @@ export class ApiService {
   }
 
   public renameProcess(parentFolderId: string, processId: string, name: string): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.put<null>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${parentFolderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.RENAME}`,
         {name},
@@ -247,7 +252,7 @@ export class ApiService {
   }
 
   public deleteProcess(folderId: string, processId: string): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.delete<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`,
         {headers}
@@ -262,13 +267,12 @@ export class ApiService {
     if (this.requestedProcess?.id === process.id && this.requestedProcess?.activeResource) {
       this.requestedProcess.activeResource.content = content;
     }
-    LocalSaverHelper.saveResource(process.parent.id, process.id, content);
     const resources: ResourceModel[] = [{
       id: process.activeResource?.id || uuid(),
       type: process.activeResource?.type || ResourceTypeEnum.XML,
       content
     }];
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.put<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.RESOURCES}`,
         {resources, generation: process.generation},
@@ -279,7 +283,7 @@ export class ApiService {
 
   public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string, generation: number)
     : Observable<UiNotificationCheck> {
-    return this._checkRequestNotification((headers: HttpHeaders) => {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.post<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`,
         {generation},
@@ -289,7 +293,7 @@ export class ApiService {
   }
 
   public createNewVersion(folderId: string, processId: string, version: CreateProcessVersionModel): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification(
+    return this.checkRequestNotification(
       (headers: HttpHeaders) => {
         return this.http.post<void>(
           `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}`,
@@ -300,7 +304,7 @@ export class ApiService {
   }
 
   public discardChanges(folderId: string, processId: string, generation: number): Observable<UiNotificationCheck> {
-    return this._checkRequestNotification(
+    return this.checkRequestNotification(
       (headers: HttpHeaders) => {
         return this.http.post<void>(
           `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.DISCARD_CHANGES}`,
@@ -310,25 +314,25 @@ export class ApiService {
       });
   }
 
-  private _checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>, xType?: string): Observable<UiNotificationCheck> {
+  private checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>, xType?: string): Observable<UiNotificationCheck> {
     const correlationId = uuid();
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
     return request(headers)
       .pipe(
-        switchMap(() => this._pendingNotificationChecked(correlationId, xType)),
+        switchMap(() => this.pendingNotificationChecked(correlationId, xType)),
         filter((notification: UiNotificationCheck) => notification.isChecked)
       );
   }
 
-  private _pendingNotificationChecked(correlationId: string, notificationType?: string): Observable<UiNotificationCheck> {
+  private pendingNotificationChecked(correlationId: string, notificationType?: string): Observable<UiNotificationCheck> {
     const createDraftProcess$ = of({correlationId, isChecked: false} as UiNotificationCheck);
-    const checkUiNotification$ = this._checkNotification(correlationId, notificationType);
+    const checkUiNotification$ = this.checkNotification(correlationId, notificationType);
     return merge(createDraftProcess$, checkUiNotification$);
   }
 
-  private _checkNotification(correlationId: string, notificationType?: string): Observable<any> {
+  private checkNotification(correlationId: string, notificationType?: string): Observable<any> {
     const maxRetry = environment.checkNotificationMaxRetryNumber;
     return timer(0, 2000)
       .pipe(
@@ -354,7 +358,7 @@ export class ApiService {
               ? notification.correlationID === correlationId && notification.notificationType === notificationType
               : notification.correlationID === correlationId;
           });
-          return this._sendNotificationProcessed(requiredNotification);
+          return this.sendNotificationProcessed(requiredNotification);
         }),
         take(1),
         map(({parameters}: UiNotification) => {
@@ -363,7 +367,7 @@ export class ApiService {
       );
   }
 
-  private _sendNotificationProcessed(notification: UiNotification): Observable<UiNotification> {
+  private sendNotificationProcessed(notification: UiNotification): Observable<UiNotification> {
     const lastAckNotificationNumber = notification.notificationNumber;
     return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
       .pipe(mapTo(notification));
