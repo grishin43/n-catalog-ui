@@ -11,11 +11,13 @@ import {Action, State, StateContext} from '@ngxs/store';
 import {ProcessActions} from './process.actions';
 import {ProcessSelectors} from './process.selectors';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
+import {Injectable} from '@angular/core';
 
 @State<EntityStateModel<ProcessModel>>({
   name: 'npProcesses',
   defaults: defaultEntityState()
 })
+@Injectable()
 export class ProcessState extends EntityState<ProcessModel> {
   constructor() {
     super(ProcessState, 'id', IdStrategy.EntityIdGenerator);
@@ -23,25 +25,23 @@ export class ProcessState extends EntityState<ProcessModel> {
 
   @Action(ProcessActions.ProcessesFetched)
   processFetched(ctx: StateContext<EntityStateModel<ProcessModel>>, {processes}: ProcessActions.ProcessesFetched): void {
-
     ctx.dispatch(new CreateOrReplace(ProcessState, processes));
   }
 
   @Action(ProcessActions.FolderProcessesFetched)
-  folderProcessesFetched(ctx: StateContext<EntityStateModel<ProcessModel>>, {processes, parentFolderId}: ProcessActions.FolderProcessesFetched): void {
+  folderProcessesFetched(ctx: StateContext<EntityStateModel<ProcessModel>>, {
+    processes,
+    parentFolderId
+  }: ProcessActions.FolderProcessesFetched): void {
     const state = ctx.getState();
-
     ctx.dispatch(new CreateOrReplace(ProcessState, processes));
     // remove leftovers which doesn't exist
     const recentIds = new Set(processes.map(({id}: ProcessModel) => id));
-
     const allFoldersProcesses = ProcessSelectors.processesInFolder(parentFolderId)(Object.values(state.entities));
     const idsToBeCleared = allFoldersProcesses
       .filter(({id}: CatalogEntityModel) => !recentIds.has(id))
       .map(({id}: CatalogEntityModel) => id);
-
-    ctx.dispatch(new Remove(ProcessState, idsToBeCleared))
-
+    ctx.dispatch(new Remove(ProcessState, idsToBeCleared));
   }
 
   @Action(ProcessActions.DraftProcessCreated)

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, forkJoin, interval, Subscription} from 'rxjs';
+import {BehaviorSubject, interval, Subscription} from 'rxjs';
 import {concatMap, timeInterval} from 'rxjs/operators';
 import {ApiService} from '../api/api.service';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -15,6 +15,9 @@ import {HttpHelper} from '../../../helpers/http.helper';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
+import {CatalogActions} from '../../store/actions/catalog.actions';
+import {Store} from '@ngxs/store';
+import {ProcessService} from '../../pages/folder/services/process/process.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +40,9 @@ export class ProcessAutosaveService {
     private bpmnModeler: BpmnModelerService,
     private connectionService: ConnectionService,
     private toast: ToastService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private store: Store,
+    private processService: ProcessService
   ) {
     this.subscribeRoute();
   }
@@ -68,18 +73,9 @@ export class ProcessAutosaveService {
     this.resourceSaved$.next(false);
     this.requestLoader$.next(true);
     return this.bpmnModeler.getDiagramXml().then((content: string) => {
-      this.api.saveProcess(process, content)
+      this.processService.saveProcess(process, content)
         .subscribe(
           () => {
-            if (this.process.activeResource) {
-              this.process.activeResource.content = content;
-            } else {
-              this.process.activeResource = {
-                type: ResourceTypeEnum.XML,
-                processId: this.process.id,
-                content
-              };
-            }
             this.savingSuccessCb();
             this.toast.show('common.diagramVersionSaved', 3000, 'OK');
             if (typeof ssCb === 'function') {
@@ -133,7 +129,7 @@ export class ProcessAutosaveService {
       } else {
         this.resourceSaved$.next(false);
         this.requestLoader$.next(true);
-        this.api.saveProcess(matchedSavedProcess, matchedSavedProcess.activeResource.content)
+        this.processService.saveProcess(matchedSavedProcess, matchedSavedProcess.activeResource.content)
           .subscribe(() => {
             LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
             this.savingSuccessCb();

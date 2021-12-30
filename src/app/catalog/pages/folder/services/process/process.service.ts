@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
 import {ProcessActions} from '../../../../store/process/process.actions';
@@ -12,6 +12,11 @@ import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {EntitiesTabService} from '../../../../services/entities-tab/entities-tab.service';
 import {ProcessModel} from '../../../../../models/domain/process.model';
+import {CatalogActions} from '../../../../store/actions/catalog.actions';
+import {HttpStatusCodeEnum} from '../../../../../models/http-status-code.enum';
+import {ResourceModel} from '../../../../../models/domain/resource.model';
+import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
+import {v4 as uuid} from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -78,8 +83,37 @@ export class ProcessService {
     );
   }
 
-  public get isLocked(): boolean {
-    return this.apiService.requestedProcess?.isLocked;
+  public getProcessById(folderId: string, processId: string): Observable<ProcessModel> {
+    return this.apiService.getProcessById(folderId, processId)
+      .pipe(
+        tap((p: ProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p))),
+        tap((p: ProcessModel) => this.entitiesTab.addEntity(p)),
+        catchError((err: any) => {
+          if (err instanceof Response) {
+            if (err.status === HttpStatusCodeEnum.NOT_FOUND) {
+              this.entitiesTab.deleteEntity({id: processId});
+            }
+          }
+          return throwError(err);
+        })
+      );
+  }
+
+  public getProcessVersionById(folderId: string, processId: string, versionId: string): Observable<ProcessModel> {
+    return this.apiService.getVersionById(folderId, processId, versionId)
+      .pipe(
+        tap((p: ProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p)))
+      );
+  }
+
+  public saveProcess(process: ProcessModel, content: string): Observable<UiNotificationCheck> {
+    this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
+    const resources: ResourceModel[] = [{
+      id: process.activeResource?.id || uuid(),
+      type: process.activeResource?.type || ResourceTypeEnum.XML,
+      content
+    }, ...process.resources];
+    return this.apiService.saveProcess(process, resources);
   }
 
 }

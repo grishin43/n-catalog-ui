@@ -1,8 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {CatalogRouteEnum} from '../../models/catalog-route.enum';
-import {EntitiesTabService} from '../../services/entities-tab/entities-tab.service';
+import {Observable, Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ApiService} from '../../services/api/api.service';
 import {ProcessAutosaveService} from '../../services/process-autosave/process-autosave.service';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -23,6 +21,10 @@ import {UiNotificationCheck} from '../../../models/domain/ui-notification.check'
 import {ResourceModel} from '../../../models/domain/resource.model';
 import {ProcessService} from '../folder/services/process/process.service';
 import {AskVersionSaveModalComponent} from '../../../shared/components/big/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
+import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
+import {Select, Store} from '@ngxs/store';
+import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
+import {CatalogActions} from '../../store/actions/catalog.actions';
 
 @Component({
   selector: 'np-process',
@@ -31,7 +33,9 @@ import {AskVersionSaveModalComponent} from '../../../shared/components/big/ask-v
   animations: [AnimationsHelper.fadeInOut]
 })
 export class ProcessComponent implements OnInit, OnDestroy {
-  public process: ProcessModel;
+  @Select(CatalogSelectors.currentProcess) process$: Observable<ProcessModel>;
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
+
   public errorResponse: HttpErrorResponse;
   public xmlMode: boolean;
   public modelerXml: string;
@@ -44,20 +48,20 @@ export class ProcessComponent implements OnInit, OnDestroy {
   constructor(
     public processAutosave: ProcessAutosaveService,
     private activateRoute: ActivatedRoute,
-    private entitiesTab: EntitiesTabService,
     private api: ApiService,
     private toast: ToastService,
     private translate: TranslateService,
     private dialog: MatDialog,
     private bpmnModelerService: BpmnModelerService,
     private processService: ProcessService,
-    private router: Router
+    private router: Router,
+    private store: Store
   ) {
   }
 
   ngOnInit(): void {
     document.body.classList.add('cdk-overflow');
-    this.subscribeRoute();
+    this.subscribeProcess();
   }
 
   ngOnDestroy(): void {
@@ -67,29 +71,14 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.processAutosave.destroy();
   }
 
-  private subscribeRoute(): void {
-    this.subscriptions.add(
-      this.activateRoute.queryParams
-        .subscribe((queryParams: Params) => {
-          this.subscribeProcess(
-            queryParams[CatalogRouteEnum._PARENT_ID],
-            queryParams[CatalogRouteEnum._ID]
-          );
-        })
-    );
-  }
-
-  private subscribeProcess(folderId: string, processId: string): void {
+  private subscribeProcess(): void {
     this.errorResponse = undefined;
     this.subscriptions.add(
-      this.api.getProcessById(folderId, processId)
-        .subscribe((res: ProcessModel) => {
-          this.process = res;
-          this.entitiesTab.addEntity(res);
-          this.handlePaletteVisibility();
+      this.process$
+        .subscribe(() => {
           this.handleLockedBy();
         }, (err: HttpErrorResponse) => {
-          this.handleGeneralErrors(err, processId);
+          this.handleGeneralErrors(err);
         })
     );
   }
@@ -97,16 +86,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
   private subscribeVersion(versionId: string): void {
     this.errorResponse = undefined;
     this.loader = true;
-    this.subscriptions.add(
-      this.api.getVersionById(this.process.parent.id, this.process.id, versionId)
-        .subscribe((res: ProcessModel) => {
-          this.process = res;
-          this.loader = false;
-        }, (err: HttpErrorResponse) => {
-          this.handleGeneralErrors(err, this.process.id);
-          this.loader = false;
-        })
-    );
+    this.processService.getProcessVersionById(this.process.parent.id, this.process.id, versionId).toPromise()
+      .catch((err) => this.handleGeneralErrors(err))
+      .finally(() => this.loader = false);
   }
 
   private handleLockedBy(): void {
@@ -119,25 +101,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handlePaletteVisibility(): void {
-    const paletteContainer = this.bpmnModelerService.modeler.get('palette')._container;
-    if (this.process?.isLocked) {
-      paletteContainer.classList.remove('show');
-    } else {
-      paletteContainer.classList.add('show');
-    }
-  }
-
-  private handleGeneralErrors(err: HttpErrorResponse, processId: string): void {
+  private handleGeneralErrors(err: HttpErrorResponse): void {
     this.errorResponse = err;
-    let toastErrorMessage: string;
-    if (err.status === HttpStatusCodeEnum.NOT_FOUND) {
-      this.entitiesTab.deleteEntity({id: processId});
-      toastErrorMessage = this.translate.instant('errors.processNotFoundOrHasBeenDeleted');
-    } else {
-      toastErrorMessage = err.error?.message || err.message;
-    }
-    this.toast.showError('errors.errorOccurred', toastErrorMessage);
+    this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
   }
 
   public openGrantAccessModal(): void {
@@ -149,21 +115,13 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   public xmlDestroyed(xml: string): void {
-    if (this.process.activeResource) {
-      this.process.activeResource.content = xml;
-    } else {
-      this.process.activeResource = {
-        type: ResourceTypeEnum.XML,
-        processId: this.process.id,
-        content: xml
-      };
-    }
+    this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(xml));
   }
 
   public changeModelerMode(flag: boolean): void {
     this.toggleXmlMode(flag);
     setTimeout(() => {
-      this.handlePaletteVisibility();
+      this.bpmnModelerService.togglePaletteVisibility(flag);
     }, 0);
   }
 
@@ -285,7 +243,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
             this.processAutosave.enableSaving();
             this.processAutosave.canDiscardChanges = false;
           }, (err: HttpErrorResponse) => {
-            this.handleGeneralErrors(err, this.process.id);
+            this.handleGeneralErrors(err);
             this.processAutosave.enableSaving();
           })
       );

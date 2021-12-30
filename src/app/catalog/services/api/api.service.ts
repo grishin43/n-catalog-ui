@@ -2,17 +2,15 @@ import {Injectable} from '@angular/core';
 import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
-import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {ResourceModel} from '../../../models/domain/resource.model';
 import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
-import {LocalSaverHelper} from '../../helpers/local-saver.helper';
 import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
@@ -51,8 +49,6 @@ enum UiNotificationType {
   providedIn: 'root'
 })
 export class ApiService {
-  public requestedProcess: ProcessModel;
-
   private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
 
   constructor(
@@ -106,19 +102,9 @@ export class ApiService {
   }
 
   public getProcessById(folderId: string, processId: string): Observable<ProcessModel> {
-    if (this.requestedProcess?.id === processId) {
-      return of(this.requestedProcess);
-    }
     return this.http.get<ProcessModel>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}`)
       .pipe(
-        map((res: ProcessModel) => {
-          return {
-            ...res,
-            isLocked: !!res?.lockedBy && res?.lockedBy !== this.kc.getUsername()
-          };
-        }),
-        map((res: ProcessModel) => MapHelper.mapProcessResponse(res, folderId, processId)),
-        tap((res: ProcessModel) => this.requestedProcess = res)
+        map((res: ProcessModel) => MapHelper.mapProcessResponse(res, folderId, processId, this.kc.getUsername()))
       );
   }
 
@@ -134,8 +120,7 @@ export class ApiService {
   }
 
   public getRecentProcesses(): Observable<CatalogEntityModel[]> {
-    const getRecentUrl = `${this.ApiUrl}/${ApiRoute.RECENT_PROCESSES}`;
-    return this.http.get<CatalogEntityModel[]>(getRecentUrl)
+    return this.http.get<CatalogEntityModel[]>(`${this.ApiUrl}/${ApiRoute.RECENT_PROCESSES}`)
       .pipe(
         map((recentProcesses: CatalogEntityModel[]) => MapHelper.mapRecentProcessesResponse(recentProcesses))
       );
@@ -262,16 +247,7 @@ export class ApiService {
 
   public saveProcess(
     process: ProcessModel,
-    content: string): Observable<UiNotificationCheck> {
-    // TODO
-    if (this.requestedProcess?.id === process.id && this.requestedProcess?.activeResource) {
-      this.requestedProcess.activeResource.content = content;
-    }
-    const resources: ResourceModel[] = [{
-      id: process.activeResource?.id || uuid(),
-      type: process.activeResource?.type || ResourceTypeEnum.XML,
-      content
-    }];
+    resources: ResourceModel[]): Observable<UiNotificationCheck> {
     return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.put<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.RESOURCES}`,

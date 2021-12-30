@@ -1,5 +1,4 @@
 import {ProcessModel} from '../../../models/domain/process.model';
-import {FolderModel} from '../../../models/domain/folder.model';
 
 export namespace ProcessActions {
 
@@ -11,8 +10,10 @@ export namespace ProcessActions {
   }
 
   export class FolderProcessesFetched {
-      static readonly type = '[FolderService] FolderProcessesFetched';
-      constructor(public processes: ProcessModel[] , public parentFolderId: string) {}
+    static readonly type = '[FolderService] FolderProcessesFetched';
+
+    constructor(public processes: ProcessModel[], public parentFolderId: string) {
+    }
   }
 
   export class DraftProcessCreated {

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {ApiService} from '../services/api/api.service';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ProcessModel} from '../../models/domain/process.model';
@@ -8,12 +7,13 @@ import {CatalogRouteEnum} from '../models/catalog-route.enum';
 import {MatDialog} from '@angular/material/dialog';
 import {ProcessAccessDeniedModalComponent} from '../../shared/components/big/process-access-denied-modal/component/process-access-denied-modal.component';
 import {AppRouteEnum} from '../../models/app-route.enum';
+import {ProcessService} from '../pages/folder/services/process/process.service';
 
 @Injectable()
 export class ProcessActivateGuard implements CanActivate {
 
   constructor(
-    private api: ApiService,
+    private processService: ProcessService,
     private router: Router,
     private dialog: MatDialog
   ) {
@@ -22,7 +22,7 @@ export class ProcessActivateGuard implements CanActivate {
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const folderId = next.queryParams[CatalogRouteEnum._PARENT_ID];
     const processId = next.queryParams[CatalogRouteEnum._ID];
-    return this.api
+    return this.processService
       .getProcessById(folderId, processId)
       .pipe(
         map((e: ProcessModel) => {

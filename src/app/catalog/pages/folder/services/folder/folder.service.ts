@@ -30,10 +30,12 @@ export class FolderService {
     return this.apiService.deleteFolder(folderId)
       .pipe(
         catchError((err) => {
-          console.log('delete folder error, revert delete', err)
-          return this.store.dispatch(new FolderActions.FolderRevertToBeDeleted(folderId))
+          console.log('delete folder error, revert delete', err);
+          return this.store.dispatch(new FolderActions.FolderRevertToBeDeleted(folderId));
         }),
-        tap(() => {this.store.dispatch(new FolderActions.FolderDeleted(folderId));})
+        tap(() => {
+          this.store.dispatch(new FolderActions.FolderDeleted(folderId));
+        })
       )
       .toPromise();
   }
@@ -67,8 +69,8 @@ export class FolderService {
     return this.apiService.renameFolder(folderId, newName)
       .pipe(catchError((err) => {
         console.log('rename folder error, revert back to previous value', err);
-       return  this.store.dispatch(new FolderActions.FolderRenamed(folderId, oldName));
-    }));
+        return this.store.dispatch(new FolderActions.FolderRenamed(folderId, oldName));
+      }));
   }
 
 }

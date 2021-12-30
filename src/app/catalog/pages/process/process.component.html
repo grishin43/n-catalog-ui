@@ -2,7 +2,7 @@
   <div class="row align-items-center">
     <div class="col-auto">
       <np-process-toolbar
-        [process]="process"
+        [process]="process$ | async"
         [xmlMode]="xmlMode">
       </np-process-toolbar>
     </div>
@@ -26,7 +26,7 @@
       <np-button
         [size]="'xs'"
         [minWidth]="true"
-        [disabled]="process?.isLocked"
+        [disabled]="(process$ | async)?.isLocked"
         (click)="openCreateNewVersionModal()">
         <span>
            {{"common.done" | translate}}
@@ -99,7 +99,7 @@
 
   <ng-container *ngIf="xmlMode; else bpmnEditorTemplate">
     <np-xml-editor
-      [isLocked]="process?.isLocked"
+      [isLocked]="(process$ | async)?.isLocked"
       [xml]="modelerXml"
       (destroyed)="xmlDestroyed($event)">
     </np-xml-editor>
@@ -108,7 +108,7 @@
   <ng-template #bpmnEditorTemplate>
     <np-bpmn-editor
       [processLoader]="loader"
-      [data]="process">
+      [data]="process$ | async">
     </np-bpmn-editor>
   </ng-template>
 
@@ -123,13 +123,13 @@
       [ngClass]="{'active': xmlMode}"
       class="mode-button xml"
       (click)="changeModelerMode(true)">
-       XML
+      XML
     </button>
   </div>
 
   <np-version-history
-    [isLocked]="process?.isLocked"
-    [processData]="process"
+    [isLocked]="(process$ | async)?.isLocked"
+    [processData]="process$ | async"
     [newVersionCreated]="versionCreated"
     (versionOpenClicked)="onVersionOpened($event)"
     (createNewVersionClicked)="patchProcessActiveResource()">

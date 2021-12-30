@@ -42,6 +42,7 @@ import {NgxsStoragePluginModule, StorageOption} from '@ngxs/storage-plugin';
 import {FolderState} from './store/folder/folder.state';
 import {FolderService} from './pages/folder/services/folder/folder.service';
 import {ProcessService} from './pages/folder/services/process/process.service';
+import {NgxsSelectSnapshotModule} from '@ngxs-labs/select-snapshot';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {ProcessService} from './pages/folder/services/process/process.service';
      ],
      storage: StorageOption.LocalStorage
     }),
+    NgxsSelectSnapshotModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NpInputModule,
     MatRippleModule,

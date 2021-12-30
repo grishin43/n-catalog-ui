@@ -11,11 +11,13 @@ import {Action, State, StateContext, Store} from '@ngxs/store';
 import {FolderActions} from './folder.actions';
 import {FolderSelectors} from './folder.selectors';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
+import {Injectable} from '@angular/core';
 
 @State<EntityStateModel<FolderModel>>({
   name: 'npFolders',
   defaults: defaultEntityState()
 })
+@Injectable()
 export class FolderState extends EntityState<FolderModel> {
   constructor() {
     super(FolderState, 'id', IdStrategy.EntityIdGenerator);

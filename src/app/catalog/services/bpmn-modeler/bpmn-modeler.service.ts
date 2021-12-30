@@ -531,6 +531,19 @@ export class BpmnModelerService {
     }
   }
 
+  public togglePaletteVisibility(flag: boolean): void {
+    try {
+      const paletteContainer = this.modeler.get('palette')._container;
+      if (flag) {
+        paletteContainer.classList.remove('show');
+      } else {
+        paletteContainer.classList.add('show');
+      }
+    } catch (err) {
+      console.error('Could not toggle palette visibility\n', err);
+    }
+  }
+
   public showToast(i18nKey: string, duration?: number, action?: string): void {
     this.toast.show(i18nKey, duration, action, 'top', 'center', 'modeler-toast');
   }

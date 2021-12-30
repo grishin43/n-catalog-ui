@@ -104,15 +104,17 @@ export class MapHelper {
     });
   }
 
-  public static mapProcessResponse(process: ProcessModel, folderId: string, processId: string): ProcessModel {
+  public static mapProcessResponse(process: ProcessModel, folderId: string, processId: string, username: string): ProcessModel {
     const mappedProcess: ProcessModel = {
       ...process,
+      isLocked: !!process?.lockedBy && process?.lockedBy !== username,
       subRoot: process.path.length > 1
         ? process.path[process.path.length - 1].id
         : process.path[0].id,
       activeResource: process.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML)
     };
     if (mappedProcess.activeResource) {
+      // TODO; check generation
       const lsResource = LocalSaverHelper.getResource(folderId, processId);
       if (lsResource?.trim()?.length) {
         const serverContent = mappedProcess.activeResource.content;

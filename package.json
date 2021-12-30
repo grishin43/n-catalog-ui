@@ -27,6 +27,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "@ngxs-labs/entity-state": "^0.1.0",
+    "@ngxs-labs/select-snapshot": "^3.0.0",
     "@ngxs/devtools-plugin": "^3.7.2",
     "@ngxs/storage-plugin": "^3.7.2",
     "@ngxs/store": "^3.7.2",

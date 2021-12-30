@@ -24,11 +24,14 @@ import {ProcessAutosaveService} from '../process-autosave/process-autosave.servi
 import {RenameEntityModalComponent} from '../../../shared/components/big/rename-entity-modal/component/rename-entity-modal.component';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {ProcessService} from '../../pages/folder/services/process/process.service';
+import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
+import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BpmnToolbarService {
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
 
   constructor(
     private bpmnModeler: BpmnModelerService,
@@ -432,19 +435,19 @@ export class BpmnToolbarService {
       },
       {
         name: ToolbarWindowItemEnum.TOGGLE_PROPERTIES_PANEL,
-        allow: !this.processService.isLocked
+        allow: !this.process?.isLocked
       },
       {
         name: ToolbarWindowItemEnum.RESET_PROPERTIES_PANEL,
-        allow: !this.processService.isLocked
+        allow: !this.process?.isLocked
       },
       {
         name: ToolbarProcessItemEnum.SAVE_VERSION,
-        allow: !this.processService.isLocked
+        allow: !this.process?.isLocked
       },
       {
         name: ToolbarProcessItemEnum.RENAME,
-        allow: !this.processService.isLocked
+        allow: !this.process?.isLocked
       }
     ];
   }

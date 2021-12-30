@@ -30,6 +30,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       this.openProcess();
     }
   }
+
   @Input() processLoader: boolean;
 
   public process: ProcessModel;
@@ -151,6 +152,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       } else {
         this.openNewDiagram();
       }
+      this.bpmnModelerService.togglePaletteVisibility(this.process?.isLocked);
     }
   }
 

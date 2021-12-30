@@ -12,7 +12,7 @@ import {ToastService} from '../../../shared/components/small/toast/service/toast
   providedIn: 'root'
 })
 export class EntitiesTabService {
-  public processes: BehaviorSubject<ProcessModel[]>;
+  public processes: BehaviorSubject<ProcessModel[]> = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.PROCESSES_TABS) || []);
   public readonly limit = 20;
 
   constructor(
@@ -79,10 +79,6 @@ export class EntitiesTabService {
         LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, newValue);
       }
     }
-  }
-
-  public init(): void {
-    this.processes = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.PROCESSES_TABS) || []);
   }
 
   public patchEntityName(parentFolderId: string, processId: string, name: string): void {
