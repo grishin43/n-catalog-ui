@@ -152,7 +152,9 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       } else {
         this.openNewDiagram();
       }
-      this.bpmnModelerService.togglePaletteVisibility(this.process?.isLocked);
+      if (this.bpmnModelerService.modeler) {
+        this.bpmnModelerService.togglePaletteVisibility(this.process?.isLocked);
+      }
     }
   }
 

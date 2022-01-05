@@ -48,6 +48,20 @@ export class UserInfoTooltipDirective implements OnInit, OnDestroy {
   private subs = new Subscription();
   private mouseEntered: boolean;
 
+  @HostListener('mouseenter')
+  mouseenter(): void {
+    this.openTooltip();
+  }
+
+  @HostListener('mouseleave')
+  mouseleave(): void {
+    setTimeout(() => {
+      if (!this.mouseEntered) {
+        this.closeToolTip();
+      }
+    }, 50);
+  }
+
   constructor(
     private overlay: Overlay,
     private overlayPositionBuilder: OverlayPositionBuilder,
@@ -65,20 +79,6 @@ export class UserInfoTooltipDirective implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.closeToolTip();
-  }
-
-  @HostListener('mouseenter')
-  mouseenter(): void {
-    this.openTooltip();
-  }
-
-  @HostListener('mouseleave')
-  mouseleave(): void {
-    setTimeout(() => {
-      if (!this.mouseEntered) {
-        this.closeToolTip();
-      }
-    }, 50);
   }
 
   private openTooltip(): void {

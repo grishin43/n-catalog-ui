@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take} from 'rxjs/operators';
+import {catchError, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -150,7 +150,33 @@ export class ApiService {
   }
 
   public getUserInfo(username: string): Observable<UserModel> {
-    return this.http.get<UserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${username}`);
+    // TODO: test content
+    return of({
+      username: 'test.test',
+      email: 'test.user@novaposta.ua',
+      firstName: 'Іван',
+      middleName: 'Іванович',
+      lastName: 'Іванченко',
+      companies: [
+        {
+          name: 'Нова Пошта Україна 1',
+          subDivision: 'Тест підрозділ',
+          position: 'Фахівець 1',
+        },
+        {
+          name: 'Нова Пошта Україна 2',
+          subDivision: 'Тест підрозділ',
+          position: 'Фахівець 2',
+        },
+        {
+          name: 'Нова Пошта Україна 3',
+          subDivision: 'Тест підрозділ',
+          position: 'Фахівець 3',
+        }
+      ],
+      url: 'https://www.google.com.ua'
+    } as UserModel);
+    /*return this.http.get<UserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${username}`);*/
   }
 
   public grantAccessToProcess(folderId: string, processId: string, level: string, username: string): Observable<void> {

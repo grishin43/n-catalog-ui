@@ -205,29 +205,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  private patchProcessResources(content: string): void {
-    if (this.process.resources?.length && this.process.activeResource) {
-      this.process.resources.forEach((pr: ResourceModel, index: number) => {
-        if (pr.id === this.process.activeResource.id && pr.type === this.process.activeResource.type) {
-          this.process.resources[index] = {
-            ...this.process.activeResource,
-            content
-          };
-        }
-      });
-    } else {
-      this.process.resources = [{
-        id: uuid(),
-        processId: this.process.id,
-        type: ResourceTypeEnum.XML,
-        content
-      }];
-    }
-  }
-
   private createNewVersion(name: string, desc: string): void {
     this.bpmnModelerService.getDiagramXml().then((content: string) => {
-      this.patchProcessResources(content);
+      this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
       const cpv: CreateProcessVersionModel = {
         versionTitle: name,
         versionDescription: desc,

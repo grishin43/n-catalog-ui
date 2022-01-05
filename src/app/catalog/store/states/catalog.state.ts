@@ -2,9 +2,10 @@ import {Action, State, StateContext} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {CatalogStateModel} from '../models/catalog-state.model';
 import {CatalogActions} from '../actions/catalog.actions';
-import {patch} from '@ngxs/store/operators';
+import {patch, updateItem} from '@ngxs/store/operators';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
-import ProcessActiveResourceXmlContentPatched = CatalogActions.ProcessActiveResourceXmlContentPatched;
+import {ResourceModel} from '../../../models/domain/resource.model';
+import {v4 as uuid} from 'uuid';
 
 @State<CatalogStateModel>({
   name: 'catalog',
@@ -24,8 +25,9 @@ export class CatalogState {
   }
 
   @Action(CatalogActions.ProcessActiveResourceXmlContentPatched)
-  patchCurrentProcessActiveResourceXmlContent(ctx: StateContext<CatalogStateModel>, {content}: ProcessActiveResourceXmlContentPatched)
-    : void {
+  patchCurrentProcessActiveResourceXmlContent(
+    ctx: StateContext<CatalogStateModel>,
+    {content}: CatalogActions.ProcessActiveResourceXmlContentPatched): void {
     if (ctx.getState().currentProcess?.activeResource) {
       ctx.setState(patch({
         currentProcess: patch({
@@ -40,6 +42,32 @@ export class CatalogState {
             processId: ctx.getState().currentProcess.id,
             content
           })
+        })
+      }));
+    }
+  }
+
+  @Action(CatalogActions.ProcessResourcePatched)
+  patchProcessResource(ctx: StateContext<CatalogStateModel>, {content, type}: CatalogActions.ProcessResourcePatched)
+    : void {
+    const currentProcess = ctx.getState().currentProcess;
+    if (currentProcess.resources?.length && currentProcess.activeResource) {
+      ctx.setState(patch({
+        currentProcess: patch({
+          resources: updateItem((r: ResourceModel) => {
+            return r.id === currentProcess.activeResource.id && r.type === currentProcess.activeResource.type;
+          }, patch({...currentProcess.activeResource, content}))
+        })
+      }));
+    } else {
+      ctx.setState(patch({
+        currentProcess: patch({
+          resources: patch([{
+            id: uuid(),
+            processId: currentProcess.id,
+            type,
+            content
+          }] as ResourceModel[])
         })
       }));
     }
