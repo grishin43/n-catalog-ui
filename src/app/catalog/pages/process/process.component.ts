@@ -18,7 +18,6 @@ import {v4 as uuid} from 'uuid';
 import {AnimationsHelper} from '../../helpers/animations.helper';
 import {FormFieldEnum} from '../../../models/form-field.enum';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
-import {ResourceModel} from '../../../models/domain/resource.model';
 import {ProcessService} from '../folder/services/process/process.service';
 import {AskVersionSaveModalComponent} from '../../../shared/components/big/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
 import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
@@ -96,8 +95,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
       this.processAutosave.destroy();
       this.bpmnModelerService.showToast('common.someUserIsEditingProcess', undefined, 'OK');
     } else {
-      this.processAutosave.init(this.process);
-      this.processAutosave.checkLocalResources(this.process);
+      this.processAutosave.init();
+      this.processAutosave.checkLocalResources();
     }
   }
 
@@ -127,9 +126,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   public onVersionOpened(version: ProcessVersionModel): void {
     if (this.processAutosave.shouldSaved) {
-      this.subscribeVersion(version.versionID);
-    } else {
       this.openAskVersionSaveModal(version);
+    } else {
+      this.subscribeVersion(version.versionID);
     }
   }
 
@@ -181,9 +180,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
         (formData: ({ [FormFieldEnum.NAME], [FormFieldEnum.DESCRIPTION] })) => {
           if (formData) {
             this.createNewVersion(formData[FormFieldEnum.NAME], formData[FormFieldEnum.DESCRIPTION]);
+          } else {
+            this.processAutosave.enableSaving();
           }
-        }, () => {
-          this.processAutosave.enableSaving();
         });
     this.subscriptions.add(saveVersionResultSubscription);
   }
@@ -207,6 +206,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   private createNewVersion(name: string, desc: string): void {
     this.bpmnModelerService.getDiagramXml().then((content: string) => {
+      this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
       this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
       const cpv: CreateProcessVersionModel = {
         versionTitle: name,
@@ -220,11 +220,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
             this.versionCreated = res;
             const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: cpv.versionTitle});
             this.toast.showMessage(toastMessage);
-            this.processAutosave.enableSaving();
             this.processAutosave.canDiscardChanges = false;
           }, (err: HttpErrorResponse) => {
             this.handleGeneralErrors(err);
-            this.processAutosave.enableSaving();
           })
       );
     });

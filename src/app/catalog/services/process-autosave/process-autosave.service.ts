@@ -15,19 +15,21 @@ import {HttpHelper} from '../../../helpers/http.helper';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {LocalSaverHelper} from '../../helpers/local-saver.helper';
-import {CatalogActions} from '../../store/actions/catalog.actions';
 import {Store} from '@ngxs/store';
 import {ProcessService} from '../../pages/folder/services/process/process.service';
+import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
+import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessAutosaveService {
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
+
   private delay = 60 * 1000;
   private timer$: Subscription;
   private networkState$: Subscription;
 
-  public process: ProcessModel;
   public requestLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public resourceSaved$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public shouldSaved: boolean;
@@ -47,8 +49,7 @@ export class ProcessAutosaveService {
     this.subscribeRoute();
   }
 
-  public init(value: ProcessModel): void {
-    this.process = value;
+  public init(): void {
     this.listenNetwork();
   }
 
@@ -69,11 +70,11 @@ export class ProcessAutosaveService {
     WindowHelper.enableBeforeUnload();
   }
 
-  public saveProcess(process: ProcessModel, ssCb?: () => void): Promise<void> {
+  public saveProcess(ssCb?: () => void): Promise<void> {
     this.resourceSaved$.next(false);
     this.requestLoader$.next(true);
     return this.bpmnModeler.getDiagramXml().then((content: string) => {
-      this.processService.saveProcess(process, content)
+      this.processService.saveProcess(content)
         .subscribe(
           () => {
             this.savingSuccessCb();
@@ -81,8 +82,9 @@ export class ProcessAutosaveService {
             if (typeof ssCb === 'function') {
               ssCb();
             }
-            // TODO: if has any version
-            this.canDiscardChanges = true;
+            if (this.process.hasVersions) {
+              this.canDiscardChanges = true;
+            }
           },
           () => {
             this.requestLoader$.next(false);
@@ -103,7 +105,7 @@ export class ProcessAutosaveService {
     this.timer$ = interval(this.delay)
       .pipe(
         timeInterval(),
-        concatMap(() => this.saveProcess(this.process))
+        concatMap(() => this.saveProcess())
       )
       .subscribe(() => {
         this.destroyTimer();
@@ -120,16 +122,16 @@ export class ProcessAutosaveService {
     this.startTimer();
   }
 
-  public checkLocalResources(process: ProcessModel): void {
+  public checkLocalResources(): void {
     const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
-    const matchedSavedProcess: ProcessModel = currentSavedProcesses.find((p: ProcessModel) => p?.id === process?.id);
+    const matchedSavedProcess: ProcessModel = currentSavedProcesses.find((p: ProcessModel) => p?.id === this.process?.id);
     if (matchedSavedProcess) {
-      if (matchedSavedProcess.generation < process.generation) {
+      if (matchedSavedProcess.generation < this.process.generation) {
         LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
       } else {
         this.resourceSaved$.next(false);
         this.requestLoader$.next(true);
-        this.processService.saveProcess(matchedSavedProcess, matchedSavedProcess.activeResource.content)
+        this.processService.saveProcess(matchedSavedProcess.activeResource.content)
           .subscribe(() => {
             LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
             this.savingSuccessCb();
@@ -217,7 +219,7 @@ export class ProcessAutosaveService {
 
   private handleNetworkConnection(online: boolean): void {
     if (online) {
-      this.checkLocalResources(this.process);
+      this.checkLocalResources();
       this.restartTimer();
     } else {
       this.destroyTimer();

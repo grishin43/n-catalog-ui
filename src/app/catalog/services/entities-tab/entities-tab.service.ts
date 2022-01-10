@@ -7,6 +7,8 @@ import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {MatDialog} from '@angular/material/dialog';
+import {TabsOverflowedModalComponent} from '../../../shared/components/big/tabs-overflowed-modal/component/tabs-overflowed-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ export class EntitiesTabService {
 
   constructor(
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -55,15 +58,20 @@ export class EntitiesTabService {
   }
 
   private deleteEarliestEntity(entity: ProcessModel): void {
-    const currentValue: ProcessModel[] = this.processes.getValue();
-    const removeIndex = currentValue.map(item => item.id).indexOf(entity.id);
-    if (removeIndex !== -1) {
-      currentValue.splice(removeIndex, 1);
-      currentValue.unshift(entity);
-      LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, currentValue);
-      // TODO
-      this.toast.show('common.tabsOverflowed', 3000, 'OK');
-    }
+    this.dialog.open(TabsOverflowedModalComponent, {
+      width: '700px',
+      autoFocus: false
+    }).afterClosed().subscribe((res: boolean) => {
+      if (res) {
+        const currentValue: ProcessModel[] = this.processes.getValue();
+        const removeIndex = currentValue.map(item => item.id).indexOf(entity.id);
+        if (removeIndex !== -1) {
+          currentValue.splice(removeIndex, 1);
+          currentValue.unshift(entity);
+          LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, currentValue);
+        }
+      }
+    });
   }
 
   private addNewEntity(entity: ProcessModel): void {

@@ -24,4 +24,18 @@ export namespace CatalogActions {
     }
   }
 
+  export class ProcessGenerationPatched {
+    static readonly type = 'ProcessGenerationPatched';
+
+    constructor(public generation: number) {
+    }
+  }
+
+  export class ProcessVersionsAvailabilityPatched {
+    static readonly type = 'ProcessVersionsAvailabilityPatched';
+
+    constructor(public hasVersions: boolean) {
+    }
+  }
+
 }

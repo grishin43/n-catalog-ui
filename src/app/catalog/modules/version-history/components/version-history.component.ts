@@ -8,6 +8,7 @@ import {SearchModel} from '../../../../models/domain/search.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ProcessModel} from '../../../../models/domain/process.model';
 import {UiNotificationCheck} from '../../../../models/domain/ui-notification.check';
+import {ProcessService} from '../../../pages/folder/services/process/process.service';
 
 @Component({
   selector: 'np-version-history',
@@ -45,7 +46,8 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   @Output() createNewVersionClicked = new EventEmitter<void>();
 
   constructor(
-    private api: ApiService
+    private api: ApiService,
+    private processService: ProcessService
   ) {
   }
 
@@ -77,7 +79,7 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   private getHistory(): void {
     if (this.historyType === HistoryTypeEnum.VERSION_HISTORY) {
       this.getData(
-        this.api.getVersions(this.process.parent?.id, this.process.id),
+        this.processService.getVersions(this.process.parent?.id, this.process.id),
         (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
       );
     } else if (this.historyType === HistoryTypeEnum.START_AND_STOP_HISTORY) {
@@ -106,8 +108,8 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   public createVersion(version: ProcessVersionModel): void {
     this.getData(
-      this.api.createBasedOnPreviousVersion(this.process.parent.id, this.process.id, version.versionID, this.process.generation),
-      (res) => {
+      this.processService.createVersionBasedOnPrevious(this.process.parent.id, this.process.id, version.versionID, this.process.generation),
+      () => {
         this.getHistory();
       }
     );

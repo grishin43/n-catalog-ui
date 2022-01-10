@@ -43,6 +43,7 @@ import {FolderState} from './store/folder/folder.state';
 import {FolderService} from './pages/folder/services/folder/folder.service';
 import {ProcessService} from './pages/folder/services/process/process.service';
 import {NgxsSelectSnapshotModule} from '@ngxs-labs/select-snapshot';
+import {TabsOverflowedModalModule} from '../shared/components/big/tabs-overflowed-modal/tabs-overflowed-modal.module';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import {NgxsSelectSnapshotModule} from '@ngxs-labs/select-snapshot';
     GrantAccessModalModule,
     ProcessAccessDeniedModalModule,
     PreventProcessCloseModalModule,
-    AcronymModule
+    AcronymModule,
+    TabsOverflowedModalModule
   ],
   providers: [
     EntitiesTabService,

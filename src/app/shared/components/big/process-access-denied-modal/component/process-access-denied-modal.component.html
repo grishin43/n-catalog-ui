@@ -4,7 +4,9 @@
 <mat-dialog-content>
   <p>{{'common.contactTheOwnerToProvideAccessToTheProcess' | translate}}</p>
   <ng-container *ngIf="data?.folderId && data?.processId">
-    <h6>{{'common.owner' | translate}}</h6>
+    <h6 *ngIf="processOwner || loader">
+      {{'common.owner' | translate}}
+    </h6>
     <ng-container *ngIf="loader; else ownerTemplate">
       <div class="owner-skeleton">
         <span></span>

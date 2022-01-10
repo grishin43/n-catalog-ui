@@ -80,8 +80,8 @@ export class BpmnToolbarService {
           },
           {
             name: ToolbarProcessItemEnum.SAVE_VERSION,
-            cb: (process: ProcessModel) => {
-              this.processAutosave.saveProcess(process);
+            cb: () => {
+              this.processAutosave.saveProcess();
             },
             hotkey: 'Ctrl + S',
             delimiterAfter: true

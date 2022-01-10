@@ -65,7 +65,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     } else if (e.ctrlKey && e.code === 'KeyS') {
       e.preventDefault();
       if (this.process) {
-        this.processAutosave.saveProcess(this.process);
+        this.processAutosave.saveProcess();
       }
     }
   }

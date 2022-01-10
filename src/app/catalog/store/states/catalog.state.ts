@@ -21,6 +21,9 @@ export class CatalogState {
 
   @Action(CatalogActions.ProcessFetched)
   fetchCurrentProcess(ctx: StateContext<CatalogStateModel>, {currentProcess}: CatalogStateModel): void {
+    if (currentProcess.resources?.length && !currentProcess.activeResource) {
+      currentProcess.activeResource = currentProcess.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML);
+    }
     ctx.setState(patch({currentProcess}));
   }
 
@@ -37,11 +40,12 @@ export class CatalogState {
     } else {
       ctx.setState(patch({
         currentProcess: patch({
-          activeResource: patch({
+          activeResource: {
             type: ResourceTypeEnum.XML,
             processId: ctx.getState().currentProcess.id,
-            content
-          })
+            content,
+            id: uuid()
+          }
         })
       }));
     }
@@ -71,6 +75,21 @@ export class CatalogState {
         })
       }));
     }
+  }
+
+  @Action(CatalogActions.ProcessGenerationPatched)
+  patchProcessGeneration(ctx: StateContext<CatalogStateModel>, {generation}: CatalogActions.ProcessGenerationPatched): void {
+    ctx.setState(patch({
+      currentProcess: patch({generation})
+    }));
+  }
+
+  @Action(CatalogActions.ProcessVersionsAvailabilityPatched)
+  patchProcessVersionsAvailability(ctx: StateContext<CatalogStateModel>, {hasVersions}: CatalogActions.ProcessVersionsAvailabilityPatched)
+    : void {
+    ctx.setState(patch({
+      currentProcess: patch({hasVersions})
+    }));
   }
 
 }

@@ -6,7 +6,7 @@ import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
 import {ProcessActions} from '../../../../store/process/process.actions';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
-import {CreateProcessVersionModel} from '../../../../../models/domain/process-version.model';
+import {CreateProcessVersionModel, ProcessVersionModel} from '../../../../../models/domain/process-version.model';
 import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 import {Router} from '@angular/router';
@@ -14,14 +14,16 @@ import {EntitiesTabService} from '../../../../services/entities-tab/entities-tab
 import {ProcessModel} from '../../../../../models/domain/process.model';
 import {CatalogActions} from '../../../../store/actions/catalog.actions';
 import {HttpStatusCodeEnum} from '../../../../../models/http-status-code.enum';
-import {ResourceModel} from '../../../../../models/domain/resource.model';
+import {SearchModel} from '../../../../../models/domain/search.model';
+import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
+import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
-import {v4 as uuid} from 'uuid';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessService {
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
 
   constructor(
     private httpClient: HttpClient,
@@ -58,7 +60,10 @@ export class ProcessService {
   }
 
   public createNewVersion(parentId: string, processId: string, cpv: CreateProcessVersionModel): Observable<UiNotificationCheck> {
-    return this.apiService.createNewVersion(parentId, processId, cpv);
+    return this.apiService.createNewVersion(parentId, processId, cpv)
+      .pipe(
+        tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
+      );
   }
 
   public createVersionBasedOnPrevious(folderId: string, processId: string, previousVersionID: string, generation: number)
@@ -106,14 +111,22 @@ export class ProcessService {
       );
   }
 
-  public saveProcess(process: ProcessModel, content: string): Observable<UiNotificationCheck> {
+  public saveProcess(content: string): Observable<UiNotificationCheck> {
     this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
-    const resources: ResourceModel[] = [{
-      id: process.activeResource?.id || uuid(),
-      type: process.activeResource?.type || ResourceTypeEnum.XML,
-      content
-    }, ...process.resources];
-    return this.apiService.saveProcess(process, resources);
+    this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
+    return this.apiService.saveProcess(this.process)
+      .pipe(
+        tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
+      );
+  }
+
+  public getVersions(folderId: string, processId: string): Observable<SearchModel<ProcessVersionModel>> {
+    return this.apiService.getVersions(folderId, processId)
+      .pipe(
+        tap((sm: SearchModel<ProcessVersionModel>) => {
+          this.store.dispatch(new CatalogActions.ProcessVersionsAvailabilityPatched(!!sm.count));
+        })
+      );
   }
 
 }

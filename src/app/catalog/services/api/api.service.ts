@@ -271,13 +271,11 @@ export class ApiService {
     });
   }
 
-  public saveProcess(
-    process: ProcessModel,
-    resources: ResourceModel[]): Observable<UiNotificationCheck> {
+  public saveProcess(process: ProcessModel): Observable<UiNotificationCheck> {
     return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.put<void>(
         `${this.ApiUrl}/${ApiRoute.FOLDERS}/${process.parent.id}/${ApiRoute.PROCESSES}/${process.id}/${ApiRoute.RESOURCES}`,
-        {resources, generation: process.generation},
+        {resources: process.resources, generation: process.generation},
         {headers}
       );
     });
