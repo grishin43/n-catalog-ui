@@ -92,4 +92,12 @@ export class CatalogState {
     }));
   }
 
+  @Action(CatalogActions.ProcessNewVersionCreated)
+  createProcessNewVersion(ctx: StateContext<CatalogStateModel>, {currentVersionId}: CatalogActions.ProcessNewVersionCreated)
+    : void {
+    ctx.setState(patch({
+      currentProcess: patch({currentVersionId})
+    }));
+  }
+
 }

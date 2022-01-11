@@ -19,7 +19,9 @@ import {AnimationsHelper} from '../../helpers/animations.helper';
 import {FormFieldEnum} from '../../../models/form-field.enum';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
 import {ProcessService} from '../folder/services/process/process.service';
-import {AskVersionSaveModalComponent} from '../../../shared/components/big/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
+import {
+  AskVersionSaveModalComponent
+} from '../../../shared/components/big/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
 import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
 import {Select, Store} from '@ngxs/store';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
@@ -86,6 +88,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.errorResponse = undefined;
     this.loader = true;
     this.processService.getProcessVersionById(this.process.parent.id, this.process.id, versionId).toPromise()
+      .then(() => this.store.dispatch(new CatalogActions.ProcessNewVersionCreated(versionId)))
       .catch((err) => this.handleGeneralErrors(err))
       .finally(() => this.loader = false);
   }
@@ -208,12 +211,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.bpmnModelerService.getDiagramXml().then((content: string) => {
       this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
       this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
-      const cpv: CreateProcessVersionModel = {
-        versionTitle: name,
-        versionDescription: desc,
-        resources: this.process.resources || [],
-        generation: this.process.generation
-      };
+      const cpv: CreateProcessVersionModel = this.getCpv(name, desc);
       this.subscriptions.add(
         this.processService.createNewVersion(this.process.parent.id, this.process.id, cpv)
           .subscribe((res: UiNotificationCheck) => {
@@ -226,6 +224,15 @@ export class ProcessComponent implements OnInit, OnDestroy {
           })
       );
     });
+  }
+
+  private getCpv(name: string, desc: string): CreateProcessVersionModel {
+    return {
+      versionTitle: name,
+      versionDescription: desc,
+      resources: this.process.resources.map(({processId, ...resource}) => resource),
+      generation: this.process.generation
+    };
   }
 
   public reloadPage(): void {

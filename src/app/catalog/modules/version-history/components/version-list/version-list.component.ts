@@ -3,6 +3,9 @@ import {ProcessVersionModel} from '../../../../../models/domain/process-version.
 import {HistoryTypeEnum} from '../../models/history-type.enum';
 import {ToastService} from '../../../../../shared/components/small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Select} from '@ngxs/store';
+import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'np-version-list',
@@ -10,6 +13,8 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrls: ['./version-list.component.scss']
 })
 export class VersionListComponent {
+  @Select(CatalogSelectors.currentProcessVersionId) currentVersionId$: Observable<string>;
+
   @Input() versions: ProcessVersionModel[];
   @Input() type: HistoryTypeEnum;
   @Input() loader: boolean;

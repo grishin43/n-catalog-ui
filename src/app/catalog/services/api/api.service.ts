@@ -341,6 +341,7 @@ export class ApiService {
           if (i < maxRetry) {
             return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
           } else {
+            // TODO
             return throwError(new Error(`Max retry number ${maxRetry} for getting notification reached. Please retry later`));
           }
         }),

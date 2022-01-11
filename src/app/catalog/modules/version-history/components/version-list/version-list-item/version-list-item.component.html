@@ -1,4 +1,4 @@
-<ng-container *ngIf="version.active; else notCurrentVersionTemplate">
+<ng-container *ngIf="active; else notCurrentVersionTemplate">
   <div class="current-version-header">
     <h4>{{'common.currentVersion' | translate}}</h4>
     <ng-container *ngTemplateOutlet="menuBtnTemplate;"></ng-container>
@@ -81,6 +81,7 @@
 <mat-menu
   #menu="matMenu">
   <button
+    *ngIf="!active"
     mat-menu-item
     (click)="openVersion()">
     {{'common.open' | translate}}

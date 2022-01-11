@@ -2,8 +2,9 @@
   <np-version-list-item
     *ngFor="let version of versions"
     [ngClass]="{
-      'active': version.active
+      'active': (currentVersionId$ | async) === version.versionID
     }"
+    [active]="(currentVersionId$ | async) === version.versionID"
     [version]="version"
     [type]="type"
     [isLocked]="isLocked"

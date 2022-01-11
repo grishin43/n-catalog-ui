@@ -18,5 +18,6 @@ export interface ProcessModel {
   lockedBy?: string;
   isLocked?: boolean; // not domain field
   hasVersions?: boolean; // not domain field
+  currentVersionId?: string; // not domain field
 }
 

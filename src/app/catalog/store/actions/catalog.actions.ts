@@ -38,4 +38,11 @@ export namespace CatalogActions {
     }
   }
 
+  export class ProcessNewVersionCreated {
+    static readonly type = 'ProcessNewVersionCreated';
+
+    constructor(public currentVersionId: string) {
+    }
+  }
+
 }

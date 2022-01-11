@@ -114,10 +114,14 @@ export class ProcessService {
   public saveProcess(content: string): Observable<UiNotificationCheck> {
     this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
     this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
-    return this.apiService.saveProcess(this.process)
+    return this.apiService.saveProcess(this.getProcessForEndpoint())
       .pipe(
         tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
       );
+  }
+
+  private getProcessForEndpoint(): ProcessModel {
+    return {...this.process, resources: this.process.resources.map(({processId, ...resource}) => resource)};
   }
 
   public getVersions(folderId: string, processId: string): Observable<SearchModel<ProcessVersionModel>> {
