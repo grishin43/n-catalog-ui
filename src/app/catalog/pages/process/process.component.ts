@@ -209,14 +209,11 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   private createNewVersion(name: string, desc: string): void {
     this.bpmnModelerService.getDiagramXml().then((content: string) => {
-      this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
-      this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
-      const cpv: CreateProcessVersionModel = this.getCpv(name, desc);
       this.subscriptions.add(
-        this.processService.createNewVersion(this.process.parent.id, this.process.id, cpv)
+        this.processService.createNewVersion(content, name, desc)
           .subscribe((res: UiNotificationCheck) => {
             this.versionCreated = res;
-            const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: cpv.versionTitle});
+            const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: name});
             this.toast.showMessage(toastMessage);
             this.processAutosave.canDiscardChanges = false;
           }, (err: HttpErrorResponse) => {
@@ -224,15 +221,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
           })
       );
     });
-  }
-
-  private getCpv(name: string, desc: string): CreateProcessVersionModel {
-    return {
-      versionTitle: name,
-      versionDescription: desc,
-      resources: this.process.resources.map(({processId, ...resource}) => resource),
-      generation: this.process.generation
-    };
   }
 
   public reloadPage(): void {

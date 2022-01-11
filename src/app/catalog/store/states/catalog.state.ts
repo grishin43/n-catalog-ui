@@ -55,23 +55,19 @@ export class CatalogState {
   patchProcessResource(ctx: StateContext<CatalogStateModel>, {content, type}: CatalogActions.ProcessResourcePatched)
     : void {
     const currentProcess = ctx.getState().currentProcess;
-    if (currentProcess.resources?.length && currentProcess.activeResource) {
+    const activeResource = currentProcess.activeResource;
+    if (currentProcess.resources?.length && activeResource) {
       ctx.setState(patch({
         currentProcess: patch({
-          resources: updateItem((r: ResourceModel) => {
-            return r.id === currentProcess.activeResource.id && r.type === currentProcess.activeResource.type;
-          }, patch({...currentProcess.activeResource, content}))
+          resources: updateItem((resource: ResourceModel) => {
+            return resource.id === activeResource.id && resource.type === activeResource.type;
+          }, patch({content}))
         })
       }));
     } else {
       ctx.setState(patch({
         currentProcess: patch({
-          resources: patch([{
-            id: uuid(),
-            processId: currentProcess.id,
-            type,
-            content
-          }] as ResourceModel[])
+          resources: [activeResource]
         })
       }));
     }

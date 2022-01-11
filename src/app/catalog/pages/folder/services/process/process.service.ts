@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
@@ -18,6 +18,7 @@ import {SearchModel} from '../../../../../models/domain/search.model';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
+import {ResourceModel} from '../../../../../models/domain/resource.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,8 +60,16 @@ export class ProcessService {
       );
   }
 
-  public createNewVersion(parentId: string, processId: string, cpv: CreateProcessVersionModel): Observable<UiNotificationCheck> {
-    return this.apiService.createNewVersion(parentId, processId, cpv)
+  public createNewVersion(content: string, name: string, desc: string): Observable<UiNotificationCheck> {
+    this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
+    this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
+    const process: ProcessModel = this.store.selectSnapshot(CatalogSelectors.currentProcessForApi);
+    return this.apiService.createNewVersion(process.parent.id, process.id, {
+      versionTitle: name,
+      versionDescription: desc,
+      resources: process.resources.map(({processId, ...resource}) => resource),
+      generation: process.generation
+    })
       .pipe(
         tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
       );
@@ -114,14 +123,10 @@ export class ProcessService {
   public saveProcess(content: string): Observable<UiNotificationCheck> {
     this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
     this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
-    return this.apiService.saveProcess(this.getProcessForEndpoint())
+    return this.apiService.saveProcess(this.store.selectSnapshot(CatalogSelectors.currentProcessForApi))
       .pipe(
         tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
       );
-  }
-
-  private getProcessForEndpoint(): ProcessModel {
-    return {...this.process, resources: this.process.resources.map(({processId, ...resource}) => resource)};
   }
 
   public getVersions(folderId: string, processId: string): Observable<SearchModel<ProcessVersionModel>> {

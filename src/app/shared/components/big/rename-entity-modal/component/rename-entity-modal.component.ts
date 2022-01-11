@@ -86,11 +86,21 @@ export class RenameEntityModalComponent implements OnInit {
             } else {
               this.toast.close();
             }
-            const toastErrorMessage = this.translate.instant('errors.processWithNameAlreadyExist', {name: newName});
-            this.toast.showError('errors.errorOccurred', toastErrorMessage);
+            this.showNameDuplicateErrorToast(newName);
           }
         })
     );
+  }
+
+  private showNameDuplicateErrorToast(newName: string): void {
+    let toastErrorMessage: string;
+    if (this.data.type === CatalogEntityEnum.FOLDER) {
+      toastErrorMessage = this.translate.instant('errors.folderWithNameAlreadyExist', {name: newName});
+    }
+    if (this.data.type === CatalogEntityEnum.PROCESS) {
+      toastErrorMessage = this.translate.instant('errors.processWithNameAlreadyExist', {name: newName});
+    }
+    this.toast.showError('errors.errorOccurred', toastErrorMessage);
   }
 
   private checkDuplicates(folder: FolderModel, name: string): boolean {

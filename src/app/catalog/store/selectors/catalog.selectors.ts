@@ -8,11 +8,20 @@ import {ProcessModel} from '../../../models/domain/process.model';
 import {FolderSelectors} from '../folder/folder.selectors';
 import {ProcessState} from '../process/process.state';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
+import {ResourceModel} from '../../../models/domain/resource.model';
 
 export class CatalogSelectors {
   @Selector([CatalogState])
   static currentProcess(state: CatalogStateModel): ProcessModel {
     return state.currentProcess;
+  }
+
+  @Selector([CatalogState])
+  static currentProcessForApi(state: CatalogStateModel): ProcessModel {
+    return {
+      ...state.currentProcess,
+      resources: state.currentProcess.resources.map(({processId, ...resource}) => resource)
+    };
   }
 
   @Selector([CatalogState])
