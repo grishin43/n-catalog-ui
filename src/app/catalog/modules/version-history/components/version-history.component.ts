@@ -29,6 +29,9 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   @Input() set processData(value: ProcessModel) {
     this.process = value;
+  }
+
+  @Input() set processId(value: string) {
     if (value) {
       this.getHistory();
     }

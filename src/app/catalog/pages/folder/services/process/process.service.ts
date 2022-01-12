@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
 import {ProcessActions} from '../../../../store/process/process.actions';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
-import {CreateProcessVersionModel, ProcessVersionModel} from '../../../../../models/domain/process-version.model';
+import {ProcessVersionModel} from '../../../../../models/domain/process-version.model';
 import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 import {Router} from '@angular/router';
@@ -18,7 +18,6 @@ import {SearchModel} from '../../../../../models/domain/search.model';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
-import {ResourceModel} from '../../../../../models/domain/resource.model';
 
 @Injectable({
   providedIn: 'root'

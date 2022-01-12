@@ -130,6 +130,7 @@
   <np-version-history
     [isLocked]="(process$ | async)?.isLocked"
     [processData]="process$ | async"
+    [processId]="(process$ | async)?.id"
     [newVersionCreated]="versionCreated"
     (versionOpenClicked)="onVersionOpened($event)"
     (createNewVersionClicked)="patchProcessActiveResource()">
