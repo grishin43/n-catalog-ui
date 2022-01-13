@@ -159,6 +159,23 @@
       }
     }
 
+    @media screen and (min-width: $notebook) {
+      mat-row {
+        mat-cell {
+          .entity-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 740px;
+
+            @media screen and (max-width: $laptop-md - 1px) {
+              max-width: 45vw;
+            }
+          }
+        }
+      }
+    }
+
   }
 }
 

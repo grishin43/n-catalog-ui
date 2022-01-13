@@ -80,7 +80,8 @@ export class ProcessService {
   }
 
   public discardVersionChanges(parentId: string, processId: string, generation: number): void {
-    this.apiService.discardChanges(parentId, processId, generation).toPromise();
+    this.apiService.discardChanges(parentId, processId, generation).toPromise()
+      .then(() => this.getProcessById(parentId, processId).toPromise());
   }
 
   public openCreatedProcess(processId: string, processName: string, parentFolder: string): void {

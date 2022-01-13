@@ -7,7 +7,6 @@ import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
-import {ResourceModel} from '../../../models/domain/resource.model';
 import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../models/domain/permission-level.enum';
@@ -19,6 +18,7 @@ import {UiNotification} from '../../../models/domain/ui-notification';
 import {environment} from '../../../../environments/environment';
 import {MapHelper} from '../../helpers/map.helper';
 import {KeycloakService} from 'keycloak-angular';
+import {TranslateService} from '@ngx-translate/core';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -30,7 +30,6 @@ enum ApiRoute {
   SEARCH_USERS = 'search/user',
   PERMISSIONS = 'permissions',
   OWNER = 'owner',
-  USERS = 'users',
   VERSIONS = 'versions',
   CREATE_BASED_ON_PREVIOUS_VERSION = 'createBasedOnPreviousVersion',
   UI_NOTIFICATIONS = 'uiNotifications',
@@ -53,7 +52,8 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private kc: KeycloakService
+    private kc: KeycloakService,
+    private translate: TranslateService
   ) {
   }
 
@@ -339,10 +339,11 @@ export class ApiService {
         take(maxRetry + 1),
         switchMap((i) => {
           if (i < maxRetry) {
+            // TODO: run timer only once
             return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
           } else {
-            // TODO
-            return throwError(new Error(`Max retry number ${maxRetry} for getting notification reached. Please retry later`));
+            console.log(`Max retry number ${maxRetry} for getting notification reached.`);
+            return throwError(new Error(this.translate.instant('errors.timedOutRequest')));
           }
         }),
         filter(({items}: CollectionWrapperDto<UiNotification>) => {

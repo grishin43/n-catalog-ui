@@ -13,7 +13,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {SaveVersionModalComponent} from '../../../shared/components/big/save-version-modal/component/save-version-modal.component';
-import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
+import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {AnimationsHelper} from '../../helpers/animations.helper';
 import {FormFieldEnum} from '../../../models/form-field.enum';
@@ -35,6 +35,7 @@ import {CatalogActions} from '../../store/actions/catalog.actions';
 })
 export class ProcessComponent implements OnInit, OnDestroy {
   @Select(CatalogSelectors.currentProcess) process$: Observable<ProcessModel>;
+  @Select(CatalogSelectors.currentProcessId) processId$: Observable<string>;
   @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
 
   public errorResponse: HttpErrorResponse;
@@ -75,7 +76,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   private subscribeProcess(): void {
     this.errorResponse = undefined;
     this.subscriptions.add(
-      this.process$
+      this.processId$
         .subscribe(() => {
           this.handleLockedBy();
         }, (err: HttpErrorResponse) => {

@@ -17,6 +17,11 @@ export class CatalogSelectors {
   }
 
   @Selector([CatalogState])
+  static currentProcessId(state: CatalogStateModel): string {
+    return state.currentProcess.id;
+  }
+
+  @Selector([CatalogState])
   static currentProcessForApi(state: CatalogStateModel): ProcessModel {
     return {
       ...state.currentProcess,
