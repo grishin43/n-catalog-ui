@@ -168,4 +168,17 @@ export class MapHelper {
     };
   }
 
+  public static filterFoldersToEntity(folders: FolderModel[], folderId: string): CatalogEntityModel[] {
+    return folders.filter((f: FolderModel) => {
+      // hide folders witch have to be deleted
+      return !f.toBeDeleted && f.parent?.id === folderId;
+    }).map(MapHelper.mapFolderToCatalogEntity);
+  }
+
+  public static filterProcessesToEntity(processes: ProcessModel[], folderId: string): CatalogEntityModel[] {
+    return processes.filter((p: ProcessModel) => {
+      return p.parent.id === folderId;
+    }).map(MapHelper.mapProcessToCatalogEntity);
+  }
+
 }

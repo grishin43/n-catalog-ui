@@ -8,9 +8,7 @@ export class ProcessSelectors {
 
   public static processesInFolder(folderId): (entities: ProcessModel[]) => CatalogEntityModel[] {
     return createSelector([ProcessState.entities], (entities: ProcessModel[]): CatalogEntityModel[] => {
-      return entities.filter((process: ProcessModel) => {
-        return process.parent.id === folderId;
-      }).map(MapHelper.mapProcessToCatalogEntity);
+      return MapHelper.filterProcessesToEntity(entities, folderId);
     });
   }
 

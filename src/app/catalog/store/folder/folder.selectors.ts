@@ -6,25 +6,23 @@ import {FolderModel} from '../../../models/domain/folder.model';
 import {Dictionary} from '@ngxs-labs/entity-state/lib/internal';
 
 export class FolderSelectors {
-  static subFoldersInFolder(folderId) {
+
+  public static subFoldersInFolder(folderId): (entities: FolderModel[]) => CatalogEntityModel[] {
     return createSelector([FolderState.entities], (entities: FolderModel[]): CatalogEntityModel[] => {
-      return entities.filter((folder: FolderModel) => {
-        // hide folders witch have to be deleted
-        return !folder.toBeDeleted && folder.parent?.id === folderId;
-      }).map(MapHelper.mapFolderToCatalogEntity);
-    })
+      return MapHelper.filterFoldersToEntity(entities, folderId);
+    });
   }
 
-  static folderById(folderId: string) {
+  public static folderById(folderId: string): (foldersMap: Dictionary<FolderModel>) => FolderModel {
     return createSelector([FolderState.entitiesMap], (foldersMap: Dictionary<FolderModel>) => {
       return foldersMap[folderId];
     });
   }
 
-  static catalogEntityByFolderId(folderId: string) {
+  public static catalogEntityByFolderId(folderId: string): (foldersMap: Dictionary<FolderModel>) => CatalogEntityModel {
     return createSelector([FolderState.entitiesMap], (foldersMap: Dictionary<FolderModel>) => {
       const folder = foldersMap[folderId];
-      return folder ? MapHelper.mapFolderToCatalogEntity(folder) : undefined ;
+      return folder ? MapHelper.mapFolderToCatalogEntity(folder) : undefined;
     });
   }
 }

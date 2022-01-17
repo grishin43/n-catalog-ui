@@ -75,9 +75,11 @@ export class CatalogState {
 
   @Action(CatalogActions.ProcessGenerationPatched)
   patchProcessGeneration(ctx: StateContext<CatalogStateModel>, {generation}: CatalogActions.ProcessGenerationPatched): void {
-    ctx.setState(patch({
-      currentProcess: patch({generation})
-    }));
+    if (generation) {
+      ctx.setState(patch({
+        currentProcess: patch({generation})
+      }));
+    }
   }
 
   @Action(CatalogActions.ProcessVersionsAvailabilityPatched)

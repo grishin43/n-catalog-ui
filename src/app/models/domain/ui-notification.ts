@@ -5,5 +5,10 @@ export interface UiNotification {
   notificationType: string;
   parameters: {
     processID: string;
+    resourceID?: string;
+    generation?: number;
+    parentProcessGeneration?: number;
+    versionTitle?: string;
+    versionDescription?: string;
   };
 }

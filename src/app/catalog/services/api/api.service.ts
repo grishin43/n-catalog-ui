@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {catchError, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take} from 'rxjs/operators';
+import {catchError, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -19,6 +19,8 @@ import {environment} from '../../../../environments/environment';
 import {MapHelper} from '../../helpers/map.helper';
 import {KeycloakService} from 'keycloak-angular';
 import {TranslateService} from '@ngx-translate/core';
+import {CatalogActions} from '../../store/actions/catalog.actions';
+import {Store} from '@ngxs/store';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -53,7 +55,8 @@ export class ApiService {
   constructor(
     private http: HttpClient,
     private kc: KeycloakService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private store: Store
   ) {
   }
 
@@ -259,7 +262,7 @@ export class ApiService {
         {name},
         {headers}
       );
-    });
+    }, undefined, processId);
   }
 
   public deleteProcess(folderId: string, processId: string): Observable<UiNotificationCheck> {
@@ -278,7 +281,7 @@ export class ApiService {
         {resources: process.resources, generation: process.generation},
         {headers}
       );
-    });
+    }, undefined, process.id);
   }
 
   public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string, generation: number)
@@ -289,7 +292,7 @@ export class ApiService {
         {generation},
         {headers}
       );
-    });
+    }, undefined, processId);
   }
 
   public createNewVersion(folderId: string, processId: string, version: CreateProcessVersionModel): Observable<UiNotificationCheck> {
@@ -300,7 +303,7 @@ export class ApiService {
           version,
           {headers}
         );
-      });
+      }, undefined, processId);
   }
 
   public discardChanges(folderId: string, processId: string, generation: number): Observable<UiNotificationCheck> {
@@ -311,22 +314,40 @@ export class ApiService {
           {generation},
           {headers}
         );
-      });
+      }, undefined, processId);
   }
 
-  private checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>, xType?: string): Observable<UiNotificationCheck> {
+  private checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>, notificationType?: string, processId?: string)
+    : Observable<UiNotificationCheck | any> {
     const correlationId = uuid();
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
     return request(headers)
       .pipe(
-        switchMap(() => this.pendingNotificationChecked(correlationId, xType)),
-        filter((notification: UiNotificationCheck) => notification.isChecked)
+        switchMap(() => this.pendingNotificationChecked(correlationId, notificationType)),
+        filter((notification: UiNotificationCheck) => notification.isChecked),
+        switchMap(() => this.getNotifications()),
+        filter(({items}: CollectionWrapperDto<UiNotification>) => {
+          return items.some((notification: UiNotification) => {
+            return notification.parameters.processID === processId;
+          });
+        }),
+        map(({items}: CollectionWrapperDto<UiNotification>) => {
+          return items.reduce((prev: UiNotification, next: UiNotification) => {
+            return (prev.notificationNumber > next.notificationNumber) ? prev : next;
+          });
+        }),
+        switchMap((n: UiNotification) => this.sendNotificationProcessed(n)),
+        tap((n: UiNotification) => {
+          const freshGeneration = n.parameters?.generation || n.parameters?.parentProcessGeneration;
+          this.store.dispatch(new CatalogActions.ProcessGenerationPatched(freshGeneration));
+        })
       );
   }
 
-  private pendingNotificationChecked(correlationId: string, notificationType?: string): Observable<UiNotificationCheck> {
+  private pendingNotificationChecked(correlationId: string, notificationType?: string)
+    : Observable<UiNotificationCheck> {
     const createDraftProcess$ = of({correlationId, isChecked: false} as UiNotificationCheck);
     const checkUiNotification$ = this.checkNotification(correlationId, notificationType);
     return merge(createDraftProcess$, checkUiNotification$);
@@ -340,9 +361,9 @@ export class ApiService {
         switchMap((i) => {
           if (i < maxRetry) {
             // TODO: run timer only once
-            return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
+            return this.getNotifications();
           } else {
-            console.log(`Max retry number ${maxRetry} for getting notification reached.`);
+            console.warn(`Max retry number ${maxRetry} for getting notification reached.`);
             return throwError(new Error(this.translate.instant('errors.timedOutRequest')));
           }
         }),
@@ -373,6 +394,10 @@ export class ApiService {
     const lastAckNotificationNumber = notification.notificationNumber;
     return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
       .pipe(mapTo(notification));
+  }
+
+  private getNotifications(): Observable<CollectionWrapperDto<UiNotification>> {
+    return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`);
   }
 
 }
