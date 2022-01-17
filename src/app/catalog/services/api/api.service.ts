@@ -318,32 +318,43 @@ export class ApiService {
   }
 
   private checkRequestNotification(request: (headers: HttpHeaders) => Observable<any>, notificationType?: string, processId?: string)
-    : Observable<UiNotificationCheck | any> {
+    : Observable<UiNotificationCheck> {
     const correlationId = uuid();
     const headers = new HttpHeaders().set(
       ApiHeader.CORRELATION_ID, correlationId
     );
-    return request(headers)
-      .pipe(
-        switchMap(() => this.pendingNotificationChecked(correlationId, notificationType)),
-        filter((notification: UiNotificationCheck) => notification.isChecked),
-        switchMap(() => this.getNotifications()),
-        filter(({items}: CollectionWrapperDto<UiNotification>) => {
-          return items.some((notification: UiNotification) => {
-            return notification.parameters.processID === processId;
-          });
-        }),
-        map(({items}: CollectionWrapperDto<UiNotification>) => {
-          return items.reduce((prev: UiNotification, next: UiNotification) => {
-            return (prev.notificationNumber > next.notificationNumber) ? prev : next;
-          });
-        }),
-        switchMap((n: UiNotification) => this.sendNotificationProcessed(n)),
-        tap((n: UiNotification) => {
-          const freshGeneration = n.parameters?.generation || n.parameters?.parentProcessGeneration;
-          this.store.dispatch(new CatalogActions.ProcessGenerationPatched(freshGeneration));
-        })
-      );
+    if (processId) {
+      return request(headers)
+        .pipe(
+          switchMap(() => this.pendingNotificationChecked(correlationId, notificationType)),
+          filter((notification: UiNotificationCheck) => notification.isChecked),
+          switchMap(() => this.getNotifications()),
+          filter(({items}: CollectionWrapperDto<UiNotification>) => {
+            return items.some((notification: UiNotification) => {
+              return notification.parameters.processID === processId;
+            });
+          }),
+          map(({items}: CollectionWrapperDto<UiNotification>) => {
+            return items.reduce((prev: UiNotification, next: UiNotification) => {
+              return (prev.notificationNumber > next.notificationNumber) ? prev : next;
+            });
+          }),
+          switchMap((n: UiNotification) => this.sendNotificationProcessed(n)),
+          tap((n: UiNotification) => {
+            const freshGeneration = n.parameters?.generation || n.parameters?.parentProcessGeneration;
+            this.store.dispatch(new CatalogActions.ProcessGenerationPatched(freshGeneration));
+          }),
+          map(({parameters}: UiNotification) => {
+            return {correlationId, isChecked: true, parameters} as UiNotificationCheck;
+          })
+        );
+    } else {
+      return request(headers)
+        .pipe(
+          switchMap(() => this.pendingNotificationChecked(correlationId, notificationType)),
+          filter((notification: UiNotificationCheck) => notification.isChecked)
+        );
+    }
   }
 
   private pendingNotificationChecked(correlationId: string, notificationType?: string)
