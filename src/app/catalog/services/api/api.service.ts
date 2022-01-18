@@ -51,6 +51,7 @@ enum UiNotificationType {
 })
 export class ApiService {
   private readonly ApiUrl = 'https://businesscatalogapi.bc.dev.digital.np.work/api/v1';
+  private latestProcessedNotification: UiNotification;
 
   constructor(
     private http: HttpClient,
@@ -327,21 +328,25 @@ export class ApiService {
       return request(headers)
         .pipe(
           switchMap(() => this.pendingNotificationChecked(correlationId, notificationType)),
-          filter((notification: UiNotificationCheck) => notification.isChecked),
+          filter((nc: UiNotificationCheck) => nc.isChecked),
           switchMap(() => this.getNotifications()),
-          filter(({items}: CollectionWrapperDto<UiNotification>) => {
-            return items.some((notification: UiNotification) => {
-              return notification.parameters.processID === processId;
-            });
+          map((un: CollectionWrapperDto<UiNotification>) => {
+            return un.items.filter((n: UiNotification) => n.parameters.processID === processId);
           }),
-          map(({items}: CollectionWrapperDto<UiNotification>) => {
-            return items.reduce((prev: UiNotification, next: UiNotification) => {
-              return (prev.notificationNumber > next.notificationNumber) ? prev : next;
-            });
+          map((un: UiNotification[]) => {
+            try {
+              return un.reduce((prev: UiNotification, next: UiNotification) => {
+                return (prev.notificationNumber > next.notificationNumber) ? prev : next;
+              });
+            } catch (e) {
+              console.warn('Got an empty notification list');
+            }
           }),
-          switchMap((n: UiNotification) => this.sendNotificationProcessed(n)),
+          switchMap((n: UiNotification) => {
+            return this.sendNotificationProcessed(n);
+          }),
           tap((n: UiNotification) => {
-            const freshGeneration = n.parameters?.generation || n.parameters?.parentProcessGeneration;
+            const freshGeneration = n?.parameters?.generation || n?.parameters?.parentProcessGeneration;
             this.store.dispatch(new CatalogActions.ProcessGenerationPatched(freshGeneration));
           }),
           map(({parameters}: UiNotification) => {
@@ -402,9 +407,15 @@ export class ApiService {
   }
 
   private sendNotificationProcessed(notification: UiNotification): Observable<UiNotification> {
-    const lastAckNotificationNumber = notification.notificationNumber;
-    return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
-      .pipe(mapTo(notification));
+    if (notification) {
+      const lastAckNotificationNumber = notification.notificationNumber;
+      return this.http.post(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}?lastAckNotificationNumber=${lastAckNotificationNumber}`, {})
+        .pipe(
+          tap(() => this.latestProcessedNotification = notification),
+          mapTo(notification)
+        );
+    }
+    return of(this.latestProcessedNotification);
   }
 
   private getNotifications(): Observable<CollectionWrapperDto<UiNotification>> {
