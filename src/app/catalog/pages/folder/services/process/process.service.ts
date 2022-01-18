@@ -74,11 +74,6 @@ export class ProcessService {
       );
   }
 
-  public createVersionBasedOnPrevious(folderId: string, processId: string, previousVersionID: string, generation: number)
-    : Observable<UiNotificationCheck> {
-    return this.apiService.createBasedOnPreviousVersion(folderId, processId, previousVersionID, generation);
-  }
-
   public discardVersionChanges(parentId: string, processId: string, generation: number): void {
     this.apiService.discardChanges(parentId, processId, generation).toPromise()
       .then(() => this.getProcessById(parentId, processId).toPromise());
@@ -133,7 +128,7 @@ export class ProcessService {
     return this.apiService.getVersions(folderId, processId)
       .pipe(
         tap((sm: SearchModel<ProcessVersionModel>) => {
-          this.store.dispatch(new CatalogActions.ProcessVersionsAvailabilityPatched(!!sm.count));
+          this.store.dispatch(new CatalogActions.ProcessVersionsPatched(sm.items));
         })
       );
   }

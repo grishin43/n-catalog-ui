@@ -3,6 +3,9 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormsHelper} from '../../../../../helpers/forms.helper';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
+import {ProcessVersionModel} from '../../../../../models/domain/process-version.model';
+import {CatalogSelectors} from '../../../../../catalog/store/selectors/catalog.selectors';
+import {Store} from '@ngxs/store';
 
 @Component({
   selector: 'np-save-version-modal',
@@ -22,6 +25,7 @@ export class SaveVersionModalComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<SaveVersionModalComponent>,
+    private store: Store
   ) {
   }
 
@@ -39,7 +43,11 @@ export class SaveVersionModalComponent implements OnInit {
   public saveVersion(): void {
     if (this.form.valid) {
       const formDetails = this.form.value;
-      this.dialogRef.close(formDetails);
+      if (this.versionHasDuplicatedName(this.form.value[FormFieldEnum.NAME])) {
+        this.form.controls[FormFieldEnum.NAME].setErrors({nameAlreadyExist: true});
+      } else {
+        this.dialogRef.close(formDetails);
+      }
     } else {
       FormsHelper.markFormGroupTouched(this.form);
     }
@@ -47,5 +55,13 @@ export class SaveVersionModalComponent implements OnInit {
 
   public closeModal(): void {
     this.dialogRef.close();
+  }
+
+  private versionHasDuplicatedName(name: string): boolean {
+    const versions: ProcessVersionModel[] = this.store.selectSnapshot(CatalogSelectors.currentProcessVersions);
+    if (versions?.length) {
+      return !!versions.find((v: ProcessVersionModel) => v.title?.trim() === name.trim());
+    }
+    return false;
   }
 }

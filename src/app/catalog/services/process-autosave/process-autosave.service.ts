@@ -82,7 +82,7 @@ export class ProcessAutosaveService {
             if (typeof ssCb === 'function') {
               ssCb();
             }
-            if (this.process.hasVersions) {
+            if (!this.process.versions?.length) {
               this.canDiscardChanges = true;
             }
           },

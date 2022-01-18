@@ -9,11 +9,17 @@ import {FolderSelectors} from '../folder/folder.selectors';
 import {ProcessState} from '../process/process.state';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {ResourceModel} from '../../../models/domain/resource.model';
+import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 
 export class CatalogSelectors {
   @Selector([CatalogState])
   static currentProcess(state: CatalogStateModel): ProcessModel {
     return state.currentProcess;
+  }
+
+  @Selector([CatalogState])
+  static currentProcessVersions(state: CatalogStateModel): ProcessVersionModel[] {
+    return state.currentProcess?.versions;
   }
 
   @Selector([CatalogState])

@@ -227,7 +227,8 @@
     "maxLength": "Максимальна кількість сиволів {{count}}",
     "processWithNameAlreadyExist": "Процес з назвою “{{name}}” вже існує у цій папці, спробуйте інше.",
     "folderWithNameAlreadyExist": "Папка з назвою “{{name}}” вже існує у цій папці, спробуйте інше.",
-    "timedOutRequest": "Перевищено інтервал очікування для запиту, спробуйте пізніше."
+    "timedOutRequest": "Перевищено інтервал очікування для запиту, спробуйте пізніше.",
+    "versionWithNameAlreadyExist": "Версія процесу з такою назвою вже існує"
   },
   "counters": {
     "foldersCount1": "{{count}} папка",

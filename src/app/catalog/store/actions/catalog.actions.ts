@@ -1,5 +1,6 @@
 import {ProcessModel} from '../../../models/domain/process.model';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
+import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 
 export namespace CatalogActions {
 
@@ -31,10 +32,10 @@ export namespace CatalogActions {
     }
   }
 
-  export class ProcessVersionsAvailabilityPatched {
-    static readonly type = 'ProcessVersionsAvailabilityPatched';
+  export class ProcessVersionsPatched {
+    static readonly type = 'ProcessVersionsPatched';
 
-    constructor(public hasVersions: boolean) {
+    constructor(public versions: ProcessVersionModel[]) {
     }
   }
 

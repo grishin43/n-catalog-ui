@@ -82,11 +82,11 @@ export class CatalogState {
     }
   }
 
-  @Action(CatalogActions.ProcessVersionsAvailabilityPatched)
-  patchProcessVersionsAvailability(ctx: StateContext<CatalogStateModel>, {hasVersions}: CatalogActions.ProcessVersionsAvailabilityPatched)
+  @Action(CatalogActions.ProcessVersionsPatched)
+  patchProcessVersionsAvailability(ctx: StateContext<CatalogStateModel>, {versions}: CatalogActions.ProcessVersionsPatched)
     : void {
     ctx.setState(patch({
-      currentProcess: patch({hasVersions})
+      currentProcess: patch({versions})
     }));
   }
 

@@ -1,6 +1,7 @@
 import {FolderModel} from './folder.model';
 import {ResourceModel} from './resource.model';
 import {ProcessPermission} from './process-permission';
+import {ProcessVersionModel} from './process-version.model';
 
 export interface ProcessModel {
   id?: string;
@@ -17,7 +18,7 @@ export interface ProcessModel {
   generation?: number;
   lockedBy?: string;
   isLocked?: boolean; // not domain field
-  hasVersions?: boolean; // not domain field
   currentVersionId?: string; // not domain field
+  versions?: ProcessVersionModel[]; // not domain field
 }
 

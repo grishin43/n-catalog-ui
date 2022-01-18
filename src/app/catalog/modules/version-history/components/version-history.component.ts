@@ -109,13 +109,4 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
     );
   }
 
-  public createVersion(version: ProcessVersionModel): void {
-    this.getData(
-      this.processService.createVersionBasedOnPrevious(this.process.parent.id, this.process.id, version.versionID, this.process.generation),
-      () => {
-        this.getHistory();
-      }
-    );
-  }
-
 }

@@ -285,17 +285,6 @@ export class ApiService {
     }, undefined, process.id);
   }
 
-  public createBasedOnPreviousVersion(folderId: string, processId: string, previousVersionID: string, generation: number)
-    : Observable<UiNotificationCheck> {
-    return this.checkRequestNotification((headers: HttpHeaders) => {
-      return this.http.post<void>(
-        `${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.VERSIONS}/${ApiRoute.CREATE_BASED_ON_PREVIOUS_VERSION}/${previousVersionID}`,
-        {generation},
-        {headers}
-      );
-    }, undefined, processId);
-  }
-
   public createNewVersion(folderId: string, processId: string, version: CreateProcessVersionModel): Observable<UiNotificationCheck> {
     return this.checkRequestNotification(
       (headers: HttpHeaders) => {

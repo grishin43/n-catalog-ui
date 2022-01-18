@@ -21,6 +21,9 @@
           <ng-container *ngIf="form.get(formControlName.NAME).hasError('required') && !form.get(formControlName.NAME).hasError('maxLength')">
             {{'errors.required' | translate}}
           </ng-container>
+          <ng-container *ngIf="form.get(formControlName.NAME).hasError('nameAlreadyExist')">
+            {{'errors.versionWithNameAlreadyExist' | translate}}
+          </ng-container>
           <ng-container *ngIf="form.get(formControlName.NAME).hasError('maxLength')">
             {{'errors.maxLength' | translate: {count: 72} }}
           </ng-container>

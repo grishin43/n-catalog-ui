@@ -50,8 +50,4 @@ export class VersionListItemComponent implements OnInit {
     });
   }
 
-  public createNewVersion(): void {
-    this.versionCreated.emit(this.version);
-  }
-
 }
