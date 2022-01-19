@@ -8,6 +8,17 @@
     max-width: 320px;
     box-shadow: 0 3px 5px rgb(138 149 163 / 20%);
 
+    &.mat-header-profile {
+      width: 344px;
+      max-width: 100%;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      border-radius: 6px;
+
+      .mat-menu-content:not(:empty) {
+        padding: 16px 16px 12px;
+      }
+    }
+
     &.mh-auto {
       min-height: auto;
     }

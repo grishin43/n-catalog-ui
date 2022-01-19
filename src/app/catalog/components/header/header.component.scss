@@ -55,6 +55,7 @@ header {
           display: inline-flex;
           align-items: center;
           transition: var(--np-base-transition);
+          margin-right: 19px;
 
           &:hover {
             background: var(--np-white-lilac);

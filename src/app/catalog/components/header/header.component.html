@@ -35,7 +35,7 @@
             (formHasStretched)="searchFormStretched.next($event)">
           </np-header-search>
         </div>
-        <a matRipple
+        <!--<a matRipple
            matRippleColor="{{rippleLightColor}}"
            class="col-auto profile-col"
            [matMenuTriggerFor]="notifications">
@@ -55,7 +55,7 @@
             disabled>
             {{'common.noNotifications' | translate}}
           </button>
-        </mat-menu>
+        </mat-menu>-->
         <a matRipple
            matRippleColor="{{rippleLightColor}}"
            [matMenuTriggerFor]="menu"
@@ -68,16 +68,12 @@
           </np-avatar>
         </a>
         <mat-menu
-          class="mh-auto"
+          class="mat-header-profile"
           #menu="matMenu"
           xPosition="before">
-          <button
-            mat-menu-item
-            (click)="logout()">
-            <span>
-              {{'common.logout' | translate}}
-            </span>
-          </button>
+          <np-header-profile
+            [firstLastName]="userFirstLastName">
+          </np-header-profile>
         </mat-menu>
       </ng-container>
     </div>

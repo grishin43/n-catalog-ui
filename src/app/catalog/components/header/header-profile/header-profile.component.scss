@@ -1,0 +1,46 @@
+.user-profile {
+  .user-profile_header {
+    display: flex;
+
+    .user-profile_header__left {
+      flex: 0 0 56px;
+      max-width: 56px;
+
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    .user-profile_header__right {
+      flex: 0 0 calc(100% - 56px);
+      max-width: calc(100% - 56px);
+
+      h6 {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        margin: 0;
+
+        & + span {
+          margin-top: 2px;
+        }
+      }
+
+      span {
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--np-roman-silver);
+      }
+    }
+  }
+
+  .user-profile_footer {
+    border-top: 1px solid var(--np-catskill-white);
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+}

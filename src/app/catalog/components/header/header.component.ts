@@ -3,7 +3,6 @@ import {MatRippleHelper} from '../../helpers/mat-ripple.helper';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
-import {AuthService} from '../../../auth/services/auth/auth.service';
 import {KeycloakService} from 'keycloak-angular';
 import {KeycloakProfile} from 'keycloak-js';
 
@@ -20,12 +19,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public hideRightBar: boolean;
   public userFirstLastName: string;
   public showAllCrosses: boolean;
+  public kcProfile: KeycloakProfile;
 
   private subs = new Subscription();
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private auth: AuthService,
     private kc: KeycloakService
   ) {
     this.subscribeRouteChanges();
@@ -41,6 +40,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private getUserProfile(): void {
     this.kc.loadUserProfile().then((res: KeycloakProfile) => {
+      console.log(res);
+      this.kcProfile = res;
       this.patchUserFirstLastName(res);
     });
   }
@@ -70,10 +71,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public get isProcessPath(): boolean {
     return !!this.processId && !!this.folderId;
-  }
-
-  public logout(): void {
-    this.auth.logout();
   }
 
 }
