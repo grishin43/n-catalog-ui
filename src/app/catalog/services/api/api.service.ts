@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {catchError, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {catchError, delay, retryWhen, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessModel} from '../../../models/domain/process.model';
@@ -354,32 +354,25 @@ export class ApiService {
   private pendingNotificationChecked(correlationId: string, notificationType?: string)
     : Observable<UiNotificationCheck> {
     const createDraftProcess$ = of({correlationId, isChecked: false} as UiNotificationCheck);
-    const checkUiNotification$ = this.checkNotification(correlationId, notificationType);
+    const checkUiNotification$ = this.checkNotificationRetry(correlationId, notificationType);
     return merge(createDraftProcess$, checkUiNotification$);
   }
 
-  private checkNotification(correlationId: string, notificationType?: string): Observable<any> {
+  private checkNotificationRetry(correlationId: string, notificationType?: string): Observable<any> {
     const maxRetry = environment.checkNotificationMaxRetryNumber;
-    return timer(0, 2000)
+    const currentRetry = 0;
+    return this.http.get<CollectionWrapperDto<UiNotification>>(`${this.ApiUrl}/${ApiRoute.UI_NOTIFICATIONS}`)
       .pipe(
-        take(maxRetry + 1),
-        switchMap((i) => {
-          if (i < maxRetry) {
-            // TODO: run timer only once
-            return this.getNotifications();
+        switchMap(({items}: CollectionWrapperDto<UiNotification>) => {
+          if (this.containNotificationWithCorrelationId(items, correlationId, notificationType)) {
+            return of(items);
           } else {
-            console.warn(`Max retry number ${maxRetry} for getting notification reached.`);
-            return throwError(new Error(this.translate.instant('errors.timedOutRequest')));
+            return throwError(new Error('correlation id isn`t found, make one more request'));
           }
         }),
-        filter(({items}: CollectionWrapperDto<UiNotification>) => {
-          return items.some((notification: UiNotification) => {
-            return notificationType != null
-              ? notification.correlationID === correlationId && notification.notificationType === notificationType
-              : notification.correlationID === correlationId;
-          });
+        retryWhen((error: any) => {
+          return this.retryDelayWithCount(error, maxRetry, currentRetry);
         }),
-        map(({items}: CollectionWrapperDto<UiNotification>) => items),
         switchMap((notifications: UiNotification[]) => {
           const requiredNotification = notifications.find((notification: UiNotification) => {
             return notificationType != null
@@ -393,6 +386,28 @@ export class ApiService {
           return {correlationId, isChecked: true, parameters} as UiNotificationCheck;
         })
       );
+  }
+
+  private retryDelayWithCount(error: any, maxRetry: number, currentRetry: number): any {
+    return error.pipe(
+      delay(100),
+      switchMap(() => {
+        if (maxRetry > currentRetry++) {
+          return of(true);
+        } else {
+          console.warn(`Max retry number ${maxRetry} for getting notification reached.`);
+          return throwError(new Error(this.translate.instant('errors.timedOutRequest')));
+        }
+      })
+    );
+  }
+
+  private containNotificationWithCorrelationId(notifications: UiNotification[], correlationId: string, notificationType?: string): boolean {
+    return notifications.some((notification: UiNotification) => {
+      return notificationType != null
+        ? notification.correlationID === correlationId && notification.notificationType === notificationType
+        : notification.correlationID === correlationId;
+    });
   }
 
   private sendNotificationProcessed(notification: UiNotification): Observable<UiNotification> {

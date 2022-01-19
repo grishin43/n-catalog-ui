@@ -9,9 +9,8 @@ import {
 import {ProcessModel} from '../../../models/domain/process.model';
 import {Action, State, StateContext} from '@ngxs/store';
 import {ProcessActions} from './process.actions';
-import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {Injectable} from '@angular/core';
-import {MapHelper} from '../../helpers/map.helper';
+import {ProcessSelectorsHelper} from './process-selectors.helper';
 
 @State<EntityStateModel<ProcessModel>>({
   name: 'npProcesses',
@@ -37,10 +36,12 @@ export class ProcessState extends EntityState<ProcessModel> {
     ctx.dispatch(new CreateOrReplace(ProcessState, processes));
     // remove leftovers which doesn't exist
     const recentIds = new Set(processes.map(({id}: ProcessModel) => id));
-    const allFoldersProcesses = MapHelper.filterProcessesToEntity(Object.values(state.entities), parentFolderId);
+    const allFoldersProcesses = ProcessSelectorsHelper.filterProcessByFolderId(Object.values(state.entities), parentFolderId);
+
     const idsToBeCleared = allFoldersProcesses
-      .filter(({id}: CatalogEntityModel) => !recentIds.has(id))
-      .map(({id}: CatalogEntityModel) => id);
+      .filter(({id}: ProcessModel) => !recentIds.has(id))
+      .map(({id}: ProcessModel) => id);
+
     ctx.dispatch(new Remove(ProcessState, idsToBeCleared));
   }
 

@@ -9,9 +9,8 @@ import {
 import {FolderModel} from '../../../models/domain/folder.model';
 import {Action, State, StateContext} from '@ngxs/store';
 import {FolderActions} from './folder.actions';
-import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {Injectable} from '@angular/core';
-import {MapHelper} from '../../helpers/map.helper';
+import {FoldersSelectorsHelper} from './folders-selectors.helper';
 
 @State<EntityStateModel<FolderModel>>({
   name: 'npFolders',
@@ -35,10 +34,10 @@ export class FolderState extends EntityState<FolderModel> {
     ctx.dispatch(new CreateOrReplace(FolderState, folders));
     // remove leftovers which doesn't exist
     const recentIds = new Set(folders.map(({id}: FolderModel) => id));
-    const allSubFolders = MapHelper.filterFoldersToEntity(Object.values(state.entities), parentFolderId);
+    const allSubFolders = FoldersSelectorsHelper.filterFoldersByFolderId(Object.values(state.entities), parentFolderId);
     const idsToBeCleared = allSubFolders
-      .filter(({id}: CatalogEntityModel) => !recentIds.has(id))
-      .map(({id}: CatalogEntityModel) => id);
+      .filter(({id}: FolderModel) => !recentIds.has(id))
+      .map(({id}: FolderModel) => id);
 
     ctx.dispatch(new Remove(FolderState, idsToBeCleared));
   }

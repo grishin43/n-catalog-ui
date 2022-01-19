@@ -4,12 +4,15 @@ import {MapHelper} from '../../helpers/map.helper';
 import {FolderState} from './folder.state';
 import {FolderModel} from '../../../models/domain/folder.model';
 import {Dictionary} from '@ngxs-labs/entity-state/lib/internal';
+import {FoldersSelectorsHelper} from './folders-selectors.helper';
 
 export class FolderSelectors {
 
   public static subFoldersInFolder(folderId): (entities: FolderModel[]) => CatalogEntityModel[] {
     return createSelector([FolderState.entities], (entities: FolderModel[]): CatalogEntityModel[] => {
-      return MapHelper.filterFoldersToEntity(entities, folderId);
+      return FoldersSelectorsHelper
+            .filterFoldersByFolderId(entities, folderId)
+            .map(MapHelper.mapFolderToCatalogEntity);
     });
   }
 
