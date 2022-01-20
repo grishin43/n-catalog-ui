@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ApiService} from '../../../services/api/api.service';
 import {Subscription} from 'rxjs';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
@@ -6,7 +6,7 @@ import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.m
 import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ProcessModel} from '../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../models/current-process.model';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
 import {validate} from 'fast-xml-parser';
 import {ToastService} from '../../../../shared/components/small/toast/service/toast.service';
@@ -20,7 +20,7 @@ import {DocumentationDialogComponent} from '../documentation-dialog/documentatio
   styleUrls: ['./bpmn-editor.component.scss']
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
-  @Input() set data(value: ProcessModel) {
+  @Input() set data(value: CurrentProcessModel) {
     if (value) {
       if (this.process && value.id !== this.process.id) {
         this.disableSaveHelpers();
@@ -30,10 +30,10 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       this.openProcess();
     }
   }
-
   @Input() processLoader: boolean;
+  @Output() diagramWasChanged = new EventEmitter<boolean>();
 
-  public process: ProcessModel;
+  public process: CurrentProcessModel;
   public errorResponse: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
@@ -178,6 +178,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       if (this.bpmnModelerService.canUndo) {
         this.processAutosave.restartTimer();
         WindowHelper.enableBeforeUnload();
+        this.diagramWasChanged.emit(true);
       } else {
         this.disableSaveHelpers();
       }

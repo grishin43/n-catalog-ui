@@ -14,7 +14,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {SearchModel} from '../../../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
-import {ProcessModel} from '../../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../../../catalog/models/current-process.model';
 import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
 import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -334,7 +334,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private matchNameDuplicates(arr: any, str: string): FolderModel | ProcessModel {
+  private matchNameDuplicates(arr: any, str: string): FolderModel | CurrentProcessModel {
     if (arr) {
       return arr.find((entity: any): boolean => {
         return entity.name.trim().toLowerCase() === str.trim().toLowerCase();
@@ -363,7 +363,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     return this.openedFolder?.[FolderFieldKey.FOLDERS]?.items;
   }
 
-  public get openedFolderProcesses(): ProcessModel[] {
+  public get openedFolderProcesses(): CurrentProcessModel[] {
     return this.openedFolder?.[FolderFieldKey.PROCESSES]?.items;
   }
 

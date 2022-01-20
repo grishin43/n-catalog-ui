@@ -5,7 +5,7 @@ import {ApiService} from '../api/api.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
 import {ConnectionService} from 'ng-connection-service';
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
@@ -24,7 +24,7 @@ import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
   providedIn: 'root'
 })
 export class ProcessAutosaveService {
-  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: CurrentProcessModel;
 
   private delay = 60 * 1000;
   private timer$: Subscription;
@@ -33,7 +33,6 @@ export class ProcessAutosaveService {
   public requestLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public resourceSaved$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public shouldSaved: boolean;
-  public canDiscardChanges: boolean;
 
   private subs = new Subscription();
 
@@ -82,9 +81,6 @@ export class ProcessAutosaveService {
             if (typeof ssCb === 'function') {
               ssCb();
             }
-            if (!this.process.versions?.length) {
-              this.canDiscardChanges = true;
-            }
           },
           () => {
             this.requestLoader$.next(false);
@@ -123,8 +119,8 @@ export class ProcessAutosaveService {
   }
 
   public checkLocalResources(): void {
-    const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
-    const matchedSavedProcess: ProcessModel = currentSavedProcesses.find((p: ProcessModel) => p?.id === this.process?.id);
+    const currentSavedProcesses: CurrentProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
+    const matchedSavedProcess: CurrentProcessModel = currentSavedProcesses.find((p: CurrentProcessModel) => p?.id === this.process?.id);
     if (matchedSavedProcess) {
       if (matchedSavedProcess.generation < this.process.generation) {
         LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
@@ -163,14 +159,14 @@ export class ProcessAutosaveService {
     this.resourceSaved$.next(false);
     this.requestLoader$.next(true);
     this.bpmnModeler.getDiagramXml().then((resource: string) => {
-      const currentSavedProcesses: ProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
-      const findIndex: number = currentSavedProcesses?.findIndex((p: ProcessModel) => {
+      const currentSavedProcesses: CurrentProcessModel[] = LocalStorageHelper.getData(StorageEnum.SAVED_PROCESSES);
+      const findIndex: number = currentSavedProcesses?.findIndex((p: CurrentProcessModel) => {
         return p.id === this.process.id && p.parent.id === this.process.parent.id;
       });
       if (findIndex >= 0) {
         currentSavedProcesses.splice(findIndex, 1);
       }
-      const newValue: ProcessModel[] = [this.getProcessNewValue(resource), ...currentSavedProcesses || []];
+      const newValue: CurrentProcessModel[] = [this.getProcessNewValue(resource), ...currentSavedProcesses || []];
       LocalStorageHelper.setData(StorageEnum.SAVED_PROCESSES, newValue);
       this.savingSuccessCb();
     }).catch((e) => {
@@ -179,7 +175,7 @@ export class ProcessAutosaveService {
     });
   }
 
-  private getProcessNewValue(resource: string): ProcessModel {
+  private getProcessNewValue(resource: string): CurrentProcessModel {
     return {
       id: this.process.id,
       name: this.process.name,

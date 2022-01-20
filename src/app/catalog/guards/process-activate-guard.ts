@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {ProcessModel} from '../../models/domain/process.model';
+import {CurrentProcessModel} from '../models/current-process.model';
 import {CatalogRouteEnum} from '../models/catalog-route.enum';
 import {MatDialog} from '@angular/material/dialog';
 import {ProcessAccessDeniedModalComponent} from '../../shared/components/big/process-access-denied-modal/component/process-access-denied-modal.component';
@@ -25,7 +25,7 @@ export class ProcessActivateGuard implements CanActivate {
     return this.processService
       .getProcessById(folderId, processId)
       .pipe(
-        map((e: ProcessModel) => {
+        map((e: CurrentProcessModel) => {
           if (e) {
             return true;
           }

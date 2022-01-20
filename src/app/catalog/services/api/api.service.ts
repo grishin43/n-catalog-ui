@@ -2,10 +2,9 @@ import {Injectable} from '@angular/core';
 import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
-import {catchError, delay, retryWhen, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {delay, retryWhen, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
-import {ProcessModel} from '../../../models/domain/process.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
 import {UserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
@@ -21,6 +20,7 @@ import {KeycloakService} from 'keycloak-angular';
 import {TranslateService} from '@ngx-translate/core';
 import {CatalogActions} from '../../store/actions/catalog.actions';
 import {Store} from '@ngxs/store';
+import {ProcessModel} from '../../../models/domain/process.model';
 
 enum ApiRoute {
   FOLDERS = 'folders',
@@ -33,7 +33,6 @@ enum ApiRoute {
   PERMISSIONS = 'permissions',
   OWNER = 'owner',
   VERSIONS = 'versions',
-  CREATE_BASED_ON_PREVIOUS_VERSION = 'createBasedOnPreviousVersion',
   UI_NOTIFICATIONS = 'uiNotifications',
   DISCARD_CHANGES = 'discardChanges'
 }
@@ -390,7 +389,7 @@ export class ApiService {
 
   private retryDelayWithCount(error: any, maxRetry: number, currentRetry: number): any {
     return error.pipe(
-      delay(100),
+      delay(2000),
       switchMap(() => {
         if (maxRetry > currentRetry++) {
           return of(true);

@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ProcessModel} from '../../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../../../catalog/models/current-process.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
 import {CatalogEntityPermissionEnum} from '../../../../../catalog/models/catalog-entity-permission.enum';
@@ -58,7 +58,7 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
 
   constructor(
     private dialogRef: MatDialogRef<GrantAccessModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public process: ProcessModel,
+    @Inject(MAT_DIALOG_DATA) public process: CurrentProcessModel,
     private translate: TranslateService,
     private api: ApiService,
     private toast: ToastService,

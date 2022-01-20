@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {ProcessModel} from '../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../models/current-process.model';
 import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.service';
 import {MatRippleHelper} from '../../../helpers/mat-ripple.helper';
 import {PreventProcessCloseModalComponent} from '../../../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
@@ -46,7 +46,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() processOpened = new EventEmitter<boolean>();
 
-  public catalogProcesses$: BehaviorSubject<ProcessModel[]>;
+  public catalogProcesses$: BehaviorSubject<CurrentProcessModel[]>;
   public rippleLightColor = MatRippleHelper.lightRippleColor;
   public readonly tabMinWidth = 125;
   public readonly menuBtnWidth = 56;
@@ -89,7 +89,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.catalogProcesses$ = this.entitiesTabService.processes;
   }
 
-  public onDeleteClicked(event: MouseEvent, entity: ProcessModel): void {
+  public onDeleteClicked(event: MouseEvent, entity: CurrentProcessModel): void {
     event.stopPropagation();
     event.preventDefault();
     if (this.processAutosave.shouldSaved) {
@@ -107,7 +107,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  public openProcess(process: ProcessModel): void {
+  public openProcess(process: CurrentProcessModel): void {
     this.router.navigate(
       [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
       {

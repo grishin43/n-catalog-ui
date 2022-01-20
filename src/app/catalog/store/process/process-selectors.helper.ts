@@ -1,8 +1,8 @@
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 
 export class ProcessSelectorsHelper {
-  static filterProcessByFolderId(entities: ProcessModel[], folderId: string) {
-    return entities.filter((process: ProcessModel) => {
+  static filterProcessByFolderId(entities: CurrentProcessModel[], folderId: string) {
+    return entities.filter((process: CurrentProcessModel) => {
       return process.parent.id === folderId;
     })
   }

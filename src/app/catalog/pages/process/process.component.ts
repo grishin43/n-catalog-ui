@@ -3,7 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApiService} from '../../services/api/api.service';
 import {ProcessAutosaveService} from '../../services/process-autosave/process-autosave.service';
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
@@ -34,28 +34,27 @@ import {CatalogActions} from '../../store/actions/catalog.actions';
   animations: [AnimationsHelper.fadeInOut]
 })
 export class ProcessComponent implements OnInit, OnDestroy {
-  @Select(CatalogSelectors.currentProcess) process$: Observable<ProcessModel>;
+  @Select(CatalogSelectors.currentProcess) process$: Observable<CurrentProcessModel>;
   @Select(CatalogSelectors.currentProcessId) processId$: Observable<string>;
-  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: CurrentProcessModel;
 
   public errorResponse: HttpErrorResponse;
   public xmlMode: boolean;
   public modelerXml: string;
   public versionCreated: UiNotificationCheck;
-  public loader: boolean;
   public httpStatusCode = HttpStatusCodeEnum;
 
   private subscriptions = new Subscription();
 
   constructor(
     public processAutosave: ProcessAutosaveService,
+    public processService: ProcessService,
     private activateRoute: ActivatedRoute,
     private api: ApiService,
     private toast: ToastService,
     private translate: TranslateService,
     private dialog: MatDialog,
     private bpmnModelerService: BpmnModelerService,
-    private processService: ProcessService,
     private router: Router,
     private store: Store
   ) {
@@ -87,11 +86,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   private subscribeVersion(versionId: string): void {
     this.errorResponse = undefined;
-    this.loader = true;
     this.processService.getProcessVersionById(this.process.parent.id, this.process.id, versionId).toPromise()
-      .then(() => this.store.dispatch(new CatalogActions.ProcessNewVersionCreated(versionId)))
-      .catch((err) => this.handleGeneralErrors(err))
-      .finally(() => this.loader = false);
+      .then(() => this.store.dispatch(new CatalogActions.ProcessVersionOpened(versionId)))
+      .catch((err) => this.handleGeneralErrors(err));
   }
 
   private handleLockedBy(): void {
@@ -216,7 +213,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
             this.versionCreated = res;
             const toastMessage = this.translate.instant('common.newProcessVersionCreated', {versionName: name});
             this.toast.showMessage(toastMessage);
-            this.processAutosave.canDiscardChanges = false;
           }, (err: HttpErrorResponse) => {
             this.handleGeneralErrors(err);
           })
@@ -230,6 +226,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   public goHome(): void {
     this.router.navigate(['/']);
+  }
+
+  public diagramWasChanged(flag: boolean): void {
+    this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(flag));
   }
 
 }

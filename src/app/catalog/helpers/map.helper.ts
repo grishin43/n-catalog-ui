@@ -1,7 +1,7 @@
 import {FolderFieldKey, FolderModel} from '../../models/domain/folder.model';
 import {CatalogEntityModel} from '../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../models/catalog-entity.enum';
-import {ProcessModel} from '../../models/domain/process.model';
+import {CurrentProcessModel} from '../models/current-process.model';
 import {CatalogEntityPermissionEnum} from '../models/catalog-entity-permission.enum';
 import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
 import {GeneralSearchItem} from '../services/search/general-search-item';
@@ -34,14 +34,14 @@ export class MapHelper {
     } as CatalogEntityModel;
   }
 
-  public static mapProcessesToEntities(processes: ProcessModel[]): CatalogEntityModel[] {
+  public static mapProcessesToEntities(processes: CurrentProcessModel[]): CatalogEntityModel[] {
     if (processes && processes.length) {
       return processes.map(MapHelper.mapProcessToCatalogEntity);
     }
     return [];
   }
 
-  public static mapProcessToCatalogEntity(process: ProcessModel): CatalogEntityModel {
+  public static mapProcessToCatalogEntity(process: CurrentProcessModel): CatalogEntityModel {
     return {
       id: process.id,
       name: process.name,
@@ -63,7 +63,7 @@ export class MapHelper {
     return undefined;
   }
 
-  public static mapEntityToProcess(entity: CatalogEntityModel): ProcessModel {
+  public static mapEntityToProcess(entity: CatalogEntityModel): CurrentProcessModel {
     if (entity) {
       return {
         id: entity.id,
@@ -104,8 +104,8 @@ export class MapHelper {
     });
   }
 
-  public static mapProcessResponse(process: ProcessModel, folderId: string, processId: string, username: string): ProcessModel {
-    const mappedProcess: ProcessModel = {
+  public static mapProcessResponse(process: CurrentProcessModel, folderId: string, processId: string, username: string): CurrentProcessModel {
+    const mappedProcess: CurrentProcessModel = {
       ...process,
       isLocked: !!process?.lockedBy && process?.lockedBy !== username,
       subRoot: process.path.length > 1
@@ -136,7 +136,7 @@ export class MapHelper {
       [FolderFieldKey.PROCESSES]: {
         count: folder[FolderFieldKey.PROCESSES].count,
         items: folder[FolderFieldKey.PROCESSES]
-          .items.map((process: ProcessModel) => {
+          .items.map((process: CurrentProcessModel) => {
             return {
               ...process,
               parent: {id}

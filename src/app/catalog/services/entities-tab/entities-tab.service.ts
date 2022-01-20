@@ -5,7 +5,7 @@ import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Router} from '@angular/router';
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {MatDialog} from '@angular/material/dialog';
 import {TabsOverflowedModalComponent} from '../../../shared/components/big/tabs-overflowed-modal/component/tabs-overflowed-modal.component';
@@ -14,7 +14,7 @@ import {TabsOverflowedModalComponent} from '../../../shared/components/big/tabs-
   providedIn: 'root'
 })
 export class EntitiesTabService {
-  public processes: BehaviorSubject<ProcessModel[]> = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.PROCESSES_TABS) || []);
+  public processes: BehaviorSubject<CurrentProcessModel[]> = new BehaviorSubject(LocalStorageHelper.getData(StorageEnum.PROCESSES_TABS) || []);
   public readonly limit = 20;
 
   constructor(
@@ -24,7 +24,7 @@ export class EntitiesTabService {
   ) {
   }
 
-  public addEntity(entity: ProcessModel): void {
+  public addEntity(entity: CurrentProcessModel): void {
     if (this.processes.getValue().length === this.limit) {
       this.deleteEarliestEntity(entity);
     } else {
@@ -32,8 +32,8 @@ export class EntitiesTabService {
     }
   }
 
-  public deleteEntity(entity: ProcessModel): void {
-    const entitiesValue: ProcessModel[] = this.processes.getValue();
+  public deleteEntity(entity: CurrentProcessModel): void {
+    const entitiesValue: CurrentProcessModel[] = this.processes.getValue();
     const removeIndex = entitiesValue.map(item => item.id).indexOf(entity.id);
     if (removeIndex !== -1) {
       entitiesValue.splice(removeIndex, 1);
@@ -57,13 +57,13 @@ export class EntitiesTabService {
     }
   }
 
-  private deleteEarliestEntity(entity: ProcessModel): void {
+  private deleteEarliestEntity(entity: CurrentProcessModel): void {
     this.dialog.open(TabsOverflowedModalComponent, {
       width: '700px',
       autoFocus: false
     }).afterClosed().subscribe((res: boolean) => {
       if (res) {
-        const currentValue: ProcessModel[] = this.processes.getValue();
+        const currentValue: CurrentProcessModel[] = this.processes.getValue();
         const removeIndex = currentValue.map(item => item.id).indexOf(entity.id);
         if (removeIndex !== -1) {
           currentValue.splice(removeIndex, 1);
@@ -74,7 +74,7 @@ export class EntitiesTabService {
     });
   }
 
-  private addNewEntity(entity: ProcessModel): void {
+  private addNewEntity(entity: CurrentProcessModel): void {
     if (entity) {
       const matchIndex = this.processes.getValue().map(item => item.id).indexOf(entity.id);
       if (matchIndex === -1) {
@@ -82,7 +82,7 @@ export class EntitiesTabService {
           id: entity.id,
           name: entity.name,
           parent: entity.parent
-        } as ProcessModel, ...this.processes.getValue() || []];
+        } as CurrentProcessModel, ...this.processes.getValue() || []];
         this.processes.next(newValue);
         LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, newValue);
       }
@@ -90,9 +90,9 @@ export class EntitiesTabService {
   }
 
   public patchEntityName(parentFolderId: string, processId: string, name: string): void {
-    const currentValue: ProcessModel[] = this.processes.getValue();
+    const currentValue: CurrentProcessModel[] = this.processes.getValue();
     if (currentValue?.length) {
-      currentValue.forEach((item: ProcessModel, index: number) => {
+      currentValue.forEach((item: CurrentProcessModel, index: number) => {
         if (item.id === processId && item.parent.id === parentFolderId) {
           currentValue[index] = {
             ...item,

@@ -1,25 +1,25 @@
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 
 export namespace ProcessActions {
 
   export class ProcessesFetched {
     static readonly type = '[ProcessService] ProcessesFetched';
 
-    constructor(public processes: ProcessModel[]) {
+    constructor(public processes: CurrentProcessModel[]) {
     }
   }
 
   export class FolderProcessesFetched {
     static readonly type = '[FolderService] FolderProcessesFetched';
 
-    constructor(public processes: ProcessModel[], public parentFolderId: string) {
+    constructor(public processes: CurrentProcessModel[], public parentFolderId: string) {
     }
   }
 
   export class DraftProcessCreated {
     static readonly type = '[ProcessService] DraftProcessCreated';
 
-    constructor(public draftProcess: ProcessModel, public correlationId) {
+    constructor(public draftProcess: CurrentProcessModel, public correlationId) {
     }
   }
 

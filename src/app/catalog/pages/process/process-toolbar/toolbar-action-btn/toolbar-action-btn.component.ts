@@ -1,21 +1,23 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ToolbarItemModel} from '../../../../models/toolbar/toolbar-item.model';
 import {BpmnModelerService} from '../../../../services/bpmn-modeler/bpmn-modeler.service';
 import {BpmnToolbarService} from '../../../../services/bpmn-toolbar/bpmn-toolbar.service';
 import {ToolbarBlockerModel} from '../../../../models/toolbar/toolbar-blocker.model';
 import {ToolbarPluginEnum} from '../../../../models/toolbar/toolbar-plugin.enum';
-import {ProcessModel} from '../../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../../models/current-process.model';
 
 @Component({
   selector: 'np-toolbar-action-btn',
   templateUrl: './toolbar-action-btn.component.html',
   styleUrls: ['./toolbar-action-btn.component.scss']
 })
-export class ToolbarActionBtnComponent {
+export class ToolbarActionBtnComponent implements OnInit {
   @Input() action: ToolbarItemModel;
-  @Input() process: ProcessModel;
+  @Input() process: CurrentProcessModel;
 
   public toolbarPlugin = ToolbarPluginEnum;
+  public disabled: boolean;
+  public showTick: boolean;
 
   constructor(
     public bpmnModeler: BpmnModelerService,
@@ -23,14 +25,19 @@ export class ToolbarActionBtnComponent {
   ) {
   }
 
-  public get disabled(): boolean {
+  ngOnInit(): void {
+    this.disabled = this.isDisabled();
+    this.showTick = this.checkTicks();
+  }
+
+  public isDisabled(): boolean {
     const match: ToolbarBlockerModel = this.bpmnToolbar.blockers.find((blocker: ToolbarBlockerModel) => {
       return blocker.name === this.action.name;
     });
     return match && !match.allow;
   }
 
-  public get showTick(): boolean {
+  public checkTicks(): boolean {
     return this.isTransactionBoundariesAndActive
       || this.isTokenSimulationAndActive
       || this.isSchemeValidatorAndActive

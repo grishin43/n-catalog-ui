@@ -4,7 +4,7 @@ import {CatalogStateModel} from '../models/catalog-state.model';
 import {FolderState} from '../folder/folder.state';
 import {ProcessSelectors} from '../process/process.selectors';
 import {FolderModel} from '../../../models/domain/folder.model';
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {FolderSelectors} from '../folder/folder.selectors';
 import {ProcessState} from '../process/process.state';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
@@ -13,7 +13,7 @@ import {ProcessVersionModel} from '../../../models/domain/process-version.model'
 
 export class CatalogSelectors {
   @Selector([CatalogState])
-  static currentProcess(state: CatalogStateModel): ProcessModel {
+  static currentProcess(state: CatalogStateModel): CurrentProcessModel {
     return state.currentProcess;
   }
 
@@ -28,7 +28,7 @@ export class CatalogSelectors {
   }
 
   @Selector([CatalogState])
-  static currentProcessForApi(state: CatalogStateModel): ProcessModel {
+  static currentProcessForApi(state: CatalogStateModel): CurrentProcessModel {
     return {
       ...state.currentProcess,
       resources: state.currentProcess.resources.map(({processId, ...resource}) => resource)
@@ -41,7 +41,7 @@ export class CatalogSelectors {
   }
 
   @Selector([CatalogState])
-  static recentProcesses(state: CatalogStateModel): ProcessModel[] {
+  static recentProcesses(state: CatalogStateModel): CurrentProcessModel[] {
     return state.recentProcesses;
   }
 
@@ -50,10 +50,10 @@ export class CatalogSelectors {
     return state.mainFolders;
   }
 
-  public static folderChildren(folderId: string): (allFolders: FolderModel[], allProcesses: ProcessModel[]) => CatalogEntityModel[] {
+  public static folderChildren(folderId: string): (allFolders: FolderModel[], allProcesses: CurrentProcessModel[]) => CatalogEntityModel[] {
     return createSelector([FolderState.entities, ProcessState.entities], (
       allFolders: FolderModel[],
-      allProcesses: ProcessModel[]
+      allProcesses: CurrentProcessModel[]
     ) => {
       const folders = FolderSelectors.subFoldersInFolder(folderId)(allFolders);
       const processes = ProcessSelectors.processesInFolder(folderId)(allProcesses);

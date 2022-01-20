@@ -1,8 +1,8 @@
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {FolderModel} from '../../../models/domain/folder.model';
 
 export interface CatalogStateModel {
-  recentProcesses?: ProcessModel[];
+  recentProcesses?: CurrentProcessModel[];
   mainFolders?: FolderModel[];
-  currentProcess?: ProcessModel;
+  currentProcess?: CurrentProcessModel;
 }

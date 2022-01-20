@@ -1,4 +1,4 @@
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
 import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 
@@ -7,7 +7,7 @@ export namespace CatalogActions {
   export class ProcessFetched {
     static readonly type = '[ProcessService] ProcessFetched';
 
-    constructor(public currentProcess: ProcessModel) {
+    constructor(public currentProcess: CurrentProcessModel) {
     }
   }
 
@@ -39,10 +39,24 @@ export namespace CatalogActions {
     }
   }
 
-  export class ProcessNewVersionCreated {
-    static readonly type = 'ProcessNewVersionCreated';
+  export class ProcessVersionOpened {
+    static readonly type = 'ProcessVersionOpened';
 
     constructor(public currentVersionId: string) {
+    }
+  }
+
+  export class ProcessDiscardChangesPatched {
+    static readonly type = 'ProcessDiscardChangesPatched';
+
+    constructor(public flag: boolean) {
+    }
+  }
+
+  export class ProcessNameChanged {
+    static readonly type = 'ProcessNameChanged';
+
+    constructor(public name: string) {
     }
   }
 

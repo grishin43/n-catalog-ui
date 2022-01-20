@@ -8,7 +8,7 @@
         [ngClass]="{
          'menu-opened': menuTrigger.menuOpen
         }"
-        [disabled]="isLocked && (tool.name === toolbarItem.EDIT || tool.name === toolbarItem.PLUGINS)">
+        [disabled]="process?.isLocked && (tool.name === toolbarItem.EDIT || tool.name === toolbarItem.PLUGINS)">
         {{'common.' + tool.name | translate}}
       </button>
       <mat-menu
@@ -28,19 +28,23 @@
               {{'common.' + item.name | translate}}
             </button>
             <mat-menu #subMenu="matMenu">
-              <ng-container *ngFor="let subItem of item.subItems">
-                <np-toolbar-action-btn
-                  [action]="subItem"
-                  [process]="process">
-                </np-toolbar-action-btn>
+              <ng-container *ngIf="menuTrigger.menuOpen">
+                <ng-container *ngFor="let subItem of item.subItems">
+                  <np-toolbar-action-btn
+                    [action]="subItem"
+                    [process]="process">
+                  </np-toolbar-action-btn>
+                </ng-container>
               </ng-container>
             </mat-menu>
           </ng-container>
           <ng-template #withoutSubItemsTemplate>
-            <np-toolbar-action-btn
-              [action]="item"
-              [process]="process">
-            </np-toolbar-action-btn>
+            <ng-container *ngIf="menuTrigger.menuOpen">
+              <np-toolbar-action-btn
+                [action]="item"
+                [process]="process">
+              </np-toolbar-action-btn>
+            </ng-container>
           </ng-template>
           <mat-divider *ngIf="item.delimiterAfter"></mat-divider>
         </ng-container>

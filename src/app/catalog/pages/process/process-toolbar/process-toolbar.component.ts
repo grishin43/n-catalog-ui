@@ -1,9 +1,9 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ToolbarItemModel} from '../../../models/toolbar/toolbar-item.model';
 import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
 import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enum';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
-import {ProcessModel} from '../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../models/current-process.model';
 import {ToolbarItemEnum} from '../../../models/toolbar/toolbar-item.enum';
 
 @Component({
@@ -11,11 +11,11 @@ import {ToolbarItemEnum} from '../../../models/toolbar/toolbar-item.enum';
   templateUrl: './process-toolbar.component.html',
   styleUrls: ['./process-toolbar.component.scss']
 })
-export class ProcessToolbarComponent {
-  @Input() process: ProcessModel;
+export class ProcessToolbarComponent implements OnInit {
+  @Input() process: CurrentProcessModel;
   @Input() xmlMode: boolean;
 
-  public tools: ToolbarItemModel[] = this.bpmnToolbar.toolbar;
+  public tools: ToolbarItemModel[];
   public toolbarEditItem = ToolbarEditItemEnum;
   public toolbarItem = ToolbarItemEnum;
 
@@ -25,8 +25,8 @@ export class ProcessToolbarComponent {
   ) {
   }
 
-  public get isLocked(): boolean {
-    return this.process?.isLocked;
+  ngOnInit(): void {
+    this.tools = this.bpmnToolbar.getToolbar();
   }
 
 }

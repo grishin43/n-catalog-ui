@@ -6,9 +6,11 @@ import {ApiService} from '../../../services/api/api.service';
 import {HistoryTypeEnum} from '../models/history-type.enum';
 import {SearchModel} from '../../../../models/domain/search.model';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ProcessModel} from '../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../models/current-process.model';
 import {UiNotificationCheck} from '../../../../models/domain/ui-notification.check';
 import {ProcessService} from '../../../pages/folder/services/process/process.service';
+import {Select} from '@ngxs/store';
+import {CatalogSelectors} from '../../../store/selectors/catalog.selectors';
 
 @Component({
   selector: 'np-version-history',
@@ -17,17 +19,19 @@ import {ProcessService} from '../../../pages/folder/services/process/process.ser
   animations: [AnimationsHelper.fadeInOut]
 })
 export class VersionHistoryComponent implements OnInit, OnDestroy {
+  @Select(CatalogSelectors.currentProcessVersionId) versionId$: Observable<string>;
+
   public panelState: boolean;
   public historyType: HistoryTypeEnum = HistoryTypeEnum.VERSION_HISTORY;
   public eHistoryType = HistoryTypeEnum;
   public loader: boolean;
   public error: string;
   public versions: ProcessVersionModel[];
-  public process: ProcessModel;
+  public process: CurrentProcessModel;
 
   private subs = new Subscription();
 
-  @Input() set processData(value: ProcessModel) {
+  @Input() set processData(value: CurrentProcessModel) {
     this.process = value;
   }
 
@@ -40,6 +44,7 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   @Input() set newVersionCreated(value: UiNotificationCheck) {
     if (value) {
       this.getHistory();
+      this.closePanel();
     }
   }
 
@@ -55,10 +60,17 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subscribeVersionId();
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+  }
+
+  private subscribeVersionId(): void {
+    this.subs.add(
+      this.versionId$.subscribe(() => this.closePanel())
+    );
   }
 
   public showPanel(): void {

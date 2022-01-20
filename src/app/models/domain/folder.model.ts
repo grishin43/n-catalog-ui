@@ -1,5 +1,5 @@
 import {SearchModel} from './search.model';
-import {ProcessModel} from './process.model';
+import {CurrentProcessModel} from '../../catalog/models/current-process.model';
 import {EntityPathModel} from './entity-path.model';
 
 export enum FolderFieldKey {
@@ -13,7 +13,7 @@ export interface FolderModel {
   icon?: string;
   parent?: FolderModel;
   [FolderFieldKey.FOLDERS]?: SearchModel<FolderModel>;
-  [FolderFieldKey.PROCESSES]?: SearchModel<ProcessModel>;
+  [FolderFieldKey.PROCESSES]?: SearchModel<CurrentProcessModel>;
   root?: boolean;
   path?: EntityPathModel[];
   updatedAt?: Date;

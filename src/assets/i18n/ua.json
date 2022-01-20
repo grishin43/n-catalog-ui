@@ -241,7 +241,8 @@
     "processesCount4": "Процесів ({{count}})"
   },
   "loaders": {
-    "rename": "Йде перейменування “{{name}}”"
+    "rename": "Йде перейменування “{{name}}”",
+    "createVersion": "Йде створення версії “{{name}}”"
   },
   "folder": {
     "cantDeleteNotEmptyFolderTitle": "Неможливо видалити папку з процессами",

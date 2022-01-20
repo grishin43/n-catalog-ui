@@ -40,7 +40,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private getUserProfile(): void {
     this.kc.loadUserProfile().then((res: KeycloakProfile) => {
-      console.log(res);
       this.kcProfile = res;
       this.patchUserFirstLastName(res);
     });

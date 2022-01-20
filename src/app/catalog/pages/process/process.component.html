@@ -65,7 +65,7 @@
 
   <div
     @fadeInOut
-    *ngIf="loader"
+    *ngIf="processService.loader$ | async"
     class="editor-overlay">
     <mat-spinner
       [diameter]="50">
@@ -110,7 +110,8 @@
   <ng-template #bpmnEditorTemplate>
     <np-bpmn-editor
       [processLoader]="loader"
-      [data]="process$ | async">
+      [data]="process$ | async"
+      (diagramWasChanged)="diagramWasChanged($event)">
     </np-bpmn-editor>
   </ng-template>
 

@@ -21,4 +21,3 @@ export interface ProcessModel {
   currentVersionId?: string; // not domain field
   versions?: ProcessVersionModel[]; // not domain field
 }
-

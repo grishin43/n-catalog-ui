@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from '../../../../services/api/api.service';
 import {Store} from '@ngxs/store';
@@ -11,26 +11,32 @@ import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {EntitiesTabService} from '../../../../services/entities-tab/entities-tab.service';
-import {ProcessModel} from '../../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../../models/current-process.model';
 import {CatalogActions} from '../../../../store/actions/catalog.actions';
 import {HttpStatusCodeEnum} from '../../../../../models/http-status-code.enum';
 import {SearchModel} from '../../../../../models/domain/search.model';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
+import {ToastService} from '../../../../../shared/components/small/toast/service/toast.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessService {
-  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: CurrentProcessModel;
+
+  public loader$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private httpClient: HttpClient,
     private apiService: ApiService,
     private store: Store,
     private router: Router,
-    private entitiesTab: EntitiesTabService
+    private entitiesTab: EntitiesTabService,
+    private toast: ToastService,
+    private translate: TranslateService
   ) {
   }
 
@@ -60,9 +66,11 @@ export class ProcessService {
   }
 
   public createNewVersion(content: string, name: string, desc: string): Observable<UiNotificationCheck> {
+    const loaderTitle = this.translate.instant('loaders.createVersion', {name});
+    this.toast.showLoader(loaderTitle);
     this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
     this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
-    const process: ProcessModel = this.store.selectSnapshot(CatalogSelectors.currentProcessForApi);
+    const process: CurrentProcessModel = this.store.selectSnapshot(CatalogSelectors.currentProcessForApi);
     return this.apiService.createNewVersion(process.parent.id, process.id, {
       versionTitle: name,
       versionDescription: desc,
@@ -70,13 +78,21 @@ export class ProcessService {
       generation: process.generation
     })
       .pipe(
-        tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
+        tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation))),
+        tap(() => this.toast.close())
       );
   }
 
   public discardVersionChanges(parentId: string, processId: string, generation: number): void {
+    this.loader$.next(true);
     this.apiService.discardChanges(parentId, processId, generation).toPromise()
-      .then(() => this.getProcessById(parentId, processId).toPromise());
+      .then(() => {
+        if (this.process.currentVersionId) {
+          this.getProcessVersionById(parentId, processId, this.process.currentVersionId).toPromise();
+        } else {
+          this.getProcessById(parentId, processId).toPromise();
+        }
+      });
   }
 
   public openCreatedProcess(processId: string, processName: string, parentFolder: string): void {
@@ -92,11 +108,13 @@ export class ProcessService {
     );
   }
 
-  public getProcessById(folderId: string, processId: string): Observable<ProcessModel> {
+  public getProcessById(folderId: string, processId: string): Observable<CurrentProcessModel> {
+    this.loader$.next(true);
     return this.apiService.getProcessById(folderId, processId)
       .pipe(
-        tap((p: ProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p))),
-        tap((p: ProcessModel) => this.entitiesTab.addEntity(p)),
+        tap((p: CurrentProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p))),
+        tap((p: CurrentProcessModel) => this.entitiesTab.addEntity(p)),
+        tap(() => this.loader$.next(false)),
         catchError((err: any) => {
           if (err instanceof Response) {
             if (err.status === HttpStatusCodeEnum.NOT_FOUND) {
@@ -108,10 +126,13 @@ export class ProcessService {
       );
   }
 
-  public getProcessVersionById(folderId: string, processId: string, versionId: string): Observable<ProcessModel> {
+  public getProcessVersionById(folderId: string, processId: string, versionId: string): Observable<CurrentProcessModel> {
+    this.loader$.next(true);
     return this.apiService.getVersionById(folderId, processId, versionId)
       .pipe(
-        tap((p: ProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p)))
+        tap((p: CurrentProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p))),
+        tap((p: CurrentProcessModel) => this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(false))),
+        tap(() => this.loader$.next(false))
       );
   }
 

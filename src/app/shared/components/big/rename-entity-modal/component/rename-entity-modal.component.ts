@@ -11,7 +11,7 @@ import {ToastService} from '../../../small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
-import {ProcessModel} from '../../../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../../../../catalog/models/current-process.model';
 import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
 
 @Component({
@@ -107,7 +107,7 @@ export class RenameEntityModalComponent implements OnInit {
     if (this.isFolder) {
       return !!folder[FolderFieldKey.FOLDERS]?.items?.find((f: FolderModel) => f.name === name);
     } else if (this.isProcess) {
-      return !!folder[FolderFieldKey.PROCESSES]?.items?.find((p: ProcessModel) => p.name === name);
+      return !!folder[FolderFieldKey.PROCESSES]?.items?.find((p: CurrentProcessModel) => p.name === name);
     }
   }
 

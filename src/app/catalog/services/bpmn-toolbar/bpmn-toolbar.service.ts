@@ -19,36 +19,39 @@ import {ToolbarPluginEnum} from '../../models/toolbar/toolbar-plugin.enum';
 import {CreateEntityModalComponent} from '../../../shared/components/big/create-entity-modal/component/create-entity-modal.component';
 import {ModalInjectableEntityModel} from '../../../models/modal-injectable-entity.model';
 import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
-import {ProcessModel} from '../../../models/domain/process.model';
+import {CurrentProcessModel} from '../../models/current-process.model';
 import {ProcessAutosaveService} from '../process-autosave/process-autosave.service';
 import {RenameEntityModalComponent} from '../../../shared/components/big/rename-entity-modal/component/rename-entity-modal.component';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {ProcessService} from '../../pages/folder/services/process/process.service';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
+import {Store} from '@ngxs/store';
+import {CatalogActions} from '../../store/actions/catalog.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BpmnToolbarService {
-  @SelectSnapshot(CatalogSelectors.currentProcess) process: ProcessModel;
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: CurrentProcessModel;
 
   constructor(
     private bpmnModeler: BpmnModelerService,
     private dialog: MatDialog,
     private processAutosave: ProcessAutosaveService,
-    private processService: ProcessService
+    private processService: ProcessService,
+    private store: Store
   ) {
   }
 
-  public get toolbar(): ToolbarItemModel[] {
+  public getToolbar(): ToolbarItemModel[] {
     return [
       {
         name: ToolbarItemEnum.PROCESS,
         subItems: [
           {
             name: ToolbarProcessItemEnum.NEW_PROCESS,
-            cb: (process: ProcessModel) => {
+            cb: (process: CurrentProcessModel) => {
               this.dialog.open(CreateEntityModalComponent, {
                 width: '700px',
                 autoFocus: false,
@@ -66,15 +69,15 @@ export class BpmnToolbarService {
             subItems: [
               {
                 name: ProcessSaveTypeEnum.BPMN,
-                cb: (process: ProcessModel) => this.bpmnModeler.exportDiagramAsXML(process?.name)
+                cb: (process: CurrentProcessModel) => this.bpmnModeler.exportDiagramAsXML(process?.name)
               },
               {
                 name: ProcessSaveTypeEnum.JPEG,
-                cb: (process: ProcessModel) => this.bpmnModeler.exportDiagramAsJpeg(process?.name)
+                cb: (process: CurrentProcessModel) => this.bpmnModeler.exportDiagramAsJpeg(process?.name)
               },
               {
                 name: ProcessSaveTypeEnum.SVG,
-                cb: (process: ProcessModel) => this.bpmnModeler.exportDiagramAsSVG(process?.name)
+                cb: (process: CurrentProcessModel) => this.bpmnModeler.exportDiagramAsSVG(process?.name)
               }
             ]
           },
@@ -88,7 +91,7 @@ export class BpmnToolbarService {
           },
           {
             name: ToolbarProcessItemEnum.GRANT_ACCESS,
-            cb: (process: ProcessModel) => {
+            cb: (process: CurrentProcessModel) => {
               this.dialog.open(GrantAccessModalComponent, {
                 width: '700px',
                 autoFocus: false,
@@ -102,7 +105,7 @@ export class BpmnToolbarService {
           },
           {
             name: ToolbarProcessItemEnum.RENAME,
-            cb: (process: ProcessModel) => {
+            cb: (process: CurrentProcessModel) => {
               this.dialog.open(RenameEntityModalComponent, {
                 width: '700px',
                 autoFocus: false,
@@ -111,7 +114,7 @@ export class BpmnToolbarService {
                   type: CatalogEntityEnum.PROCESS,
                   parent: process.parent,
                   ssCb: (newName: string) => {
-                    process.name = newName;
+                    this.store.dispatch(new CatalogActions.ProcessNameChanged(newName));
                   }
                 } as ModalInjectableEntityModel
               });
@@ -127,7 +130,9 @@ export class BpmnToolbarService {
         subItems: [
           {
             name: ToolbarEditItemEnum.DISCARD_CHANGES,
-            cb: (process: ProcessModel) => this.processService.discardVersionChanges(process.parent.id, process.id, process.generation),
+            cb: (process: CurrentProcessModel) => {
+              return this.processService.discardVersionChanges(process.parent.id, process.id, process.generation);
+            },
             delimiterAfter: true
           },
           {
@@ -431,7 +436,7 @@ export class BpmnToolbarService {
       },
       {
         name: ToolbarEditItemEnum.DISCARD_CHANGES,
-        allow: this.processAutosave.canDiscardChanges
+        allow: this.process?.canDiscardChanges
       },
       {
         name: ToolbarWindowItemEnum.TOGGLE_PROPERTIES_PANEL,

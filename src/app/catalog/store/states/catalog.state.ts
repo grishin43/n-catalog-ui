@@ -21,9 +21,13 @@ export class CatalogState {
 
   @Action(CatalogActions.ProcessFetched)
   fetchCurrentProcess(ctx: StateContext<CatalogStateModel>, {currentProcess}: CatalogStateModel): void {
-    if (currentProcess.resources?.length && !currentProcess.activeResource) {
+    if (currentProcess?.resources?.length && !currentProcess?.activeResource) {
       currentProcess.activeResource = currentProcess.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML);
     }
+    const stateProcess = ctx.getState().currentProcess;
+    currentProcess.versions = stateProcess?.versions;
+    currentProcess.currentVersionId = stateProcess?.currentVersionId;
+    currentProcess.canDiscardChanges = stateProcess?.canDiscardChanges;
     ctx.setState(patch({currentProcess}));
   }
 
@@ -90,11 +94,28 @@ export class CatalogState {
     }));
   }
 
-  @Action(CatalogActions.ProcessNewVersionCreated)
-  createProcessNewVersion(ctx: StateContext<CatalogStateModel>, {currentVersionId}: CatalogActions.ProcessNewVersionCreated)
+  @Action(CatalogActions.ProcessVersionOpened)
+  openProcessVersion(ctx: StateContext<CatalogStateModel>, {currentVersionId}: CatalogActions.ProcessVersionOpened)
     : void {
     ctx.setState(patch({
       currentProcess: patch({currentVersionId})
+    }));
+  }
+
+  @Action(CatalogActions.ProcessDiscardChangesPatched)
+  processDiscardChangesPatched(ctx: StateContext<CatalogStateModel>, {flag}: CatalogActions.ProcessDiscardChangesPatched)
+    : void {
+    const hasVersions = !!ctx.getState().currentProcess?.versions?.length;
+    ctx.setState(patch({
+      currentProcess: patch({canDiscardChanges: hasVersions && flag})
+    }));
+  }
+
+  @Action(CatalogActions.ProcessNameChanged)
+  changeProcessName(ctx: StateContext<CatalogStateModel>, {name}: CatalogActions.ProcessNameChanged)
+    : void {
+    ctx.setState(patch({
+      currentProcess: patch({name})
     }));
   }
 
