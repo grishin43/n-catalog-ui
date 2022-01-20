@@ -97,6 +97,7 @@
     "permissions": "Права",
     "read": "Перегляд",
     "noPermissions": "Немає прав",
+    "noUpdateDate": "Немає дати оновленення",
     "requestPermission": "Запросити доступ",
     "plugins": "Плагіни",
     "schemeValidator": "Валідація схеми",

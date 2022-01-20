@@ -117,7 +117,7 @@
           </ng-container>
 
           <ng-container *ngSwitchCase="tableDataType.DATE">
-            {{row[col?.name] | date : 'dd.MM.yyyy'}}
+            {{ row[col?.name].toString()  === 'Invalid Date' ? ('common.noUpdateDate' | translate) : (row[col?.name] | date : 'dd.MM.yyyy') }}
           </ng-container>
 
           <ng-container *ngSwitchCase="tableDataType.STATUS">

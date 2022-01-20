@@ -29,6 +29,7 @@ export class EntitiesTableComponent implements OnInit {
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
   public eCatalogEntityAction = CatalogEntityActionEnum;
+  public dateObject = Date;
 
   @Input() set data(value: CatalogEntityModel[] | any) {
     this.dataSource = new MatTableDataSource(value);

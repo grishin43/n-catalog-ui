@@ -65,7 +65,7 @@
       </mat-optgroup>
     </ng-container>
     <ng-template #autoCompleteResult>
-      <ng-container *ngIf="autoCompleteResults; else noResults">
+      <ng-container *ngIf="autoCompleteResults && (autoCompleteResults.processes?.totalResults ||  autoCompleteResults.folders?.totalResults); else noResults">
         <mat-option>
           <i class="np-icon-recent-search mr-3"></i>
           {{formControl.value}}
