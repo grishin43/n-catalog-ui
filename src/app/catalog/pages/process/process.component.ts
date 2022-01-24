@@ -171,6 +171,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     if (this.process?.isLocked) {
       return false;
     }
+    const shouldSaved = this.processAutosave.shouldSaved;
     this.processAutosave.disableSaving();
     const saveVersionResultSubscription = this.dialog.open(SaveVersionModalComponent, {
       width: '700px',
@@ -181,7 +182,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
         (formData: ({ [FormFieldEnum.NAME], [FormFieldEnum.DESCRIPTION] })) => {
           if (formData) {
             this.createNewVersion(formData[FormFieldEnum.NAME], formData[FormFieldEnum.DESCRIPTION]);
-          } else {
+          } else if (shouldSaved) {
             this.processAutosave.enableSaving();
           }
         });

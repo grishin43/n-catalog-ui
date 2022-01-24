@@ -194,7 +194,8 @@
     "discardChanges": "Скасувати зміни",
     "cancelChanges": "Скасувати зміни",
     "areYouWantToSaveVersionBasedOn": "Ви бажаєте зберегти версію створену на основі {{versionName}} ?",
-    "workplaces": "Місця роботи"
+    "workplaces": "Місця роботи",
+    "add": "Додати"
   },
   "statuses": {
     "undefined": "Невизначений",

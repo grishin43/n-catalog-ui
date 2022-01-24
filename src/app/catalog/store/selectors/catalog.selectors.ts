@@ -28,6 +28,11 @@ export class CatalogSelectors {
   }
 
   @Selector([CatalogState])
+  static currentProcessActiveResource(state: CatalogStateModel): ResourceModel {
+    return state.currentProcess.activeResource;
+  }
+
+  @Selector([CatalogState])
   static currentProcessForApi(state: CatalogStateModel): CurrentProcessModel {
     return {
       ...state.currentProcess,

@@ -20,6 +20,8 @@ import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
 import {ToastService} from '../../../../../shared/components/small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
+import {ProcessAutosaveService} from '../../../../services/process-autosave/process-autosave.service';
+import {MapHelper} from '../../../../helpers/map.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -83,16 +85,25 @@ export class ProcessService {
       );
   }
 
-  public discardVersionChanges(parentId: string, processId: string, generation: number): void {
-    this.loader$.next(true);
-    this.apiService.discardChanges(parentId, processId, generation).toPromise()
-      .then(() => {
-        if (this.process.currentVersionId) {
-          this.getProcessVersionById(parentId, processId, this.process.currentVersionId).toPromise();
-        } else {
-          this.getProcessById(parentId, processId).toPromise();
-        }
-      });
+  public discardVersionChanges(parentId: string, processId: string, generation: number, shouldSaved?: boolean): void {
+    if (shouldSaved) {
+      this.discardVersionChangesCb(parentId, processId);
+    } else {
+      this.loader$.next(true);
+      this.apiService.discardChanges(parentId, processId, generation).toPromise()
+        .then(() => {
+          this.discardVersionChangesCb(parentId, processId);
+        });
+    }
+  }
+
+  private discardVersionChangesCb(parentId: string, processId: string): void {
+    if (this.process.currentVersionId) {
+      this.getProcessVersionById(parentId, processId, this.process.currentVersionId).toPromise();
+    } else {
+      this.getProcessById(parentId, processId).toPromise();
+    }
+    this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(false));
   }
 
   public openCreatedProcess(processId: string, processName: string, parentFolder: string): void {
@@ -131,7 +142,7 @@ export class ProcessService {
     return this.apiService.getVersionById(folderId, processId, versionId)
       .pipe(
         tap((p: CurrentProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p))),
-        tap((p: CurrentProcessModel) => this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(false))),
+        tap(() => this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(false))),
         tap(() => this.loader$.next(false))
       );
   }

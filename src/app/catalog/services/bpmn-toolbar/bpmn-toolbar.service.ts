@@ -131,7 +131,8 @@ export class BpmnToolbarService {
           {
             name: ToolbarEditItemEnum.DISCARD_CHANGES,
             cb: (process: CurrentProcessModel) => {
-              return this.processService.discardVersionChanges(process.parent.id, process.id, process.generation);
+              return this.processService.discardVersionChanges(process.parent.id, process.id, process.generation,
+                this.processAutosave.shouldSaved);
             },
             delimiterAfter: true
           },

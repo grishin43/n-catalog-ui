@@ -10,6 +10,7 @@ import {ResourceTypeEnum} from '../../models/domain/resource-type.enum';
 import {LocalSaverHelper} from './local-saver.helper';
 import {Base64} from 'js-base64';
 import {SearchModel} from '../../models/domain/search.model';
+import {ProcessModel} from '../../models/domain/process.model';
 
 export class MapHelper {
 
@@ -166,6 +167,11 @@ export class MapHelper {
       items: folders,
       count: folders?.length
     };
+  }
+
+  public static getResourceContent(process: ProcessModel): string {
+    const matchedResource = process?.resources?.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML);
+    return matchedResource?.content;
   }
 
 }

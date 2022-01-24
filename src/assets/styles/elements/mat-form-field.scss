@@ -252,6 +252,12 @@ mat-label {
             mat-spinner {
               margin-right: -20px;
             }
+
+            input {
+              &.mat-input-element{
+                color: var(--np-roman-silver);
+              }
+            }
           }
         }
       }

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ApiService} from '../../../services/api/api.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 import {BpmnPaletteSchemeModel} from '../../../models/bpmn/bpmn-palette-scheme.model';
 import {BpmnToolbarService} from '../../../services/bpmn-toolbar/bpmn-toolbar.service';
@@ -13,6 +13,11 @@ import {ToastService} from '../../../../shared/components/small/toast/service/to
 import {TranslateService} from '@ngx-translate/core';
 import {WindowHelper} from '../../../../helpers/window.helper';
 import {DocumentationDialogComponent} from '../documentation-dialog/documentation-dialog.component';
+import {ProcessService} from '../../folder/services/process/process.service';
+import {Select} from '@ngxs/store';
+import {CatalogSelectors} from '../../../store/selectors/catalog.selectors';
+import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
+import {ResourceModel} from '../../../../models/domain/resource.model';
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -20,20 +25,12 @@ import {DocumentationDialogComponent} from '../documentation-dialog/documentatio
   styleUrls: ['./bpmn-editor.component.scss']
 })
 export class BpmnEditorComponent implements OnInit, OnDestroy {
-  @Input() set data(value: CurrentProcessModel) {
-    if (value) {
-      if (this.process && value.id !== this.process.id) {
-        this.disableSaveHelpers();
-      }
-      this.process = value;
-      this.processLoader = true;
-      this.openProcess();
-    }
-  }
-  @Input() processLoader: boolean;
+  @Select(CatalogSelectors.currentProcessId) processId$: Observable<string>;
+  @Select(CatalogSelectors.currentProcessActiveResource) processResource$: Observable<ResourceModel>;
+  @SelectSnapshot(CatalogSelectors.currentProcess) process: CurrentProcessModel;
+
   @Output() diagramWasChanged = new EventEmitter<boolean>();
 
-  public process: CurrentProcessModel;
   public errorResponse: HttpErrorResponse;
   public paletteColors: BpmnPaletteSchemeModel[];
 
@@ -85,7 +82,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = (pe: ProgressEvent<FileReader>): void => {
         const xml = pe.target.result;
-        this.openDiagram(xml as string);
+        this.openDiagram(xml as string, true);
       };
       reader.readAsText(file);
     }
@@ -98,17 +95,29 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private processAutosave: ProcessAutosaveService,
     private toast: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private processService: ProcessService
   ) {
   }
 
   ngOnInit(): void {
     this.paletteColors = this.bpmnToolbarService.paletteColors;
     this.initEditor();
+    this.subscribeProcessChange(this.processId$);
+    this.subscribeProcessChange(this.processResource$);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private subscribeProcessChange(obs: Observable<any>): void {
+    this.subscriptions.add(
+      obs.subscribe(() => {
+        this.disableSaveHelpers();
+        this.openProcess();
+      })
+    );
   }
 
   private initEditor(): void {
@@ -118,7 +127,6 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       () => {
         this.listenModelerChanges();
         this.listenOpenWysiwygEditor();
-        this.openProcess();
       }
     );
   }
@@ -158,14 +166,17 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  private openDiagram(xml: string): void {
+  private openDiagram(xml: string, shouldSavedAfter?: boolean): void {
     if (validate(xml) === true) {
       this.bpmnModelerService.openDiagram(xml).then(() => {
+        this.processService.loader$.next(false);
+        if (shouldSavedAfter) {
+          this.processAutosave.shouldSaved = shouldSavedAfter;
+        }
         this.bpmnModelerService.zoomTo(true);
-        this.processLoader = false;
       });
     } else {
-      this.processLoader = false;
+      this.processService.loader$.next(false);
       this.toast.showError(
         'errors.errorOccurred',
         this.translate.instant('errors.processCannotBeOpened')
@@ -192,13 +203,11 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
 
   private openNewDiagram(): void {
     this.errorResponse = undefined;
-    this.processLoader = true;
     this.subscriptions.add(
       this.api.getXML(this.newDiagramLink)
         .subscribe(
           (res: string) => this.openDiagram(res),
           (err: HttpErrorResponse) => {
-            this.processLoader = false;
             this.errorResponse = err;
           }
         )

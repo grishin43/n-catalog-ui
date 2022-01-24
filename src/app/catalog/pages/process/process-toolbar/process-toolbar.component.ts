@@ -5,6 +5,7 @@ import {ToolbarEditItemEnum} from '../../../models/toolbar/toolbar-edit-item.enu
 import {BpmnModelerService} from '../../../services/bpmn-modeler/bpmn-modeler.service';
 import {CurrentProcessModel} from '../../../models/current-process.model';
 import {ToolbarItemEnum} from '../../../models/toolbar/toolbar-item.enum';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'np-process-toolbar',
@@ -27,6 +28,17 @@ export class ProcessToolbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.tools = this.bpmnToolbar.getToolbar();
+  }
+
+  /**
+   * Mat-menu issue: https://github.com/angular/components/issues/9969
+   */
+  public onMenuMouseLeave(event: MouseEvent, index: number, subMenuTrigger: MatMenuTrigger): void {
+    const relatedTarget = event.relatedTarget as HTMLElement;
+    const relatedMatMenu = relatedTarget.closest(`.mat-menu-index-${index}`);
+    if (!relatedMatMenu) {
+      subMenuTrigger.closeMenu();
+    }
   }
 
 }

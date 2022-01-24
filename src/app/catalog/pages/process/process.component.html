@@ -109,8 +109,6 @@
 
   <ng-template #bpmnEditorTemplate>
     <np-bpmn-editor
-      [processLoader]="loader"
-      [data]="process$ | async"
       (diagramWasChanged)="diagramWasChanged($event)">
     </np-bpmn-editor>
   </ng-template>

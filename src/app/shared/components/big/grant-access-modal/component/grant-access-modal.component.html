@@ -18,9 +18,6 @@
     [formGroup]="form"
     (submit)="formSubmit()">
     <div class="form-group mb-0">
-      <mat-label>
-        {{'common.email' | translate}}
-      </mat-label>
       <div
         #mergedFields
         class="merged-fields">
@@ -99,7 +96,7 @@
         [type]="'primary'"
         [disabled]="!selectedUsers?.length || formLoader">
         <span>
-          {{'common.create' | translate}}
+          {{'common.add' | translate}}
         </span>
         <mat-spinner
           *ngIf="formLoader"
