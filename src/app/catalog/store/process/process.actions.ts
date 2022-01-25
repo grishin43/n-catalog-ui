@@ -37,4 +37,18 @@ export namespace ProcessActions {
     }
   }
 
+  export class ProcessMarkedToBeDeleted {
+    static readonly type = 'ProcessMarkedToBeDeleted';
+
+    constructor(public processId: string) {
+    }
+  }
+
+  export class ProcessRevertToBeDeleted {
+    static readonly type = 'ProcessRevertToBeDeleted';
+
+    constructor(public processId: string) {
+    }
+  }
+
 }

@@ -26,7 +26,6 @@ export class FolderService {
    */
   public deleteFolder(folderId: string): Promise<any> {
     // optimistic update
-    this.store.dispatch(new FolderActions.FolderMarkedToBeDeleted(folderId));
     return this.apiService.deleteFolder(folderId)
       .pipe(
         catchError((err) => {

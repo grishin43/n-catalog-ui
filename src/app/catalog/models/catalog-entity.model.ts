@@ -23,4 +23,5 @@ export interface CatalogEntityModel {
   permissions?: CatalogEntityPermissionEnum; // is used
   path?: string; // isn't used. to be deprecated and moved to new compatible model
   original?: any; // wrapper for backend item
+  toBeDeleted?: boolean;
 }

@@ -20,8 +20,7 @@ import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
 import {ToastService} from '../../../../../shared/components/small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
-import {ProcessAutosaveService} from '../../../../services/process-autosave/process-autosave.service';
-import {MapHelper} from '../../../../helpers/map.helper';
+import {FolderActions} from '../../../../store/folder/folder.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -47,12 +46,19 @@ export class ProcessService {
    * @param parentFolderId - ...
    * @param processId - id of folder with should be deleted
    */
-  public deleteProcess(parentFolderId: string, processId: string): Observable<any> {
+  public deleteProcess(parentFolderId: string, processId: string): Promise<any> {
+    // optimistic update
     return this.apiService.deleteProcess(parentFolderId, processId)
       .pipe(
+        catchError((err) => {
+          console.log('delete folder error, revert delete', err);
+          return this.store.dispatch(new ProcessActions.ProcessRevertToBeDeleted(processId));
+        }),
         tap(() => {
           this.store.dispatch(new ProcessActions.ProcessDeleted(processId));
-        }));
+        })
+      )
+      .toPromise();
   }
 
   public createProcess(parentFolderId: string, processType: string, name: string): Observable<UiNotificationCheck> {

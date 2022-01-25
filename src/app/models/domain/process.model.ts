@@ -17,7 +17,5 @@ export interface ProcessModel {
   currentUserPermissionLevel?: ProcessPermission;
   generation?: number;
   lockedBy?: string;
-  isLocked?: boolean; // not domain field
-  currentVersionId?: string; // not domain field
-  versions?: ProcessVersionModel[]; // not domain field
+  toBeDeleted?: boolean; // local field
 }

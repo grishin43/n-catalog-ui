@@ -168,7 +168,7 @@ mat-form-field {
         }
 
         .mat-form-field-infix {
-          input.mat-input-element {
+          input.mat-input-element, textarea.mat-input-element {
             color: var(--np-crimson);
           }
         }

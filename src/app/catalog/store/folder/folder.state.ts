@@ -48,17 +48,17 @@ export class FolderState extends EntityState<FolderModel> {
   }
 
   @Action(FolderActions.FolderMarkedToBeDeleted)
-  folderMarkToBeDeleted(ctx: StateContext<EntityStateModel<FolderModel>>, {folderId}: FolderActions.FolderMarkedToBeDeleted): void {
+  entityMarkToBeDeleted(ctx: StateContext<EntityStateModel<FolderModel>>, {folderId}: FolderActions.FolderMarkedToBeDeleted): void {
     ctx.dispatch(new Update(FolderState, [folderId], {toBeDeleted: true}));
   }
 
   @Action(FolderActions.FolderRevertToBeDeleted)
-  folderRevertToBeDeleted(ctx: StateContext<EntityStateModel<FolderModel>>, {folderId}: FolderActions.FolderRevertToBeDeleted): void {
+  entityRevertToBeDeleted(ctx: StateContext<EntityStateModel<FolderModel>>, {folderId}: FolderActions.FolderRevertToBeDeleted): void {
     ctx.dispatch(new Update(FolderState, [folderId], {toBeDeleted: false}));
   }
 
   @Action(FolderActions.FolderDeleted)
-  folderDeleted(ctx: StateContext<EntityStateModel<FolderModel>>, {folderId}: FolderActions.FolderDeleted): void {
+  entityDeleted(ctx: StateContext<EntityStateModel<FolderModel>>, {folderId}: FolderActions.FolderDeleted): void {
     ctx.dispatch(new Remove(FolderState, [folderId]));
   }
 }

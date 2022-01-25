@@ -18,13 +18,13 @@
           [attr.name]="formControlName.NAME"
           [placeholder]="'common.enterName' | translate">
         <mat-error *ngIf="form.get(formControlName.NAME).invalid">
-          <ng-container *ngIf="form.get(formControlName.NAME).hasError('required') && !form.get(formControlName.NAME).hasError('maxLength')">
+          <ng-container *ngIf="form.get(formControlName.NAME).hasError('required') && !form.get(formControlName.NAME).hasError('maxlength')">
             {{'errors.required' | translate}}
           </ng-container>
           <ng-container *ngIf="form.get(formControlName.NAME).hasError('nameAlreadyExist')">
             {{'errors.versionWithNameAlreadyExist' | translate}}
           </ng-container>
-          <ng-container *ngIf="form.get(formControlName.NAME).hasError('maxLength')">
+          <ng-container *ngIf="form.get(formControlName.NAME).hasError('maxlength')">
             {{'errors.maxLength' | translate: {count: 72} }}
           </ng-container>
         </mat-error>
@@ -45,10 +45,10 @@
           [placeholder]="'common.descriptionThatChanged' | translate">
         </textarea>
         <mat-error *ngIf="form.get(formControlName.DESCRIPTION).invalid">
-          <ng-container *ngIf="form.get(formControlName.DESCRIPTION).hasError('required')">
+          <ng-container *ngIf="form.get(formControlName.DESCRIPTION).hasError('required') && !form.get(formControlName.DESCRIPTION).hasError('maxlength')">
             {{'errors.required' | translate}}
           </ng-container>
-          <ng-container *ngIf="form.get(formControlName.DESCRIPTION).hasError('maxLength')">
+          <ng-container *ngIf="form.get(formControlName.DESCRIPTION).hasError('maxlength')">
             {{'errors.maxLength' | translate: {count: 200} }}
           </ng-container>
         </mat-error>

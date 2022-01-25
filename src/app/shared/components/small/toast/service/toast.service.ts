@@ -74,4 +74,17 @@ export class ToastService {
     this.snackBar.dismiss();
   }
 
+  public showWithUndo(i18key: string, i18Params: any): MatSnackBarRef<TextOnlySnackBar> {
+    const undoTranslation = this.translateService.instant('common.undo');
+    return this.show(
+      i18key,
+      5000,
+      undoTranslation,
+      null,
+      null,
+      'message',
+      i18Params
+    );
+  }
+
 }

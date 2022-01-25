@@ -50,7 +50,8 @@ export class MapHelper {
       permissions: process.currentUserPermissionLevel?.code,
       link: process.url,
       original: process,
-      status: NpStatusPillEnum.DRAFT
+      status: NpStatusPillEnum.DRAFT,
+      toBeDeleted: process.toBeDeleted
     } as CatalogEntityModel;
   }
 

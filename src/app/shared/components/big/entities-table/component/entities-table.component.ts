@@ -29,7 +29,6 @@ export class EntitiesTableComponent implements OnInit {
 
   public rippleLightColor = MatRippleHelper.lightRippleColor;
   public eCatalogEntityAction = CatalogEntityActionEnum;
-  public dateObject = Date;
 
   @Input() set data(value: CatalogEntityModel[] | any) {
     this.dataSource = new MatTableDataSource(value);
@@ -53,13 +52,13 @@ export class EntitiesTableComponent implements OnInit {
   ngOnInit(): void {
     this.processActions = this.tableActions.processActions;
     this.folderActions = this.tableActions.folderActions;
-    this.addDeleteCallback();
+    this.addDeleteCallback(this.processActions);
+    this.addDeleteCallback(this.folderActions);
   }
 
-  private addDeleteCallback(): void {
-    const deleteAction: TableActionModel = this.folderActions
+  private addDeleteCallback(actions: TableActionModel[]): void {
+    const deleteAction: TableActionModel = actions
       .find(({name}: TableActionModel) => name === CatalogEntityActionEnum.DELETE);
-
     deleteAction.cb = (value?: any, parent?: FolderModel, ssCb?: () => void) => {
       this.entityDeleted.emit(value);
     };
@@ -77,7 +76,7 @@ export class EntitiesTableComponent implements OnInit {
 
   public entityRenamedSsCb = () => {
     this.entityRenamed.emit();
-  };
+  }
 
   public requestEntityTemplate(entity: CatalogEntityModel): void {
     this.dialog.open(RequestAccessModalComponent, {

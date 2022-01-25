@@ -17,17 +17,17 @@ export namespace FolderActions {
   }
 
   export class FolderMarkedToBeDeleted {
-      static readonly type = '[FolderService] FolderMarkedToBeDeleted';
+      static readonly type = 'FolderMarkedToBeDeleted';
       constructor(public folderId: string) {}
   }
 
   export class FolderRevertToBeDeleted {
-      static readonly type = '[FolderService] FolderRevertToBeDeleted';
+      static readonly type = 'FolderRevertToBeDeleted';
       constructor(public folderId: string) {}
   }
 
   export class FolderDeleted {
-      static readonly type = '[FolderService] FolderDeleted';
+      static readonly type = 'FolderDeleted';
       constructor(public folderId: string) {}
   }
 }

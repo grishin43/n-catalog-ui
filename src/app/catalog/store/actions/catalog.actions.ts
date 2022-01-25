@@ -4,6 +4,13 @@ import {ProcessVersionModel} from '../../../models/domain/process-version.model'
 
 export namespace CatalogActions {
 
+  export class CurrentProcessCleared {
+    static readonly type = 'CurrentProcessCleared';
+
+    constructor() {
+    }
+  }
+
   export class ProcessFetched {
     static readonly type = '[ProcessService] ProcessFetched';
 

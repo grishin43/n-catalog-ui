@@ -19,6 +19,14 @@ export class CatalogState {
   constructor() {
   }
 
+  @Action(CatalogActions.CurrentProcessCleared)
+  clearCurrentProcess(ctx: StateContext<CatalogStateModel>): void {
+    ctx.setState(patch({
+      currentProcess: undefined
+    }));
+  }
+
+
   @Action(CatalogActions.ProcessFetched)
   fetchCurrentProcess(ctx: StateContext<CatalogStateModel>, {currentProcess}: CatalogStateModel): void {
     if (currentProcess?.resources?.length && !currentProcess?.activeResource) {
@@ -81,7 +89,7 @@ export class CatalogState {
 
   @Action(CatalogActions.ProcessGenerationPatched)
   patchProcessGeneration(ctx: StateContext<CatalogStateModel>, {generation}: CatalogActions.ProcessGenerationPatched): void {
-    if (generation) {
+    if (generation && ctx.getState().currentProcess) {
       ctx.setState(patch({
         currentProcess: patch({generation})
       }));

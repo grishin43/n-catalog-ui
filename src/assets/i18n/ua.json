@@ -124,7 +124,7 @@
     "tryAgain": "Спробувати знову",
     "folderLoading": "Завантаження папки",
     "delete": "Видалити",
-    "entityDeleted": "{{entityName}} видалено",
+    "entityDeleted": "“{{entityName}}” видалено",
     "rootFoldersNotFound": "Рутові папки не знайдені",
     "save": "Зберегти",
     "folderRenamesSuccessfully": "Папка успішно перейменована",

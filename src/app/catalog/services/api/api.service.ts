@@ -335,7 +335,9 @@ export class ApiService {
           }),
           tap((n: UiNotification) => {
             const freshGeneration = n?.parameters?.generation || n?.parameters?.parentProcessGeneration;
-            this.store.dispatch(new CatalogActions.ProcessGenerationPatched(freshGeneration));
+            if (freshGeneration) {
+              this.store.dispatch(new CatalogActions.ProcessGenerationPatched(freshGeneration));
+            }
           }),
           map(({parameters}: UiNotification) => {
             return {correlationId, isChecked: true, parameters} as UiNotificationCheck;

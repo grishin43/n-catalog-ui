@@ -74,16 +74,6 @@ export class TableActionsService {
       },
       {
         name: CatalogEntityActionEnum.DELETE,
-        cb: (entity: CatalogEntityModel, parentFolder?: FolderModel, ssCb?: () => void) => {
-          this.processService.deleteProcess(parentFolder.id, entity.id)
-            .subscribe(() => {
-              this.entitiesTab.deleteEntity({id: entity.id});
-              this.toast.show('common.processDeletedSuccessfully', 1500, undefined, 'bottom', 'right');
-              if (typeof ssCb === 'function') {
-                ssCb();
-              }
-            });
-        },
         class: 'danger'
       }
     ];
@@ -130,9 +120,6 @@ export class TableActionsService {
       },
       {
         name: CatalogEntityActionEnum.DELETE,
-        cb: (entity: CatalogEntityModel) => {
-          console.log(entity);
-        },
         class: 'danger'
       }
     ];
