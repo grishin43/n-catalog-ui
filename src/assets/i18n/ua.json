@@ -248,7 +248,7 @@
   },
   "folder": {
     "cantDeleteNotEmptyFolderTitle": "Неможливо видалити папку з процессами",
-    "cantDeleteNotEmptyFolderDescription": "Щоб вадалити цю папку, вона має бути порожня"
+    "cantDeleteNotEmptyFolderDescription": "Щоб видалити цю папку, вона має бути порожня"
   },
   "permissions": {
     "owner": "Власник",

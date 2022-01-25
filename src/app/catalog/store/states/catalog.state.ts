@@ -25,9 +25,11 @@ export class CatalogState {
       currentProcess.activeResource = currentProcess.resources.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML);
     }
     const stateProcess = ctx.getState().currentProcess;
-    currentProcess.versions = stateProcess?.versions;
-    currentProcess.currentVersionId = stateProcess?.currentVersionId;
-    currentProcess.canDiscardChanges = stateProcess?.canDiscardChanges;
+    if (stateProcess?.id === currentProcess?.id) {
+      currentProcess.versions = stateProcess?.versions;
+      currentProcess.currentVersionId = stateProcess?.currentVersionId;
+      currentProcess.canDiscardChanges = stateProcess?.canDiscardChanges;
+    }
     ctx.setState(patch({currentProcess}));
   }
 
