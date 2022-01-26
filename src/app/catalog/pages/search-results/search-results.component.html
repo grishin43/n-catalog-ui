@@ -1,7 +1,12 @@
 <div class="container-fluid container-top-gap">
   <div class="row">
     <div class="col-12">
-      <h3 class="mb-0">{{'common.searchResults' | translate}}</h3>
+      <h3 class="mb-0">
+        {{'common.searchResults' | translate}}
+        <span *ngIf="(searchResult$ | async)?.length as count">
+          ({{count}})
+        </span>
+      </h3>
     </div>
     <div class="col-12">
       <ng-container *ngIf="(searchResult$ | async)?.length; else noResults">

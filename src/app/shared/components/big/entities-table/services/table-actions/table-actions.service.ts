@@ -12,12 +12,8 @@ import {CatalogEntityEnum} from '../../../../../../catalog/models/catalog-entity
 import {MapHelper} from '../../../../../../catalog/helpers/map.helper';
 import {RenameEntityModalComponent} from '../../../rename-entity-modal/component/rename-entity-modal.component';
 import {FolderModel} from '../../../../../../models/domain/folder.model';
-import {ApiService} from '../../../../../../catalog/services/api/api.service';
-import {ToastService} from '../../../../small/toast/service/toast.service';
-import {EntitiesTabService} from '../../../../../../catalog/services/entities-tab/entities-tab.service';
 import {GrantAccessModalComponent} from '../../../grant-access-modal/component/grant-access-modal.component';
 import {BehaviorSubject} from 'rxjs';
-import {ProcessService} from '../../../../../../catalog/pages/folder/services/process/process.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +24,7 @@ export class TableActionsService {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog,
-    private api: ApiService,
-    private toast: ToastService,
-    private entitiesTab: EntitiesTabService,
-    private processService: ProcessService
+    private dialog: MatDialog
   ) {
   }
 

@@ -6,3 +6,11 @@ np-entities-table {
   display: block;
   margin-top: 24px;
 }
+
+h3 {
+  span {
+    font-size: 20px;
+    color: var(--np-roman-silver);
+    font-weight: normal;
+  }
+}

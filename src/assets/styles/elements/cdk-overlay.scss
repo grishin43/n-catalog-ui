@@ -26,5 +26,6 @@
 }
 
 .cdk-global-scrollblock{
-  height: 200vh;
+  position: static;
+  overflow: hidden !important;
 }
