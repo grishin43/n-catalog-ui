@@ -230,7 +230,8 @@
     "processWithNameAlreadyExist": "Процес з назвою “{{name}}” вже існує у цій папці, спробуйте інше.",
     "folderWithNameAlreadyExist": "Папка з назвою “{{name}}” вже існує у цій папці, спробуйте інше.",
     "timedOutRequest": "Перевищено інтервал очікування для запиту, спробуйте пізніше.",
-    "versionWithNameAlreadyExist": "Версія процесу з такою назвою вже існує"
+    "versionWithNameAlreadyExist": "Версія процесу з такою назвою вже існує",
+    "trimError": "Поле не може складатися з пробілов"
   },
   "counters": {
     "foldersCount1": "{{count}} папка",
@@ -247,7 +248,7 @@
     "createVersion": "Йде створення версії “{{name}}”"
   },
   "folder": {
-    "cantDeleteNotEmptyFolderTitle": "Неможливо видалити папку з процессами",
+    "cantDeleteNotEmptyFolderTitle": "Неможливо видалити папку з процессами або папками",
     "cantDeleteNotEmptyFolderDescription": "Щоб видалити цю папку, вона має бути порожня"
   },
   "permissions": {

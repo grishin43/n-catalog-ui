@@ -46,6 +46,9 @@
               {{'errors.thisProcessNameAlreadyExistAt' | translate : {folderPath: folderPath} }}
             </ng-container>
           </ng-container>
+          <ng-container *ngIf="form.get(formControlName.ENTITY_NAME).hasError('pattern')">
+            {{'errors.trimError' | translate}}
+          </ng-container>
         </mat-error>
       </mat-form-field>
     </div>

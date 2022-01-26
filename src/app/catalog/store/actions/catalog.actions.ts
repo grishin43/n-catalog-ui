@@ -67,4 +67,18 @@ export namespace CatalogActions {
     }
   }
 
+  export class BlockProcess {
+    static readonly type = 'BlockProcess';
+
+    constructor() {
+    }
+  }
+
+  export class UnblockProcess {
+    static readonly type = 'UnblockProcess';
+
+    constructor() {
+    }
+  }
+
 }

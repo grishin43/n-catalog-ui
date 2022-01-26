@@ -140,9 +140,9 @@ export class FolderComponent implements OnInit, OnDestroy {
     deleteToast.afterDismissed().subscribe(() => {
       if (!isDeleteWasUndo) {
         if (entity.type === CatalogEntityEnum.FOLDER) {
-          this.folderService.deleteFolder(entity.id);
+          this.folderService.deleteFolder(entity.id).then(() => this.getFolderById());
         } else if (entity.type === CatalogEntityEnum.PROCESS) {
-          this.processService.deleteProcess(entity.original.parentId, entity.id);
+          this.processService.deleteProcess(entity.original.parentId, entity.id).then(() => this.getFolderById());
         }
       }
     });

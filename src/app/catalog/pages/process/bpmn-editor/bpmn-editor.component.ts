@@ -61,7 +61,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
       this.bpmnModelerService.decreaseUndoCounter();
     } else if (e.ctrlKey && e.code === 'KeyS') {
       e.preventDefault();
-      if (this.process && this.processAutosave.shouldSaved) {
+      if (this.process && this.processAutosave.shouldSaved && !this.process.blocked && !this.process.isLocked) {
         this.processAutosave.saveProcess();
       }
     }

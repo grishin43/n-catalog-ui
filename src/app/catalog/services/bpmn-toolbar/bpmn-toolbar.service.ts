@@ -449,7 +449,7 @@ export class BpmnToolbarService {
       },
       {
         name: ToolbarProcessItemEnum.SAVE_VERSION,
-        allow: !this.process?.isLocked && this.processAutosave.shouldSaved
+        allow: !this.process?.isLocked && this.processAutosave.shouldSaved && !this.process.blocked
       },
       {
         name: ToolbarProcessItemEnum.RENAME,

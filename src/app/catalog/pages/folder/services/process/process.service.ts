@@ -20,7 +20,6 @@ import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
 import {ToastService} from '../../../../../shared/components/small/toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
-import {FolderActions} from '../../../../store/folder/folder.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +73,7 @@ export class ProcessService {
   }
 
   public createNewVersion(content: string, name: string, desc: string): Observable<UiNotificationCheck> {
+    this.store.dispatch(new CatalogActions.BlockProcess());
     const loaderTitle = this.translate.instant('loaders.createVersion', {name});
     this.toast.showLoader(loaderTitle);
     this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
@@ -87,7 +87,8 @@ export class ProcessService {
     })
       .pipe(
         tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation))),
-        tap(() => this.toast.close())
+        tap(() => this.toast.close()),
+        tap(() => this.store.dispatch(new CatalogActions.UnblockProcess()))
       );
   }
 
@@ -96,9 +97,11 @@ export class ProcessService {
       this.discardVersionChangesCb(parentId, processId);
     } else {
       this.loader$.next(true);
+      this.store.dispatch(new CatalogActions.BlockProcess());
       this.apiService.discardChanges(parentId, processId, generation).toPromise()
         .then(() => {
           this.discardVersionChangesCb(parentId, processId);
+          this.store.dispatch(new CatalogActions.UnblockProcess());
         });
     }
   }
@@ -156,9 +159,11 @@ export class ProcessService {
   public saveProcess(content: string): Observable<UiNotificationCheck> {
     this.store.dispatch(new CatalogActions.ProcessActiveResourceXmlContentPatched(content));
     this.store.dispatch(new CatalogActions.ProcessResourcePatched(content, ResourceTypeEnum.XML));
+    this.store.dispatch(new CatalogActions.BlockProcess());
     return this.apiService.saveProcess(this.store.selectSnapshot(CatalogSelectors.currentProcessForApi))
       .pipe(
-        tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation)))
+        tap((nc: UiNotificationCheck) => this.store.dispatch(new CatalogActions.ProcessGenerationPatched(nc.parameters?.generation))),
+        tap(() => this.store.dispatch(new CatalogActions.UnblockProcess())),
       );
   }
 

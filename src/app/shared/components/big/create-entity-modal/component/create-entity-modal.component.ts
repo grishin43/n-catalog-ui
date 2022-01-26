@@ -112,7 +112,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   private initForm(parentFolderName?: string): void {
     this.form = new FormGroup({
-      [FormFieldEnum.ENTITY_NAME]: new FormControl(undefined, [Validators.required]),
+      [FormFieldEnum.ENTITY_NAME]: new FormControl(undefined, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
       [FormFieldEnum.FOLDER_PATH]: new FormControl(parentFolderName, [Validators.required])
     });
     if (this.isProcess) {
@@ -192,6 +192,10 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     return folder.name;
   }
 
+  public xyz(): void {
+    console.log(this.form.get(FormFieldEnum.ENTITY_NAME).errors);
+  }
+
   public formSubmit(): void {
     this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
     if (this.form.valid) {
@@ -201,7 +205,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
 
   private handleFormSubmit(): void {
     if (this.isFolder) {
-      this.createGeneralFolder();
+      this.createFolder();
     } else if (this.isProcess) {
       this.createProcess();
     }
@@ -214,7 +218,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   private createProcess(): void {
     this.formLoader = true;
     const processType = this.processTypes.find(ft => this.form.value[FormFieldEnum.PROCESS_TYPE] === ft.name);
-    const processName = this.form.value[FormFieldEnum.ENTITY_NAME];
+    const processName = this.form.value[FormFieldEnum.ENTITY_NAME].trim();
     this.subscription.add(
       this.processService.createProcess(this.currentFolderId, processType.code, processName)
         .subscribe(
@@ -237,11 +241,12 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  private createGeneralFolder(): void {
+  private createFolder(): void {
     this.formLoader = true;
     const parentFolderId = this.openedFolder?.id || this.data?.parent?.id;
+    const folderName = this.form.value[FormFieldEnum.ENTITY_NAME].trim();
     this.subscription.add(
-      this.folderService.createFolder(parentFolderId, this.form.value[FormFieldEnum.ENTITY_NAME])
+      this.folderService.createFolder(parentFolderId, folderName)
         .subscribe(
           () => {
             this.formLoader = false;

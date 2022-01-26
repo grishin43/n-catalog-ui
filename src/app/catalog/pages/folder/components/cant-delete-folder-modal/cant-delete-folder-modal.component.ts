@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
@@ -6,7 +6,7 @@ import {MatDialogRef} from '@angular/material/dialog';
   templateUrl: './cant-delete-folder-modal.component.html',
   styleUrls: ['./cant-delete-folder-modal.component.scss']
 })
-export class CantDeleteFolderModalComponent implements OnInit {
+export class CantDeleteFolderModalComponent {
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'Enter') {
@@ -16,10 +16,8 @@ export class CantDeleteFolderModalComponent implements OnInit {
   }
 
   constructor(
-    private dialogRef: MatDialogRef<CantDeleteFolderModalComponent>,
-  ) { }
-
-  ngOnInit(): void {
+    private dialogRef: MatDialogRef<CantDeleteFolderModalComponent>
+  ) {
   }
 
   public closeModal(): void {

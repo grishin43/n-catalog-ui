@@ -27,6 +27,9 @@
           <ng-container *ngIf="form.get(formControlName.NAME).hasError('maxlength')">
             {{'errors.maxLength' | translate: {count: 72} }}
           </ng-container>
+          <ng-container *ngIf="form.get(formControlName.NAME).hasError('pattern')">
+            {{'errors.trimError' | translate}}
+          </ng-container>
         </mat-error>
       </mat-form-field>
     </div>
@@ -65,6 +68,7 @@
     {{'common.cancel' | translate}}
   </np-button>
   <np-button
+    [disabled]="!nameValid"
     [minWidth]="true"
     [btnType]="'submit'"
     [type]="'primary'"

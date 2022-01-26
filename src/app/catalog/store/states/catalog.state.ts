@@ -97,24 +97,21 @@ export class CatalogState {
   }
 
   @Action(CatalogActions.ProcessVersionsPatched)
-  patchProcessVersionsAvailability(ctx: StateContext<CatalogStateModel>, {versions}: CatalogActions.ProcessVersionsPatched)
-    : void {
+  patchProcessVersionsAvailability(ctx: StateContext<CatalogStateModel>, {versions}: CatalogActions.ProcessVersionsPatched): void {
     ctx.setState(patch({
       currentProcess: patch({versions})
     }));
   }
 
   @Action(CatalogActions.ProcessVersionOpened)
-  openProcessVersion(ctx: StateContext<CatalogStateModel>, {currentVersionId}: CatalogActions.ProcessVersionOpened)
-    : void {
+  openProcessVersion(ctx: StateContext<CatalogStateModel>, {currentVersionId}: CatalogActions.ProcessVersionOpened): void {
     ctx.setState(patch({
       currentProcess: patch({currentVersionId})
     }));
   }
 
   @Action(CatalogActions.ProcessDiscardChangesPatched)
-  processDiscardChangesPatched(ctx: StateContext<CatalogStateModel>, {flag}: CatalogActions.ProcessDiscardChangesPatched)
-    : void {
+  processDiscardChangesPatched(ctx: StateContext<CatalogStateModel>, {flag}: CatalogActions.ProcessDiscardChangesPatched): void {
     const hasVersions = !!ctx.getState().currentProcess?.versions?.length;
     ctx.setState(patch({
       currentProcess: patch({canDiscardChanges: hasVersions && flag})
@@ -122,10 +119,23 @@ export class CatalogState {
   }
 
   @Action(CatalogActions.ProcessNameChanged)
-  changeProcessName(ctx: StateContext<CatalogStateModel>, {name}: CatalogActions.ProcessNameChanged)
-    : void {
+  changeProcessName(ctx: StateContext<CatalogStateModel>, {name}: CatalogActions.ProcessNameChanged): void {
     ctx.setState(patch({
       currentProcess: patch({name})
+    }));
+  }
+
+  @Action(CatalogActions.BlockProcess)
+  blockProcess(ctx: StateContext<CatalogStateModel>): void {
+    ctx.setState(patch({
+      currentProcess: patch({blocked: true})
+    }));
+  }
+
+  @Action(CatalogActions.UnblockProcess)
+  unblockProcess(ctx: StateContext<CatalogStateModel>): void {
+    ctx.setState(patch({
+      currentProcess: patch({blocked: false})
     }));
   }
 

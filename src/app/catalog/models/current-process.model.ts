@@ -6,4 +6,5 @@ export interface CurrentProcessModel extends ProcessModel {
   currentVersionId?: string;
   versions?: ProcessVersionModel[];
   canDiscardChanges?: boolean;
+  blocked?: boolean; // await generation update
 }

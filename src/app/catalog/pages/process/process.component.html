@@ -1,12 +1,10 @@
 <div class="container-fluid mw-100">
   <div class="row align-items-center">
     <div class="col-auto">
-      <!-- TODO: refactor -->
       <np-process-toolbar
         [process]="process$ | async"
         [xmlMode]="xmlMode">
       </np-process-toolbar>
-      <!-- TODO: refactor -->
     </div>
     <div
       class="col-auto"
@@ -28,7 +26,7 @@
       <np-button
         [size]="'xs'"
         [minWidth]="true"
-        [disabled]="(process$ | async)?.isLocked"
+        [disabled]="(process$ | async)?.isLocked || (process$ | async)?.blocked"
         (click)="openCreateNewVersionModal()">
         <span>
            {{"common.done" | translate}}

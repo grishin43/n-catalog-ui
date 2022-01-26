@@ -18,6 +18,7 @@ export class HttpErrorsInterceptorService implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse): Observable<any> => {
+        // TODO: handle errors
         if (error.status === HttpStatusCodeEnum.UNAUTHORIZED) {
           this.authService.logout();
         }
