@@ -29,7 +29,6 @@ import {BpmnModelerService} from './services/bpmn-modeler/bpmn-modeler.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {ProcessAutosaveService} from './services/process-autosave/process-autosave.service';
-import {ToastModule} from '../shared/components/small/toast/toast.module';
 import {GrantAccessModalModule} from '../shared/components/big/grant-access-modal/grant-access-modal.module';
 import {ProcessAccessDeniedModalModule} from '../shared/components/big/process-access-denied-modal/process-access-denied-modal.module';
 import {ProcessActivateGuard} from './guards/process-activate-guard';
@@ -86,7 +85,6 @@ import { HeaderProfileComponent } from './components/header/header-profile/heade
     MatSnackBarModule,
     MatDialogModule,
     MatMenuModule,
-    ToastModule,
     GrantAccessModalModule,
     ProcessAccessDeniedModalModule,
     PreventProcessCloseModalModule,

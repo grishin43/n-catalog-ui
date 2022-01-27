@@ -51,7 +51,7 @@ export class ToastService {
     this.snackBar.openFromComponent(ToastErrorComponent, {
       data: {
         title: this.translateService.instant(i18nTitleKey),
-        error
+        error: this.translateService.instant(error)
       } as ToastErrorDataModel,
       duration,
       verticalPosition: 'bottom',

@@ -6,7 +6,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
 import {ConnectionService} from 'ng-connection-service';
 import {CurrentProcessModel} from '../../models/current-process.model';
-import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {ToastService} from '../../../toast/service/toast.service';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';

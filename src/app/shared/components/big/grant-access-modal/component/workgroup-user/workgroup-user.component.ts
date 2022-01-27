@@ -3,7 +3,7 @@ import {ProcessWorkgroupModel} from '../../../../../../models/domain/process-wor
 import {Observable, Subscription} from 'rxjs';
 import {ApiService} from '../../../../../../catalog/services/api/api.service';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ToastService} from '../../../../small/toast/service/toast.service';
+import {ToastService} from '../../../../../../toast/service/toast.service';
 import {PermissionLevel} from '../../../../../../models/domain/permission-level.enum';
 
 @Component({
@@ -62,9 +62,8 @@ export class WorkgroupUserComponent implements OnDestroy {
         if (typeof successCb === 'function') {
           successCb();
         }
-      }, (err: HttpErrorResponse) => {
+      }, () => {
         this.loader = false;
-        this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
       })
     );
   }

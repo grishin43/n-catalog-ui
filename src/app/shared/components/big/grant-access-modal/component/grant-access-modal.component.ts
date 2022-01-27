@@ -19,7 +19,7 @@ import {debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {SearchModel} from '../../../../../models/domain/search.model';
 import {UserModel} from '../../../../../models/domain/user.model';
-import {ToastService} from '../../../small/toast/service/toast.service';
+import {ToastService} from '../../../../../toast/service/toast.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {ProcessWorkgroupModel} from '../../../../../models/domain/process-workgroup.model';
@@ -168,10 +168,6 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
           this.closeModal();
         }, (err: HttpErrorResponse) => {
           this.formLoader = false;
-          this.toast.showError(
-            'errors.errorOccurred',
-            err.error?.message || err.message
-          );
         })
       );
     }

@@ -72,15 +72,6 @@
   </div>
   <div
     @fadeInOut
-    *ngIf="!errorResponse && errorResponse"
-    class="editor-overlay">
-    <p>{{'errors.failedToLoadProcess' | translate}}</p>
-    <np-button (click)="reloadPage()">
-      <span>{{'common.tryAgain' | translate}}</span>
-    </np-button>
-  </div>
-  <div
-    @fadeInOut
     *ngIf="errorResponse"
     class="editor-overlay">
     <ng-container *ngIf="errorResponse.status === httpStatusCode.FORBIDDEN; else generalErrorOccurredTempRef">

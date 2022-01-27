@@ -9,7 +9,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {CurrentProcessModel} from '../../../models/current-process.model';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
 import {validate} from 'fast-xml-parser';
-import {ToastService} from '../../../../shared/components/small/toast/service/toast.service';
+import {ToastService} from '../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {WindowHelper} from '../../../../helpers/window.helper';
 import {DocumentationDialogComponent} from '../documentation-dialog/documentation-dialog.component';
@@ -181,6 +181,7 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
         'errors.errorOccurred',
         this.translate.instant('errors.processCannotBeOpened')
       );
+      // TODO: reload process;
     }
   }
 

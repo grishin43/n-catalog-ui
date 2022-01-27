@@ -5,7 +5,6 @@ import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Router} from '@angular/router';
-import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
 import {MatDialog} from '@angular/material/dialog';
 import {TabsOverflowedModalComponent} from '../../../shared/components/big/tabs-overflowed-modal/component/tabs-overflowed-modal.component';
 import {Store} from '@ngxs/store';
@@ -21,7 +20,6 @@ export class EntitiesTabService {
 
   constructor(
     private router: Router,
-    private toast: ToastService,
     private dialog: MatDialog,
     private store: Store
   ) {

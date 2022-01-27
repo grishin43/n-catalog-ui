@@ -13,7 +13,7 @@ import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
 import {BpmnPaletteSchemeModel} from '../../models/bpmn/bpmn-palette-scheme.model';
 import {InjectionNames, OriginalPaletteProvider} from './palette/bpmn-js/bpmn-js';
 import {CustomPaletteProvider} from './palette/provider/CustomPaletteProvider';
-import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {ToastService} from '../../../toast/service/toast.service';
 import {default as camundaModdleDescriptor} from 'camunda-bpmn-moddle/resources/camunda.json';
 import resizeTask from 'bpmn-js-task-resize/lib';
 import {default as documentationModdleDescriptor} from './properties-panel/descriptors/documentation.json';

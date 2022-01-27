@@ -6,7 +6,7 @@ import {ProcessAutosaveService} from '../../services/process-autosave/process-au
 import {CurrentProcessModel} from '../../models/current-process.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
-import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {ToastService} from '../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -103,7 +103,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   private handleGeneralErrors(err: HttpErrorResponse): void {
     this.errorResponse = err;
-    this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
   }
 
   public openGrantAccessModal(): void {

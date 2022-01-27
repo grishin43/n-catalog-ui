@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ProcessVersionModel} from '../../../../../models/domain/process-version.model';
 import {HistoryTypeEnum} from '../../models/history-type.enum';
-import {ToastService} from '../../../../../shared/components/small/toast/service/toast.service';
+import {ToastService} from '../../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Select} from '@ngxs/store';
 import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';

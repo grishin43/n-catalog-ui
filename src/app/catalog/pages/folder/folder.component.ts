@@ -9,7 +9,7 @@ import {FolderModel} from '../../../models/domain/folder.model';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
-import {ToastService} from '../../../shared/components/small/toast/service/toast.service';
+import {ToastService} from '../../../toast/service/toast.service';
 import {CatalogEntityEnum} from '../../models/catalog-entity.enum';
 import {TranslateService} from '@ngx-translate/core';
 import {FolderService} from './services/folder/folder.service';

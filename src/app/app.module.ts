@@ -14,13 +14,24 @@ import {AuthService} from './auth/services/auth/auth.service';
 import {AuthComponent} from './auth/auth.component';
 import {registerLocaleData} from '@angular/common';
 import localeUk from '@angular/common/locales/uk';
+import {ToastLoaderComponent} from './toast/components/toast-loader/toast-loader.component';
+import {ToastErrorComponent} from './toast/components/toast-error/toast-error.component';
+import {ToastMessageComponent} from './toast/components/toast-message/toast-message.component';
+import {ToastService} from './toast/service/toast.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
+import {NpButtonModule} from './shared/components/small/np-button/np-button.module';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 registerLocaleData(localeUk, 'uk');
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent
+    AuthComponent,
+    ToastLoaderComponent,
+    ToastErrorComponent,
+    ToastMessageComponent
   ],
   imports: [
     BrowserModule,
@@ -34,15 +45,20 @@ registerLocaleData(localeUk, 'uk');
         deps: [HttpClient]
       }
     }),
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    NpButtonModule
   ],
   providers: [
     AuthService,
+    ToastService,
     {provide: LOCALE_ID, useValue: 'uk'},
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorsInterceptorService,
-      multi: true,
+      multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,

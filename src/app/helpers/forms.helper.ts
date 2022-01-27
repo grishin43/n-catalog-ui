@@ -6,7 +6,7 @@ export class FormsHelper {
     (Object as any).values(formGroup.controls).forEach(control => {
       control.markAsTouched();
       if (control.invalid) {
-        control.setErrors({required: true});
+        control.setErrors(control.errors);
       }
       if (control.controls) {
         this.markFormGroupTouched(control);

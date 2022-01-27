@@ -1,4 +1,5 @@
 export enum HttpStatusCodeEnum {
+  NO_CONNECTION = 0,
   UNAUTHORIZED = 401,
   NOT_FOUND = 404,
   FORBIDDEN = 403,

@@ -16,7 +16,7 @@ import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.m
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
 import {CurrentProcessModel} from '../../../../../catalog/models/current-process.model';
 import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
-import {ToastService} from '../../../small/toast/service/toast.service';
+import {ToastService} from '../../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
@@ -89,9 +89,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
             this.processTypesLoader = false;
             this.processTypes = undefined;
           }
-        }, (err: HttpErrorResponse) => {
+        }, () => {
           this.processTypesLoader = false;
-          this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
         })
     );
   }
@@ -103,9 +102,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
         .subscribe((res: SearchModel<FolderModel>) => {
           this.explorerLoader = false;
           this.rootFolders = res?.items;
-        }, (err: HttpErrorResponse) => {
+        }, () => {
           this.explorerLoader = false;
-          this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
         })
     );
   }
@@ -160,9 +158,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
           this.explorerLoader = false;
           this.openedFolder = res;
           this.handleEntityNameDuplicator(FormFieldEnum.ENTITY_NAME);
-        }, (err: HttpErrorResponse) => {
+        }, () => {
           this.explorerLoader = false;
-          this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
         })
     );
   }
@@ -190,10 +187,6 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       return path?.length ? `${path}/${folder.name}` : folder.name;
     }
     return folder.name;
-  }
-
-  public xyz(): void {
-    console.log(this.form.get(FormFieldEnum.ENTITY_NAME).errors);
   }
 
   public formSubmit(): void {
@@ -233,9 +226,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
               this.processService.openCreatedProcess(parameters.processID, processName, this.currentFolderId);
             }
           },
-          (err: HttpErrorResponse) => {
+          () => {
             this.formLoader = false;
-            this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
             this.closeModal();
           })
     );
@@ -257,9 +249,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
               this.data.ssCb();
             }
           },
-          (err: HttpErrorResponse) => {
+          () => {
             this.formLoader = false;
-            this.toast.showError('errors.errorOccurred', err.error?.message || err.message);
           })
     );
   }
