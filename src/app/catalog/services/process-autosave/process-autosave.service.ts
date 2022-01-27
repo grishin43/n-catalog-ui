@@ -6,7 +6,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
 import {ConnectionService} from 'ng-connection-service';
 import {CurrentProcessModel} from '../../models/current-process.model';
-import {ToastService} from '../../../toast/service/toast.service';
 import {LocalStorageHelper} from '../../../helpers/localStorageHelper';
 import {StorageEnum} from '../../../models/storageEnum';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
@@ -19,6 +18,7 @@ import {Store} from '@ngxs/store';
 import {ProcessService} from '../../pages/folder/services/process/process.service';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
+import {ToastService} from '../../../toast/service/toast.service';
 
 @Injectable({
   providedIn: 'root'

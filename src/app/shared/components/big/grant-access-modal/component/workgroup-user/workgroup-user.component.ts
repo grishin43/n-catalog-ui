@@ -2,8 +2,6 @@ import {Component, Input, OnDestroy} from '@angular/core';
 import {ProcessWorkgroupModel} from '../../../../../../models/domain/process-workgroup.model';
 import {Observable, Subscription} from 'rxjs';
 import {ApiService} from '../../../../../../catalog/services/api/api.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {ToastService} from '../../../../../../toast/service/toast.service';
 import {PermissionLevel} from '../../../../../../models/domain/permission-level.enum';
 
 @Component({
@@ -24,8 +22,7 @@ export class WorkgroupUserComponent implements OnDestroy {
   private subs = new Subscription();
 
   constructor(
-    private api: ApiService,
-    private toast: ToastService
+    private api: ApiService
   ) {
   }
 

@@ -2,6 +2,10 @@
 
 button {
 
+  &:disabled {
+    pointer-events: none !important;
+  }
+
   &.md {
     font-size: 16px;
     height: 48px;

@@ -10,17 +10,16 @@ import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../../catalog/models/catalog-route.enum';
 import {ModalInjectableEntityModel} from '../../../../../models/modal-injectable-entity.model';
 import {Subscription} from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
 import {SearchModel} from '../../../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../../../models/domain/process-type.model';
 import {CurrentProcessModel} from '../../../../../catalog/models/current-process.model';
 import {EntityPathModel} from '../../../../../models/domain/entity-path.model';
-import {ToastService} from '../../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
+import {ToastService} from '../../../../../toast/service/toast.service';
 
 @Component({
   selector: 'np-create-entity-modal',

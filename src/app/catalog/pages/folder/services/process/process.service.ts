@@ -18,8 +18,8 @@ import {SearchModel} from '../../../../../models/domain/search.model';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogSelectors} from '../../../../store/selectors/catalog.selectors';
 import {ResourceTypeEnum} from '../../../../../models/domain/resource-type.enum';
-import {ToastService} from '../../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
+import {ToastService} from '../../../../../toast/service/toast.service';
 
 @Injectable({
   providedIn: 'root'

@@ -6,7 +6,6 @@ import {ProcessAutosaveService} from '../../services/process-autosave/process-au
 import {CurrentProcessModel} from '../../models/current-process.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
-import {ToastService} from '../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -26,6 +25,7 @@ import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
 import {Select, Store} from '@ngxs/store';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {CatalogActions} from '../../store/actions/catalog.actions';
+import {ToastService} from '../../../toast/service/toast.service';
 
 @Component({
   selector: 'np-process',
@@ -167,7 +167,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   public openCreateNewVersionModal(): boolean {
-    if (this.process?.isLocked) {
+    if (this.process?.isLocked || this.process?.blocked) {
       return false;
     }
     const shouldSaved = this.processAutosave.shouldSaved;

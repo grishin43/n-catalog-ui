@@ -9,7 +9,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {CurrentProcessModel} from '../../../models/current-process.model';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
 import {validate} from 'fast-xml-parser';
-import {ToastService} from '../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {WindowHelper} from '../../../../helpers/window.helper';
 import {DocumentationDialogComponent} from '../documentation-dialog/documentation-dialog.component';
@@ -18,6 +17,7 @@ import {Select} from '@ngxs/store';
 import {CatalogSelectors} from '../../../store/selectors/catalog.selectors';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {ResourceModel} from '../../../../models/domain/resource.model';
+import {ToastService} from '../../../../toast/service/toast.service';
 
 @Component({
   selector: 'np-bpmn-editor',

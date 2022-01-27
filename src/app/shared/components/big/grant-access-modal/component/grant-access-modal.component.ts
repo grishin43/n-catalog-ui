@@ -19,13 +19,13 @@ import {debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {SearchModel} from '../../../../../models/domain/search.model';
 import {UserModel} from '../../../../../models/domain/user.model';
-import {ToastService} from '../../../../../toast/service/toast.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {ProcessWorkgroupModel} from '../../../../../models/domain/process-workgroup.model';
 import {PermissionLevel} from '../../../../../models/domain/permission-level.enum';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {HttpErrorResponse} from '@angular/common/http';
+import {ToastService} from '../../../../../toast/service/toast.service';
 
 @Component({
   selector: 'np-grant-access-modal',
@@ -33,6 +33,30 @@ import {HttpErrorResponse} from '@angular/common/http';
   styleUrls: ['./grant-access-modal.component.scss']
 })
 export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDestroy {
+
+  constructor(
+    private dialogRef: MatDialogRef<GrantAccessModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public process: CurrentProcessModel,
+    private translate: TranslateService,
+    private api: ApiService,
+    private toast: ToastService,
+    private cdRef: ChangeDetectorRef,
+    private clipboard: Clipboard
+  ) {
+  }
+
+  public get filteredUsers(): UserModel[] {
+    const usernames = new Set(this.selectedUsers?.map((u: UserModel) => u.username));
+    return this.users?.filter((u: UserModel) => !usernames.has(u.username));
+  }
+
+  public get ownerPermissionId(): string {
+    return this.workgroup?.find((wg: ProcessWorkgroupModel) => wg.level.code === PermissionLevel.OWNER)?.id;
+  }
+
+  public get currentUrl(): string {
+    return window.location.href;
+  }
   public form: FormGroup;
   public formControlName = FormFieldEnum;
   public formLoader: boolean;
@@ -49,25 +73,14 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
 
   private subs = new Subscription();
 
+  @ViewChild('usersInput') usersInput: ElementRef;
+
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'Enter') {
       e.preventDefault();
       this.formSubmit();
     }
   }
-
-  constructor(
-    private dialogRef: MatDialogRef<GrantAccessModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public process: CurrentProcessModel,
-    private translate: TranslateService,
-    private api: ApiService,
-    private toast: ToastService,
-    private cdRef: ChangeDetectorRef,
-    private clipboard: Clipboard
-  ) {
-  }
-
-  @ViewChild('usersInput') usersInput: ElementRef;
 
   ngOnInit(): void {
     this.initForm();
@@ -127,11 +140,6 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
     return !!this.users?.find((u: UserModel) => u.username === str);
   }
 
-  public get filteredUsers(): UserModel[] {
-    const usernames = new Set(this.selectedUsers?.map((u: UserModel) => u.username));
-    return this.users?.filter((u: UserModel) => !usernames.has(u.username));
-  }
-
   private searchUsers(searchTerm: string): void {
     this.searchLoader = true;
     this.subs.add(
@@ -185,14 +193,6 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
     if (index >= 0) {
       this.selectedUsers.splice(index, 1);
     }
-  }
-
-  public get ownerPermissionId(): string {
-    return this.workgroup?.find((wg: ProcessWorkgroupModel) => wg.level.code === PermissionLevel.OWNER)?.id;
-  }
-
-  public get currentUrl(): string {
-    return window.location.href;
   }
 
   public copyToClipboard(event: MouseEvent): void {

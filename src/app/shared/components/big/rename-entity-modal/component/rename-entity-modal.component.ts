@@ -7,12 +7,12 @@ import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.en
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {Observable, Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ToastService} from '../../../../../toast/service/toast.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ProcessService} from '../../../../../catalog/pages/folder/services/process/process.service';
 import {FolderFieldKey, FolderModel} from '../../../../../models/domain/folder.model';
 import {CurrentProcessModel} from '../../../../../catalog/models/current-process.model';
 import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
+import {ToastService} from '../../../../../toast/service/toast.service';
 
 @Component({
   selector: 'np-rename-entity-modal',
