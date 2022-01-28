@@ -11,6 +11,7 @@ import {UiNotificationCheck} from '../../../../models/domain/ui-notification.che
 import {ProcessService} from '../../../pages/folder/services/process/process.service';
 import {Select} from '@ngxs/store';
 import {CatalogSelectors} from '../../../store/selectors/catalog.selectors';
+import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
 
 @Component({
   selector: 'np-version-history',
@@ -55,7 +56,8 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   constructor(
     private api: ApiService,
-    private processService: ProcessService
+    private processService: ProcessService,
+    public processAutosave: ProcessAutosaveService
   ) {
   }
 

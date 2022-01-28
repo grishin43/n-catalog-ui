@@ -4,6 +4,7 @@ import {HistoryTypeEnum} from '../../../models/history-type.enum';
 import {AnimationsHelper} from '../../../../../helpers/animations.helper';
 import {VersionDetailsModalComponent} from '../../version-details-modal/version-details-modal.component';
 import {MatDialog} from '@angular/material/dialog';
+import {ProcessAutosaveService} from '../../../../../services/process-autosave/process-autosave.service';
 
 @Component({
   selector: 'np-version-list-item',
@@ -14,9 +15,9 @@ import {MatDialog} from '@angular/material/dialog';
 export class VersionListItemComponent implements OnInit {
   @Input() type: HistoryTypeEnum;
   @Input() version: ProcessVersionModel;
+  @Input() active: boolean;
   @Input() autosaving: boolean;
   @Input() isLocked: boolean;
-  @Input() active: boolean;
 
   @Output() versionOpened = new EventEmitter<ProcessVersionModel>();
   @Output() versionLaunched = new EventEmitter<ProcessVersionModel>();
@@ -27,7 +28,7 @@ export class VersionListItemComponent implements OnInit {
   public eHistoryType = HistoryTypeEnum;
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
   }
 

@@ -5,6 +5,7 @@
       'active': (currentVersionId$ | async) === version.versionID
     }"
     [active]="(currentVersionId$ | async) === version.versionID"
+    [autosaving]="autosaving"
     [version]="version"
     [type]="type"
     [isLocked]="isLocked"

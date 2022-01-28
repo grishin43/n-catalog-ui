@@ -79,6 +79,7 @@
         [loader]="loader"
         [error]="error"
         [type]="historyType"
+        [autosaving]="processAutosave.autosaveLoader$ | async"
         (versionOpenClicked)="versionOpenClicked.emit($event)">
       </np-version-list>
     </div>

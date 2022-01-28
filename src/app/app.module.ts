@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
@@ -22,6 +22,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {NpButtonModule} from './shared/components/small/np-button/np-button.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {GlobalErrorHandler} from './services/error-handler/global-error-handler.service';
 
 registerLocaleData(localeUk, 'uk');
 
@@ -70,6 +71,10 @@ registerLocaleData(localeUk, 'uk');
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
     }
   ],
   bootstrap: [AppComponent]

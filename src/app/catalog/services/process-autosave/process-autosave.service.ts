@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, interval, Subscription} from 'rxjs';
-import {concatMap, timeInterval} from 'rxjs/operators';
+import {concatMap, tap, timeInterval} from 'rxjs/operators';
 import {ApiService} from '../api/api.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {BpmnModelerService} from '../bpmn-modeler/bpmn-modeler.service';
@@ -32,6 +32,7 @@ export class ProcessAutosaveService {
 
   public requestLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public resourceSaved$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public autosaveLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public shouldSaved: boolean;
 
   private subs = new Subscription();
@@ -84,6 +85,7 @@ export class ProcessAutosaveService {
           },
           () => {
             this.requestLoader$.next(false);
+            this.autosaveLoader$.next(false);
             this.handleServerErrors();
           }
         );
@@ -101,8 +103,8 @@ export class ProcessAutosaveService {
     this.timer$ = interval(this.delay)
       .pipe(
         timeInterval(),
-        concatMap(() => this.saveProcess())
-      )
+        tap(() => this.autosaveLoader$.next(true)),
+        concatMap(() => this.saveProcess()))
       .subscribe(() => {
         this.destroyTimer();
       }, (err: HttpErrorResponse) => {
@@ -191,6 +193,7 @@ export class ProcessAutosaveService {
 
   private savingSuccessCb(): void {
     this.requestLoader$.next(false);
+    this.autosaveLoader$.next(false);
     this.resourceSaved$.next(true);
     this.disableSaving();
   }

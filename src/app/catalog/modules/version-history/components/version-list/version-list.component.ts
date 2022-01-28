@@ -20,6 +20,7 @@ export class VersionListComponent {
   @Input() loader: boolean;
   @Input() error: string;
   @Input() isLocked: boolean;
+  @Input() autosaving: boolean;
 
   @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
 
