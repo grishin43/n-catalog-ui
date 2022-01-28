@@ -81,4 +81,11 @@ export namespace CatalogActions {
     }
   }
 
+  export class CurrentProcessClosed {
+    static readonly type = 'CurrentProcessClosed';
+
+    constructor() {
+    }
+  }
+
 }

@@ -70,6 +70,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
     this.toast.close();
     this.processAutosave.destroy();
+    this.store.dispatch(new CatalogActions.CurrentProcessClosed());
   }
 
   private subscribeProcess(): void {

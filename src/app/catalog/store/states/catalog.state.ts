@@ -139,4 +139,11 @@ export class CatalogState {
     }));
   }
 
+  @Action(CatalogActions.CurrentProcessClosed)
+  deleteCurrentProcess(ctx: StateContext<CatalogStateModel>): void {
+    ctx.setState(patch({
+      currentProcess: undefined
+    }));
+  }
+
 }
