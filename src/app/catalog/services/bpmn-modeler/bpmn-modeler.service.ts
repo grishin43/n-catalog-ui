@@ -71,41 +71,10 @@ export class BpmnModelerService {
     }
   }
 
-  public initModeler(containerSelector: string, propertiesPanelSelector: string, cb: () => void): void {
+  public init(modeler: any, propertiesPanelSelector: string): void {
     if (window.hasOwnProperty('BpmnJS')) {
       this.panelSelector = propertiesPanelSelector;
-      // @ts-ignore
-      this.modeler = new BpmnJS({
-        container: containerSelector,
-        keyboard: {
-          bindTo: window
-        },
-        linting: {
-          bpmnlint: bpmnlintConfig
-        },
-        additionalModules: [
-          propertiesPanelModule,
-          bpmnPropertiesProviderModule,
-          camundaModdleDescriptor,
-          // Re-use original palette, see CustomPaletteProvider
-          {[InjectionNames.originalPaletteProvider]: ['type', OriginalPaletteProvider]},
-          {[InjectionNames.paletteProvider]: ['type', CustomPaletteProvider]},
-          TokenSimulationModule,
-          lintModule,
-          transactionBoundariesModule,
-          resizeTask,
-          embeddedCommentsModule
-        ],
-        propertiesPanel: {
-          parent: propertiesPanelSelector
-        },
-        moddleExtensions: {
-          camunda: camundaModdleDescriptor,
-          documentation: documentationModdleDescriptor
-        },
-        taskResizingEnabled: true
-      });
-      cb();
+      this.modeler = modeler;
       this.listenPasteElements();
     }
   }

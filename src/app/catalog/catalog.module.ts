@@ -43,7 +43,7 @@ import {FolderService} from './pages/folder/services/folder/folder.service';
 import {ProcessService} from './pages/folder/services/process/process.service';
 import {NgxsSelectSnapshotModule} from '@ngxs-labs/select-snapshot';
 import {TabsOverflowedModalModule} from '../shared/components/big/tabs-overflowed-modal/tabs-overflowed-modal.module';
-import { HeaderProfileComponent } from './components/header/header-profile/header-profile.component';
+import {HeaderProfileComponent} from './components/header/header-profile/header-profile.component';
 
 @NgModule({
   declarations: [
@@ -62,11 +62,11 @@ import { HeaderProfileComponent } from './components/header/header-profile/heade
       FolderState,
     ], {developmentMode: !environment.production}),
     NgxsStoragePluginModule.forRoot({
-     key: [
-       ProcessState,
-       FolderState,
-     ],
-     storage: StorageOption.LocalStorage
+      key: [
+        ProcessState,
+        FolderState,
+      ],
+      storage: StorageOption.LocalStorage
     }),
     NgxsSelectSnapshotModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),

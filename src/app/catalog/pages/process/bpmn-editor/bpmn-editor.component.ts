@@ -18,6 +18,21 @@ import {CatalogSelectors} from '../../../store/selectors/catalog.selectors';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';
 import {ResourceModel} from '../../../../models/domain/resource.model';
 import {ToastService} from '../../../../toast/service/toast.service';
+import BpmnModeler from 'bpmn-js/lib/Modeler';
+import propertiesPanelModule from 'bpmn-js-properties-panel';
+import bpmnPropertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
+import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda.json';
+// @ts-ignore
+import bpmnlintConfig from '.bpmnlintrc';
+import {InjectionNames, OriginalPaletteProvider} from '../../../services/bpmn-modeler/palette/bpmn-js/bpmn-js';
+import {CustomPaletteProvider} from '../../../services/bpmn-modeler/palette/provider/CustomPaletteProvider';
+import TokenSimulationModule from 'bpmn-js-token-simulation';
+import lintModule from 'bpmn-js-bpmnlint';
+import transactionBoundariesModule from 'bpmn-js-transaction-boundaries';
+import resizeTask from 'bpmn-js-task-resize/lib';
+import embeddedCommentsModule from '../../../services/bpmn-modeler/embedded-comments';
+import {default as documentationModdleDescriptor} from '../../../services/bpmn-modeler/properties-panel/descriptors/documentation.json';
+
 
 @Component({
   selector: 'np-bpmn-editor',
@@ -121,14 +136,39 @@ export class BpmnEditorComponent implements OnInit, OnDestroy {
   }
 
   private initEditor(): void {
-    this.bpmnModelerService.initModeler(
-      '#bpmn-canvas',
-      '#bpmn-properties',
-      () => {
-        this.listenModelerChanges();
-        this.listenOpenWysiwygEditor();
-      }
-    );
+    const modeler = new BpmnModeler({
+      container: '#bpmn-canvas',
+      keyboard: {
+        bindTo: window
+      },
+      linting: {
+        bpmnlint: bpmnlintConfig
+      },
+      additionalModules: [
+        propertiesPanelModule,
+        bpmnPropertiesProviderModule,
+        camundaModdleDescriptor,
+        // Re-use original palette, see CustomPaletteProvider
+        {[InjectionNames.originalPaletteProvider]: ['type', OriginalPaletteProvider]},
+        {[InjectionNames.paletteProvider]: ['type', CustomPaletteProvider]},
+        TokenSimulationModule,
+        lintModule,
+        transactionBoundariesModule,
+        resizeTask,
+        embeddedCommentsModule
+      ],
+      propertiesPanel: {
+        parent: '#bpmn-properties'
+      },
+      moddleExtensions: {
+        camunda: camundaModdleDescriptor,
+        documentation: documentationModdleDescriptor
+      },
+      taskResizingEnabled: true
+    });
+    this.bpmnModelerService.init(modeler, '#bpmn-properties');
+    this.listenModelerChanges();
+    this.listenOpenWysiwygEditor();
   }
 
   private listenOpenWysiwygEditor(): void {
