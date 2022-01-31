@@ -38,6 +38,7 @@
         appearance="outline"
         floatLabel="never">
         <textarea
+          #descriptionRef
           type="text"
           class="np-text-area"
           matInput
@@ -46,6 +47,10 @@
           [attr.name]="formControlName.DESCRIPTION"
           [placeholder]="'common.descriptionThatChanged' | translate">
         </textarea>
+        <mat-hint>{{'common.maxSymbolsCount' | translate : {
+          count: descriptionRef.value?.length,
+          of: 200
+        } }}</mat-hint>
       </mat-form-field>
     </div>
   </form>

@@ -1,4 +1,5 @@
-import {Directive, ElementRef, HostListener, Input} from '@angular/core';
+import {Directive, HostListener, Input} from '@angular/core';
+import {NgControl} from '@angular/forms';
 
 @Directive({
   selector: '[npMaxLength]'
@@ -6,13 +7,15 @@ import {Directive, ElementRef, HostListener, Input} from '@angular/core';
 export class MaxLengthDirective {
   @Input() npMaxLength: string;
 
-  constructor(private el: ElementRef) {
+  constructor(private control: NgControl) {
   }
 
   @HostListener('input') onInput(): void {
-    const length = this.el?.nativeElement?.value?.length;
+    const value = this.control.control.value;
+    const length = value?.length;
     if (length >= +this.npMaxLength) {
-      this.el.nativeElement.value = this.el.nativeElement.value.substr(0, +this.npMaxLength);
+      const newValue = value.substr(0, +this.npMaxLength);
+      this.control.control.setValue(newValue);
     }
   }
 

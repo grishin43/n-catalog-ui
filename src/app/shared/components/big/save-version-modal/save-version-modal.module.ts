@@ -17,17 +17,17 @@ import {MaxLengthModule} from '../../../directives/max-length/max-length.module'
   exports: [
     SaveVersionModalComponent
   ],
-    imports: [
-        CommonModule,
-        MatDialogModule,
-        TranslateModule,
-        ReactiveFormsModule,
-        NpButtonModule,
-        MatProgressSpinnerModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MaxLengthModule
-    ]
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    TranslateModule,
+    ReactiveFormsModule,
+    NpButtonModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MaxLengthModule
+  ]
 })
 export class SaveVersionModalModule {
 }
