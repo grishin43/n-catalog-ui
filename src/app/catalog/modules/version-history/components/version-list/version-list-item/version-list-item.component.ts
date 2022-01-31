@@ -1,10 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ProcessVersionModel} from '../../../../../../models/domain/process-version.model';
 import {HistoryTypeEnum} from '../../../models/history-type.enum';
 import {AnimationsHelper} from '../../../../../helpers/animations.helper';
 import {VersionDetailsModalComponent} from '../../version-details-modal/version-details-modal.component';
 import {MatDialog} from '@angular/material/dialog';
-import {ProcessAutosaveService} from '../../../../../services/process-autosave/process-autosave.service';
 
 @Component({
   selector: 'np-version-list-item',
@@ -26,6 +25,14 @@ export class VersionListItemComponent implements OnInit {
   public readonly dateFormat: string = 'dd MMMM yyyy, HH:mm:ss';
   public showMenu: boolean;
   public eHistoryType = HistoryTypeEnum;
+  public focused: boolean;
+
+  @ViewChild('itemRef') itemRef;
+
+  @HostListener('document:click', ['$event'])
+  public onOutsideClick(event: MouseEvent): void {
+    this.focused = this.itemRef.nativeElement.contains(event.target);
+  }
 
   constructor(
     private dialog: MatDialog,

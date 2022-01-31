@@ -61,7 +61,7 @@ button {
     &:not(.no-menu) {
       transition: var(--np-base-transition);
 
-      &:hover {
+      &:hover, &.focused {
         background: var(--np-ghost-white);
       }
     }
@@ -71,7 +71,7 @@ button {
       font-size: 14px;
     }
 
-    &:hover {
+    &:hover, &.focused {
       .version-info_header {
         button {
           &.menu-dots {

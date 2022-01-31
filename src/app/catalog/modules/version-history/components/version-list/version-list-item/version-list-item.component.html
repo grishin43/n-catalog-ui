@@ -11,9 +11,11 @@
 </ng-container>
 <ng-template #notCurrentVersionTemplate>
   <div
+    #itemRef
     class="version-info"
     [ngClass]="{
-      'no-menu': type === eHistoryType.START_AND_STOP_HISTORY
+      'no-menu': type === eHistoryType.START_AND_STOP_HISTORY,
+      'focused': focused
     }">
     <div class="version-info_header">
       <h4>{{version.title}}</h4>

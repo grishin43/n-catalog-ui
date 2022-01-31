@@ -8,6 +8,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {SaveVersionModalComponent} from './component/save-version-modal.component';
+import {MaxLengthModule} from '../../../directives/max-length/max-length.module';
 
 @NgModule({
   declarations: [
@@ -16,16 +17,17 @@ import {SaveVersionModalComponent} from './component/save-version-modal.componen
   exports: [
     SaveVersionModalComponent
   ],
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    TranslateModule,
-    ReactiveFormsModule,
-    NpButtonModule,
-    MatProgressSpinnerModule,
-    MatFormFieldModule,
-    MatInputModule
-  ]
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        TranslateModule,
+        ReactiveFormsModule,
+        NpButtonModule,
+        MatProgressSpinnerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MaxLengthModule
+    ]
 })
 export class SaveVersionModalModule {
 }
