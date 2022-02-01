@@ -2,7 +2,9 @@
    matRipple
    matRippleColor="{{rippleLightColor}}"
    [routerLink]="folderRoute"
-   class="folder">
+   class="folder"
+   [attr.data-name]="'root-folder'"
+   id="{{folder?.id}}">
   <div class="folder-header">
     <ng-container *ngIf="folder.icon; else generalIconTemplate">
       <mat-icon [innerHTML]="folder.icon | safeHtml"></mat-icon>

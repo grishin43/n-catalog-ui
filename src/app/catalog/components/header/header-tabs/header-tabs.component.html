@@ -12,7 +12,7 @@
         matRippleColor="{{rippleLightColor}}"
         matTooltip="{{process.name}}"
         [ngClass]="{
-          'active': process.id === processId && process.parent.id === folderId
+          'active': process.id === currentProcessId && process.parent.id === currentProcessFolderId
         }"
         [ngStyle]="{
           'max-width': processes.length > maxCount
@@ -21,7 +21,9 @@
           'min-width': tabMinWidth + 'px',
           'flex': processes.length > maxCount ? '0 0 100%' : '0 0 auto'
         }"
-        (click)="openProcess(process)">
+        (click)="openProcess(process)"
+        [attr.id]="process.id"
+        [attr.data-name]="'header-process-tab'">
         <span class="entity-name">
            {{process.name}}
         </span>
@@ -30,7 +32,8 @@
           [ngClass]="{
             'visible': showAllCrosses
           }"
-          (click)="onDeleteClicked($event, process)">
+          (click)="onDeleteClicked($event, process)"
+          [attr.data-name]="'header-process-tab-close'">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M18.3 5.7107C17.91 5.3207 17.28 5.3207 16.89 5.7107L12 10.5907L7.10997 5.7007C6.71997 5.3107 6.08997 5.3107 5.69997 5.7007C5.30997 6.0907 5.30997 6.7207 5.69997 7.1107L10.59 12.0007L5.69997 16.8907C5.30997 17.2807 5.30997 17.9107 5.69997 18.3007C6.08997 18.6907 6.71997 18.6907 7.10997 18.3007L12 13.4107L16.89 18.3007C17.28 18.6907 17.91 18.6907 18.3 18.3007C18.69 17.9107 18.69 17.2807 18.3 16.8907L13.41 12.0007L18.3 7.1107C18.68 6.7307 18.68 6.0907 18.3 5.7107Z"
@@ -47,7 +50,8 @@
           <button
             mat-button
             class="min-width-auto p-0"
-            (click)="menuTrigger.openMenu()">
+            (click)="menuTrigger.openMenu()"
+            id="hidden-process-menu-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M9.31002 17.29C8.92002 16.9 8.92002 16.27 9.31002 15.88L13.19 12L9.31002 8.11998C8.92002 7.72998 8.92002 7.09998 9.31002 6.70998C9.70002 6.31998 10.33 6.31998 10.72 6.70998L15.31 11.3C15.7 11.69 15.7 12.32 15.31 12.71L10.72 17.3C10.34 17.68 9.70002 17.68 9.31002 17.29Z"
@@ -69,6 +73,8 @@
             <button
               *ngIf="process"
               (click)="openProcess(process)"
+              [attr.id]="process.id"
+              [attr.data-name]="'header-hidden-process-tab'"
               mat-menu-item>
               <mat-icon>
                 <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">

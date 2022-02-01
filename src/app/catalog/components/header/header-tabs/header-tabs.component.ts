@@ -14,7 +14,9 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {CurrentProcessModel} from '../../../models/current-process.model';
 import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.service';
 import {MatRippleHelper} from '../../../helpers/mat-ripple.helper';
-import {PreventProcessCloseModalComponent} from '../../../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
+import {
+  PreventProcessCloseModalComponent
+} from '../../../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';
@@ -38,8 +40,9 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
     private cdRef: ChangeDetectorRef
   ) {
   }
-  @Input() processId: string;
-  @Input() folderId: string;
+
+  @Input() currentProcessId: string;
+  @Input() currentProcessFolderId: string;
   @Input() showAllCrosses: boolean;
   @Input() searchFormStretched: BehaviorSubject<boolean>;
   @Input() isProcessPath: boolean;
@@ -92,7 +95,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
   public onDeleteClicked(event: MouseEvent, entity: CurrentProcessModel): void {
     event.stopPropagation();
     event.preventDefault();
-    if (this.processId === entity.id && this.processAutosave.shouldSaved) {
+    if (this.currentProcessId === entity.id && this.processAutosave.shouldSaved) {
       this.subs.add(this.dialog.open(PreventProcessCloseModalComponent, {
           width: '700px',
           autoFocus: false
@@ -103,7 +106,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
     } else {
-      this.entitiesTabService.deleteEntity(entity, this.processId !== entity.id);
+      this.entitiesTabService.deleteEntity(entity, this.currentProcessId !== entity.id);
     }
   }
 

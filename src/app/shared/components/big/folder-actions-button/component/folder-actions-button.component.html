@@ -1,6 +1,8 @@
-<div class="d-inline-flex"
-     #menuTrigger="matMenuTrigger"
-     [matMenuTriggerFor]="menu">
+<div
+  id="mat-menu-trigger"
+  class="d-inline-flex"
+  #menuTrigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu">
   <ng-content></ng-content>
 </div>
 <mat-menu
@@ -9,6 +11,7 @@
   <ng-container
     *ngIf="renameOnly; else notRenameOnlyTemplate">
     <button
+      id="rename-entity"
       mat-menu-item
       (click)="renameEntity($event); menuTrigger.closeMenu();">
       <mat-icon>
@@ -25,6 +28,7 @@
   </ng-container>
   <ng-template #notRenameOnlyTemplate>
     <button
+      id="create-folder"
       mat-menu-item
       (click)="createEntity($event, eCatalogEntity.FOLDER); menuTrigger.closeMenu();">
       <mat-icon>
@@ -35,10 +39,11 @@
         </svg>
       </mat-icon>
       <span>
-      {{(createPrefix ? 'common.createFolder' : 'common.folder') | translate}}
-    </span>
+        {{(createPrefix ? 'common.createFolder' : 'common.folder') | translate}}
+      </span>
     </button>
     <button
+      id="create-process"
       mat-menu-item
       (click)="createEntity($event, eCatalogEntity.PROCESS); menuTrigger.closeMenu();">
       <mat-icon>
@@ -49,8 +54,8 @@
         </svg>
       </mat-icon>
       <span>
-      {{(createPrefix ? 'common.createProcess' : 'common.process') | translate}}
-    </span>
+        {{(createPrefix ? 'common.createProcess' : 'common.process') | translate}}
+      </span>
     </button>
   </ng-template>
 </mat-menu>

@@ -102,15 +102,24 @@ export class ProcessService {
         .then(() => {
           this.discardVersionChangesCb(parentId, processId);
           this.store.dispatch(new CatalogActions.UnblockProcess());
+        })
+        .catch(() => {
+          this.store.dispatch(new CatalogActions.UnblockProcess());
         });
     }
   }
 
+  private showChangesDiscardedToast(): void {
+    this.toast.show('common.changesDiscarded', 5000);
+  }
+
   private discardVersionChangesCb(parentId: string, processId: string): void {
     if (this.process.currentVersionId) {
-      this.getProcessVersionById(parentId, processId, this.process.currentVersionId).toPromise();
+      this.getProcessVersionById(parentId, processId, this.process.currentVersionId).toPromise()
+        .then(() => this.showChangesDiscardedToast());
     } else {
-      this.getProcessById(parentId, processId).toPromise();
+      this.getProcessById(parentId, processId).toPromise()
+        .then(() => this.showChangesDiscardedToast());
     }
     this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(false));
   }

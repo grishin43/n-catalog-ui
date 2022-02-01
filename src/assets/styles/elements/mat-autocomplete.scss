@@ -191,6 +191,15 @@
   }
 
   &.pseudo-explorer {
+
+    @media screen and (max-height: 700px) {
+      max-height: 200px;
+    }
+
+    @media screen and (max-height: 500px) {
+      max-height: 180px;
+    }
+
     mat-option {
       &:not(.pseudo-header):not(.pseudo-body):not(.pseudo-footer) {
         height: 38px;

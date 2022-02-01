@@ -6,6 +6,7 @@
     {{'common.areYouWantToSaveVersionBasedOn' | translate: {versionName: versionName} }}
   </h4>
   <button
+    id="avs-modal-close-btn"
     class="min-width-auto p-0"
     mat-button
     (click)="closeModal()">
@@ -18,6 +19,7 @@
 </div>
 <mat-dialog-actions>
   <np-button
+    id="avs-modal-cancel-btn"
     [minWidth]="true"
     [btnType]="'reset'"
     [type]="'secondary'"
@@ -25,6 +27,7 @@
     {{'common.cancelChanges' | translate}}
   </np-button>
   <np-button
+    id="avs-modal-save-btn"
     [minWidth]="true"
     [btnType]="'submit'"
     [type]="'primary'"

@@ -135,9 +135,11 @@
             <ng-container
               *ngIf="row.permissions !== entityPermission.NO_ACCESS; else requestAccessTemp">
               <ng-container *ngIf="row?.type === catalogEntityType.PROCESS || row?.type === catalogEntityType.FOLDER">
-                <button mat-icon-button
-                        (click)="$event.preventDefault(); $event.stopPropagation();"
-                        [matMenuTriggerFor]="menu">
+                <button
+                  mat-icon-button
+                  (click)="$event.preventDefault(); $event.stopPropagation();"
+                  [matMenuTriggerFor]="menu"
+                  [attr.data-name]="'entities-table-action-btn'">
                   <mat-icon>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -166,7 +168,8 @@
               <np-button
                 [type]="'secondary'"
                 [size]="'sm'"
-                (click)="requestEntityTemplate(row)">
+                (click)="requestEntityTemplate(row)"
+                [attr.data-name]="'entities-table-request-permission-btn'">
                 {{'common.requestPermission' | translate}}
               </np-button>
             </ng-template>
@@ -221,6 +224,8 @@
       [matRippleColor]="rippleLightColor"
       [matRippleDisabled]="row.permissions === entityPermission.NO_ACCESS || (tableActions.renameLoader | async) === row?.id"
       (click)="openItem(row)"
+      [attr.data-name]="'entities-table-row'"
+      [attr.id]="row?.id"
       [ngClass]="{
         'blocked': row.permissions === entityPermission.NO_ACCESS,
         'disabled': (tableActions.renameLoader | async) === row?.id
@@ -246,6 +251,7 @@
   <ng-template #otherActionButton>
     <button
       mat-menu-item
+      [attr.data-name]="'entities-table-row-action-btn'"
       [ngClass]="action.class"
       [disabled]="action.disabled"
       (click)="action.cb(entity, parentFolder, entityRenamedSsCb)">

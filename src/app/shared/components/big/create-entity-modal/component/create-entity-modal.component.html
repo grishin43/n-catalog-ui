@@ -29,6 +29,7 @@
         <input
           type="text"
           matInput
+          id="cem-modal-name-field"
           (input)="handleEntityNameDuplicator(formControlName.ENTITY_NAME)"
           [formControlName]="formControlName.ENTITY_NAME"
           [attr.name]="formControlName.ENTITY_NAME"
@@ -67,6 +68,7 @@
         <input
           type="text"
           matInput
+          id="cem-modal-replacement-field"
           #matAutocompleteTrigger="matAutocompleteTrigger"
           [formControlName]="formControlName.FOLDER_PATH"
           [attr.name]="formControlName.FOLDER_PATH"
@@ -109,6 +111,7 @@
         <input
           type="text"
           matInput
+          id="cem-modal-process-type-field"
           #matAutocompleteTrigger2="matAutocompleteTrigger"
           [formControlName]="formControlName.PROCESS_TYPE"
           [attr.name]="formControlName.PROCESS_TYPE"
@@ -137,6 +140,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <np-button
+    id="cem-modal-cancel-btn"
     [minWidth]="true"
     [btnType]="'reset'"
     [type]="'secondary'"
@@ -144,6 +148,7 @@
     {{'common.cancel' | translate}}
   </np-button>
   <np-button
+    id="cem-modal-create-btn"
     [minWidth]="true"
     [btnType]="'submit'"
     [type]="'primary'"
@@ -165,7 +170,9 @@
     class="sm"
     *ngFor="let option of processTypes"
     [value]="option.name"
-    (click)="processTypeSelected($event, option)">
+    (click)="processTypeSelected($event, option)"
+    [attr.id]="option.code"
+    [attr.data-name]="'cem-modal-process-type'">
     {{option.name}}
   </mat-option>
 </mat-autocomplete>
@@ -181,6 +188,7 @@
       [disabled]="true">
       <button
         mat-button
+        id="cem-modal-new-folder-back-btn"
         (click)="onNewFolderBack($event)">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -196,6 +204,7 @@
         <input
           type="text"
           matInput
+          id="cem-modal-new-entity-name-field"
           (keydown)="$event.stopPropagation()"
           (input)="handleEntityNameDuplicator(formControlName.NEW_ENTITY_NAME)"
           [formControlName]="formControlName.NEW_ENTITY_NAME"
@@ -223,6 +232,7 @@
       class="pseudo-disabled pseudo-footer"
       [disabled]="true">
       <np-button
+        id="cem-modal-create-new-folder-btn"
         [size]="'md'"
         [btnType]="'submit'"
         [type]="'primary'"
@@ -244,6 +254,7 @@
       class="pseudo-disabled pseudo-header"
       [disabled]="true">
       <button
+        id="cem-modal-folder-back-btn"
         *ngIf="openedFolder"
         mat-button
         (click)="onFolderBack($event)">
@@ -266,7 +277,8 @@
     </mat-option>
     <ng-container *ngIf="openedFolder; else rootFoldersTemplate">
       <mat-optgroup class="hide-label">
-        <ng-container *ngIf="(isProcess && openedFolderHasChildren) || (isFolder && openedFolderHasSubFolders); else noSubsTemplate">
+        <ng-container
+          *ngIf="(isProcess && openedFolderHasChildren) || (isFolder && openedFolderHasSubFolders); else noSubsTemplate">
           <ng-container
             *ngTemplateOutlet="folderOptionsTemplate; context: {data : openedFolderSubFolders}"></ng-container>
           <ng-container *ngIf="isProcess">
@@ -297,6 +309,7 @@
       [disabled]="true">
       <np-button
         class="mr-auto"
+        id="cem-modal-add-new-folder-btn"
         *ngIf="isProcess && !newFolderMode"
         [size]="'md'"
         [btnType]="'submit'"
@@ -312,6 +325,7 @@
         </span>
       </np-button>
       <np-button
+        id="cem-modal-select-folder-btn"
         [size]="'md'"
         [btnType]="'submit'"
         [type]="'primary'"
@@ -343,7 +357,9 @@
       class="pseudo-disabled"
       (click)="onFolderClick($event, folder)"
       [value]="folder.name"
-      [disabled]="true">
+      [disabled]="true"
+      [attr.id]="folder.id"
+      [attr.data-name]="'cem-modal-folder-option'">
       <mat-icon *ngIf="!folder.root">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip1)">
@@ -378,6 +394,8 @@
   #processOptionsTemplate>
   <ng-container *ngFor="let process of processes">
     <mat-option
+      [attr.id]="process.id"
+      [attr.data-name]="'cem-modal-process-option'"
       class="pseudo-disabled entity-type--process"
       (mouseenter)="processNameTooltip.show()"
       (mouseleave)="processNameTooltip.hide()"
