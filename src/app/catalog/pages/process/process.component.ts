@@ -107,11 +107,13 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   public openGrantAccessModal(): void {
-    this.dialog.open(GrantAccessModalComponent, {
-      width: '700px',
-      autoFocus: false,
-      data: this.process
-    });
+    if (this.isOnline) {
+      this.dialog.open(GrantAccessModalComponent, {
+        width: '700px',
+        autoFocus: false,
+        data: this.process
+      });
+    }
   }
 
   public xmlDestroyed(xml: string): void {
@@ -168,7 +170,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   public openCreateNewVersionModal(): boolean {
-    if (this.process?.isLocked || this.process?.blocked) {
+    if (this.process?.isLocked || this.process?.blocked || !this.isOnline) {
       return false;
     }
     const shouldSaved = this.processAutosave.shouldSaved;
@@ -231,6 +233,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   public diagramWasChanged(flag: boolean): void {
     this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(flag));
+  }
+
+  public get isOnline(): boolean {
+    return window.navigator.onLine;
   }
 
 }

@@ -26,7 +26,7 @@
       <np-button
         [size]="'xs'"
         [minWidth]="true"
-        [disabled]="(process$ | async)?.isLocked || (process$ | async)?.blocked"
+        [disabled]="(process$ | async)?.isLocked || (process$ | async)?.blocked || !isOnline"
         (click)="openCreateNewVersionModal()">
         <span>
            {{"common.done" | translate}}
@@ -41,7 +41,8 @@
             [type]="'secondary'"
             [size]="'sm'"
             [light]="true"
-            (click)="openGrantAccessModal()">
+            (click)="openGrantAccessModal()"
+            [disabled]="!isOnline">
             <mat-icon>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path

@@ -95,18 +95,20 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
   public onDeleteClicked(event: MouseEvent, entity: CurrentProcessModel): void {
     event.stopPropagation();
     event.preventDefault();
-    if (this.currentProcessId === entity.id && this.processAutosave.shouldSaved) {
-      this.subs.add(this.dialog.open(PreventProcessCloseModalComponent, {
-          width: '700px',
-          autoFocus: false
-        }).afterClosed().subscribe((res: boolean) => {
-          if (res) {
-            this.entitiesTabService.deleteEntity(entity);
-          }
-        })
-      );
-    } else {
-      this.entitiesTabService.deleteEntity(entity, this.currentProcessId !== entity.id);
+    if (window.navigator.onLine) {
+      if (this.currentProcessId === entity.id && this.processAutosave.shouldSaved) {
+        this.subs.add(this.dialog.open(PreventProcessCloseModalComponent, {
+            width: '700px',
+            autoFocus: false
+          }).afterClosed().subscribe((res: boolean) => {
+            if (res) {
+              this.entitiesTabService.deleteEntity(entity);
+            }
+          })
+        );
+      } else {
+        this.entitiesTabService.deleteEntity(entity, this.currentProcessId !== entity.id);
+      }
     }
   }
 

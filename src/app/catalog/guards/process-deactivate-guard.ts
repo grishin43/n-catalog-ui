@@ -2,7 +2,9 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanDeactivate, Router, RouterStateSnapshot} from '@angular/router';
 import {ProcessComponent} from '../pages/process/process.component';
 import {MatDialog} from '@angular/material/dialog';
-import {PreventProcessCloseModalComponent} from '../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
+import {
+  PreventProcessCloseModalComponent
+} from '../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
 import {ProcessAutosaveService} from '../services/process-autosave/process-autosave.service';
 
 @Injectable()
@@ -21,7 +23,9 @@ export class ProcessDeactivateGuard implements CanDeactivate<ProcessComponent> {
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ): boolean {
-    if (this.processAutosave.shouldSaved) {
+    if (!window.navigator.onLine) {
+      return false;
+    } else if (this.processAutosave.shouldSaved) {
       let str = nextState.url;
       str = str.substr(0, str.indexOf('?'));
       this.dialog.open(PreventProcessCloseModalComponent, {

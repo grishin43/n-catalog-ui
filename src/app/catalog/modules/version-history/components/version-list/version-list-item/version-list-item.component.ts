@@ -58,4 +58,8 @@ export class VersionListItemComponent implements OnInit {
     });
   }
 
+  public get isOnline(): boolean {
+    return window.navigator.onLine;
+  }
+
 }

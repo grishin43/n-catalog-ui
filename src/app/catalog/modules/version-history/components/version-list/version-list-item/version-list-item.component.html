@@ -85,6 +85,7 @@
   <button
     *ngIf="!active"
     mat-menu-item
+    [disabled]="!isOnline"
     (click)="openVersion()">
     {{'common.open' | translate}}
   </button>
