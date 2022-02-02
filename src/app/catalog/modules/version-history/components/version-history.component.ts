@@ -30,6 +30,9 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
   public versions: ProcessVersionModel[];
   public process: CurrentProcessModel;
 
+  private refreshCounter = 0;
+  private refreshLimit = 5;
+
   private subs = new Subscription();
 
   @Input() set processData(value: CurrentProcessModel) {
@@ -53,6 +56,7 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   @Output() versionOpenClicked = new EventEmitter<ProcessVersionModel>();
   @Output() createNewVersionClicked = new EventEmitter<void>();
+  @Output() processRefreshRequested = new EventEmitter<void>();
 
   constructor(
     private api: ApiService,
@@ -95,26 +99,32 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   private getHistory(): void {
     if (this.historyType === HistoryTypeEnum.VERSION_HISTORY) {
-      this.getData(
+      this.getVersionsData(
         this.processService.getVersions(this.process.parent?.id, this.process.id),
         (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
       );
     } else if (this.historyType === HistoryTypeEnum.START_AND_STOP_HISTORY) {
-      this.getData(
+      this.getVersionsData(
         this.api.getStartAndStopHistory(),
         (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
       );
     }
   }
 
-  private getData(request: Observable<any>, cb: (res: any) => void): void {
+  private getVersionsData(request: Observable<any>, cb: (res: any) => void): void {
     this.loader = true;
     this.subs.add(
       request
-        .subscribe((res: any) => {
-          this.loader = false;
-          if (typeof cb === 'function') {
-            cb(res);
+        .subscribe((res: SearchModel<ProcessVersionModel>) => {
+          if (res?.count === this.versions?.length && this.refreshCounter < this.refreshLimit) {
+            this.refreshCounter++;
+            this.processService.getProcessById(this.process.parent.id, this.process.id).toPromise()
+              .then(() => this.getVersionsData(request, cb));
+          } else {
+            if (typeof cb === 'function') {
+              cb(res);
+            }
+            this.loader = false;
           }
         }, (err: HttpErrorResponse) => {
           this.error = err.error?.message || err.message;
