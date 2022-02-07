@@ -362,4 +362,15 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     return this.openedFolder?.[FolderFieldKey.PROCESSES]?.items;
   }
 
+  public get explorerPosition(): 'auto' | 'above' | 'below' {
+    if (this.isProcess) {
+      if (window.innerHeight >= 556) {
+        return 'below';
+      } else {
+        return 'above';
+      }
+    }
+    return 'auto';
+  }
+
 }

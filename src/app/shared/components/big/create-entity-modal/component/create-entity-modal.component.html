@@ -74,7 +74,8 @@
           [attr.name]="formControlName.FOLDER_PATH"
           [placeholder]="'common.chooseReplacement' | translate"
           [matAutocomplete]="auto"
-          [readonly]="true">
+          [readonly]="true"
+          [matAutocompletePosition]="explorerPosition">
         <mat-error *ngIf="form.get(formControlName.FOLDER_PATH).invalid">
           <ng-container *ngIf="form.get(formControlName.FOLDER_PATH).hasError('required')">
             {{'errors.required' | translate}}
