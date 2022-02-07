@@ -197,7 +197,8 @@
     "workplaces": "Місця роботи",
     "add": "Додати",
     "maxSymbolsCount": "Максимальна кількість символів {{count}}/{{of}}",
-    "changesDiscarded": "Зміни відхилено"
+    "changesDiscarded": "Зміни відхилено",
+    "resultsLoading": "Завантаження релультатів"
   },
   "statuses": {
     "undefined": "Невизначений",

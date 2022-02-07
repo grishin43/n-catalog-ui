@@ -6,6 +6,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
 import {SafeHtmlModule} from '../../../shared/pipes/safe-html/safe-html.module';
 import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const routes: Routes = [
   {
@@ -28,7 +30,9 @@ const routes: Routes = [
     TranslateModule,
     MatIconModule,
     SafeHtmlModule,
-    EntityTableModule
+    EntityTableModule,
+    NgxPaginationModule,
+    MatProgressSpinnerModule
   ]
 })
 export class SearchResultsModule {

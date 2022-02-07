@@ -118,12 +118,13 @@ export class SearchService {
       }));
   }
 
-  public generalSearch(query: string, searchType = SearchType.all): Observable<GeneralSearchWrapperDto> {
+  public generalSearch(query: string, searchType = SearchType.all, pageNumber: number, pageSize: number)
+    : Observable<GeneralSearchWrapperDto> {
     const searchRequestParams: GeneralSearchDTO = {
       searchType,
       searchValue: query,
-      pageNumber: 0,
-      pageSize: 100
+      pageNumber: pageNumber < 0 ? 0 : pageNumber,
+      pageSize
     };
     return this.http.post<GeneralSearchWrapperDto>(this.generalSearchUrl, searchRequestParams);
   }

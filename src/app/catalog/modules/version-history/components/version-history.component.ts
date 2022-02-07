@@ -47,7 +47,7 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
 
   @Input() set newVersionCreated(value: UiNotificationCheck) {
     if (value) {
-      this.getHistory();
+      this.getHistory(true);
       this.closePanel();
     }
   }
@@ -97,26 +97,28 @@ export class VersionHistoryComponent implements OnInit, OnDestroy {
     this.getHistory();
   }
 
-  private getHistory(): void {
+  private getHistory(checkCountAfter?: boolean): void {
     if (this.historyType === HistoryTypeEnum.VERSION_HISTORY) {
       this.getVersionsData(
         this.processService.getVersions(this.process.parent?.id, this.process.id),
-        (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
+        (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items,
+        checkCountAfter
       );
     } else if (this.historyType === HistoryTypeEnum.START_AND_STOP_HISTORY) {
       this.getVersionsData(
         this.api.getStartAndStopHistory(),
-        (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items
+        (res: SearchModel<ProcessVersionModel>) => this.versions = res?.items,
+        checkCountAfter
       );
     }
   }
 
-  private getVersionsData(request: Observable<any>, cb: (res: any) => void): void {
+  private getVersionsData(request: Observable<any>, cb: (res: any) => void, checkCountAfter?: boolean): void {
     this.loader = true;
     this.subs.add(
       request
         .subscribe((res: SearchModel<ProcessVersionModel>) => {
-          if (res?.count === this.versions?.length && this.refreshCounter < this.refreshLimit) {
+          if (checkCountAfter && res?.count === this.versions?.length && this.refreshCounter < this.refreshLimit) {
             this.refreshCounter++;
             this.processService.getProcessById(this.process.parent.id, this.process.id).toPromise()
               .then(() => this.getVersionsData(request, cb));
