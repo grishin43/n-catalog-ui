@@ -50,6 +50,7 @@ export class ProcessAutosaveService {
   }
 
   public init(): void {
+    this.destroyNetworkListener();
     this.listenNetwork();
   }
 
@@ -129,7 +130,6 @@ export class ProcessAutosaveService {
       } else {
         this.resourceSaved$.next(false);
         this.requestLoader$.next(true);
-        console.log('Gotcha 1');
         this.processService.saveProcess(matchedSavedProcess.activeResource.content)
           .subscribe(() => {
             LocalSaverHelper.deleteResource(matchedSavedProcess.parent.id, matchedSavedProcess.id);
@@ -150,10 +150,8 @@ export class ProcessAutosaveService {
   }
 
   private listenNetwork(): void {
-    if (!this.networkState$) {
-      this.networkState$ = this.connectionService.monitor()
-        .subscribe((res: boolean) => this.handleNetworkConnection(res));
-    }
+    this.networkState$ = this.connectionService.monitor()
+      .subscribe((res: boolean) => this.handleNetworkConnection(res));
   }
 
   private showServerErrorToast(): void {
@@ -221,7 +219,6 @@ export class ProcessAutosaveService {
 
   private handleNetworkConnection(online: boolean): void {
     if (online) {
-      console.log('Gotcha 7');
       this.checkLocalResources();
       this.restartTimer();
     } else {
