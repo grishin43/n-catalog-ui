@@ -363,7 +363,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   }
 
   public get explorerPosition(): 'auto' | 'above' | 'below' {
-    if (this.isProcess) {
+    if (this.isFolder) {
       if (window.innerHeight >= 556) {
         return 'below';
       } else {
