@@ -78,6 +78,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.processId$
         .subscribe(() => {
+          this.processAutosave.disableSaving();
           this.handleLockedBy();
         }, (err: HttpErrorResponse) => {
           this.handleGeneralErrors(err);
