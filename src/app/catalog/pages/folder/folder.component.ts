@@ -122,7 +122,13 @@ export class FolderComponent implements OnInit, OnDestroy {
 
   private deleteEntityWithUndo(entity: CatalogEntityModel): void {
     let isDeleteWasUndo = false;
-    const deleteToast = this.toastService.showWithUndo('common.entityDeleted', {entityName: entity.name});
+    let toastPanelClass: string;
+    if (entity.type === CatalogEntityEnum.FOLDER) {
+      toastPanelClass = 'folder-deleted';
+    } else if (entity.type === CatalogEntityEnum.PROCESS) {
+      toastPanelClass = 'process-deleted';
+    }
+    const deleteToast = this.toastService.showWithUndo('common.entityDeleted', {entityName: entity.name}, toastPanelClass);
     if (entity.type === CatalogEntityEnum.FOLDER) {
       this.store.dispatch(new FolderActions.FolderMarkedToBeDeleted(entity.id));
     } else if (entity.type === CatalogEntityEnum.PROCESS) {

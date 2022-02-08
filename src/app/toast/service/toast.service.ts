@@ -26,7 +26,7 @@ export class ToastService {
     action?: string,
     vertical?: MatSnackBarVerticalPosition,
     horizontal?: MatSnackBarHorizontalPosition,
-    panelClass?: string,
+    panelClass?: string | string[],
     translateInterpolateParams?: any
   ): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(this.translateService.instant(i18nKey, translateInterpolateParams), action, {
@@ -60,13 +60,13 @@ export class ToastService {
     });
   }
 
-  public showMessage(i18nKeyOrString: string, duration: number = 10000): void {
+  public showMessage(i18nKeyOrString: string, duration: number = 10000, panelClass?: string): void {
     this.snackBar.openFromComponent(ToastMessageComponent, {
       data: this.translateService.instant(i18nKeyOrString),
       duration,
       verticalPosition: 'bottom',
       horizontalPosition: 'right',
-      panelClass: 'message'
+      panelClass: panelClass ? [panelClass, 'message'] : 'message'
     });
   }
 
@@ -74,15 +74,16 @@ export class ToastService {
     this.snackBar.dismiss();
   }
 
-  public showWithUndo(i18key: string, i18Params: any): MatSnackBarRef<TextOnlySnackBar> {
+  public showWithUndo(i18key: string, i18Params: any, addPanelClass?: string): MatSnackBarRef<TextOnlySnackBar> {
     const undoTranslation = this.translateService.instant('common.undo');
+    const panelClass = addPanelClass ? [addPanelClass, 'message'] : 'message';
     return this.show(
       i18key,
       5000,
       undoTranslation,
       null,
       null,
-      'message',
+      panelClass,
       i18Params
     );
   }

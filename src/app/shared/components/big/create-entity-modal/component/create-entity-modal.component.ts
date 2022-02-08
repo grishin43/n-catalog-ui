@@ -216,7 +216,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
         .subscribe(
           ({parameters}: UiNotificationCheck) => {
             this.formLoader = false;
-            this.showToast('common.processCreated');
+            this.showToast('common.processCreated', 'process-created');
             this.closeModal();
             if (typeof this.data.ssCb === 'function') {
               this.data.ssCb();
@@ -241,7 +241,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.formLoader = false;
-            this.showToast('common.folderCreated');
+            this.showToast('common.folderCreated', 'folder-created');
             this.closeModal();
             this.router.navigate([`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.FOLDER}/${parentFolderId}`]);
             if (typeof this.data.ssCb === 'function') {
@@ -254,8 +254,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  private showToast(i18nKey: string): void {
-    this.toast.show(i18nKey, 3000, undefined, 'bottom', 'right');
+  private showToast(i18nKey: string, panelClass?: string): void {
+    this.toast.show(i18nKey, 3000, undefined, 'bottom', 'right', panelClass);
   }
 
   public processTypeSelected(event: MouseEvent, option: ProcessTypeModel): void {
@@ -297,7 +297,7 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       this.folderService.createFolder(parentFolderId, folderName)
         .subscribe(() => {
           this.newFolderLoader = false;
-          this.showToast('common.folderCreated');
+          this.showToast('common.folderCreated', 'folder-created');
           this.closeNewFolderMode();
           this.patchOpenedFolder(this.openedFolder.id);
         }, () => {

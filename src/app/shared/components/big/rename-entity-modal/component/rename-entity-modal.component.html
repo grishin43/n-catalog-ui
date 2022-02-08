@@ -20,6 +20,7 @@
         appearance="outline"
         floatLabel="never">
         <input
+          id="entity-name-field"
           type="text"
           matInput
           [formControlName]="formControlName.ENTITY_NAME"
@@ -36,6 +37,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <np-button
+    id="close-modal-btn"
     [minWidth]="true"
     [btnType]="'reset'"
     [type]="'secondary'"
@@ -43,6 +45,7 @@
     {{'common.cancel' | translate}}
   </np-button>
   <np-button
+    id="submit-form-btn"
     [minWidth]="true"
     [btnType]="'submit'"
     [type]="'primary'"

@@ -24,6 +24,7 @@
       class="col-auto"
       @fadeInOut>
       <np-button
+        id="done-btn"
         [size]="'xs'"
         [minWidth]="true"
         [disabled]="(process$ | async)?.isLocked || (process$ | async)?.blocked || !isOnline"

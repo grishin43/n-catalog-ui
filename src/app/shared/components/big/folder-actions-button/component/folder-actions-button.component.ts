@@ -30,6 +30,7 @@ export class FolderActionsButtonComponent {
     event.stopPropagation();
     event.preventDefault();
     this.dialog.open(CreateEntityModalComponent, {
+      id: 'create-entity-modal',
       width: '700px',
       autoFocus: false,
       data: {

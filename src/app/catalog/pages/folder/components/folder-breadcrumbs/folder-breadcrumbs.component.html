@@ -1,13 +1,17 @@
 <ul class="list-unstyled">
   <li>
-    <a [routerLink]="'/'">
+    <a id="root-route"
+       [routerLink]="'/'">
       {{'common.mainFolder' | translate}}
     </a>
   </li>
   <ng-container *ngIf="folder?.path?.length">
     <li *ngFor="let parentFolder of folder?.path">
-      <a [routerLink]="folderRoute + parentFolder.id"
-         [innerHTML]="parentFolder.name">
+      <a
+        [attr.data-name]="'folder-route'"
+        [attr.id]="parentFolder.id"
+        [routerLink]="folderRoute + parentFolder.id"
+        [innerHTML]="parentFolder.name">
       </a>
     </li>
   </ng-container>

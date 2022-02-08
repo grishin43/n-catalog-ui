@@ -120,7 +120,8 @@ export class RenameEntityModalComponent implements OnInit {
           {folderOldName: oldName, folderNewName: newName}
         ),
         this.translate.instant('errors.failedToRenameFolder', {folderName: oldName}),
-        newName
+        newName,
+        'folder-renamed'
       );
     } else if (this.isProcess) {
       this.renameEntity(
@@ -130,7 +131,8 @@ export class RenameEntityModalComponent implements OnInit {
           {processOldName: oldName, processNewName: newName}
         ),
         this.translate.instant('errors.failedToRenameProcess', {processName: oldName}),
-        newName
+        newName,
+        'process-renamed'
       );
     }
   }
@@ -139,7 +141,8 @@ export class RenameEntityModalComponent implements OnInit {
     request: Observable<any>,
     successTitle: string,
     errorTitle: string,
-    newName: string
+    newName: string,
+    panelClass?: string
   ): void {
     this.subscription.add(
       request.subscribe(() => {
@@ -148,7 +151,7 @@ export class RenameEntityModalComponent implements OnInit {
         } else {
           this.toast.close();
         }
-        this.toast.showMessage(successTitle);
+        this.toast.showMessage(successTitle, undefined, panelClass);
         if (typeof this.data.ssCb === 'function') {
           this.data.ssCb(newName);
         }

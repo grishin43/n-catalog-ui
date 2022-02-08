@@ -4,6 +4,7 @@
     style="margin-bottom: 16px;">
     <div class="col" *ngIf="folderEntity$ | async as folder">
       <np-folder-breadcrumbs
+        id="breadcrumbs"
         [folder]="folder.original"
         (folderUpdated)="getFolderById()">
       </np-folder-breadcrumbs>

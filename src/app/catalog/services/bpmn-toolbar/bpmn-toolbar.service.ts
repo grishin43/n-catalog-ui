@@ -53,6 +53,7 @@ export class BpmnToolbarService {
             name: ToolbarProcessItemEnum.NEW_PROCESS,
             cb: (process: CurrentProcessModel) => {
               this.dialog.open(CreateEntityModalComponent, {
+                id: 'create-entity-modal',
                 width: '700px',
                 autoFocus: false,
                 data: {

@@ -136,6 +136,7 @@ export class TableActionsService {
 
   public openCreateEntityModal(data: ModalInjectableEntityModel): void {
     this.dialog.open(CreateEntityModalComponent, {
+      id: 'create-entity-modal',
       width: '700px',
       autoFocus: false,
       data
