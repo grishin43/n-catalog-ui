@@ -15,17 +15,68 @@
           [data]="(searchResult$ | async)"
           [tableClass]="'truncate-entity-name-30'">
         </np-entities-table>
+        <!--<div class="pagination-show-more">
+          <button
+            class="min-width-auto"
+            mat-button
+            (click)="showMore($event)">
+            {{'common.showMore' | translate}}
+          </button>
+        </div>-->
         <ul class="pagination-helper">
           <li
             *ngFor="let item of paginationHelperArr | paginate: {itemsPerPage: itemsPerPage, currentPage: currentPage}">
             {{item}}
           </li>
         </ul>
-        <pagination-controls
-          [previousLabel]="''"
-          [nextLabel]="''"
+        <pagination-template
+          #paginationApi="paginationApi"
           (pageChange)="onPageChanged($event)">
-        </pagination-controls>
+          <ul class="ngx-pagination">
+            <li class="pagination-previous"
+                [class.disabled]="paginationApi.isFirstPage()">
+              <ng-container *ngIf="paginationApi.isFirstPage(); else notFirstPageRef">
+                <span>
+                  <span class="show-for-sr">
+                    page
+                  </span>
+                </span>
+              </ng-container>
+              <ng-template #notFirstPageRef>
+                <a *ngIf="!paginationApi.isFirstPage()" (click)="paginationApi.previous()"></a>
+              </ng-template>
+            </li>
+            <li class="pagination-page"
+              *ngFor="let page of paginationApi.pages; let i = index;"
+              [ngClass]="{
+                'current': paginationApi.getCurrent() === page.value,
+                'disabled': showMoreCounter != null && (i + 1 >= currentPage && i < currentPage + showMoreCounter)
+              }">
+              <a
+                tabindex="0"
+                *ngIf="paginationApi.getCurrent() !== page.value"
+                (click)="paginationApi.setCurrent(page.value)">
+                <span>{{ page.label }}</span>
+              </a>
+              <div *ngIf="paginationApi.getCurrent() === page.value">
+                <span>{{ page.label }}</span>
+              </div>
+            </li>
+            <li class="pagination-next"
+                [class.disabled]="paginationApi.isLastPage()">
+              <ng-container *ngIf="paginationApi.isLastPage(); else notLastPageRef">
+                <span>
+                  <span class="show-for-sr">
+                    page
+                  </span>
+                </span>
+              </ng-container>
+              <ng-template #notLastPageRef>
+                <a *ngIf="!paginationApi.isLastPage()" (click)="paginationApi.next()"></a>
+              </ng-template>
+            </li>
+          </ul>
+        </pagination-template>
       </ng-container>
       <ng-template #noResults>
         <div class="no-results">
@@ -43,7 +94,8 @@
                   fill="white"/>
                 <path d="M51.3125 0H37.25V96H65.375C70.0349 96 73.8125 92.2224 73.8125 87.5625V22.5L51.3125 0Z"
                       fill="white"/>
-                <path d="M51.3125 0V19.6875C51.3125 21.2407 52.5717 22.5 54.125 22.5H73.8125L51.3125 0Z" fill="#8A95A3"/>
+                <path d="M51.3125 0V19.6875C51.3125 21.2407 52.5717 22.5 54.125 22.5H73.8125L51.3125 0Z"
+                      fill="#8A95A3"/>
                 <path
                   d="M39.9443 58.8732C39.9443 49.5409 47.4697 41.9766 56.7519 41.9766C66.035 41.9766 73.5605 49.5419 73.5605 58.8722C73.5605 68.2045 66.035 75.7689 56.7519 75.7689C47.4697 75.7689 39.9443 68.2045 39.9443 58.8732Z"
                   fill="white"/>

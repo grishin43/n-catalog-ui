@@ -16,7 +16,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public processId: string;
   public folderId: string;
   public searchFormStretched = new BehaviorSubject<boolean>(false);
-  public hideRightBar: boolean;
   public userFirstLastName: string;
   public showAllCrosses: boolean;
   public kcProfile: KeycloakProfile;

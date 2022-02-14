@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Observable, of, Subscription} from 'rxjs';
@@ -11,6 +11,7 @@ import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {GeneralSearchItem} from '../../services/search/general-search-item';
 import {SearchType} from '../../services/search/search-type.enum';
 import {GeneralSearchWrapperDto} from '../../services/search/general-search-wrapper.dto';
+import {PaginationControlsDirective} from 'ngx-pagination/dist/pagination-controls.directive';
 
 @Component({
   selector: 'np-search-results',
@@ -26,6 +27,7 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   public readonly itemsPerPage = 10;
   public paginationHelperArr: any[];
   public loader: boolean;
+  public showMoreCounter: number;
 
   private subscriptions = new Subscription();
 
@@ -75,8 +77,19 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   }
 
   public onPageChanged(event: number): void {
+    this.showMoreCounter = undefined;
     this.currentPage = event;
     this.fetchGeneralSearchResults();
+  }
+
+  public showMore(event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.showMoreCounter == null) {
+      this.showMoreCounter = 0;
+    }
+    this.showMoreCounter++;
+    this.currentPage++;
   }
 
 }

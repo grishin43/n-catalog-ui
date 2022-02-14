@@ -23,6 +23,7 @@ import {ProcessAutosaveService} from '../../../services/process-autosave/process
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {AnimationsHelper} from '../../../helpers/animations.helper';
+import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'np-header-tabs',
@@ -58,6 +59,7 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
   private subs = new Subscription();
 
   @ViewChild('processesRow') rowRef: ElementRef;
+  @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
 
   @HostListener('window:resize')
   onResize(): void {
@@ -130,6 +132,26 @@ export class HeaderTabsComponent implements OnInit, OnDestroy, AfterViewInit {
       const row: HTMLElement = this.rowRef.nativeElement;
       const freeWidth = row.offsetWidth - this.menuBtnWidth;
       this.maxCount = Math.floor(freeWidth / this.tabMinWidth);
+      if (this.menuTrigger.menuOpen) {
+        setTimeout(() => {
+          this.menuTrigger.closeMenu();
+          this.menuTrigger.openMenu();
+        }, 200);
+      }
+    }
+  }
+
+  public openMenuWithHiddenProcesses(): void {
+    const processesLength = this.catalogProcesses$.getValue()?.length;
+    const formStretched = this.searchFormStretched.getValue();
+    if (formStretched) {
+      setTimeout(() => {
+        if (processesLength > this.maxCount) {
+          this.menuTrigger.openMenu();
+        }
+      }, 400);
+    } else {
+      this.menuTrigger.openMenu();
     }
   }
 

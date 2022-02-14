@@ -260,9 +260,29 @@ mat-label {
             }
 
             input {
-              &.mat-input-element{
+              &.mat-input-element {
                 color: var(--np-roman-silver);
               }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.wait-for-dirty {
+  mat-form-field {
+    &.mat-form-field-appearance-outline {
+      &.mat-form-field-invalid {
+        .mat-form-field-flex {
+          .mat-form-field-outline {
+            color: var(--np-geyser) !important;
+          }
+
+          .mat-form-field-infix {
+            input.mat-input-element, textarea.mat-input-element {
+              color: var(--np-geyser) !important;
             }
           }
         }

@@ -8,6 +8,7 @@ import {SafeHtmlModule} from '../../../shared/pipes/safe-html/safe-html.module';
 import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
 
 const routes: Routes = [
   {
@@ -24,16 +25,17 @@ const routes: Routes = [
   declarations: [
     SearchResultsComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    TranslateModule,
-    MatIconModule,
-    SafeHtmlModule,
-    EntityTableModule,
-    NgxPaginationModule,
-    MatProgressSpinnerModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        TranslateModule,
+        MatIconModule,
+        SafeHtmlModule,
+        EntityTableModule,
+        NgxPaginationModule,
+        MatProgressSpinnerModule,
+        MatButtonModule
+    ]
 })
 export class SearchResultsModule {
 }

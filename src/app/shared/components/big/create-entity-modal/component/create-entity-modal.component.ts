@@ -1,10 +1,10 @@
-import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormFieldEnum} from '../../../../../models/form-field.enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ApiService} from '../../../../../catalog/services/api/api.service';
 import {CatalogEntityEnum} from '../../../../../catalog/models/catalog-entity.enum';
-import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {Router} from '@angular/router';
 import {AppRouteEnum} from '../../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../../../catalog/models/catalog-route.enum';
@@ -41,6 +41,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
   public newFolderMode: boolean;
 
   private subscription = new Subscription();
+
+  @ViewChild('matAutocompleteTrigger') matAutocompleteTrigger: MatAutocompleteTrigger;
 
   @HostListener('window:keydown', ['$event']) onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'Enter') {
@@ -116,6 +118,10 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
       this.form.addControl(FormFieldEnum.PROCESS_TYPE, new FormControl(undefined, [Validators.required]));
       this.getProcessTypes();
     }
+  }
+
+  public onExplorerClosed(): void {
+    this.form.get([FormFieldEnum.FOLDER_PATH]).markAsDirty();
   }
 
   private removeControlError(controlName: string, errorKey: string): void {
