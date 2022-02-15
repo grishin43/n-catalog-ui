@@ -20,6 +20,7 @@ import {ProcessService} from '../../../../../catalog/pages/folder/services/proce
 import {FolderService} from '../../../../../catalog/pages/folder/services/folder/folder.service';
 import {UiNotificationCheck} from '../../../../../models/domain/ui-notification.check';
 import {ToastService} from '../../../../../toast/service/toast.service';
+import {EntitiesTabService} from '../../../../../catalog/services/entities-tab/entities-tab.service';
 
 @Component({
   selector: 'np-create-entity-modal',
@@ -59,7 +60,8 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ModalInjectableEntityModel,
     private translateService: TranslateService,
-    private toast: ToastService
+    private toast: ToastService,
+    private entitiesTabService: EntitiesTabService
   ) {
   }
 
@@ -228,7 +230,13 @@ export class CreateEntityModalComponent implements OnInit, OnDestroy {
               this.data.ssCb();
             }
             if (this.data.openCreatedInstance) {
-              this.processService.openCreatedProcess(parameters.processID, processName, this.currentFolderId);
+              this.entitiesTabService.tryToOpenEntity({
+                id: parameters.processID,
+                name: processName,
+                parent: {
+                  id: this.currentFolderId
+                }
+              });
             }
           },
           () => {

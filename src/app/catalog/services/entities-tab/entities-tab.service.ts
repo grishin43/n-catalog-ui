@@ -25,11 +25,12 @@ export class EntitiesTabService {
   ) {
   }
 
-  public addEntity(entity: ProcessModel): void {
-    if (this.processes.getValue().length === this.limit) {
+  public tryToOpenEntity(entity: ProcessModel): void {
+    const isNew = this.processes.getValue().map(item => item.id).indexOf(entity.id) === -1;
+    if (this.processes.getValue().length === this.limit && isNew) {
       this.deleteEarliestEntity(entity);
     } else {
-      this.addNewEntity(entity);
+      this.addNewEntity(entity, isNew);
     }
   }
 
@@ -73,20 +74,31 @@ export class EntitiesTabService {
     }).afterClosed().subscribe((res: boolean) => {
       if (res) {
         const currentValue: ProcessModel[] = this.processes.getValue();
-        const removeIndex = currentValue.map(item => item.id).indexOf(entity.id);
-        if (removeIndex !== -1) {
-          currentValue.splice(removeIndex, 1);
-          currentValue.unshift(entity);
-          LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, currentValue);
-        }
+        currentValue.splice(currentValue.length - 1, 1);
+        currentValue.unshift(entity);
+        this.processes.next(currentValue);
+        LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, currentValue);
+        this.openProcess(entity.id, entity.name, entity.parent.id);
       }
     });
   }
 
-  private addNewEntity(entity: ProcessModel): void {
+  private openProcess(processId: string, processName: string, parentFolderId: string): void {
+    this.router.navigate(
+      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
+      {
+        queryParams: {
+          [CatalogRouteEnum._ID]: processId,
+          [CatalogRouteEnum._NAME]: processName,
+          [CatalogRouteEnum._PARENT_ID]: parentFolderId
+        }
+      }
+    );
+  }
+
+  private addNewEntity(entity: ProcessModel, isNew: boolean): void {
     if (entity) {
-      const matchIndex = this.processes.getValue().map(item => item.id).indexOf(entity.id);
-      if (matchIndex === -1) {
+      if (isNew) {
         const newValue = [{
           id: entity.id,
           name: entity.name,
@@ -95,6 +107,7 @@ export class EntitiesTabService {
         this.processes.next(newValue);
         LocalStorageHelper.setData(StorageEnum.PROCESSES_TABS, newValue);
       }
+      this.openProcess(entity.id, entity.name, entity.parent.id);
     }
   }
 

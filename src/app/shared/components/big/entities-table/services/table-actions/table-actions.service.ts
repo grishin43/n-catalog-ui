@@ -14,6 +14,7 @@ import {RenameEntityModalComponent} from '../../../rename-entity-modal/component
 import {FolderModel} from '../../../../../../models/domain/folder.model';
 import {GrantAccessModalComponent} from '../../../grant-access-modal/component/grant-access-modal.component';
 import {BehaviorSubject} from 'rxjs';
+import {EntitiesTabService} from '../../../../../../catalog/services/entities-tab/entities-tab.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class TableActionsService {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private entitiesTabService: EntitiesTabService
   ) {
   }
 
@@ -118,16 +120,7 @@ export class TableActionsService {
   }
 
   public openProcess(entity: CatalogEntityModel): void {
-    this.router.navigate(
-      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
-      {
-        queryParams: {
-          [CatalogRouteEnum._ID]: entity.id,
-          [CatalogRouteEnum._NAME]: entity.name,
-          [CatalogRouteEnum._PARENT_ID]: entity.original?.parent?.id
-        }
-      }
-    );
+    this.entitiesTabService.tryToOpenEntity(entity.original);
   }
 
   public openFolder(entity: CatalogEntityModel): void {

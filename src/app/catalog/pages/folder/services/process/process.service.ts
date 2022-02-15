@@ -124,25 +124,12 @@ export class ProcessService {
     this.store.dispatch(new CatalogActions.ProcessDiscardChangesPatched(false));
   }
 
-  public openCreatedProcess(processId: string, processName: string, parentFolder: string): void {
-    this.router.navigate(
-      [`/${AppRouteEnum.CATALOG}/${CatalogRouteEnum.PROCESS}`],
-      {
-        queryParams: {
-          [CatalogRouteEnum._ID]: processId,
-          [CatalogRouteEnum._NAME]: processName,
-          [CatalogRouteEnum._PARENT_ID]: parentFolder
-        }
-      }
-    );
-  }
-
   public getProcessById(folderId: string, processId: string): Observable<CurrentProcessModel> {
     this.loader$.next(true);
     return this.apiService.getProcessById(folderId, processId)
       .pipe(
         tap((p: CurrentProcessModel) => this.store.dispatch(new CatalogActions.ProcessFetched(p))),
-        tap((p: CurrentProcessModel) => this.entitiesTab.addEntity(p)),
+      /*  tap((p: CurrentProcessModel) => this.entitiesTab.addEntity(p)),*/
         tap(() => this.loader$.next(false)),
         catchError((err: any) => {
           if (err instanceof Response) {

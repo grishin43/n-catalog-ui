@@ -23,60 +23,62 @@
             {{'common.showMore' | translate}}
           </button>
         </div>-->
-        <ul class="pagination-helper">
-          <li
-            *ngFor="let item of paginationHelperArr | paginate: {itemsPerPage: itemsPerPage, currentPage: currentPage}">
-            {{item}}
-          </li>
-        </ul>
-        <pagination-template
-          #paginationApi="paginationApi"
-          (pageChange)="onPageChanged($event)">
-          <ul class="ngx-pagination">
-            <li class="pagination-previous"
-                [class.disabled]="paginationApi.isFirstPage()">
-              <ng-container *ngIf="paginationApi.isFirstPage(); else notFirstPageRef">
+        <ng-container *ngIf="paginationHelperArr?.length > itemsPerPage">
+          <ul class="pagination-helper">
+            <li
+              *ngFor="let item of paginationHelperArr | paginate: {itemsPerPage: itemsPerPage, currentPage: currentPage}">
+              {{item}}
+            </li>
+          </ul>
+          <pagination-template
+            #paginationApi="paginationApi"
+            (pageChange)="onPageChanged($event)">
+            <ul class="ngx-pagination">
+              <li class="pagination-previous"
+                  [class.disabled]="paginationApi.isFirstPage()">
+                <ng-container *ngIf="paginationApi.isFirstPage(); else notFirstPageRef">
                 <span>
                   <span class="show-for-sr">
                     page
                   </span>
                 </span>
-              </ng-container>
-              <ng-template #notFirstPageRef>
-                <a *ngIf="!paginationApi.isFirstPage()" (click)="paginationApi.previous()"></a>
-              </ng-template>
-            </li>
-            <li class="pagination-page"
-              *ngFor="let page of paginationApi.pages; let i = index;"
-              [ngClass]="{
+                </ng-container>
+                <ng-template #notFirstPageRef>
+                  <a *ngIf="!paginationApi.isFirstPage()" (click)="paginationApi.previous()"></a>
+                </ng-template>
+              </li>
+              <li class="pagination-page"
+                  *ngFor="let page of paginationApi.pages; let i = index;"
+                  [ngClass]="{
                 'current': paginationApi.getCurrent() === page.value,
                 'disabled': showMoreCounter != null && (i + 1 >= currentPage && i < currentPage + showMoreCounter)
               }">
-              <a
-                tabindex="0"
-                *ngIf="paginationApi.getCurrent() !== page.value"
-                (click)="paginationApi.setCurrent(page.value)">
-                <span>{{ page.label }}</span>
-              </a>
-              <div *ngIf="paginationApi.getCurrent() === page.value">
-                <span>{{ page.label }}</span>
-              </div>
-            </li>
-            <li class="pagination-next"
-                [class.disabled]="paginationApi.isLastPage()">
-              <ng-container *ngIf="paginationApi.isLastPage(); else notLastPageRef">
+                <a
+                  tabindex="0"
+                  *ngIf="paginationApi.getCurrent() !== page.value"
+                  (click)="paginationApi.setCurrent(page.value)">
+                  <span>{{ page.label }}</span>
+                </a>
+                <div *ngIf="paginationApi.getCurrent() === page.value">
+                  <span>{{ page.label }}</span>
+                </div>
+              </li>
+              <li class="pagination-next"
+                  [class.disabled]="paginationApi.isLastPage()">
+                <ng-container *ngIf="paginationApi.isLastPage(); else notLastPageRef">
                 <span>
                   <span class="show-for-sr">
                     page
                   </span>
                 </span>
-              </ng-container>
-              <ng-template #notLastPageRef>
-                <a *ngIf="!paginationApi.isLastPage()" (click)="paginationApi.next()"></a>
-              </ng-template>
-            </li>
-          </ul>
-        </pagination-template>
+                </ng-container>
+                <ng-template #notLastPageRef>
+                  <a *ngIf="!paginationApi.isLastPage()" (click)="paginationApi.next()"></a>
+                </ng-template>
+              </li>
+            </ul>
+          </pagination-template>
+        </ng-container>
       </ng-container>
       <ng-template #noResults>
         <div class="no-results">

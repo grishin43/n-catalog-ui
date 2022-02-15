@@ -42,7 +42,8 @@ enum ApiHeader {
 }
 
 enum UiNotificationType {
-  PROCESS_PERMISSION_ASSIGNED = 'process_permission_assigned'
+  PROCESS_PERMISSION_ASSIGNED = 'process_permission_assigned',
+  PROCESS_CREATED = 'process_created'
 }
 
 @Injectable({
