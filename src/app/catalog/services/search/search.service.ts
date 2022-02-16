@@ -101,11 +101,7 @@ export class SearchService {
   }
 
   public recentSearch$(): Observable<RecentSearchDto> {
-    return this.http.get<RecentSearchDto>(this.recentSearchUrl)
-      .pipe(
-        tap(resentRequest => console.log('recent data ' + resentRequest)
-        )
-      );
+    return this.http.get<RecentSearchDto>(this.recentSearchUrl);
   }
 
   public fetchAutocompleteSearchResults(query: string): Observable<SearchAutocompleteDto> {

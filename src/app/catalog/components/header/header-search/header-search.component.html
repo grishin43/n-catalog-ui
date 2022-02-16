@@ -65,15 +65,18 @@
           <i class="np-icon-recent-search mr-3"></i>
           {{recent.value}}
         </mat-option>
-
       </mat-optgroup>
     </ng-container>
     <ng-template #autoCompleteResult>
       <ng-container
         *ngIf="autoCompleteResults && (autoCompleteResults.processes?.totalResults ||  autoCompleteResults.folders?.totalResults); else noResults">
-        <mat-option>
+        <mat-option
+          *ngFor="let recent of autoCompleteResults.recentSearches?.items"
+          (click)="recentSelected(recent.value)"
+          [value]="recent.value"
+          [attr.data-value]="recent.value">
           <i class="np-icon-recent-search mr-3"></i>
-          {{formControl.value}}
+          {{recent.value}}
         </mat-option>
         <ng-container *ngIf="autoCompleteResults.folders?.items?.length">
           <mat-optgroup>

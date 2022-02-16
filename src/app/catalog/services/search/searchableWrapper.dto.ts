@@ -1,6 +1,6 @@
 import {SearchableItemDto} from './searchableItem.dto';
 
 export interface SearchableWrapperDto {
-  items: SearchableItemDto[];
+  items: SearchableItemDto[] | {value: string}[];
   totalResults: number;
 }

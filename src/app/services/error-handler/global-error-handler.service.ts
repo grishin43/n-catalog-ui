@@ -10,7 +10,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   public handleError(error: any): void {
-    if (/ChunkLoadError/.test(error.message)) {
+    if (/ChunkLoadError/.test(error?.message)) {
       if (window.navigator.onLine) {
         this.toastService.showError('errors.errorOccurred', 'errors.serviceUnavailable');
       } else {
