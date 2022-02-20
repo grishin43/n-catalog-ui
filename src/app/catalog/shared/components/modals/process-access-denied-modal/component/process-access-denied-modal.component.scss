@@ -1,0 +1,51 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.mat-dialog-content {
+  font-size: 14px;
+  line-height: 20px;
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  h6 {
+    margin-bottom: 8px;
+    font-weight: normal;
+    font-size: 14px;
+    color: var(--np-roman-silver);
+  }
+
+  .owner-skeleton {
+    display: flex;
+    align-items: center;
+    @include skeleton;
+
+    span {
+      &:nth-child(1) {
+        height: 32px;
+        flex: 0 0 32px;
+        max-width: 32px;
+        border-radius: 50%;
+      }
+
+      &:nth-child(2) {
+        margin-left: 8px;
+        height: 20px;
+        flex: 0 0 120px;
+        max-width: 120px;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .owner {
+    display: flex;
+    align-items: center;
+
+    np-avatar {
+      & + span {
+        margin-left: 8px;
+      }
+    }
+  }
+}

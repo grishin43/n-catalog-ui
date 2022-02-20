@@ -196,7 +196,9 @@
     "maxSymbolsCount": "Максимальна кількість символів {{count}}/{{of}}",
     "changesDiscarded": "Зміни відхилено",
     "resultsLoading": "Завантаження релультатів",
-    "showMore": "Показати більше"
+    "showMore": "Показати більше",
+    "fired": "Звільненний",
+    "processDefaultPermissionText": "Дозволити всім іншим користувачам мати права на перегляд цього файлу"
   },
   "statuses": {
     "undefined": "Невизначений",

@@ -1,5 +1,5 @@
-import {TableColumnsModel} from '../../shared/components/big/entities-table/models/table.model';
-import {TableDataTypeEnum} from '../../shared/components/big/entities-table/models/table-data-type.enum';
+import {TableColumnsModel} from '../shared/components/big/entities-table/models/table.model';
+import {TableDataTypeEnum} from '../shared/components/big/entities-table/models/table-data-type.enum';
 
 export enum EntityTableColumnName {
   NAME = 'name',

@@ -16,7 +16,7 @@ import {EntitiesTabService} from '../../../services/entities-tab/entities-tab.se
 import {MatRippleHelper} from '../../../helpers/mat-ripple.helper';
 import {
   PreventProcessCloseModalComponent
-} from '../../../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
+} from '../../../shared/components/modals/prevent-process-close-modal/component/prevent-process-close-modal.component';
 import {AppRouteEnum} from '../../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../../models/catalog-route.enum';
 import {ProcessAutosaveService} from '../../../services/process-autosave/process-autosave.service';

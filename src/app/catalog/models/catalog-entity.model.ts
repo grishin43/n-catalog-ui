@@ -1,7 +1,7 @@
 import {CatalogEntityEnum} from './catalog-entity.enum';
-import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
+import {NpStatusPillEnum} from '../shared/components/general/np-status-pill/models/np-status-pill.enum';
 import {EmployeeModel} from '../../models/employee.model';
-import {CatalogEntityPermissionEnum} from './catalog-entity-permission.enum';
+import {EntityPermissionLevelEnum} from './entity-permission-level.enum';
 
 export interface CatalogEntityModel {
   id: string; // is used
@@ -20,7 +20,7 @@ export interface CatalogEntityModel {
   status?: NpStatusPillEnum; // is used // to add status for future delete
   editingBy?: EmployeeModel; // isn't used. to be deprecated and moved to new compatible model
   link?: string; // is used for process
-  permissions?: CatalogEntityPermissionEnum; // is used
+  permissions?: EntityPermissionLevelEnum; // is used
   path?: string; // isn't used. to be deprecated and moved to new compatible model
   original?: any; // wrapper for backend item
   toBeDeleted?: boolean;

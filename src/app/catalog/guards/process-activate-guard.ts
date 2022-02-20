@@ -5,7 +5,7 @@ import {catchError, map} from 'rxjs/operators';
 import {CurrentProcessModel} from '../models/current-process.model';
 import {CatalogRouteEnum} from '../models/catalog-route.enum';
 import {MatDialog} from '@angular/material/dialog';
-import {ProcessAccessDeniedModalComponent} from '../../shared/components/big/process-access-denied-modal/component/process-access-denied-modal.component';
+import {ProcessAccessDeniedModalComponent} from '../shared/components/modals/process-access-denied-modal/component/process-access-denied-modal.component';
 import {AppRouteEnum} from '../../models/app-route.enum';
 import {ProcessService} from '../pages/folder/services/process/process.service';
 

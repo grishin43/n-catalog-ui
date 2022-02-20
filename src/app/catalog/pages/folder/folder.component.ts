@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TableColumnsModel} from '../../../shared/components/big/entities-table/models/table.model';
+import {TableColumnsModel} from '../../shared/components/big/entities-table/models/table.model';
 import {TableHelper} from '../../helpers/table.helper';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';

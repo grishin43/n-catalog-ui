@@ -4,7 +4,7 @@ import {ProcessComponent} from '../pages/process/process.component';
 import {MatDialog} from '@angular/material/dialog';
 import {
   PreventProcessCloseModalComponent
-} from '../../shared/components/big/prevent-process-close-modal/component/prevent-process-close-modal.component';
+} from '../shared/components/modals/prevent-process-close-modal/component/prevent-process-close-modal.component';
 import {ProcessAutosaveService} from '../services/process-autosave/process-autosave.service';
 
 @Injectable()

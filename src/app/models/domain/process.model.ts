@@ -1,7 +1,6 @@
 import {FolderModel} from './folder.model';
 import {ResourceModel} from './resource.model';
-import {ProcessPermission} from './process-permission';
-import {ProcessVersionModel} from './process-version.model';
+import {EntityPermissionLevelEnum} from '../../catalog/models/entity-permission-level.enum';
 
 export interface ProcessModel {
   id?: string;
@@ -14,8 +13,13 @@ export interface ProcessModel {
   url?: string;
   subRoot?: string;
   activeResource?: ResourceModel;
-  currentUserPermissionLevel?: ProcessPermission;
+  currentUserPermissionLevel?: ProcessPermissionLevelModel;
   generation?: number;
   lockedBy?: string;
   toBeDeleted?: boolean; // local field
+}
+
+export interface ProcessPermissionLevelModel {
+  code: EntityPermissionLevelEnum;
+  description: string;
 }

@@ -7,11 +7,11 @@ import {CurrentProcessModel} from '../../models/current-process.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {HttpStatusCodeEnum} from '../../../models/http-status-code.enum';
 import {TranslateService} from '@ngx-translate/core';
-import {GrantAccessModalComponent} from '../../../shared/components/big/grant-access-modal/component/grant-access-modal.component';
+import {GrantAccessModalComponent} from '../../shared/components/modals/grant-access-modal/component/grant-access-modal.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BpmnModelerService} from '../../services/bpmn-modeler/bpmn-modeler.service';
 import {ResourceTypeEnum} from '../../../models/domain/resource-type.enum';
-import {SaveVersionModalComponent} from '../../../shared/components/big/save-version-modal/component/save-version-modal.component';
+import {SaveVersionModalComponent} from '../../shared/components/modals/save-version-modal/component/save-version-modal.component';
 import {ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {AnimationsHelper} from '../../helpers/animations.helper';
@@ -20,7 +20,7 @@ import {UiNotificationCheck} from '../../../models/domain/ui-notification.check'
 import {ProcessService} from '../folder/services/process/process.service';
 import {
   AskVersionSaveModalComponent
-} from '../../../shared/components/big/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
+} from '../../shared/components/modals/ask-version-save-modal/components/ask-version-save-modal/ask-version-save-modal.component';
 import {CatalogSelectors} from '../../store/selectors/catalog.selectors';
 import {Select, Store} from '@ngxs/store';
 import {SelectSnapshot} from '@ngxs-labs/select-snapshot';

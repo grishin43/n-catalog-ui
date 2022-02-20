@@ -7,11 +7,11 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
-import {EntityTableModule} from '../../../shared/components/big/entities-table/entity-table.module';
+import {EntityTableModule} from '../../shared/components/big/entities-table/entity-table.module';
 import {MatRippleModule} from '@angular/material/core';
-import {NpButtonModule} from '../../../shared/components/small/np-button/np-button.module';
+import {NpButtonModule} from '../../shared/components/general/np-button/np-button.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {FolderActionsButtonModule} from '../../../shared/components/big/folder-actions-button/folder-actions-button.module';
+import {FolderActionsButtonModule} from '../../shared/components/big/folder-actions-button/folder-actions-button.module';
 import {CantDeleteFolderModalComponent} from './components/cant-delete-folder-modal/cant-delete-folder-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 

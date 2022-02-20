@@ -3,7 +3,7 @@ import {ActivatedRoute, Params} from '@angular/router';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Observable, of, Subscription} from 'rxjs';
 import {SearchService} from '../../services/search/search.service';
-import {TableColumnsModel} from '../../../shared/components/big/entities-table/models/table.model';
+import {TableColumnsModel} from '../../shared/components/big/entities-table/models/table.model';
 import {TableHelper} from '../../helpers/table.helper';
 import {catchError, map, tap} from 'rxjs/operators';
 import {MapHelper} from '../../helpers/map.helper';

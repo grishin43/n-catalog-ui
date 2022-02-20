@@ -2,8 +2,8 @@ import {FolderFieldKey, FolderModel} from '../../models/domain/folder.model';
 import {CatalogEntityModel} from '../models/catalog-entity.model';
 import {CatalogEntityEnum} from '../models/catalog-entity.enum';
 import {CurrentProcessModel} from '../models/current-process.model';
-import {CatalogEntityPermissionEnum} from '../models/catalog-entity-permission.enum';
-import {NpStatusPillEnum} from '../../shared/components/small/np-status-pill/models/np-status-pill.enum';
+import {EntityPermissionLevelEnum} from '../models/entity-permission-level.enum';
+import {NpStatusPillEnum} from '../shared/components/general/np-status-pill/models/np-status-pill.enum';
 import {GeneralSearchItem} from '../services/search/general-search-item';
 import {ResourceModel} from '../../models/domain/resource.model';
 import {ResourceTypeEnum} from '../../models/domain/resource-type.enum';
@@ -26,7 +26,7 @@ export class MapHelper {
       id: folder.id,
       name: folder.name,
       type: CatalogEntityEnum.FOLDER,
-      permissions: CatalogEntityPermissionEnum.EDITOR,
+      permissions: EntityPermissionLevelEnum.EDITOR,
       original: folder,
       icon: folder.icon,
       hasSubFolders: !!folder[FolderFieldKey.FOLDERS]?.count,
@@ -80,10 +80,10 @@ export class MapHelper {
     if (entity) {
       const permissions =
         entity.permissionLevel?.code === 'owner'
-          ? CatalogEntityPermissionEnum.EDITOR
+          ? EntityPermissionLevelEnum.EDITOR
           : entity.permissionLevel?.code === 'viewer'
-            ? CatalogEntityPermissionEnum.VIEWER
-            : CatalogEntityPermissionEnum.NO_ACCESS;
+            ? EntityPermissionLevelEnum.VIEWER
+            : EntityPermissionLevelEnum.NO_ACCESS;
       return {
         id: entity.id,
         name: entity.name,
@@ -100,7 +100,7 @@ export class MapHelper {
   public static mapRecentProcessesResponse(recentProcesses: CatalogEntityModel[]): CatalogEntityModel[] {
     return recentProcesses.map((process: CatalogEntityModel) => {
       if (!process.permissions) {
-        process.permissions = CatalogEntityPermissionEnum.NO_ACCESS;
+        process.permissions = EntityPermissionLevelEnum.NO_ACCESS;
       }
       return process;
     });

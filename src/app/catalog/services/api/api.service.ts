@@ -6,9 +6,8 @@ import {delay, retryWhen, defaultIfEmpty, exhaustMap, filter, map, mapTo, switch
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
-import {UserModel} from '../../../models/domain/user.model';
+import {UserModel, WorkgroupUserModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
-import {PermissionLevel} from '../../../models/domain/permission-level.enum';
 import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
 import {UiNotificationCheck} from '../../../models/domain/ui-notification.check';
@@ -31,10 +30,12 @@ enum ApiRoute {
   RESOURCES = 'resources',
   SEARCH_USERS = 'search/user',
   PERMISSIONS = 'permissions',
+  GLOBAL = 'global',
   OWNER = 'owner',
   VERSIONS = 'versions',
   UI_NOTIFICATIONS = 'uiNotifications',
-  DISCARD_CHANGES = 'discardChanges'
+  DISCARD_CHANGES = 'discardChanges',
+  USERS = 'users'
 }
 
 enum ApiHeader {
@@ -142,7 +143,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`);
   }
 
-  public patchUserPermission(folderId: string, processId: string, permissionId: string, level: PermissionLevel): Observable<void> {
+  public patchUserPermission(folderId: string, processId: string, permissionId: string, level: string): Observable<void> {
     return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`, {level});
   }
 
@@ -153,34 +154,8 @@ export class ApiService {
     });
   }
 
-  public getUserInfo(username: string): Observable<UserModel> {
-    // TODO: test content
-    return of({
-      username: 'test.test',
-      email: 'test.user@novaposta.ua',
-      firstName: 'Іван',
-      middleName: 'Іванович',
-      lastName: 'Іванченко',
-      companies: [
-        {
-          name: 'Нова Пошта Україна 1',
-          subDivision: 'Тест підрозділ',
-          position: 'Фахівець 1',
-        },
-        {
-          name: 'Нова Пошта Україна 2',
-          subDivision: 'Тест підрозділ',
-          position: 'Фахівець 2',
-        },
-        {
-          name: 'Нова Пошта Україна 3',
-          subDivision: 'Тест підрозділ',
-          position: 'Фахівець 3',
-        }
-      ],
-      url: 'https://www.google.com.ua'
-    } as UserModel);
-    /*return this.http.get<UserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${username}`);*/
+  public getUserInfo(id: string): Observable<WorkgroupUserModel> {
+    return this.http.get<WorkgroupUserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${id}`);
   }
 
   public grantAccessToProcess(folderId: string, processId: string, level: string, username: string): Observable<void> {
@@ -190,6 +165,20 @@ export class ApiService {
       subRoot: folderId,
       username
     });
+  }
+
+  public grantGlobalAccessToProcess(folderId: string, processId: string, subRootFolderID: string, level: string = 'viewer')
+    : Observable<void> {
+    return this.http.post<void>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.GLOBAL}`, {
+      level,
+      subRootFolderID
+    });
+  }
+
+  public revokeGlobalAccessToProcess(folderId: string, processId: string, permissionId: string): Observable<void> {
+    return this.http.delete<void>
+    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`);
   }
 
   public getProcessOwner(folderId: string, processId: string): Observable<UserModel> {

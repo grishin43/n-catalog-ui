@@ -20,7 +20,7 @@ import {ToastMessageComponent} from './toast/components/toast-message/toast-mess
 import {ToastService} from './toast/service/toast.service';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
-import {NpButtonModule} from './shared/components/small/np-button/np-button.module';
+import {NpButtonModule} from './catalog/shared/components/general/np-button/np-button.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {GlobalErrorHandler} from './services/error-handler/global-error-handler.service';
 

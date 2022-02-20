@@ -1,0 +1,45 @@
+<div mat-dialog-title>
+  <h4>{{'common.noAccess' | translate}}</h4>
+</div>
+<mat-dialog-content>
+  <p>{{'common.contactTheOwnerToProvideAccessToTheProcess' | translate}}</p>
+  <ng-container *ngIf="data?.folderId && data?.processId">
+    <h6 *ngIf="processOwner || loader">
+      {{'common.owner' | translate}}
+    </h6>
+    <ng-container *ngIf="loader; else ownerTemplate">
+      <div class="owner-skeleton">
+        <span></span>
+        <span></span>
+      </div>
+    </ng-container>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <np-button
+    [minWidth]="true"
+    [btnType]="'submit'"
+    [type]="'primary'"
+    (click)="closeModal()">
+    <span>
+      {{'common.gotIt' | translate}}
+    </span>
+  </np-button>
+</mat-dialog-actions>
+
+<ng-template #ownerTemplate>
+  <div
+    *ngIf="processOwner"
+    class="owner">
+    <np-avatar
+      [data]="(processOwner.lastName + ' ' + processOwner.firstName) | acronym : 2"
+      [size]="'xs'"
+      [type]="'initials'"
+      npUserInfoTooltip
+      [id]="processOwner.username">
+    </np-avatar>
+    <span>
+      {{processOwner.lastName + ' ' + processOwner.firstName}}
+    </span>
+  </div>
+</ng-template>

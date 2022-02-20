@@ -6,7 +6,7 @@ import {AppRouteEnum} from '../../../models/app-route.enum';
 import {CatalogRouteEnum} from '../../models/catalog-route.enum';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {TabsOverflowedModalComponent} from '../../../shared/components/big/tabs-overflowed-modal/component/tabs-overflowed-modal.component';
+import {TabsOverflowedModalComponent} from '../../shared/components/modals/tabs-overflowed-modal/component/tabs-overflowed-modal.component';
 import {Store} from '@ngxs/store';
 import {CatalogActions} from '../../store/actions/catalog.actions';
 import {ProcessModel} from '../../../models/domain/process.model';

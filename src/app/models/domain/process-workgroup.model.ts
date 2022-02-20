@@ -1,13 +1,15 @@
 import {UserModel} from './user.model';
-import {PermissionLevel} from './permission-level.enum';
 
-export interface ProcessWorkgroupModel {
+export interface ProcessWorkgroupPermissionModel {
   id: string;
   level: ProcessWorkgroupLevelModel;
-  user: UserModel;
+}
+
+export interface ProcessWorkgroupModel extends ProcessWorkgroupPermissionModel {
+  user?: UserModel;
 }
 
 export interface ProcessWorkgroupLevelModel {
-  code: PermissionLevel | string;
+  code: string;
   description: string;
 }
