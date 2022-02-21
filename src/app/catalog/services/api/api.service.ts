@@ -131,8 +131,8 @@ export class ApiService {
       );
   }
 
-  public searchUsers(searchTerm: string): Observable<SearchModel<UserModel>> {
-    return this.http.post<SearchModel<UserModel>>(`${this.ApiUrl}/${ApiRoute.SEARCH_USERS}`, {searchTerm});
+  public searchUsers(searchKeywords: string): Observable<WorkgroupUserModel[]> {
+    return this.http.post<WorkgroupUserModel[]>(`${this.ApiUrl}/${ApiRoute.USERS}`, {searchKeywords});
   }
 
   public getProcessWorkGroup(folderId: string, processId: string): Observable<SearchModel<ProcessWorkgroupModel>> {
@@ -158,21 +158,26 @@ export class ApiService {
     return this.http.get<WorkgroupUserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${id}`);
   }
 
-  public grantAccessToProcess(folderId: string, processId: string, level: string, username: string): Observable<void> {
+  public grantAccessToProcess(folderId: string, processId: string, level: string, user: WorkgroupUserModel): Observable<void> {
     return this.http.post<void>
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}`, {
       level,
-      subRoot: folderId,
-      username
+      subRootFolderID: folderId,
+      user: {
+        id: user.id,
+        // TODO
+        username: user.workplaces[0]?.username,
+        companyID: user.workplaces[0]?.company?.companyID
+      }
     });
   }
 
-  public grantGlobalAccessToProcess(folderId: string, processId: string, subRootFolderID: string, level: string = 'viewer')
+  public grantGlobalAccessToProcess(folderId: string, processId: string, level: string = 'viewer')
     : Observable<void> {
     return this.http.post<void>
     (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.GLOBAL}`, {
       level,
-      subRootFolderID
+      subRootFolderID: folderId
     });
   }
 

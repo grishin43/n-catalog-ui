@@ -41,7 +41,11 @@
                 npUserInfoTooltip
                 [id]="user.id">
               </np-avatar>
-              {{user?.fullName}}
+              <span
+                class="text-truncate"
+                style="max-width: 215px">
+                {{user?.fullName}}
+              </span>
               <mat-icon matChipRemove>
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd"
@@ -193,7 +197,7 @@
   [panelWidth]="mergedFields.offsetWidth"
   #usersAutocomplete="matAutocomplete"
   (optionSelected)="userSelected($event)">
-  <ng-container *ngIf="usersInput?.value && filteredUsers?.length === 0; else usersListTemplate">
+  <ng-container *ngIf="usersInput?.value?.length && !workgroupUsers?.length; else usersListTemplate">
     <mat-option
       class="sm"
       disabled>
@@ -201,23 +205,29 @@
     </mat-option>
   </ng-container>
   <ng-template #usersListTemplate>
-    <mat-option
-      class="user"
-      *ngFor="let user of filteredUsers"
-      [value]="user.id">
-      <np-avatar
-        [data]="user.fullName | acronym : 2"
-        [type]="'initials'"
-        npUserInfoTooltip
-        [id]="user.id">
-      </np-avatar>
-      <span>
-      {{user.fullName}}
-      <!--<small *ngIf="user?.email">
-        {{user?.email}}
-      </small>-->
-    </span>
-    </mat-option>
+    <cdk-virtual-scroll-viewport
+      [ngStyle]="{
+        'height': searchVirtualScrollHeight
+      }"
+      itemSize="15">
+      <mat-option
+        class="user"
+        *ngFor="let user of workgroupUsers"
+        [value]="user.id">
+        <np-avatar
+          [data]="user.fullName | acronym : 2"
+          [type]="'initials'"
+          npUserInfoTooltip
+          [id]="user.id">
+        </np-avatar>
+        <span>
+           {{user.fullName}}
+          <!--<small *ngIf="user?.email">
+            {{user?.email}}
+          </small>-->
+         </span>
+      </mat-option>
+    </cdk-virtual-scroll-viewport>
   </ng-template>
 </mat-autocomplete>
 

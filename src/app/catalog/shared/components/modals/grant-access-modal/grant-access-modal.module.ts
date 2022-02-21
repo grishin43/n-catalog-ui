@@ -21,6 +21,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {UserInfoTooltipModule} from '../../../directives/user-info-tooltip/user-info-tooltip.module';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
         MatTooltipModule,
         ClipboardModule,
         UserInfoTooltipModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        ScrollingModule
     ]
 })
 export class GrantAccessModalModule {

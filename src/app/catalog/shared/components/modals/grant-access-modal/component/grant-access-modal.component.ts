@@ -18,7 +18,7 @@ import {forkJoin, Observable, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 import {ApiService} from '../../../../../services/api/api.service';
 import {SearchModel} from '../../../../../../models/domain/search.model';
-import {UserModel} from '../../../../../../models/domain/user.model';
+import {UserModel, WorkgroupUserModel} from '../../../../../../models/domain/user.model';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {ProcessWorkgroupModel, ProcessWorkgroupPermissionModel} from '../../../../../../models/domain/process-workgroup.model';
@@ -41,8 +41,8 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
     EntityPermissionLevelEnum.VIEWER,
     EntityPermissionLevelEnum.EDITOR
   ];
-  public users: UserModel[];
-  public selectedUsers: UserModel[] = [];
+  public workgroupUsers: WorkgroupUserModel[];
+  public selectedUsers: WorkgroupUserModel[] = [];
   public separatorKeysCodes = [ENTER, COMMA];
   public workgroup: ProcessWorkgroupModel[];
   public workgroupPermissions: ProcessWorkgroupPermissionModel[];
@@ -50,6 +50,7 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   public globalViewerPermission: ProcessWorkgroupPermissionModel;
   public hasViewerGlobalPermission: boolean;
   public toggleLoader: boolean;
+  public searchVirtualScrollHeight: string;
 
   private subs = new Subscription();
 
@@ -84,11 +85,6 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
-  }
-
-  public get filteredUsers(): UserModel[] {
-    const ids = new Set(this.selectedUsers?.map((u: UserModel) => u.id));
-    return this.users?.filter((u: UserModel) => !ids.has(u.id));
   }
 
   public get ownerPermissionId(): string {
@@ -154,16 +150,21 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   }
 
   private checkUsername(str: string): boolean {
-    return !!this.users?.find((u: UserModel) => u.fullName === str);
+    return !!this.workgroupUsers?.find((u: WorkgroupUserModel) => u.fullName === str);
   }
 
   private searchUsers(searchTerm: string): void {
     this.searchLoader = true;
     this.subs.add(
       this.api.searchUsers(searchTerm)
-        .subscribe((res: SearchModel<UserModel>) => {
+        .subscribe((res: WorkgroupUserModel[]) => {
+          this.workgroupUsers = res;
+          if (res.length < 4) {
+            this.searchVirtualScrollHeight = (res.length * 56) + 'px';
+          } else {
+            this.searchVirtualScrollHeight = '224px';
+          }
           this.searchLoader = false;
-          this.users = res?.items;
         }, () => {
           this.searchLoader = false;
           this.toast.showError(
@@ -183,9 +184,9 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
       this.formLoader = true;
       this.subs.add(
         forkJoin(
-          this.selectedUsers.map((u: UserModel) => {
+          this.selectedUsers.map((wu: WorkgroupUserModel) => {
             return this.api.grantAccessToProcess(
-              this.process.parent.id, this.process.id, this.form.value[FormFieldEnum.PERMISSIONS], u.id
+              this.process.parent.id, this.process.id, this.form.value[FormFieldEnum.PERMISSIONS], wu
             );
           })
         ).subscribe(() => {
@@ -199,13 +200,13 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   }
 
   public userSelected(event: MatAutocompleteSelectedEvent): void {
-    const user = this.users.find((u: UserModel) => event.option.value === u.id);
+    const user = this.workgroupUsers.find((u: WorkgroupUserModel) => event.option.value === u.id);
     this.selectedUsers.push(user);
     this.usersInput.nativeElement.value = '';
     this.form.get([FormFieldEnum.SEARCH]).patchValue(null);
   }
 
-  public usernameRemove(user: UserModel): void {
+  public usernameRemove(user: WorkgroupUserModel): void {
     const index = this.selectedUsers.indexOf(user);
     if (index >= 0) {
       this.selectedUsers.splice(index, 1);
@@ -221,7 +222,7 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   public onToggleChange(event: MatSlideToggleChange): void {
     if (event.checked) {
       this.sendGlobalAccessRequest(
-        this.api.grantGlobalAccessToProcess(this.process.parent.id, this.process.id, this.process.subRoot),
+        this.api.grantGlobalAccessToProcess(this.process.parent.id, this.process.id),
         event.checked
       );
     } else {
