@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, merge, Observable, of, throwError, timer} from 'rxjs';
+import {forkJoin, merge, Observable, of, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CatalogEntityModel} from '../../models/catalog-entity.model';
 import {delay, retryWhen, defaultIfEmpty, exhaustMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
@@ -28,7 +28,6 @@ enum ApiRoute {
   ORIGINS = 'origins',
   RECENT_PROCESSES = 'processes/recent',
   RESOURCES = 'resources',
-  SEARCH_USERS = 'search/user',
   PERMISSIONS = 'permissions',
   GLOBAL = 'global',
   OWNER = 'owner',
@@ -44,6 +43,8 @@ enum ApiHeader {
 
 enum UiNotificationType {
   PROCESS_PERMISSION_ASSIGNED = 'process_permission_assigned',
+  PROCESS_PERMISSION_REVOKED = 'process_permission_revoked',
+  PROCESS_PERMISSION_UPDATED = 'process_permission_updated',
   PROCESS_CREATED = 'process_created'
 }
 
@@ -147,43 +148,8 @@ export class ApiService {
     return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`, {level});
   }
 
-  public changeProcessOwner(folderId: string, processId: string, currentOwnerId: string, newOwnerId: string): Observable<void> {
-    return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.OWNER}`, {
-      currentOwnerPermissionId: currentOwnerId,
-      newOwnerPermissionId: newOwnerId
-    });
-  }
-
   public getUserInfo(id: string): Observable<WorkgroupUserModel> {
     return this.http.get<WorkgroupUserModel>(`${this.ApiUrl}/${ApiRoute.USERS}/${id}`);
-  }
-
-  public grantAccessToProcess(folderId: string, processId: string, level: string, user: WorkgroupUserModel): Observable<void> {
-    return this.http.post<void>
-    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}`, {
-      level,
-      subRootFolderID: folderId,
-      user: {
-        id: user.id,
-        // TODO
-        username: user.workplaces[0]?.username,
-        companyID: user.workplaces[0]?.company?.companyID
-      }
-    });
-  }
-
-  public grantGlobalAccessToProcess(folderId: string, processId: string, level: string = 'viewer')
-    : Observable<void> {
-    return this.http.post<void>
-    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.GLOBAL}`, {
-      level,
-      subRootFolderID: folderId
-    });
-  }
-
-  public revokeGlobalAccessToProcess(folderId: string, processId: string, permissionId: string): Observable<void> {
-    return this.http.delete<void>
-    (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`);
   }
 
   public getProcessOwner(folderId: string, processId: string): Observable<UserModel> {
@@ -208,6 +174,51 @@ export class ApiService {
   /******************
    * Async requests *
    ******************/
+
+  public changeProcessOwner(folderId: string, processId: string, currentOwnerId: string, newOwnerId: string)
+    : Observable<UiNotificationCheck> {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
+      return this.http.put<void>(`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.OWNER}`, {
+        currentOwnerPermissionId: currentOwnerId,
+        newOwnerPermissionId: newOwnerId
+      }, {headers});
+    }, UiNotificationType.PROCESS_PERMISSION_UPDATED);
+  }
+
+  public grantAccessToProcess(folderId: string, processId: string, level: string, user: WorkgroupUserModel)
+    : Observable<UiNotificationCheck> {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
+      return this.http.post<void>
+      (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}`, {
+        level,
+        subRootFolderID: folderId,
+        user: {
+          id: user.id,
+          // TODO
+          username: user.workplaces[0]?.username,
+          companyID: user.workplaces[0]?.company?.companyID
+        }
+      }, {headers});
+    }, UiNotificationType.PROCESS_PERMISSION_ASSIGNED);
+  }
+
+  public grantGlobalAccessToProcess(folderId: string, processId: string, level: string = 'viewer'): Observable<UiNotificationCheck> {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
+      return this.http.post<void>
+      (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${ApiRoute.GLOBAL}`, {
+        level,
+        subRootFolderID: folderId
+      }, {headers});
+    }, UiNotificationType.PROCESS_PERMISSION_ASSIGNED);
+  }
+
+  public revokeGlobalAccessToProcess(folderId: string, processId: string, permissionId: string): Observable<UiNotificationCheck> {
+    return this.checkRequestNotification((headers: HttpHeaders) => {
+      return this.http.delete<void>
+      (`${this.ApiUrl}/${ApiRoute.FOLDERS}/${folderId}/${ApiRoute.PROCESSES}/${processId}/${ApiRoute.PERMISSIONS}/${permissionId}`,
+        {headers});
+    }, UiNotificationType.PROCESS_PERMISSION_REVOKED);
+  }
 
   public createFolder(parentFolderId: string, name: string): Observable<UiNotificationCheck> {
     return this.checkRequestNotification((headers: HttpHeaders) => {

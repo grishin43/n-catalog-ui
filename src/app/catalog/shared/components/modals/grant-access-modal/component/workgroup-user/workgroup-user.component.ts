@@ -1,8 +1,9 @@
-import {Component, Input, OnDestroy} from '@angular/core';
-import {ProcessWorkgroupModel, ProcessWorkgroupPermissionModel} from '../../../../../../../models/domain/process-workgroup.model';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {ProcessWorkgroupModel} from '../../../../../../../models/domain/process-workgroup.model';
 import {Observable, Subscription} from 'rxjs';
 import {ApiService} from '../../../../../../services/api/api.service';
 import {EntityPermissionLevelEnum} from '../../../../../../models/entity-permission-level.enum';
+import {ToastService} from '../../../../../../../toast/service/toast.service';
 
 @Component({
   selector: 'np-workgroup-user',
@@ -14,7 +15,9 @@ export class WorkgroupUserComponent implements OnDestroy {
   @Input() processId: string;
   @Input() ownerPermissionId?: string;
   @Input() workgroup: ProcessWorkgroupModel;
-  @Input() permissions: ProcessWorkgroupPermissionModel[];
+  @Input() permissions: EntityPermissionLevelEnum[];
+
+  @Output() requestSent = new EventEmitter<string>();
 
   public loader: boolean;
   public EntityPermissionLevel = EntityPermissionLevelEnum;
@@ -22,7 +25,8 @@ export class WorkgroupUserComponent implements OnDestroy {
   private subs = new Subscription();
 
   constructor(
-    private api: ApiService
+    private api: ApiService,
+    private toast: ToastService
   ) {
   }
 
@@ -32,18 +36,21 @@ export class WorkgroupUserComponent implements OnDestroy {
 
   public deleteUser(): void {
     this.sendRequest(
-      this.api.deleteUserFromWorkgroup(this.folderId, this.processId, this.workgroup.id)
+      this.api.deleteUserFromWorkgroup(this.folderId, this.processId, this.workgroup.id),
+      'common.deletedFromWorkGroupSuccessfully'
     );
   }
 
   public changePermission(value: string): void {
     if (value === EntityPermissionLevelEnum.OWNER) {
       this.sendRequest(
-        this.api.changeProcessOwner(this.folderId, this.processId, this.ownerPermissionId, this.workgroup.id)
+        this.api.changeProcessOwner(this.folderId, this.processId, this.ownerPermissionId, this.workgroup.id),
+        'common.processOwnerSuccessfullyChanged',
       );
     } else {
       this.sendRequest(
         this.api.patchUserPermission(this.folderId, this.processId, this.workgroup.id, value),
+        'common.userPermissionSuccessfullyChanged',
         () => {
           this.workgroup.level.code = value;
         }
@@ -51,7 +58,7 @@ export class WorkgroupUserComponent implements OnDestroy {
     }
   }
 
-  private sendRequest(request: Observable<any>, successCb?: () => void): void {
+  private sendRequest(request: Observable<any>, toastMessage: string, successCb?: () => void): void {
     this.loader = true;
     this.subs.add(
       request.subscribe(() => {
@@ -59,6 +66,8 @@ export class WorkgroupUserComponent implements OnDestroy {
         if (typeof successCb === 'function') {
           successCb();
         }
+        this.toast.showMessage(toastMessage);
+        this.requestSent.emit();
       }, () => {
         this.loader = false;
       })

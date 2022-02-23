@@ -52,9 +52,9 @@
     <button
       *ngIf="permission"
       mat-menu-item
-      (click)="changePermission(permission.level.code)">
+      (click)="changePermission(permission)">
       <span>
-        {{'permissions.' + permission.level.code | translate}}
+        {{'permissions.' + permission | translate}}
       </span>
     </button>
   </ng-container>

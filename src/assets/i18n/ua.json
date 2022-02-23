@@ -198,7 +198,13 @@
     "resultsLoading": "Завантаження релультатів",
     "showMore": "Показати більше",
     "fired": "Звільненний",
-    "processDefaultPermissionText": "Дозволити всім іншим користувачам мати права на перегляд цього файлу"
+    "processDefaultPermissionText": "Дозволити всім іншим користувачам мати права на перегляд цього файлу",
+    "accessSuccessfullyGranted": "Доступ успішно надано",
+    "deletedFromWorkGroupSuccessfully": "Користувача успішно вилучено з робочої групи",
+    "userPermissionSuccessfullyChanged": "Доступ користувача успішно змінено",
+    "globalAccessSuccessfullyGranted": "Глобальний доступ на перегряд процесу надано успішно",
+    "globalAccessSuccessfullyRevoked": "Глобальний доступ на прегляд процесу успішно відізвано",
+    "processOwnerSuccessfullyChanged": "Власник процесу успішно змінено"
   },
   "statuses": {
     "undefined": "Невизначений",

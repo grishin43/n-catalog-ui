@@ -119,7 +119,8 @@
           [processId]="process?.id"
           [ownerPermissionId]="ownerPermissionId"
           [workgroup]="item"
-          [permissions]="workgroupPermissions">
+          [permissions]="workgroupPermissions"
+          (requestSent)="closeModal()">
         </np-workgroup-user>
       </li>
     </ng-container>
@@ -238,7 +239,8 @@
   <mat-option
     class="sm"
     *ngFor="let permission of permissions"
-    [value]="'common.' + permission | translate">
+    [value]="'common.' + permission | translate"
+    (onSelectionChange)="onPermissionSelected(permission)">
     {{'common.' + permission | translate}}
   </mat-option>
 </mat-autocomplete>

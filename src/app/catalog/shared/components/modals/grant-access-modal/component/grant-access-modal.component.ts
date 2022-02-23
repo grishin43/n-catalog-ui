@@ -37,7 +37,7 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   public formControlName = FormFieldEnum;
   public formLoader: boolean;
   public searchLoader: boolean;
-  public permissions = [
+  public permissions: EntityPermissionLevelEnum[] = [
     EntityPermissionLevelEnum.VIEWER,
     EntityPermissionLevelEnum.EDITOR
   ];
@@ -45,12 +45,17 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   public selectedUsers: WorkgroupUserModel[] = [];
   public separatorKeysCodes = [ENTER, COMMA];
   public workgroup: ProcessWorkgroupModel[];
-  public workgroupPermissions: ProcessWorkgroupPermissionModel[];
+  public workgroupPermissions: EntityPermissionLevelEnum[] = [
+    EntityPermissionLevelEnum.VIEWER,
+    EntityPermissionLevelEnum.EDITOR,
+    EntityPermissionLevelEnum.OWNER
+  ];
   public workgroupLoader: boolean;
   public globalViewerPermission: ProcessWorkgroupPermissionModel;
   public hasViewerGlobalPermission: boolean;
   public toggleLoader: boolean;
   public searchVirtualScrollHeight: string;
+  public selectedPermission: EntityPermissionLevelEnum = this.permissions[0];
 
   private subs = new Subscription();
 
@@ -101,7 +106,6 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
       this.api.getProcessWorkGroup(this.process.parent.id, this.process.id)
         .subscribe((res: SearchModel<ProcessWorkgroupModel>) => {
           this.workgroup = res?.items;
-          this.mapPermissions(res?.items);
           this.checkGlobalPermission(res?.items);
           this.workgroupLoader = false;
         }, () => {
@@ -110,19 +114,13 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
     );
   }
 
-  private mapPermissions(items: ProcessWorkgroupModel[]): void {
-    this.workgroupPermissions = items?.map(({id, level}: ProcessWorkgroupModel) => {
-      return {id, level};
-    });
-  }
-
   private checkGlobalPermission(items: ProcessWorkgroupModel[]): void {
     this.globalViewerPermission = items?.find((pw: ProcessWorkgroupModel) => pw.user == null);
     this.hasViewerGlobalPermission = !!this.globalViewerPermission;
   }
 
   private initForm(): void {
-    const defaultPermission = this.translate.instant('common.' + EntityPermissionLevelEnum.VIEWER);
+    const defaultPermission = this.translate.instant('common.' + this.permissions[0]);
     this.form = new FormGroup({
       [FormFieldEnum.SEARCH]: new FormControl(undefined, [Validators.required]),
       [FormFieldEnum.PERMISSIONS]: new FormControl(defaultPermission, [Validators.required])
@@ -141,16 +139,12 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
             distinctUntilChanged()
           )
           .subscribe((str: string) => {
-            if (!this.checkUsername(str)) {
+            if (str?.trim()?.length >= 3) {
               this.searchUsers(str);
             }
           })
       );
     }
-  }
-
-  private checkUsername(str: string): boolean {
-    return !!this.workgroupUsers?.find((u: WorkgroupUserModel) => u.fullName === str);
   }
 
   private searchUsers(searchTerm: string): void {
@@ -185,14 +179,13 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
       this.subs.add(
         forkJoin(
           this.selectedUsers.map((wu: WorkgroupUserModel) => {
-            return this.api.grantAccessToProcess(
-              this.process.parent.id, this.process.id, this.form.value[FormFieldEnum.PERMISSIONS], wu
-            );
+            return this.api.grantAccessToProcess(this.process.parent.id, this.process.id, this.selectedPermission, wu);
           })
         ).subscribe(() => {
           this.formLoader = false;
           this.closeModal();
-        }, (err: HttpErrorResponse) => {
+          this.toast.showMessage('common.accessSuccessfullyGranted');
+        }, () => {
           this.formLoader = false;
         })
       );
@@ -223,26 +216,33 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
     if (event.checked) {
       this.sendGlobalAccessRequest(
         this.api.grantGlobalAccessToProcess(this.process.parent.id, this.process.id),
-        event.checked
+        event.checked,
+        'common.globalAccessSuccessfullyGranted'
       );
     } else {
       this.sendGlobalAccessRequest(
         this.api.revokeGlobalAccessToProcess(this.process.parent.id, this.process.id, this.globalViewerPermission.id),
-        event.checked
+        event.checked,
+        'common.globalAccessSuccessfullyRevoked'
       );
     }
   }
 
-  private sendGlobalAccessRequest(request: Observable<any>, flag: boolean): void {
+  private sendGlobalAccessRequest(request: Observable<any>, flag: boolean, toastMessage: string): void {
     this.toggleLoader = true;
     this.subs.add(
       request.subscribe(() => {
         this.hasViewerGlobalPermission = flag;
         this.toggleLoader = false;
+        this.toast.showMessage(toastMessage);
       }, () => {
         this.toggleLoader = false;
       })
     );
+  }
+
+  public onPermissionSelected(permission: string): void {
+    this.selectedPermission = permission as EntityPermissionLevelEnum;
   }
 
 }
