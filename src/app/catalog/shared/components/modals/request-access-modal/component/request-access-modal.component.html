@@ -5,16 +5,16 @@
   <p>{{'common.toAccessTheFileContactTheFileOwner' | translate}}:</p>
   <div
     class="user"
-    *ngIf="data">
+    *ngIf="processOwner">
     <np-avatar
-      [data]="data | acronym : 2"
+      [data]="processOwner.fullName | acronym : 2"
       [size]="'sm'"
       [type]="'initials'"
       npUserInfoTooltip
-      [id]="data">
+      [id]="processOwner.id">
     </np-avatar>
     <span>
-      {{data}}
+      {{processOwner.fullName}}
     </span>
   </div>
 </mat-dialog-content>

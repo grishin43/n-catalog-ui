@@ -133,7 +133,9 @@
 
           <ng-container *ngSwitchCase="tableDataType.ACTIONS">
             <ng-container
-              *ngIf="row.permissions !== entityPermission.NO_ACCESS; else requestAccessTemp">
+              *ngIf="row?.type === catalogEntityType.FOLDER
+              || (row.permissions !== entityPermission.NO_ACCESS && row?.type === catalogEntityType.PROCESS);
+              else requestAccessTemp">
               <ng-container *ngIf="row?.type === catalogEntityType.PROCESS || row?.type === catalogEntityType.FOLDER">
                 <button
                   mat-icon-button
@@ -227,7 +229,7 @@
       [attr.data-name]="'entities-table-row'"
       [attr.id]="row?.id"
       [ngClass]="{
-        'blocked': row.permissions === entityPermission.NO_ACCESS,
+        'blocked': row.type === catalogEntityType.PROCESS && row.permissions === entityPermission.NO_ACCESS,
         'disabled': (tableActions.renameLoader | async) === row?.id
       }"
       *matRowDef="let row; columns: displayedColumns | toStringArray : 'name';">

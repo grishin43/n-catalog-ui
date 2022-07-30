@@ -17,7 +17,6 @@ export interface WorkgroupUserModel {
   fullName: string;
   avatar?: string;
   workplaces: WorkplaceModel[];
-  department: CompanyDepartmentModel;
   chiefID: string;
 }
 
@@ -26,6 +25,7 @@ export interface WorkplaceModel {
   username: string;
   email: string;
   company: CompanyModel;
+  department?: CompanyDepartmentModel;
 }
 
 export interface CompanyModel {

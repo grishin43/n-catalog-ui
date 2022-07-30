@@ -32,14 +32,14 @@
     *ngIf="processOwner"
     class="owner">
     <np-avatar
-      [data]="(processOwner.lastName + ' ' + processOwner.firstName) | acronym : 2"
+      [data]="processOwner.fullName | acronym : 2"
       [size]="'xs'"
       [type]="'initials'"
       npUserInfoTooltip
       [id]="processOwner.username">
     </np-avatar>
     <span>
-      {{processOwner.lastName + ' ' + processOwner.firstName}}
+      {{processOwner.fullName}}
     </span>
   </div>
 </ng-template>

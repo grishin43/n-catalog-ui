@@ -16,6 +16,8 @@ export interface ProcessModel {
   currentUserPermissionLevel?: ProcessPermissionLevelModel;
   generation?: number;
   lockedBy?: string;
+  companyID?: string;
+  ownerId?: string;
   toBeDeleted?: boolean; // local field
 }
 

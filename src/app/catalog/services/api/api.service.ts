@@ -6,7 +6,7 @@ import {delay, retryWhen, defaultIfEmpty, exhaustMap, filter, map, mapTo, switch
 import {SearchModel} from '../../../models/domain/search.model';
 import {FolderFieldKey, FolderModel} from '../../../models/domain/folder.model';
 import {ProcessTypeModel} from '../../../models/domain/process-type.model';
-import {UserModel, WorkgroupUserModel} from '../../../models/domain/user.model';
+import {UserModel, WorkgroupUserModel, WorkplaceModel} from '../../../models/domain/user.model';
 import {ProcessWorkgroupModel} from '../../../models/domain/process-workgroup.model';
 import {CreateProcessVersionModel, ProcessVersionModel} from '../../../models/domain/process-version.model';
 import {v4 as uuid} from 'uuid';
@@ -132,8 +132,11 @@ export class ApiService {
       );
   }
 
-  public searchUsers(searchKeywords: string): Observable<WorkgroupUserModel[]> {
-    return this.http.post<WorkgroupUserModel[]>(`${this.ApiUrl}/${ApiRoute.USERS}`, {searchKeywords});
+  public searchUsers(searchKeywords: string, companyId: string): Observable<UserModel[]> {
+    return this.http.post<WorkgroupUserModel[]>(`${this.ApiUrl}/${ApiRoute.USERS}`, {searchKeywords})
+      .pipe(
+        map((wuList: WorkgroupUserModel[]) => MapHelper.mapSearchResults(wuList, companyId))
+      );
   }
 
   public getProcessWorkGroup(folderId: string, processId: string): Observable<SearchModel<ProcessWorkgroupModel>> {
@@ -185,7 +188,7 @@ export class ApiService {
     }, UiNotificationType.PROCESS_PERMISSION_UPDATED);
   }
 
-  public grantAccessToProcess(folderId: string, processId: string, level: string, user: WorkgroupUserModel)
+  public grantAccessToProcess(folderId: string, processId: string, level: string, user: UserModel)
     : Observable<UiNotificationCheck> {
     return this.checkRequestNotification((headers: HttpHeaders) => {
       return this.http.post<void>
@@ -194,9 +197,8 @@ export class ApiService {
         subRootFolderID: folderId,
         user: {
           id: user.id,
-          // TODO
-          username: user.workplaces[0]?.username,
-          companyID: user.workplaces[0]?.company?.companyID
+          username: user.username,
+          companyID: user.companyID
         }
       }, {headers});
     }, UiNotificationType.PROCESS_PERMISSION_ASSIGNED);

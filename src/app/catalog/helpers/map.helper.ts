@@ -11,6 +11,7 @@ import {LocalSaverHelper} from './local-saver.helper';
 import {Base64} from 'js-base64';
 import {SearchModel} from '../../models/domain/search.model';
 import {ProcessModel} from '../../models/domain/process.model';
+import {UserModel, WorkgroupUserModel, WorkplaceModel} from '../../models/domain/user.model';
 
 export class MapHelper {
 
@@ -78,20 +79,15 @@ export class MapHelper {
 
   public static mapSearchToCatalogModel(entity: GeneralSearchItem): CatalogEntityModel {
     if (entity) {
-      const permissions =
-        entity.permissionLevel?.code === 'owner'
-          ? EntityPermissionLevelEnum.EDITOR
-          : entity.permissionLevel?.code === 'viewer'
-            ? EntityPermissionLevelEnum.VIEWER
-            : EntityPermissionLevelEnum.NO_ACCESS;
       return {
         id: entity.id,
         name: entity.name,
         type: (entity.type === 'folder') ? CatalogEntityEnum.FOLDER : CatalogEntityEnum.PROCESS,
-        lastUpdated: new Date(entity.lastUpdatedAt),
-        permissions,
-        status: entity.status?.code,
-        original: entity
+        /*permissions: entity.currentUserPermissionLevel?.code,*/
+        permissions: EntityPermissionLevelEnum.NO_ACCESS,
+        original: entity,
+        // TODO: request status
+        status: NpStatusPillEnum.DRAFT
       } as CatalogEntityModel;
     }
     return undefined;
@@ -170,9 +166,27 @@ export class MapHelper {
     };
   }
 
-  public static getResourceContent(process: ProcessModel): string {
-    const matchedResource = process?.resources?.find((r: ResourceModel) => r.type === ResourceTypeEnum.XML);
-    return matchedResource?.content;
+  public static mapSearchResults(wuList: WorkgroupUserModel[], companyId): UserModel[]{
+    const filteredWuListL: WorkgroupUserModel[] = wuList.filter((wu: WorkgroupUserModel) => {
+      return wu.workplaces.find((wuw: WorkplaceModel) => {
+        return wuw.company.companyID === companyId;
+      });
+    });
+    return filteredWuListL.map((wuf: WorkgroupUserModel): UserModel => {
+      const matchWorkspace = wuf.workplaces.find((wuw: WorkplaceModel) => wuw.company.companyID === companyId);
+      return {
+        id: wuf.id,
+        username: matchWorkspace.username,
+        email: matchWorkspace.email,
+        fullName: wuf.fullName,
+        avatar: wuf.avatar,
+        profile: wuf.profile,
+        companyID: matchWorkspace.company.companyID,
+        companyName: matchWorkspace.company.companyName,
+        departmentName: matchWorkspace.department.departmentName,
+        positionName: matchWorkspace.position.positionName
+      };
+    });
   }
 
 }

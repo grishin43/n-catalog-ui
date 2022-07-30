@@ -41,8 +41,8 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
     EntityPermissionLevelEnum.VIEWER,
     EntityPermissionLevelEnum.EDITOR
   ];
-  public workgroupUsers: WorkgroupUserModel[];
-  public selectedUsers: WorkgroupUserModel[] = [];
+  public workgroupUsers: UserModel[];
+  public selectedUsers: UserModel[] = [];
   public separatorKeysCodes = [ENTER, COMMA];
   public workgroup: ProcessWorkgroupModel[];
   public workgroupPermissions: EntityPermissionLevelEnum[] = [
@@ -150,8 +150,8 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   private searchUsers(searchTerm: string): void {
     this.searchLoader = true;
     this.subs.add(
-      this.api.searchUsers(searchTerm)
-        .subscribe((res: WorkgroupUserModel[]) => {
+      this.api.searchUsers(searchTerm, this.process.companyID)
+        .subscribe((res: UserModel[]) => {
           this.workgroupUsers = res;
           if (res.length < 4) {
             this.searchVirtualScrollHeight = (res.length * 56) + 'px';
@@ -178,7 +178,7 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
       this.formLoader = true;
       this.subs.add(
         forkJoin(
-          this.selectedUsers.map((wu: WorkgroupUserModel) => {
+          this.selectedUsers.map((wu: UserModel) => {
             return this.api.grantAccessToProcess(this.process.parent.id, this.process.id, this.selectedPermission, wu);
           })
         ).subscribe(() => {
@@ -193,13 +193,13 @@ export class GrantAccessModalComponent implements OnInit, AfterViewChecked, OnDe
   }
 
   public userSelected(event: MatAutocompleteSelectedEvent): void {
-    const user = this.workgroupUsers.find((u: WorkgroupUserModel) => event.option.value === u.id);
+    const user = this.workgroupUsers.find((u: UserModel) => event.option.value === u.id);
     this.selectedUsers.push(user);
     this.usersInput.nativeElement.value = '';
     this.form.get([FormFieldEnum.SEARCH]).patchValue(null);
   }
 
-  public usernameRemove(user: WorkgroupUserModel): void {
+  public usernameRemove(user: UserModel): void {
     const index = this.selectedUsers.indexOf(user);
     if (index >= 0) {
       this.selectedUsers.splice(index, 1);
